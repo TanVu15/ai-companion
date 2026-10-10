@@ -27,6 +27,9 @@
 | Bơ ghi nhầm "việc cần làm" (hoặc không ghi) | AI hiểu nhầm nhờ nhắc với nhờ ghi | Nút "Việc cần làm" → Xóa hoặc tự thêm. Có giờ cụ thể ("8h tối...") thì Bơ đặt lời nhắc thay vì ghi việc |
 | Bỏ đánh dấu việc thì báo "đang có trong danh sách rồi" | Đã có việc y hệt chưa xong | Bình thường, giữ một việc là đủ |
 | Hôm trước ngày đặc biệt Bơ không nhắc | Hôm đó không mở web (hoặc mở trước 8h sáng), hoặc Tân vừa mới kể ngày đó | Đúng ngày Bơ vẫn chúc |
+| Dòng lịch / ngày âm lệch một ngày | Giờ hoặc múi giờ máy tính sai | Chỉnh đồng hồ Windows về múi giờ (UTC+07:00) Bangkok, Hà Nội |
+| Đã sửa `.env` (thành phố, giờ yên lặng) mà không đổi | Mục đó đã chỉnh trên web, web được ưu tiên | Nút "?" → Cài đặt → "Về như file .env", hoặc sửa luôn trên web |
+| Kể ngày giỗ âm mà Bơ ghi thành ngày dương | AI hiểu nhầm | "Bơ nhớ gì về mình?" → Xóa ngày đó, kể lại rõ "… theo âm lịch" (ngày âm có chữ "(âm lịch)") |
 | Lỡ đổi màu mặt Bơ | — | Nút "?" → Màu mặt Bơ → chọn "Vàng (mặc định)" |
 | Mới `git pull` mà web vẫn cũ | Cửa sổ `run.bat` cũ còn chạy | Tắt cửa sổ đó, chạy lại `run.bat` (nó tự cài thêm thư viện mới nếu có). Vẫn lỗi thư viện thì xóa thư mục `.venv` rồi chạy lại |
 | Hỏi mật khẩu mãi | Gõ sai `APP_PASSWORD` | Mật khẩu phân biệt hoa/thường, tên đăng nhập gõ gì cũng được |

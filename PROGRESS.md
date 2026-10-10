@@ -5,6 +5,15 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## Tóm tắt nhanh lần chạy 2026-10-10 (22:31–23:10 UTC)
+Xong giai đoạn 24 → 29 (187 test qua hết, 4 lượt rà soát độc lập đã sửa lỗi). Đáng thử nhất:
+1. **Tâm trạng:** nút "?" có dải tâm trạng 7 ngày; mấy hôm buồn/mệt Bơ nhẹ nhàng hơn.
+2. **Việc cần làm:** "nhớ giúp mình mua sữa" → nút "Việc cần làm"; "mua sữa rồi" → Bơ gạch.
+3. **Âm lịch:** dòng lịch dưới tên Bơ; Bơ biết ngày lễ (20/10 sắp tới!); kể "giỗ ông 15/7 âm lịch" → hôm trước Bơ nhắc.
+4. **Cài đặt trên web:** "?" → Cài đặt (thành phố, giờ yên lặng, tổng kết tuần) — không cần sửa `.env`.
+5. **Sửa lời nhắc** ngay trong "Bơ nhớ gì về mình?".
+6. `python -m app.thu_tinh_cach` (22 tình huống) → gửi điểm vào `FEEDBACK.md`.
+
 ## Tóm tắt nhanh lần chạy 2026-10-10 (19:39–20:20 UTC)
 Xong giai đoạn 13 → 23 (128 test qua hết, 6 lượt rà soát độc lập đã sửa lỗi). Đáng thử nhất:
 1. `git pull`, nhấp đúp `run.bat`. Bấm nút **"?"**: xem tình trạng, đổi màu mặt Bơ, xem mẹo dùng.
