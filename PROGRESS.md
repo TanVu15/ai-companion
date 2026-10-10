@@ -441,3 +441,9 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 
 **Tân cần thử:** nhắn "hôm nay mệt quá", rồi bấm "?" xem dải tâm trạng.
 
+## 2026-10-10 – Giai đoạn 24: nhắc trước ngày đặc biệt
+- Hôm trước ngày đặc biệt (sinh nhật mẹ, kỷ niệm...), lần đầu Tân mở web từ 8h sáng (hoặc web đang mở sẵn), Bơ chủ động nhắc: "Mai sinh nhật mẹ đó, chuẩn bị quà chưa?". Mỗi năm nhắc 1 lần, tốn 1 câu API.
+- Đúng ngày vẫn chúc như cũ. 139 test qua hết.
+
+**Tân cần thử:** nhắn "sinh nhật mẹ mình là ngày [ngày mai]" rồi tải lại trang xem Bơ có nhắc không (hôm nay Bơ đã biết nên sẽ nhắc ngay).
+

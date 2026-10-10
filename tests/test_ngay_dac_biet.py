@@ -99,3 +99,52 @@ def test_told_today_not_wished_again(memory):
     brain = Brain(memory, client=FakeClient([reply("Ôi chúc mừng!", ngay_dac_biet=[{"ngay": today_ddmm(), "viec": "Sinh nhật Tân"}])]))
     brain.chat("hôm nay sinh nhật mình")
     assert memory.special_days_today() == []  # vừa chúc trong câu trả lời rồi
+
+
+def test_special_days_tomorrow(memory):
+    memory.add_special_days([{"ngay": "11/10", "viec": "Sinh nhật mẹ"}, {"ngay": "12/10", "viec": "Kỷ niệm"}])
+    t = date(2026, 10, 10)
+    assert [d["viec"] for d in memory.special_days_tomorrow(t)] == ["Sinh nhật mẹ"]
+    memory.mark_eve_reminded([d["id"] for d in memory.special_days_tomorrow(t)], 2026)
+    assert memory.special_days_tomorrow(t) == []
+    assert memory.special_days_tomorrow(date(2027, 10, 10)) != []  # năm sau nhắc lại
+    # 31/12 → mai là 1/1 năm sau
+    memory.add_special_days([{"ngay": "1/1", "viec": "Năm mới"}])
+    assert [d["viec"] for d in memory.special_days_tomorrow(date(2026, 12, 31))] == ["Năm mới"]
+    # 29/02: năm không nhuận nhắc vào 27/02
+    memory.add_special_days([{"ngay": "29/2", "viec": "Sinh nhật bạn"}])
+    assert [d["viec"] for d in memory.special_days_tomorrow(date(2027, 2, 27))] == ["Sinh nhật bạn"]
+
+
+def _fixed_morning(monkeypatch, hour=10):
+    import app.brain as b
+
+    real = datetime.now()
+
+    class Fixed(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return real.replace(hour=hour, minute=0)
+
+    monkeypatch.setattr(b, "datetime", Fixed)
+
+
+def test_greet_nhac_truoc_mot_ngay_mot_lan(memory, monkeypatch):
+    _fixed_morning(monkeypatch)
+    memory.add_special_days([{"ngay": today_ddmm(1), "viec": "Sinh nhật mẹ"}])
+    memory.add_message("user", "hi")  # vừa nói chuyện xong vẫn nhắc
+    client = FakeClient([reply("Mai sinh nhật mẹ đó nha!")])
+    brain = Brain(memory, client=client)
+    r = brain.greet(only_occasion=True)
+    assert r and r.noi == "Mai sinh nhật mẹ đó nha!"
+    assert "NGÀY MAI" in client.calls[0]["messages"][-1]["content"]
+    assert "Sinh nhật mẹ" in client.calls[0]["messages"][-1]["content"]
+    assert brain.greet(only_occasion=True) is None  # không nhắc lại
+    assert len(client.calls) == 1
+
+
+def test_greet_khong_nhac_truoc_luc_nua_dem(memory, monkeypatch):
+    _fixed_morning(monkeypatch, hour=2)
+    memory.add_special_days([{"ngay": today_ddmm(1), "viec": "Sinh nhật mẹ"}])
+    client = FakeClient([])
+    assert Brain(memory, client=client).greet(only_occasion=True) is None

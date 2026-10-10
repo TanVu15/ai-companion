@@ -124,7 +124,7 @@
 ## Giai đoạn 24 – Hiểu tâm trạng (chỉ phần mềm, Claude tự thêm)
 - [x] Bơ ghi tâm trạng của Tân mỗi tin; xem "Tâm trạng 7 ngày" trong nút "?"
 - [x] Mấy ngày liền Tân buồn/mệt → Bơ quan tâm nhẹ nhàng hơn
-- [ ] Nhắc trước ngày đặc biệt 1 ngày ("mai là sinh nhật mẹ đó")
+- [x] Nhắc trước ngày đặc biệt 1 ngày ("mai là sinh nhật mẹ đó")
 - [ ] Rà soát code lần 7 (phần mới), sửa lỗi tìm được
 
 ## Sau này

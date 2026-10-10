@@ -80,6 +80,9 @@ class Memory:
             self.conn.execute("ALTER TABLE messages ADD COLUMN ghim INTEGER NOT NULL DEFAULT 0")
         if "tu_dong" not in cols:  # 1 = tin Bơ tự gửi theo giờ (lời nhắc), không tính là "đang nói chuyện"
             self.conn.execute("ALTER TABLE messages ADD COLUMN tu_dong INTEGER NOT NULL DEFAULT 0")
+        if "nhac_truoc_year" not in {r[1] for r in self.conn.execute("PRAGMA table_info(special_days)")}:
+            # năm gần nhất Bơ đã nhắc trước một ngày ("mai là sinh nhật mẹ đó")
+            self.conn.execute("ALTER TABLE special_days ADD COLUMN nhac_truoc_year INTEGER NOT NULL DEFAULT 0")
         if "tam_trang" not in cols:  # tâm trạng người dùng lúc gửi tin (vui, buon, met...), Bơ đoán
             self.conn.execute("ALTER TABLE messages ADD COLUMN tam_trang TEXT")
         self.conn.commit()
@@ -424,6 +427,26 @@ class Memory:
         ).fetchall()
         return [{"id": i, "viec": c} for i, c in rows]
 
+    def special_days_tomorrow(self, today: date | None = None) -> list[dict]:
+        """Ngày đặc biệt rơi vào NGÀY MAI mà năm đó Bơ chưa nhắc trước."""
+        tomorrow = (today or date.today()) + timedelta(days=1)
+        rows = self.special_days_today(tomorrow, only_unwished=False)
+        if not rows:
+            return []
+        ids = [d["id"] for d in rows]
+        done = {
+            i for (i,) in self.conn.execute(
+                f"SELECT id FROM special_days WHERE id IN ({','.join('?' * len(ids))}) AND nhac_truoc_year >= ?",
+                (*ids, tomorrow.year),
+            )
+        }
+        return [d for d in rows if d["id"] not in done]
+
+    def mark_eve_reminded(self, ids: list[int], year: int) -> None:
+        for i in ids:
+            self.conn.execute("UPDATE special_days SET nhac_truoc_year = ? WHERE id = ?", (year, i))
+        self.conn.commit()
+
     def mark_wished(self, ids: list[int], year: int | None = None) -> None:
         year = year or date.today().year
         for i in ids:
@@ -526,7 +549,7 @@ class Memory:
         "followups": ("content", "done", "created_at"),
         "facts": ("content", "created_at"),
         "reminders": ("content", "due_at", "done", "lap"),
-        "special_days": ("day", "content", "wished_year"),
+        "special_days": ("day", "content", "wished_year", "nhac_truoc_year"),
     }
 
     def export_all(self) -> dict:

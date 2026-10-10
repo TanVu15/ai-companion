@@ -81,6 +81,11 @@ SPECIAL_TRIGGER = (
     "(Tin nhắn hệ thống, không phải người dùng nói: người dùng vừa mở ứng dụng. "
     "Hôm nay là ngày đặc biệt (xem phần 'Hôm nay là ngày đặc biệt'), hãy chủ động chúc mừng thật vui, ngắn gọn.)"
 )
+EVE_TRIGGER = (
+    "(Tin nhắn hệ thống, không phải người dùng nói: NGÀY MAI là ngày đặc biệt: {items}. "
+    "Hãy chủ động nhắc khéo, ngắn gọn, vui vẻ để người dùng kịp chuẩn bị (quà, lời chúc, gọi điện...). "
+    "Nếu là sinh nhật chính người dùng thì chỉ cần hào hứng báo mai là ngày của họ.)"
+)
 WEEK_TRIGGER = (
     "(Tin nhắn hệ thống, không phải người dùng nói: tối Chủ nhật rồi. Hãy chủ động điểm lại tuần qua của người dùng "
     "thật ấm áp, như bạn thân: nhắc 2-3 chuyện đáng nhớ, khen điều họ làm được, hỏi tuần tới có dự định gì. "
@@ -400,8 +405,13 @@ class Brain:
         days = (datetime.now() - last).days if last else 0
         week = self._recap_week()
         recap = False
+        now = datetime.now()
+        eve = self.memory.special_days_tomorrow(now.date()) if now.hour >= 8 else []
         if self.memory.special_days_today():
             trigger = SPECIAL_TRIGGER  # ngày đặc biệt chưa chúc thì chúc ngay, dù vừa mới nói chuyện
+            eve = []
+        elif eve:
+            trigger = EVE_TRIGGER.format(items="; ".join(d["viec"] for d in eve))
         elif week:
             items = "\n".join(f"- {m['content'][:200]}" for m in self.memory.user_messages_since(datetime.now() - timedelta(days=7)))
             trigger, recap = WEEK_TRIGGER.format(items=items[-4000:]), True
@@ -420,6 +430,8 @@ class Brain:
         reply = self._ask(clean_history(history), followups)
         if recap:
             self.memory.set_kv("tong_ket_tuan", week)  # tuần này đã điểm lại rồi
+        if eve:  # năm nay đã nhắc trước rồi
+            self.memory.mark_eve_reminded([d["id"] for d in eve], (now.date() + timedelta(days=1)).year)
         return reply
 
     def _recap_week(self, now: datetime | None = None) -> str:
