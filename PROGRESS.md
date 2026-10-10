@@ -506,3 +506,12 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 
 **Tân cần thử:** nhắn "8h tối nhắc mình gọi mẹ", rồi vào "Bơ nhớ gì về mình?" → Sửa thành 9h.
 
+## 2026-10-10 – Giai đoạn 27 xong (báo cáo): cài đặt trên web
+- Rà soát lần 9 (độc lập). Đã sửa:
+  - Lưu cài đặt chỉ giữ mục khác `.env` → sau này Tân sửa `.env` vẫn có tác dụng với mục chưa chỉnh trên web.
+  - Sửa lời nhắc thành y hệt một lời nhắc khác (cùng việc, cùng giờ) → báo, không tạo nhắc trùng.
+  - Mở hộp "?" chỉ đọc cài đặt, không tự đổi (tránh thời tiết lệch thành phố).
+- Cả giai đoạn: mục Cài đặt (thành phố, giờ yên lặng, tổng kết tuần), sửa lời nhắc trên web. 168 test qua hết.
+
+**Tân cần thử:** "?" → Cài đặt; "Bơ nhớ gì về mình?" → Sửa lời nhắc.
+

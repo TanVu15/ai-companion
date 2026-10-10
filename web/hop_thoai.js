@@ -81,7 +81,8 @@ function editReminder(li, x) {
       const r = await fetch('/api/nhac/' + x.id, { method: 'PUT', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ viec: viec.value, luc: luc.value, lap: lap.value }) });
       if (r.ok) { loadReminders(); return; }
-      err.textContent = (await r.json().catch(() => ({}))).detail || 'Không lưu được';
+      const d = await r.json().catch(() => ({}));
+      err.textContent = typeof d.detail === 'string' ? d.detail : 'Không lưu được';
     } catch (e2) { err.textContent = 'Mất mạng, thử lại nha.'; }
   };
   const row = document.createElement('div'); row.className = 'row'; row.append(err, cancel, save);
@@ -280,7 +281,7 @@ async function sendSettings(method, body) {
   try {
     const r = await fetch('/api/cai-dat', { method, headers: { 'Content-Type': 'application/json' }, body: body && JSON.stringify(body) });
     const d = await r.json().catch(() => ({}));
-    if (!r.ok) { settingsNote(d.detail || 'Không lưu được'); return; }
+    if (!r.ok) { settingsNote(typeof d.detail === 'string' ? d.detail : 'Không lưu được'); return; }
     fillSettings(d); settingsNote(method === 'DELETE' ? 'Đã về như file .env.' : 'Đã lưu, áp dụng ngay.');
   } catch (e) { settingsNote('Mất mạng, thử lại nha.'); }
 }

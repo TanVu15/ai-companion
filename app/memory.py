@@ -405,6 +405,12 @@ class Memory:
             t = self._next_time(t, lap, now - timedelta(minutes=1))
         elif t < now - timedelta(minutes=1):
             raise ValueError("Giờ này đã qua rồi, chọn giờ sau nha")
+        due = t.strftime("%Y-%m-%d %H:%M")
+        if self.conn.execute(
+            "SELECT 1 FROM reminders WHERE done = 0 AND id != ? AND due_at = ? AND lower(content) = lower(?)",
+            (reminder_id, due, viec),
+        ).fetchone():
+            raise ValueError("Đã có lời nhắc y hệt vào giờ này rồi")
         cur = self.conn.execute(
             "UPDATE reminders SET content = ?, due_at = ?, lap = ? WHERE id = ? AND done = 0",
             (viec, t.strftime("%Y-%m-%d %H:%M"), lap, reminder_id),

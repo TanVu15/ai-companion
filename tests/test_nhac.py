@@ -233,3 +233,19 @@ def test_api_sua_loi_nhac(tmp_path):
     assert c.get("/api/nhac/sap-toi").json()[0]["luc"] == "2099-01-02 09:15"
     assert c.put(f"/api/nhac/{r['id']}", json={"viec": "x", "luc": "2000-01-01 09:00"}).status_code == 400
     assert c.put("/api/nhac/999", json={"viec": "x", "luc": "2099-01-01 09:00"}).status_code == 404
+
+
+def test_sua_loi_nhac_khong_tao_trung(tmp_path):
+    from datetime import datetime as _dt
+
+    import pytest as _pt
+
+    from app.memory import Memory as _M
+
+    mem = _M(tmp_path / "d.db")
+    now = _dt(2026, 10, 10, 9, 0)
+    mem.add_reminders([{"luc": "2026-10-11 08:00", "viec": "A"}, {"luc": "2026-10-12 08:00", "viec": "A"}], now=now)
+    second = mem.upcoming_reminders()[1]
+    with _pt.raises(ValueError):
+        mem.update_reminder(second["id"], "a", "2026-10-11 08:00", "", now=now)
+    assert mem.update_reminder(second["id"], "A", "2026-10-12 08:00", "", now=now)  # sửa chính nó vẫn được

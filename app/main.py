@@ -342,7 +342,7 @@ def stats():
 def settings():
     """Cài đặt đang dùng + những mục đã chỉnh trên web (khác .env)."""
     get_brain()
-    return {"hien_tai": cai_dat.ap_dung(), "da_chinh": sorted(cai_dat.doc())}
+    return {"hien_tai": cai_dat.hien_tai(), "da_chinh": sorted(cai_dat.doc())}
 
 
 def _after_settings(old_city: str) -> dict:
@@ -356,8 +356,8 @@ def _after_settings(old_city: str) -> dict:
 @app.put("/api/cai-dat")
 def settings_save(body: dict):
     brain = get_brain()
-    old_city = config.THANH_PHO
     with brain._lock:
+        old_city = config.THANH_PHO
         try:
             cai_dat.luu(body)
         except ValueError as e:
@@ -371,8 +371,8 @@ def settings_save(body: dict):
 @app.delete("/api/cai-dat")
 def settings_reset():
     brain = get_brain()
-    old_city = config.THANH_PHO
     with brain._lock:
+        old_city = config.THANH_PHO
         try:
             cai_dat.ve_mac_dinh()
         except OSError as e:

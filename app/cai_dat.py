@@ -63,6 +63,12 @@ def doc() -> dict:
     return out
 
 
+def hien_tai() -> dict:
+    """Giá trị đang dùng (web chỉnh > .env), chỉ đọc, không đổi config."""
+    da_chinh = doc()
+    return {k: da_chinh.get(k, v) for k, v in MAC_DINH.items()}
+
+
 def ap_dung() -> dict:
     """Đặt giá trị đang dùng vào config (web chỉnh > .env). Trả về các giá trị đang dùng."""
     da_chinh = doc()
@@ -78,6 +84,8 @@ def luu(thay_doi: dict) -> dict:
         raise ValueError("Dữ liệu cài đặt không hợp lệ")
     moi = {k: kiem_tra(k, v) for k, v in thay_doi.items()}
     data = {**doc(), **moi}
+    # Giống hệt .env thì khỏi lưu, để sau này Tân sửa .env vẫn có tác dụng
+    data = {k: v for k, v in data.items() if v != MAC_DINH.get(k)}
     path = config.CAI_DAT_PATH
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(".tmp")

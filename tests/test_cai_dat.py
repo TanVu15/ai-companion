@@ -62,3 +62,16 @@ def test_file_hong_thi_dung_env(c):
     config.CAI_DAT_PATH.write_text('{"gio_yen_lang": "99-1", "thanh_pho": "Hue"}', encoding="utf-8")
     assert c.get("/api/cai-dat").json()["hien_tai"]["thanh_pho"] == "Hue"
     assert config.GIO_YEN_LANG == "23-6"
+
+
+def test_giong_env_thi_khong_luu(c):
+    d = c.put("/api/cai-dat", json={"thanh_pho": "", "gio_yen_lang": "22-7", "tong_ket_tuan": True}).json()
+    assert d["da_chinh"] == ["gio_yen_lang"]  # chỉ mục khác .env mới được lưu
+    d = c.put("/api/cai-dat", json={"gio_yen_lang": "23-6"}).json()
+    assert d["da_chinh"] == [] and config.GIO_YEN_LANG == "23-6"
+
+
+def test_get_chi_doc(c):
+    config.CAI_DAT_PATH.write_text('{"thanh_pho": "Hue"}', encoding="utf-8")
+    assert c.get("/api/cai-dat").json()["hien_tai"]["thanh_pho"] == "Hue"
+    assert config.THANH_PHO != "Hue"  # chỉ áp dụng khi lưu hoặc khởi động
