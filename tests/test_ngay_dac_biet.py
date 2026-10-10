@@ -93,3 +93,9 @@ def test_api_list_delete_and_backup(tmp_path):
     assert c.get("/api/ngay-dac-biet").json() == []
     assert c.post("/api/khoi-phuc", json=backup).status_code == 200
     assert [d["viec"] for d in c.get("/api/ngay-dac-biet").json()] == ["Sinh nhật mẹ"]
+
+
+def test_told_today_not_wished_again(memory):
+    brain = Brain(memory, client=FakeClient([reply("Ôi chúc mừng!", ngay_dac_biet=[{"ngay": today_ddmm(), "viec": "Sinh nhật Tân"}])]))
+    brain.chat("hôm nay sinh nhật mình")
+    assert memory.special_days_today() == []  # vừa chúc trong câu trả lời rồi

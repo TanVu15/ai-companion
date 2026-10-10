@@ -256,4 +256,4 @@ Gặp lỗi: xem `SU_CO.md`, gửi mấy dòng cuối `data/loi.log` vào `FEEDB
 - Xem/xóa trong "Bơ nhớ gì về mình?" → mục "Ngày đặc biệt". Có trong file sao lưu.
 - 92 test qua hết.
 
-**Tân cần thử:** nhắn "sinh nhật mình là ngày <hôm nay>", bấm "Bơ nhớ gì về mình?" xem đã có chưa. (Đã chúc trong năm rồi thì muốn thử lại phải xóa đi kể lại.)
+**Tân cần thử:** nhắn "sinh nhật mình là ngày <ngày mai>", bấm "Bơ nhớ gì về mình?" xem đã có chưa; mai mở web xem Bơ có chúc không.

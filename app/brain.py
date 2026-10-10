@@ -366,7 +366,8 @@ class Brain:
         self.memory.add_followups(reply.hoi_tham)
         self.memory.add_reminders(reply.nhac)
         self.memory.add_special_days(reply.ngay_dac_biet)
-        self.memory.mark_wished([d["id"] for d in special])  # đã đưa vào câu này → không chúc lại trong năm
+        # Đã chúc trong câu này (hoặc người dùng vừa kể "hôm nay sinh nhật mình", Bơ đã biết) → không chúc lại trong năm
+        self.memory.mark_wished([d["id"] for d in self.memory.special_days_today()])
         if self._background:
             threading.Thread(target=self._housekeeping, daemon=True).start()
         else:
