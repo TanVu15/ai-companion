@@ -186,3 +186,14 @@ def test_thiet_bi_nhac_khong_dau(tmp_path, monkeypatch):
     main_memory().add_reminders([{"luc": fmt(datetime.now()), "viec": "Uống nước"}])
     [x] = c.get("/api/thiet-bi/nhac?khong_dau=1", headers={"X-Device-Key": "k"}).json()
     assert x["viec"] == "Uong nuoc" and x["noi"] == "Toi gio roi ne: uong nuoc!"
+
+
+def test_loi_nhac_co_id_de_ghim_nhung_thiet_bi_khong_nhan(tmp_path, monkeypatch):
+    c = make_client(tmp_path, [])
+    monkeypatch.setattr(config, "DEVICE_KEY", "k")
+    main_memory().add_reminders([{"luc": fmt(datetime.now()), "viec": "A"}])
+    [x] = c.get("/api/nhac").json()
+    assert x["id"] > 0 and c.post(f"/api/ghim/{x['id']}", json={"ghim": True}).status_code == 200
+    main_memory().add_reminders([{"luc": fmt(datetime.now()), "viec": "B"}])
+    [y] = c.get("/api/thiet-bi/nhac", headers={"X-Device-Key": "k"}).json()
+    assert "id" not in y and y["viec"] == "B"

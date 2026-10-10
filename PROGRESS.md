@@ -319,3 +319,9 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 ## 2026-10-10 – Giai đoạn 16: Bơ và bạn
 - Mở nút **"?"**: dòng đầu cho biết đã quen bao nhiêu ngày (từ ngày nào), trò chuyện bao nhiêu ngày, bao nhiêu tin nhắn, Bơ đang nhớ bao nhiêu điều. Không tốn API.
 - 109 test qua hết.
+
+## 2026-10-10 – Giai đoạn 16 xong (báo cáo): rà soát lần 4
+- Thêm tình huống chấm điểm (sinh nhật, nhắc mỗi ngày), thống kê "Bơ và bạn" trong nút "?", README cập nhật đủ tính năng mới.
+- Rà soát độc lập phần ghim/tổng kết tuần: không có lỗi nặng. Đã sửa: lời nhắc vừa tới giờ ghim được ngay (trước phải tải lại trang); sao lưu/thống kê/tin đã ghim không đọc dữ liệu dở dang khi đang nạp sao lưu; cổng thiết bị (chào, nhắc) vẫn chỉ trả các mục gọn như cũ.
+- Biết nhưng chưa sửa (nhỏ): tổng kết tuần chỉ kiểm tra lúc mở/tải lại trang; để trang mở từ chiều qua 17h thì phải tải lại mới thấy.
+- 110 test qua hết.

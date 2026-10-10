@@ -154,7 +154,10 @@ def backup():
     """Tải toàn bộ trí nhớ về máy thành file JSON."""
     from datetime import date
 
-    body = json.dumps(get_brain().memory.export_all(), ensure_ascii=False, indent=1)
+    brain = get_brain()
+    with brain._lock:  # không sao lưu giữa lúc đang nạp bản khác (sẽ ra file dở dang)
+        data = brain.memory.export_all()
+    body = json.dumps(data, ensure_ascii=False, indent=1)
     name = f"bo-sao-luu-{date.today().isoformat()}.json"
     return Response(body, media_type="application/json",
                     headers={"Content-Disposition": f'attachment; filename="{name}"'})
@@ -226,7 +229,7 @@ def health():
 @app.get("/api/nhac")
 def reminders_due():
     """Web gọi mỗi 30 giây: trả các lời nhắc vừa tới giờ (mỗi cái chỉ trả một lần)."""
-    return [{**r.to_dict(), "viec": r.viec_nhac} for r in get_brain().due_reminders()]
+    return [{**r.to_dict(), "viec": r.viec_nhac, "id": r.msg_id} for r in get_brain().due_reminders()]
 
 
 class SnoozeIn(BaseModel):
@@ -258,7 +261,8 @@ def reminder_delete(reminder_id: int):
 
 @app.get("/api/history")
 def history(before_id: int | None = None, limit: int = 50):
-    """Tin nhắn gần nhất (kèm giờ). Gửi before_id để lấy thêm tin cũ hơn."""
+    """Tin nhắn gần nhất (kèm giờ). Gửi before_id để lấy thêm tin cũ hơn.
+    Cố ý không chờ khóa: mở web không phải đợi Bơ trả lời xong tin của máy khác."""
     return get_brain().memory.history_page(min(max(limit, 1), 200), before_id)
 
 
@@ -268,12 +272,16 @@ class PinIn(BaseModel):
 
 @app.get("/api/thong-ke")
 def stats():
-    return get_brain().memory.stats()
+    brain = get_brain()
+    with brain._lock:
+        return brain.memory.stats()
 
 
 @app.get("/api/ghim")
 def pinned():
-    return get_brain().memory.pinned_messages()
+    brain = get_brain()
+    with brain._lock:
+        return brain.memory.pinned_messages()
 
 
 @app.post("/api/ghim/{msg_id}")
@@ -364,11 +372,12 @@ def device_chat(body: ChatIn, request: Request, khong_dau: int = 0):
 def device_greet(request: Request, khong_dau: int = 0):
     """Thiết bị gọi khi vừa bật / thấy người: Bơ chủ động hỏi thăm nếu có chuyện. Không thì {"noi": null}."""
     _check_device(request)
-    return _device_out(greet(), khong_dau)
+    data = {k: v for k, v in greet().items() if k in ("noi", "cam_xuc", "hanh_dong")}
+    return _device_out(data, khong_dau)
 
 
 @app.get("/api/thiet-bi/nhac")
 def device_reminders(request: Request, khong_dau: int = 0):
     """Thiết bị hỏi định kỳ: có lời nhắc nào tới giờ không."""
     _check_device(request)
-    return [_device_out(r, khong_dau) for r in reminders_due()]
+    return [_device_out({k: v for k, v in r.items() if k != "id"}, khong_dau) for r in reminders_due()]

@@ -284,7 +284,7 @@ async function pollReminders() {
     const r = await fetch('/api/nhac');
     if (!r.ok) return;
     for (const x of await r.json()) {
-      await addBo(x.noi); express(x.cam_xuc, x.hanh_dong); speak(x.noi);
+      await addBo(x.noi, x.id); express(x.cam_xuc, x.hanh_dong); speak(x.noi);
       if (x.viec) addSnooze(x.viec);
       if (window.Notification && Notification.permission === 'granted' && document.hidden) new Notification('Bơ', { body: x.noi, icon: '/web/icon-180.png' });
     }
