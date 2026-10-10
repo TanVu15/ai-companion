@@ -161,3 +161,12 @@
 - 67 test qua hết.
 
 **Tân cần thử:** nhắn "2 phút nữa nhắc mình uống nước", để yên trang web, chờ Bơ nhắc.
+
+## 2026-10-10 – Giai đoạn 9: rà soát lỗi (review độc lập) và sửa
+- **Bảo mật:** trước đây một trang web lạ mở trên cùng máy có thể lén gửi lệnh xóa sạch trí nhớ của Bơ. Giờ mọi lệnh thay đổi dữ liệu phải có header `X-Bo` mà trang lạ không gắn được; nạp sao lưu chỉ nhận JSON.
+- **Nhắc việc:** nhắc trễ (lúc đó không mở web) thì nói rõ "Lúc 20:00 bạn nhờ Bơ nhắc… Trễ rồi nhưng vẫn nhắc"; lời nhắc không còn làm Bơ quên hỏi thăm.
+- **Nhanh hơn:** tóm tắt/gộp trí nhớ chạy sau khi đã trả lời, không bắt chờ → bớt cảnh trình duyệt hết giờ chờ rồi bấm "Thử lại" bị gửi 2 lần.
+- **Đọc JSON chắc hơn:** AI lỡ viết thêm chữ sau JSON, hoặc JSON bị cắt, thì vẫn lấy đúng câu nói, không hiện cả đống ký hiệu.
+- **Giọng nói:** sửa lỗi rảnh tay bật micro lại khi Bơ còn đang nói; tắt rảnh tay không còn tự gửi chữ đang gõ dở; nút micro không bị kẹt sau lỗi quyền micro.
+- **Sao lưu:** nạp sao lưu không bị việc khác ghi xen vào; file thiếu giờ vẫn nạp đúng.
+- 74 test qua hết.

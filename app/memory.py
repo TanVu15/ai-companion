@@ -106,8 +106,14 @@ class Memory:
         return [{"id": i, "role": r, "content": c} for i, r, c in rows]
 
     def last_message_time(self) -> datetime | None:
-        row = self.conn.execute("SELECT created_at FROM messages ORDER BY id DESC LIMIT 1").fetchone()
-        return datetime.fromisoformat(row[0]) if row else None
+        """Lúc người dùng nhắn gần nhất (lời nhắc tự động của Bơ không tính)."""
+        row = self.conn.execute(
+            "SELECT created_at FROM messages WHERE role = 'user' AND created_at IS NOT NULL ORDER BY id DESC LIMIT 1"
+        ).fetchone()
+        try:
+            return datetime.fromisoformat(row[0]) if row else None
+        except (TypeError, ValueError):
+            return None
 
     # --- Chi phí API ---
     def add_usage(self, kind: str, input_tokens: int, output_tokens: int) -> None:
@@ -272,7 +278,12 @@ class Memory:
                 for table, cols in self._BACKUP_TABLES.items():
                     self.conn.execute(f"DELETE FROM {table}")
                     for row in data.get(table, []):
-                        use = (("id",) if table == "messages" and "id" in row else ()) + cols
+                        if not isinstance(row, dict):
+                            raise TypeError("dòng không hợp lệ")
+                        # cột thiếu thì để SQLite tự điền mặc định (giờ tạo, done = 0)
+                        use = (("id",) if table == "messages" and "id" in row else ()) + tuple(
+                            c for c in cols if c in row
+                        )
                         self.conn.execute(
                             f"INSERT INTO {table} ({', '.join(use)}) VALUES ({', '.join('?' * len(use))})",
                             [row.get(c) for c in use],

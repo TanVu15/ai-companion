@@ -279,3 +279,31 @@ def test_monthly_budget_stops_brain(memory, monkeypatch):
     assert brain.greet() is None
     monkeypatch.setattr(config, "MONTHLY_USD_LIMIT", 0)  # 0 = không giới hạn
     assert not brain.over_budget()
+
+
+def test_parse_ignores_text_after_json():
+    r = parse_reply('{"noi": "Chào Tân", "cam_xuc": "vui"}\n(mình dùng {} cho vui)')
+    assert r.noi == "Chào Tân" and r.cam_xuc == "vui"
+
+
+def test_parse_cut_off_json_still_gets_noi():
+    r = parse_reply('{"noi": "Hôm nay \\"vui\\" ghê", "cam_xuc": "vui", "ghi_nho": ["Thích')
+    assert r.noi == 'Hôm nay "vui" ghê'
+
+
+def test_background_housekeeping_does_not_block(memory, monkeypatch):
+    monkeypatch.setattr(config, "HISTORY_LIMIT", 2)
+    monkeypatch.setattr(config, "SUMMARY_BATCH", 2)
+    for i in range(4):
+        memory.add_message("user" if i % 2 == 0 else "assistant", f"tin {i}")
+    client = FakeClient([json.dumps({"noi": "Ok"}), "Tóm tắt nè"])
+    brain = Brain(memory, client=client, background=True)
+    assert brain.chat("mới").noi == "Ok"
+    with brain._lock:  # chờ việc nền xong
+        pass
+    import time as _t
+    for _ in range(50):
+        if memory.latest_summary()[0]:
+            break
+        _t.sleep(0.02)
+    assert memory.latest_summary()[0] == "Tóm tắt nè"

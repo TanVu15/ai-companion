@@ -95,7 +95,7 @@ def test_greet_silent_when_nothing_or_recent(memory):
 def test_greet_endpoint(tmp_path):
     mem = Memory(tmp_path / "api.db")
     main._brain = Brain(mem, client=FakeClient([reply("Thi sao rồi?")]))
-    c = TestClient(main.app)
+    c = TestClient(main.app, headers={"X-Bo": "1"})
     assert c.post("/api/chao").json() == {"noi": None}
     mem.add_followups(["Đi thi"])
     set_age(mem, "followups", 20)

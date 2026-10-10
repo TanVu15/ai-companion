@@ -3,7 +3,7 @@ import base64
 import json
 import secrets
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import Body, FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -28,10 +28,18 @@ def _password_ok(header: str) -> bool:
     return secrets.compare_digest(pw.encode(), config.APP_PASSWORD.encode())
 
 
+# Lệnh làm thay đổi dữ liệu phải có header "X-Bo: 1". Trang web lạ không tự gắn được header này
+# (trình duyệt chặn), nên không thể lén xóa trí nhớ hay tiêu tiền API của Tân.
+_CHANGES_DATA_GET = {"/api/nhac"}  # GET nhưng có đánh dấu "đã nhắc"
+
+
 @app.middleware("http")
 async def require_password(request: Request, call_next):
     if request.url.path.startswith("/api/thiet-bi/"):
         return await call_next(request)  # thiết bị dùng khóa riêng (DEVICE_KEY), kiểm tra bên dưới
+    changes = request.method not in ("GET", "HEAD", "OPTIONS") or request.url.path in _CHANGES_DATA_GET
+    if changes and request.headers.get("x-bo") != "1":
+        return Response("Thiếu header X-Bo", status_code=403, media_type="text/plain; charset=utf-8")
     if config.APP_PASSWORD and not _password_ok(request.headers.get("authorization", "")):
         return Response(
             "Cần mật khẩu để nói chuyện với Bơ.",
@@ -69,11 +77,11 @@ def get_brain() -> Brain:
     global _brain
     if _brain is None:
         if config.DEMO:
-            _brain = Brain(Memory(config.DB_PATH.with_name("demo.db")), client=_DemoClient())
+            _brain = Brain(Memory(config.DB_PATH.with_name("demo.db")), client=_DemoClient(), background=True)
             return _brain
         if not config.ANTHROPIC_API_KEY:
             raise HTTPException(500, "Chưa có ANTHROPIC_API_KEY trong file .env")
-        _brain = Brain(Memory(config.DB_PATH))
+        _brain = Brain(Memory(config.DB_PATH), background=True)
     return _brain
 
 
@@ -145,11 +153,12 @@ def backup():
 
 
 @app.post("/api/khoi-phuc")
-async def restore(request: Request):
-    """Nạp lại file sao lưu (thay toàn bộ trí nhớ hiện tại)."""
+def restore(data: dict = Body(...)):
+    """Nạp lại file sao lưu (thay toàn bộ trí nhớ hiện tại). Chỉ nhận Content-Type: application/json."""
+    brain = get_brain()
     try:
-        data = json.loads(await request.body())
-        get_brain().memory.import_all(data)
+        with brain._lock:  # không cho tin nhắn/lời nhắc ghi xen vào giữa lúc đang nạp
+            brain.memory.import_all(data)
     except (ValueError, UnicodeDecodeError) as e:
         raise HTTPException(400, str(e) if "Bơ" in str(e) or "hỏng" in str(e) else "File không đọc được")
     return {"ok": True}

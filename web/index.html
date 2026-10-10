@@ -139,6 +139,12 @@
 <script src="/web/danh_thuc.js"></script>
 <script src="/web/doc_to.js"></script>
 <script>
+// Mọi lệnh gửi máy chủ Bơ đều kèm header X-Bo (máy chủ chặn lệnh thiếu header này, chống trang lạ phá dữ liệu)
+const _fetch = window.fetch.bind(window);
+window.fetch = (url, opts = {}) => {
+  if (typeof url === 'string' && url.startsWith('/api/')) opts = { ...opts, headers: { ...(opts.headers || {}), 'X-Bo': '1' } };
+  return _fetch(url, opts);
+};
 const log = document.getElementById('log'), form = document.getElementById('form');
 const input = document.getElementById('input'), send = document.getElementById('send');
 const face = document.getElementById('face'), statusEl = document.getElementById('status');
@@ -265,21 +271,27 @@ function viVoice() {
   const all = window.speechSynthesis ? speechSynthesis.getVoices() : [];
   return all.find(v => v.lang && v.lang.toLowerCase().startsWith('vi')) || null;
 }
+let speakSeq = 0;
 function speak(text) {
   text = boChuDeDoc(text);
   if (!voiceOn || !window.speechSynthesis || !text) return;
+  const id = ++speakSeq;  // chỉ lần đọc mới nhất được báo "đọc xong"
+  if (handsFree) pauseListening();  // đừng để micro nghe giọng của chính Bơ
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
   u.lang = 'vi-VN'; u.rate = RATES[rateIdx][1]; const v = viVoice(); if (v) u.voice = v;
   u.onstart = () => face.classList.add('talking');
-  u.onend = u.onerror = () => { speaking = false; face.classList.remove('talking'); resumeListening(); };
+  u.onend = u.onerror = () => {
+    if (id !== speakSeq) return;  // lần đọc cũ bị ngắt thì bỏ qua
+    speaking = false; face.classList.remove('talking'); resumeListening();
+  };
   speaking = true; speechSynthesis.speak(u);
   // Phòng khi trình duyệt quên báo "đọc xong" → rảnh tay không bị kẹt
   setTimeout(() => { if (speaking) u.onend(); }, 3000 + text.length * 150);
 }
 const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
 const handsBtn = document.getElementById('handsBtn');
-let rec = null, listening = false, handsFree = false, paused = false, awaitUntil = 0;
+let rec = null, listening = false, handsFree = false, paused = false, awaitUntil = 0, micSession = false;
 function startRec() {
   if (!rec || listening) return;
   rec.continuous = handsFree; rec.interimResults = !handsFree;
@@ -316,11 +328,13 @@ if (Rec && window.isSecureContext) {
     listening = false; micBtn.classList.remove('on');
     if (handsFree) { if (!paused) setTimeout(startRec, 300); return; }  // máy tự ngắt sau một lúc → nghe lại
     statusEl.textContent = '';
-    if (input.value.trim() && !send.disabled) form.requestSubmit();
+    // chỉ tự gửi khi người dùng vừa bấm micro (không gửi chữ đang gõ dở lúc tắt rảnh tay)
+    if (micSession && input.value.trim() && !send.disabled) form.requestSubmit();
+    micSession = false;
   };
   rec.onerror = (ev) => {
     if (ev.error === 'not-allowed') {
-      handsFree = false; showHands();
+      handsFree = false; micBtn.disabled = false; showHands();
       addError('Trình duyệt chưa cho dùng micro. Bấm vào biểu tượng ổ khóa trên thanh địa chỉ để cho phép.');
     } else if (!['no-speech', 'aborted', 'network'].includes(ev.error)) addError('Không nghe được: ' + ev.error);
   };
@@ -328,11 +342,11 @@ if (Rec && window.isSecureContext) {
     if (handsFree) return;
     if (listening) { rec.stop(); return; }
     if (window.speechSynthesis) speechSynthesis.cancel();
-    input.value = ''; micBtn.classList.add('on'); statusEl.textContent = 'Bơ đang nghe...';
+    input.value = ''; micSession = true; micBtn.classList.add('on'); statusEl.textContent = 'Bơ đang nghe...';
     startRec();
   };
   handsBtn.onclick = () => {
-    handsFree = !handsFree; paused = false; awaitUntil = 0; showHands();
+    handsFree = !handsFree; paused = false; awaitUntil = 0; micSession = false; showHands();
     micBtn.disabled = handsFree;
     if (listening) rec.abort(); else if (handsFree) startRec();
   };
@@ -390,7 +404,7 @@ async function checkHealth() {
     express('buon'); return false;
   } catch (e) { return true; }
 }
-loadHistory().then(checkHealth).then(ok => { if (ok) { pollReminders(); greet(); } });
+loadHistory().then(checkHealth).then(async ok => { if (ok) { await greet(); pollReminders(); } });
 
 const mem = document.getElementById('mem'), factsEl = document.getElementById('facts');
 async function delFact(content) {

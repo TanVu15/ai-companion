@@ -11,7 +11,7 @@ from tests.test_brain import FakeClient
 
 def make_client(tmp_path, replies):
     main._brain = Brain(Memory(tmp_path / "api.db"), client=FakeClient(replies))
-    return TestClient(main.app)
+    return TestClient(main.app, headers={"X-Bo": "1"})
 
 
 def test_index_served(tmp_path):
@@ -97,7 +97,7 @@ def test_backup_and_restore(tmp_path):
 
     c2 = make_client(tmp_path / "moi", [])
     assert c2.get("/api/facts").json() == []
-    assert c2.post("/api/khoi-phuc", content=backup).json() == {"ok": True}
+    assert c2.post("/api/khoi-phuc", content=backup, headers={"Content-Type": "application/json"}).json() == {"ok": True}
     assert c2.get("/api/facts").json() == ["Tên là Tân"]
     assert [m["content"] for m in c2.get("/api/history").json()] == ["mình là Tân, mai thi", "Chào Tân!"]
     assert main._brain.memory.export_all()["followups"][0]["content"] == "Mai thi"
@@ -106,10 +106,14 @@ def test_backup_and_restore(tmp_path):
 def test_restore_rejects_bad_file(tmp_path):
     c = make_client(tmp_path, [json.dumps({"noi": "x", "ghi_nho": ["Giữ lại"]})])
     c.post("/api/chat", json={"text": "hi"})
-    assert c.post("/api/khoi-phuc", content=b"khong phai json").status_code == 400
-    assert c.post("/api/khoi-phuc", content=b'{"facts": []}').status_code == 400
+    h = {"Content-Type": "application/json"}
+    assert c.post("/api/khoi-phuc", content=b"khong phai json", headers=h).status_code in (400, 422)
+    assert c.post("/api/khoi-phuc", content=b'{"facts": []}', headers=h).status_code == 400
     bad = json.dumps({"phien_ban": 1, "facts": [{"content": None}]}).encode()
-    assert c.post("/api/khoi-phuc", content=bad).status_code == 400
+    assert c.post("/api/khoi-phuc", content=bad, headers=h).status_code == 400
+    # gửi kiểu text/plain (cách trang lạ hay dùng để lén gửi) bị từ chối
+    wipe = c.post("/api/khoi-phuc", content=b'{"phien_ban": 1}', headers={"Content-Type": "text/plain"})
+    assert wipe.status_code == 422
     assert c.get("/api/facts").json() == ["Giữ lại"]  # lỗi thì trí nhớ cũ còn nguyên
 
 
@@ -157,3 +161,15 @@ def test_home_screen_files(tmp_path):
     for icon in m["icons"]:
         r = c.get(icon["src"])
         assert r.status_code == 200 and r.content[:4] == b"\x89PNG"
+
+
+
+def test_changes_need_x_bo_header(tmp_path):
+    from fastapi.testclient import TestClient
+
+    make_client(tmp_path, [])
+    bare = TestClient(main.app)  # giống một trang web lạ: không gắn được header X-Bo
+    assert bare.post("/api/chat", json={"text": "hi"}).status_code == 403
+    assert bare.delete("/api/facts/all").status_code == 403
+    assert bare.get("/api/nhac").status_code == 403
+    assert bare.get("/api/facts").status_code == 200  # chỉ đọc thì không cần

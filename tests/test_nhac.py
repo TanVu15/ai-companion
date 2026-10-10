@@ -73,3 +73,32 @@ def test_reminder_endpoints(tmp_path, monkeypatch):
     assert c.get("/api/nhac/sap-toi").json() == []
     monkeypatch.setattr(config, "DEVICE_KEY", "k")
     assert c.get("/api/thiet-bi/nhac", headers={"X-Device-Key": "k"}).json() == []
+
+
+def test_late_reminder_says_it_is_late():
+    from app.brain import reminder_text
+
+    now = datetime(2026, 10, 11, 7, 0)
+    assert reminder_text("Gọi mẹ", "2026-10-11 06:55", now) == "Tới giờ rồi nè: gọi mẹ!"
+    late = reminder_text("Gọi mẹ", "2026-10-10 20:00", now)
+    assert "20:00 10/10" in late and "Trễ rồi" in late
+
+
+def test_reminder_does_not_block_greeting(memory):
+    from tests.test_hoi_tham import set_age
+
+    memory.add_message("user", "mai thi")
+    memory.add_followups(["Đi thi"])
+    set_age(memory, "messages", 20)
+    set_age(memory, "followups", 20)
+    memory.add_reminders([{"luc": fmt(datetime.now()), "viec": "Uống nước"}])
+    brain = Brain(memory, client=FakeClient([json.dumps({"noi": "Thi sao rồi?"})]))
+    brain.due_reminders()  # lời nhắc tự động không tính là "vừa nói chuyện"
+    assert brain.greet().noi == "Thi sao rồi?"
+
+
+def test_restore_missing_created_at_uses_default(memory):
+    memory.import_all({"phien_ban": 1, "messages": [{"role": "user", "content": "a"}],
+                       "reminders": [{"content": "Gọi mẹ", "due_at": "2099-01-01 08:00"}]})
+    assert memory.last_message_time() is not None
+    assert memory.upcoming_reminders()[0]["viec"] == "Gọi mẹ"

@@ -48,6 +48,11 @@
 - [x] Thêm Bơ vào màn hình chính iPhone (biểu tượng, mở toàn màn hình)
 - [x] Nhắc việc theo giờ ("8h tối nhắc mình gọi mẹ"), báo khi web đang mở
 
+## Giai đoạn 9 – Rà soát & gọn gàng (chỉ phần mềm, Claude tự thêm)
+- [x] Rà soát toàn bộ code tìm lỗi (một lượt review độc lập), sửa lỗi tìm được
+- [ ] Tách JS của web ra file riêng cho dễ sửa (index.html đang dài)
+- [ ] Bơ biết thứ trong tuần và buổi (sáng/trưa/tối) để chào hợp lúc
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo

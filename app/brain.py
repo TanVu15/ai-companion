@@ -115,10 +115,12 @@ def _str_list(value) -> list[str]:
 
 def parse_reply(text: str) -> Reply:
     """Đọc JSON từ câu trả lời. Nếu AI trả sai định dạng thì vẫn dùng được phần chữ."""
-    match = re.search(r"\{.*\}", text, re.DOTALL)
-    if match:
+    start = text.find("{")
+    if start >= 0:
         try:
-            data = json.loads(match.group(0))
+            data, _ = json.JSONDecoder().raw_decode(text, start)  # chỉ đọc đối tượng JSON đầu tiên
+            if not isinstance(data, dict):
+                raise json.JSONDecodeError("không phải đối tượng", text, start)
             noi = str(data.get("noi", "")).strip()
             if noi:
                 cam_xuc = data.get("cam_xuc")
@@ -138,6 +140,13 @@ def parse_reply(text: str) -> Reply:
                 )
         except json.JSONDecodeError:
             pass
+        # JSON hỏng (ví dụ bị cắt giữa chừng): cố lấy riêng câu "noi" thay vì đọc cả đống ký hiệu
+        m = re.search(r'"noi"\s*:\s*"((?:[^"\\]|\\.)*)"', text)
+        if m:
+            try:
+                return Reply(noi=json.loads(f'"{m.group(1)}"'))
+            except json.JSONDecodeError:
+                pass
     return Reply(noi=text.strip() or "...")
 
 
@@ -174,13 +183,20 @@ def cost_usd(u: dict) -> float:
     return (u["input_tokens"] * config.PRICE_INPUT_PER_MTOK + u["output_tokens"] * config.PRICE_OUTPUT_PER_MTOK) / 1e6
 
 
-def reminder_text(viec: str) -> str:
-    """Câu Bơ nói khi tới giờ nhắc."""
-    return f"Tới giờ rồi nè: {viec[:1].lower() + viec[1:]}!"
+def reminder_text(viec: str, luc: str = "", now: datetime | None = None) -> str:
+    """Câu Bơ nói khi tới giờ nhắc. Trễ quá 15 phút (lúc đó không mở web) thì nói rõ là nhắc muộn."""
+    viec = viec[:1].lower() + viec[1:]
+    try:
+        due = datetime.strptime(luc, "%Y-%m-%d %H:%M")
+    except ValueError:
+        due = None
+    if due and ((now or datetime.now()) - due).total_seconds() > 15 * 60:
+        return f"Lúc {due.strftime('%H:%M %d/%m')} bạn nhờ Bơ nhắc: {viec}. Trễ rồi nhưng Bơ vẫn nhắc nha!"
+    return f"Tới giờ rồi nè: {viec}!"
 
 
 class Brain:
-    def __init__(self, memory, client=None, sleep=time.sleep):
+    def __init__(self, memory, client=None, sleep=time.sleep, background: bool = False):
         self.memory = memory
         if client is None:
             import anthropic
@@ -194,6 +210,8 @@ class Brain:
         # Mỗi lần chỉ xử lý một tin: hai tin tới cùng lúc (điện thoại + máy tính) thì tin sau chờ tin trước,
         # để lịch sử không bị xen lẫn và SQLite không bị ghi chồng.
         self._lock = threading.RLock()
+        # background=True (máy chủ web): tóm tắt/gộp trí nhớ chạy sau khi đã trả lời, người dùng không phải chờ
+        self._background = background
         self._merged_at = 0  # số điều đáng nhớ còn lại sau lần gộp gần nhất
 
     def _create(self, retries: int | None = None, kind: str = "chat", **kwargs):
@@ -239,7 +257,7 @@ class Brain:
         with self._lock:
             out = []
             for r in self.memory.pop_due_reminders():
-                reply = Reply(noi=reminder_text(r["viec"]), cam_xuc="hao_hung", hanh_dong="vay_tay")
+                reply = Reply(noi=reminder_text(r["viec"], r["luc"]), cam_xuc="hao_hung", hanh_dong="vay_tay")
                 self.memory.add_message("assistant", reply.noi)
                 out.append(reply)
             return out
@@ -294,9 +312,16 @@ class Brain:
         self.memory.done_followups(reply.da_hoi)
         self.memory.add_followups(reply.hoi_tham)
         self.memory.add_reminders(reply.nhac)
-        self.maybe_merge_facts()
-        self.maybe_summarize()
+        if self._background:
+            threading.Thread(target=self._housekeeping, daemon=True).start()
+        else:
+            self._housekeeping()
         return reply
+
+    def _housekeeping(self) -> None:
+        with self._lock:
+            self.maybe_merge_facts()
+            self.maybe_summarize()
 
     def maybe_summarize(self) -> None:
         """Gom tin nhắn cũ thành một đoạn tóm tắt ngắn, để Bơ nhớ chuyện xa mà không tốn nhiều tiền."""
