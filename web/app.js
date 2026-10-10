@@ -162,14 +162,30 @@ rateBtn.onclick = () => {
 };
 showVoice();
 voiceBtn.onclick = () => {
-  voiceOn = !voiceOn; showVoice();
+  voiceOn = !voiceOn; showVoice(); showPick();
   try { localStorage.setItem('bo_voice', voiceOn ? '1' : '0'); } catch (e) {}
   if (!voiceOn && window.speechSynthesis) { speechSynthesis.cancel(); speaking = false; face.classList.remove('talking'); }
 };
-function viVoice() {
-  const all = window.speechSynthesis ? speechSynthesis.getVoices() : [];
-  return all.find(v => v.lang && v.lang.toLowerCase().startsWith('vi')) || null;
+let voiceName = '';
+try { voiceName = localStorage.getItem('bo_giong') || ''; } catch (e) {}
+const pickBtn = document.getElementById('pickVoiceBtn');
+function allVoices() { return window.speechSynthesis ? speechSynthesis.getVoices() : []; }
+function viVoice() { return boChonGiong(allVoices(), voiceName); }
+// Chỉ hiện nút "Giọng" khi bật giọng nói và máy có từ 2 giọng tiếng Việt trở lên
+function showPick() {
+  const n = boGiongViet(allVoices()).length, v = viVoice();
+  pickBtn.hidden = !voiceOn || n < 2;
+  if (v) pickBtn.textContent = 'Giọng: ' + v.name.replace(/^Microsoft |^Google /, '').slice(0, 24);
 }
+if (window.speechSynthesis) speechSynthesis.addEventListener && speechSynthesis.addEventListener('voiceschanged', showPick);
+pickBtn.onclick = () => {
+  const v = boGiongKe(allVoices(), (viVoice() || {}).name);
+  if (!v) return;
+  voiceName = v.name; showPick();
+  try { localStorage.setItem('bo_giong', voiceName); } catch (e) {}
+  speak('Bơ nói giọng này nha');
+};
+showPick();
 let speakSeq = 0;
 function speak(text) {
   text = boChuDeDoc(text);

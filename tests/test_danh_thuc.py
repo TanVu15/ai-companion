@@ -80,3 +80,17 @@ def test_wake_script_served(tmp_path):
     assert r.status_code == 200 and "boDanhThuc" in r.text
     assert 'id="handsBtn"' in c.get("/").text
     assert "boChuDeDoc" in c.get("/web/doc_to.js").text
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="cần Node.js")
+def test_chon_giong_doc():
+    code = """
+    const { boChonGiong, boGiongKe, boGiongViet } = require('./web/doc_to.js');
+    const vs = [{name: 'Anna', lang: 'en-US'}, {name: 'An', lang: 'vi-VN'}, {name: 'HoaiMy', lang: 'vi_VN'}];
+    console.log(JSON.stringify([
+      boGiongViet(vs).length, boChonGiong(vs, '').name, boChonGiong(vs, 'HoaiMy').name,
+      boChonGiong(vs, 'Mất rồi').name, boGiongKe(vs, 'An').name, boGiongKe(vs, 'HoaiMy').name,
+      boChonGiong([], 'x'), boGiongKe([{name: 'A', lang: 'en'}], 'A')]));
+    """
+    out = subprocess.run(["node", "-e", code], capture_output=True, text=True, encoding="utf-8", check=True)
+    assert json.loads(out.stdout) == [2, "An", "HoaiMy", "An", "HoaiMy", "An", None, None]

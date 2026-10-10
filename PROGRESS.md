@@ -368,3 +368,9 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - 124 test qua hết.
 
 **Tân cần thử:** nếu đã lỡ sửa tính cách trên web (bản cũ ở `data/persona.md`), mở nút "Tính cách" dán lại rồi Lưu.
+
+## 2026-10-10 – Giai đoạn 19: chọn giọng đọc
+- Bật "Giọng nói" mà máy có từ 2 giọng tiếng Việt trở lên (Windows thường có "An" + "HoaiMy" nếu cài thêm gói giọng, Edge có nhiều giọng online) → hiện nút **"Giọng: ..."**. Bấm để đổi sang giọng kế tiếp, Bơ đọc thử, máy nhớ lựa chọn.
+- 125 test qua hết.
+
+**Tân cần thử:** mở bằng Edge, bật "Giọng nói", bấm "Giọng: ..." vài lần chọn giọng dễ nghe nhất.

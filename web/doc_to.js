@@ -32,4 +32,20 @@ function boTachTin(text, toiDa = 3) {
   return gom;
 }
 
-if (typeof module !== 'undefined') module.exports = { boChuDeDoc, boTachTin };
+// Các giọng tiếng Việt của máy, và giọng đang chọn (giọng đã lưu nếu còn, không thì giọng tiếng Việt đầu tiên)
+function boGiongViet(voices) {
+  return (voices || []).filter(v => v.lang && v.lang.toLowerCase().replace('_', '-').startsWith('vi'));
+}
+function boChonGiong(voices, tenDaLuu) {
+  const vi = boGiongViet(voices);
+  return vi.find(v => v.name === tenDaLuu) || vi[0] || null;
+}
+// Bấm nút "Giọng" → sang giọng kế tiếp (hết thì quay lại đầu)
+function boGiongKe(voices, tenHienTai) {
+  const vi = boGiongViet(voices);
+  if (!vi.length) return null;
+  const i = vi.findIndex(v => v.name === tenHienTai);
+  return vi[(i + 1) % vi.length];
+}
+
+if (typeof module !== 'undefined') module.exports = { boChuDeDoc, boTachTin, boGiongViet, boChonGiong, boGiongKe };

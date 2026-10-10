@@ -98,6 +98,11 @@
 - [x] Kiểm tra sức khỏe báo thêm: thời tiết lấy được không, tính cách đang dùng bản nào
 - [x] Rà soát code lần 5 (tính cách trên web, thời tiết, dịp đặc biệt), sửa lỗi tìm được
 
+## Giai đoạn 19 – Cá nhân hóa giao diện (chỉ phần mềm, Claude tự thêm)
+- [x] Chọn giọng đọc (khi máy có nhiều giọng tiếng Việt)
+- [ ] Chọn màu khuôn mặt Bơ (lưu trên máy)
+- [ ] Phím tắt: Esc để Bơ ngừng đọc / đóng hộp, Ctrl+K để tìm
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo
