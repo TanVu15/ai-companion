@@ -7,6 +7,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 
 from . import config
+from .nhat_ky import log
 
 OUTPUT_RULES = f"""
 ## Cách trả lời (bắt buộc)
@@ -250,6 +251,7 @@ class Brain:
             except Exception as e:
                 if attempt >= retries or not is_transient(e):
                     raise
+                log.info("Lỗi tạm thời %s, thử lại lần %d", type(e).__name__, attempt + 1)
                 self._sleep(2**attempt)
 
     def persona(self) -> str:
@@ -359,7 +361,8 @@ class Brain:
                 system=SUMMARY_PROMPT,
                 messages=[{"role": "user", "content": prompt}],
             )
-        except Exception:
+        except Exception as e:
+            log.warning("Tóm tắt lỗi (sẽ thử lại sau): %s", friendly_error(e) + f" [{type(e).__name__}]")
             return  # tóm tắt lỗi thì lần sau thử lại, không làm hỏng câu trả lời
         text = "".join(b.text for b in resp.content if getattr(b, "type", "") == "text").strip()
         if text:
@@ -383,7 +386,8 @@ class Brain:
             text = "".join(b.text for b in resp.content if getattr(b, "type", "") == "text")
             match = re.search(r"\[.*\]", text, re.DOTALL)
             merged = [str(x).strip() for x in json.loads(match.group(0)) if str(x).strip()] if match else []
-        except Exception:
+        except Exception as e:
+            log.warning("Gộp trí nhớ lỗi: %s", type(e).__name__)
             merged = []
         # Chỉ nhận kết quả hợp lý: không rỗng và không dài hơn danh sách cũ
         if merged and len(merged) <= len(facts):

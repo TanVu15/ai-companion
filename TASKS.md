@@ -55,7 +55,7 @@
 
 ## Giai đoạn 10 – Dễ bảo trì (chỉ phần mềm, Claude tự thêm)
 - [x] Tự chạy test trên GitHub mỗi lần đẩy code (GitHub Actions)
-- [ ] Ghi lỗi ra file `data/loi.log` để Tân gửi khi gặp sự cố
+- [x] Ghi lỗi ra file `data/loi.log` để Tân gửi khi gặp sự cố
 - [ ] Hướng dẫn khắc phục sự cố thường gặp (SU_CO.md)
 
 ## Sau này

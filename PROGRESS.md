@@ -185,3 +185,8 @@
 ## 2026-10-10 – Giai đoạn 10: test tự động trên GitHub
 - Mỗi lần có code mới trên GitHub, test tự chạy (tab "Actions" trên trang repo). Dấu ✓ xanh = ổn, ✗ đỏ = có lỗi.
 - Ghi chú: có một commit lúc 19:09 lỡ đẩy lên khi 1 test cũ chưa sửa; 20 giây sau đã sửa. Từ giờ Claude chỉ commit khi test xanh (chạy test và commit chung một lệnh).
+
+## 2026-10-10 – Giai đoạn 10: nhật ký lỗi
+- Lỗi (mất mạng, sai key, tóm tắt hỏng...) được ghi vào `data/loi.log`: giờ, loại lỗi, vị trí trong code. **Không** ghi nội dung tin nhắn hay API key. Tự giới hạn tối đa ~3 MB.
+- Gặp sự cố: mở file đó, chép mấy dòng cuối vào FEEDBACK.md.
+- 76 test qua hết.

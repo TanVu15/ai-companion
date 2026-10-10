@@ -11,6 +11,7 @@ from pydantic import BaseModel
 from . import config
 from .brain import Brain, cost_usd, friendly_error
 from .memory import Memory
+from .nhat_ky import bat_ghi_file, log
 
 app = FastAPI(title="AI Companion")
 app.mount("/web", StaticFiles(directory=config.ROOT / "web"), name="web")
@@ -79,6 +80,7 @@ class _DemoClient:
 def get_brain() -> Brain:
     global _brain
     if _brain is None:
+        bat_ghi_file(config.DB_PATH.parent / "loi.log")
         if config.DEMO:
             _brain = Brain(Memory(config.DB_PATH.with_name("demo.db")), client=_DemoClient(), background=True)
             return _brain
@@ -111,6 +113,7 @@ def chat(body: ChatIn):
     except HTTPException:
         raise
     except Exception as e:  # lỗi mạng, hết tiền API... (đã thử lại vài lần trong bộ não)
+        log.exception("Trả lời lỗi: %s", friendly_error(e))
         raise HTTPException(502, friendly_error(e))
     return reply.to_dict()
 
@@ -122,7 +125,8 @@ def greet():
         reply = get_brain().greet()
     except HTTPException:
         raise
-    except Exception:
+    except Exception as e:
+        log.warning("Mở lời lỗi: %s", type(e).__name__)
         reply = None  # mở lời không được thì thôi, không báo lỗi làm phiền
     return reply.to_dict() if reply else {"noi": None}
 

@@ -176,3 +176,26 @@ def test_changes_need_x_bo_header(tmp_path):
     assert bare.delete("/api/facts/all").status_code == 403
     assert bare.get("/api/nhac").status_code == 403
     assert bare.get("/api/facts").status_code == 200  # chỉ đọc thì không cần
+
+
+def test_errors_written_to_log_without_message_text(tmp_path):
+    import logging
+
+    from app.nhat_ky import bat_ghi_file, log
+
+    path = tmp_path / "loi.log"
+    bat_ghi_file(path)
+    bat_ghi_file(path)  # gọi lại không bị ghi 2 lần
+    try:
+        c = make_client(tmp_path, [])  # FakeClient hết câu trả lời → lỗi
+        c.post("/api/chat", json={"text": "bí mật của Tân"})
+        for h in log.handlers:
+            h.flush()
+        text = path.read_text(encoding="utf-8")
+        assert text.count("Trả lời lỗi") == 1 and "IndexError" in text
+        assert "bí mật của Tân" not in text
+    finally:
+        for h in list(log.handlers):
+            if isinstance(h, logging.FileHandler):
+                log.removeHandler(h)
+                h.close()
