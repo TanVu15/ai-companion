@@ -73,7 +73,10 @@ app/brain.py    Bộ não: ghép tính cách + trí nhớ + lịch sử, hỏi C
 app/memory.py   Trí nhớ: SQLite lưu tin nhắn và điều đáng nhớ (data/companion.db)
 app/main.py     Máy chủ web (FastAPI)
 web/index.html  Giao diện chat + khuôn mặt (HTML + CSS)
-web/app.js      Phần chạy của giao diện: gửi tin, giọng nói, trí nhớ, chi phí, lời nhắc
+web/app.js      Khung chat: gửi tin, bong bóng, khuôn mặt, lịch sử
+web/giong_noi.js  Giọng nói: đọc to, micro, rảnh tay, chọn giọng
+web/khoi_dong.js  Chi phí, lời chào, lời nhắc, khởi động trang
+web/hop_thoai.js  Hộp thoại: trí nhớ, tìm, "?", ghim, tính cách, màu mặt, phím tắt
 web/danh_thuc.js, web/doc_to.js   Từ đánh thức "Bơ ơi", dọn chữ trước khi đọc to
 persona.md      Tính cách
 app/thu_tinh_cach.py + tinh_huong.json   Bộ câu hỏi thử tính cách

@@ -389,3 +389,8 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - 126 test qua hết.
 
 **Tân cần thử:** thêm "Mình thích ăn phở", rồi hỏi Bơ "mình thích ăn gì?".
+
+## 2026-10-10 – Giai đoạn 20 xong (báo cáo): quản lý trí nhớ + gọn code
+- Tự thêm/sửa điều Bơ nhớ (xem mục trên).
+- `web/app.js` (600 dòng) tách thành 4 file theo chức năng: `app.js` (khung chat), `giong_noi.js`, `khoi_dong.js`, `hop_thoai.js`. Chạy y như cũ (đã thử tự động trên trình duyệt: gửi tin, ghim, tìm, nhắc lại, các hộp thoại — không lỗi).
+- 126 test qua hết.
