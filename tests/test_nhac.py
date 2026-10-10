@@ -102,3 +102,36 @@ def test_restore_missing_created_at_uses_default(memory):
                        "reminders": [{"content": "Gọi mẹ", "due_at": "2099-01-01 08:00"}]})
     assert memory.last_message_time() is not None
     assert memory.upcoming_reminders()[0]["viec"] == "Gọi mẹ"
+
+
+def test_nhac_lap_lai_moi_ngay(memory):
+    now = datetime(2026, 10, 10, 9, 0)
+    # "7h sáng mỗi ngày" nói lúc 9h: lần đầu là 7h sáng mai
+    assert memory.add_reminders([{"luc": "2026-10-10 07:00", "viec": "Uống nước", "lap": "ngay"},
+                                 {"luc": "2026-10-10 07:00", "viec": "Một lần, đã qua"}], now) == 1
+    [r] = memory.upcoming_reminders()
+    assert (r["luc"], r["lap"]) == ("2026-10-11 07:00", "ngay")
+    assert [x["viec"] for x in memory.pop_due_reminders(datetime(2026, 10, 11, 7, 0))] == ["Uống nước"]
+    assert memory.upcoming_reminders()[0]["luc"] == "2026-10-12 07:00"  # dời sang mai, không mất
+    # Tắt máy 3 ngày: chỉ nhắc 1 lần rồi dời tới lần kế tiếp trong tương lai
+    assert len(memory.pop_due_reminders(datetime(2026, 10, 15, 8, 0))) == 1
+    assert memory.upcoming_reminders()[0]["luc"] == "2026-10-16 07:00"
+
+
+def test_nhac_lap_lai_moi_tuan_va_rac(memory):
+    now = datetime(2026, 10, 10, 9, 0)
+    memory.add_reminders([{"luc": "2026-10-12 20:00", "viec": "Họp nhóm", "lap": "tuan"},
+                          {"luc": "2026-10-12 21:00", "viec": "Lặp lạ", "lap": "nam"}], now)
+    a, b = memory.upcoming_reminders()
+    assert (a["lap"], b["lap"]) == ("tuan", "")  # kiểu lặp lạ → coi như một lần
+    memory.pop_due_reminders(datetime(2026, 10, 12, 20, 0))
+    assert memory.upcoming_reminders()[0]["luc"] == "2026-10-12 21:00"
+    assert memory.upcoming_reminders()[1]["luc"] == "2026-10-19 20:00"
+
+
+def test_nhac_lap_lai_sao_luu(memory, tmp_path):
+    memory.add_reminders([{"luc": fmt(datetime.now() + timedelta(hours=1)), "viec": "Thuốc", "lap": "ngay"}])
+    data = memory.export_all()
+    m2 = Memory(tmp_path / "n2.db")
+    m2.import_all(data)
+    assert m2.upcoming_reminders()[0]["lap"] == "ngay"

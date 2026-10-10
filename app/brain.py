@@ -20,7 +20,7 @@ Chỉ trả về MỘT đối tượng JSON, không viết gì ngoài JSON:
   "quen": ["điều trong phần 'Điều bạn đã biết' nay đã sai/lỗi thời, chép y nguyên"],
   "hoi_tham": ["chuyện sắp diễn ra mà lần sau nên hỏi lại, ví dụ 'Chiều nay đi tập chân'"],
   "da_hoi": ["chuyện trong phần 'Chuyện nên hỏi thăm' mà bạn vừa hỏi hoặc người dùng đã kể, chép y nguyên"],
-  "nhac": [{{"luc": "YYYY-MM-DD HH:MM", "viec": "việc cần nhắc"}}],
+  "nhac": [{{"luc": "YYYY-MM-DD HH:MM", "viec": "việc cần nhắc", "lap": ""}}],
   "ngay_dac_biet": [{{"ngay": "DD/MM", "viec": "ví dụ Sinh nhật Tân"}}]
 }}
 - "noi" ngắn gọn như nhắn tin với bạn bè, thường 1-3 câu.
@@ -33,7 +33,8 @@ Chỉ trả về MỘT đối tượng JSON, không viết gì ngoài JSON:
 - Nếu có phần "Chuyện nên hỏi thăm", hãy hỏi thăm TỰ NHIÊN một chuyện khi hợp lúc (không hỏi dồn),
   rồi chép chuyện đó vào "da_hoi". Không có thì để [].
 - "nhac": CHỈ khi người dùng nhờ nhắc việc vào một giờ cụ thể ("8h tối nhắc mình gọi mẹ").
-  Tính giờ theo "Bây giờ là..." ở trên, ghi đủ ngày giờ. Không có thì để []. Đừng tự hứa nhắc nếu không ghi vào đây.
+  Tính giờ theo "Bây giờ là..." ở trên, ghi đủ ngày giờ (lần nhắc đầu tiên). Không có thì để []. Đừng tự hứa nhắc nếu không ghi vào đây.
+  "lap": "ngay" nếu nhắc mỗi ngày, "tuan" nếu nhắc mỗi tuần, "" nếu chỉ nhắc một lần.
 - "ngay_dac_biet": ngày lặp lại mỗi năm mà người dùng kể (sinh nhật mình/người thân, ngày kỷ niệm...),
   chỉ khi biết rõ ngày và tháng. Không có thì để [].
 - Nếu có phần "Hôm nay là ngày đặc biệt", hãy chúc mừng thật vui ngay trong câu này.

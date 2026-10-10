@@ -69,6 +69,9 @@ class Memory:
         cols = {r[1] for r in self.conn.execute("PRAGMA table_info(messages)")}
         if "cam_xuc" not in cols:
             self.conn.execute("ALTER TABLE messages ADD COLUMN cam_xuc TEXT")
+        if "lap" not in {r[1] for r in self.conn.execute("PRAGMA table_info(reminders)")}:
+            # lời nhắc lặp lại: '' = một lần, 'ngay' = mỗi ngày, 'tuan' = mỗi tuần
+            self.conn.execute("ALTER TABLE reminders ADD COLUMN lap TEXT NOT NULL DEFAULT ''")
         if "tu_dong" not in cols:  # 1 = tin Bơ tự gửi theo giờ (lời nhắc), không tính là "đang nói chuyện"
             self.conn.execute("ALTER TABLE messages ADD COLUMN tu_dong INTEGER NOT NULL DEFAULT 0")
         self.conn.commit()
@@ -189,39 +192,70 @@ class Memory:
         return {"calls": row[0], "input_tokens": row[1], "output_tokens": row[2]}
 
     # --- Lời nhắc theo giờ ---
+    _LAP = {"ngay": timedelta(days=1), "tuan": timedelta(weeks=1)}
+
+    @classmethod
+    def _next_time(cls, luc: datetime, lap: str, now: datetime) -> datetime:
+        """Lời nhắc lặp lại: dời tới lần kế tiếp sau `now` (bỏ qua các lần đã lỡ)."""
+        step = cls._LAP[lap]
+        if luc > now:
+            return luc
+        return luc + step * ((now - luc) // step + 1)
+
     def add_reminders(self, items: list[dict], now: datetime | None = None) -> int:
-        """Thêm lời nhắc dạng {"luc": "YYYY-MM-DD HH:MM", "viec": "..."}. Giờ sai hoặc đã qua thì bỏ."""
+        """Thêm lời nhắc dạng {"luc": "YYYY-MM-DD HH:MM", "viec": "...", "lap": "ngay"|"tuan"|""}.
+        Giờ sai thì bỏ. Nhắc một lần mà giờ đã qua thì bỏ; nhắc lặp lại thì dời tới lần kế tiếp."""
         now = now or datetime.now()
         added = 0
         for it in items:
             if not isinstance(it, dict):
                 continue
             viec = re.sub(r"\s+", " ", str(it.get("viec", ""))).strip()
+            lap = str(it.get("lap") or "").strip().lower()
+            lap = lap if lap in self._LAP else ""
             try:
                 luc = datetime.strptime(str(it.get("luc", "")).strip()[:16], "%Y-%m-%d %H:%M")
             except ValueError:
                 continue
-            if not viec or luc < now - timedelta(minutes=1):
+            if not viec:
+                continue
+            if lap:
+                luc = self._next_time(luc, lap, now - timedelta(minutes=1))
+            elif luc < now - timedelta(minutes=1):
                 continue
             due = luc.strftime("%Y-%m-%d %H:%M")
             exists = self.conn.execute(
-                "SELECT 1 FROM reminders WHERE done = 0 AND due_at = ? AND lower(content) = lower(?)", (due, viec)
+                "SELECT 1 FROM reminders WHERE done = 0 AND due_at = ? AND lower(content) = lower(?) AND lap = ?",
+                (due, viec, lap),
             ).fetchone()
             if not exists:
-                self.conn.execute("INSERT INTO reminders (content, due_at) VALUES (?, ?)", (viec, due))
+                self.conn.execute("INSERT INTO reminders (content, due_at, lap) VALUES (?, ?, ?)", (viec, due, lap))
                 added += 1
         self.conn.commit()
         return added
 
     def upcoming_reminders(self) -> list[dict]:
-        rows = self.conn.execute("SELECT id, content, due_at FROM reminders WHERE done = 0 ORDER BY due_at").fetchall()
-        return [{"id": i, "viec": c, "luc": t} for i, c, t in rows]
+        rows = self.conn.execute(
+            "SELECT id, content, due_at, lap FROM reminders WHERE done = 0 ORDER BY due_at"
+        ).fetchall()
+        return [{"id": i, "viec": c, "luc": t, "lap": lap} for i, c, t, lap in rows]
 
     def pop_due_reminders(self, now: datetime | None = None) -> list[dict]:
-        """Lấy các lời nhắc đã tới giờ và đánh dấu đã nhắc (mỗi lời nhắc chỉ báo một lần)."""
-        now_s = (now or datetime.now()).strftime("%Y-%m-%d %H:%M")
+        """Lấy các lời nhắc đã tới giờ và đánh dấu đã nhắc (mỗi lần chỉ báo một lần).
+        Lời nhắc lặp lại thì dời sang lần kế tiếp thay vì xong hẳn."""
+        now = now or datetime.now()
+        now_s = now.strftime("%Y-%m-%d %H:%M")
         due = [r for r in self.upcoming_reminders() if r["luc"] <= now_s]
         for r in due:
+            if r["lap"] in self._LAP:
+                try:
+                    nxt = self._next_time(datetime.strptime(r["luc"], "%Y-%m-%d %H:%M"), r["lap"], now)
+                    self.conn.execute(
+                        "UPDATE reminders SET due_at = ? WHERE id = ?", (nxt.strftime("%Y-%m-%d %H:%M"), r["id"])
+                    )
+                    continue
+                except ValueError:
+                    pass
             self.conn.execute("UPDATE reminders SET done = 1 WHERE id = ?", (r["id"],))
         self.conn.commit()
         return due
@@ -365,7 +399,7 @@ class Memory:
         "summaries": ("content", "upto_id", "created_at"),
         "followups": ("content", "done", "created_at"),
         "facts": ("content", "created_at"),
-        "reminders": ("content", "due_at", "done"),
+        "reminders": ("content", "due_at", "done", "lap"),
         "special_days": ("day", "content", "wished_year"),
     }
 

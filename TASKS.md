@@ -72,6 +72,11 @@
 - [x] Ngày đặc biệt: Tân kể sinh nhật/kỷ niệm → đúng ngày Bơ chúc
 - [x] Tải lịch sử trò chuyện về thành file chữ (.txt) để đọc lại
 
+## Giai đoạn 14 – Lời nhắc tiện hơn (chỉ phần mềm, Claude tự thêm)
+- [x] Lời nhắc lặp lại: "7h sáng mỗi ngày nhắc mình uống nước", "tối thứ Hai hằng tuần..."
+- [ ] Nút "Nhắc lại sau 10 phút" ngay dưới lời nhắc
+- [ ] Rà soát code lần 3 (review độc lập phần mới: tìm, ngày đặc biệt, lời nhắc lặp), sửa lỗi tìm được
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo

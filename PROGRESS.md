@@ -265,3 +265,11 @@ Gặp lỗi: xem `SU_CO.md`, gửi mấy dòng cuối `data/loi.log` vào `FEEDB
 - Cả ba không tốn thêm câu API nào. 94 test qua hết.
 
 **Tân cần thử:** bấm "Tìm"; kể "sinh nhật mình <ngày mai>" rồi mai mở web; tải file .txt mở bằng Notepad.
+
+## 2026-10-10 – Giai đoạn 14: lời nhắc lặp lại
+- Nhắn "7h sáng mỗi ngày nhắc mình uống nước" hay "tối thứ Hai hằng tuần 8h nhắc mình họp nhóm" → Bơ nhắc đều đặn (mục `lap` trong lời nhắc: `ngay` / `tuan`).
+- Nói lúc 9h mà giờ nhắc là 7h → lần đầu là 7h sáng mai. Tắt máy mấy ngày → mở lại chỉ nhắc 1 lần (không dồn), rồi hẹn lần kế tiếp.
+- Trong "Bơ nhớ gì về mình?" lời nhắc lặp có ghi "(mỗi ngày)"/"(mỗi tuần)"; bấm "Xóa" là thôi nhắc. File `.db` cũ tự thêm cột mới, không mất gì.
+- 97 test qua hết.
+
+**Tân cần thử:** nhắn "mỗi ngày 9h tối nhắc mình đánh răng", mở "Bơ nhớ gì về mình?" xem có dòng "(mỗi ngày)".

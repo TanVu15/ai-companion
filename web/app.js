@@ -326,7 +326,8 @@ async function loadReminders() {
   if (!list.length) { const li = document.createElement('li'); li.textContent = 'Chưa có. Thử nhắn: "8h tối nhắc mình gọi mẹ".'; remsEl.appendChild(li); }
   list.forEach(x => {
     const li = document.createElement('li'), b = document.createElement('button');
-    li.textContent = x.luc.slice(11) + ' ' + x.luc.slice(8, 10) + '/' + x.luc.slice(5, 7) + ' — ' + x.viec + ' ';
+    const lap = x.lap === 'ngay' ? ' (mỗi ngày)' : x.lap === 'tuan' ? ' (mỗi tuần)' : '';
+    li.textContent = x.luc.slice(11) + ' ' + x.luc.slice(8, 10) + '/' + x.luc.slice(5, 7) + ' — ' + x.viec + lap + ' ';
     b.textContent = 'Xóa'; b.type = 'button'; b.className = 'link'; b.setAttribute('aria-label', 'Xóa lời nhắc: ' + x.viec);
     b.onclick = async () => { await fetch('/api/nhac/' + x.id, { method: 'DELETE' }); loadReminders(); };
     li.appendChild(b); remsEl.appendChild(li);
