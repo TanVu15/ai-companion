@@ -12,11 +12,14 @@ Chỉ trả về MỘT đối tượng JSON, không viết gì ngoài JSON:
   "noi": "câu bạn nói với người dùng",
   "cam_xuc": một trong {config.EMOTIONS},
   "hanh_dong": một trong {config.ACTIONS},
-  "ghi_nho": ["điều MỚI đáng nhớ về người dùng trong tin nhắn vừa rồi, nếu có"]
+  "ghi_nho": ["điều MỚI đáng nhớ về người dùng trong tin nhắn vừa rồi, nếu có"],
+  "quen": ["điều trong phần 'Điều bạn đã biết' nay đã sai/lỗi thời, chép y nguyên"]
 }}
 - "noi" ngắn gọn như nhắn tin với bạn bè, thường 1-3 câu.
 - "ghi_nho" chỉ ghi điều người dùng tự kể (tên, sở thích, kế hoạch, chuyện đáng nhớ). Không có thì để [].
 - Không ghi lại những gì đã có trong phần "Điều bạn đã biết".
+- Nếu người dùng kể điều làm một điều cũ không còn đúng (ví dụ chuyển nhà, đổi việc, bỏ sở thích),
+  chép điều cũ vào "quen" và ghi điều mới vào "ghi_nho". Không có thì để [].
 """
 
 
@@ -26,6 +29,7 @@ class Reply:
     cam_xuc: str = "binh_thuong"
     hanh_dong: str = "khong"
     ghi_nho: list[str] = field(default_factory=list)
+    quen: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         return {"noi": self.noi, "cam_xuc": self.cam_xuc, "hanh_dong": self.hanh_dong}
@@ -57,6 +61,12 @@ def clean_history(history: list[dict]) -> list[dict]:
     return out
 
 
+def _str_list(value) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [str(x) for x in value if isinstance(x, (str, int, float))]
+
+
 def parse_reply(text: str) -> Reply:
     """Đọc JSON từ câu trả lời. Nếu AI trả sai định dạng thì vẫn dùng được phần chữ."""
     match = re.search(r"\{.*\}", text, re.DOTALL)
@@ -68,11 +78,13 @@ def parse_reply(text: str) -> Reply:
                 cam_xuc = data.get("cam_xuc")
                 hanh_dong = data.get("hanh_dong")
                 ghi_nho = data.get("ghi_nho") or []
+                quen = data.get("quen") or []
                 return Reply(
                     noi=noi,
                     cam_xuc=cam_xuc if cam_xuc in config.EMOTIONS else "binh_thuong",
                     hanh_dong=hanh_dong if hanh_dong in config.ACTIONS else "khong",
-                    ghi_nho=[str(x) for x in ghi_nho if isinstance(x, (str, int, float))],
+                    ghi_nho=_str_list(ghi_nho),
+                    quen=_str_list(quen),
                 )
         except json.JSONDecodeError:
             pass
@@ -110,6 +122,7 @@ class Brain:
         reply = parse_reply(text)
 
         self.memory.add_message("assistant", reply.noi)
+        self.memory.forget_facts(reply.quen)
         self.memory.add_facts(reply.ghi_nho)
         self.maybe_summarize()
         return reply

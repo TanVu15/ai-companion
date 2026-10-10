@@ -1,4 +1,5 @@
 """Trí nhớ: lưu tin nhắn và những điều đáng nhớ về người dùng trong SQLite."""
+import re
 import sqlite3
 from datetime import date
 from pathlib import Path
@@ -72,12 +73,33 @@ class Memory:
         return [{"id": i, "role": r, "content": c} for i, r, c in rows]
 
     # --- Điều đáng nhớ ---
+    @staticmethod
+    def _key(fact: str) -> str:
+        """Dạng rút gọn để so trùng: bỏ hoa/thường, khoảng trắng thừa, dấu chấm câu ở cuối."""
+        return re.sub(r"\s+", " ", fact).strip().rstrip(".!;,").strip().lower()
+
     def add_facts(self, facts: list[str]) -> None:
+        known = {self._key(f) for f in self.all_facts()}
         for f in facts:
-            f = f.strip()
-            if f:
+            f = re.sub(r"\s+", " ", f).strip()
+            key = self._key(f)
+            if key and key not in known:
+                known.add(key)
                 self.conn.execute("INSERT OR IGNORE INTO facts (content) VALUES (?)", (f,))
         self.conn.commit()
+
+    def forget_facts(self, facts: list[str]) -> None:
+        """Xóa các điều đã lỗi thời (so theo dạng rút gọn, nên lệch hoa/thường vẫn xóa được)."""
+        keys = {self._key(f) for f in facts}
+        for f in self.all_facts():
+            if self._key(f) in keys:
+                self.conn.execute("DELETE FROM facts WHERE content = ?", (f,))
+        self.conn.commit()
+
+    def replace_facts(self, facts: list[str]) -> None:
+        """Thay toàn bộ danh sách (dùng sau khi gộp)."""
+        self.conn.execute("DELETE FROM facts")
+        self.add_facts(facts)
 
     def all_facts(self) -> list[str]:
         return [r[0] for r in self.conn.execute("SELECT content FROM facts ORDER BY id")]

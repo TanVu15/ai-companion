@@ -130,3 +130,23 @@ def test_summary_failure_does_not_break_chat(memory, monkeypatch):
     reply = Brain(memory, client=client).chat("hi")
     assert reply.noi == "ok"
     assert memory.latest_summary() == ("", 0)
+
+
+def test_near_duplicate_facts_ignored(memory):
+    memory.add_facts(["Thích tập gym"])
+    memory.add_facts(["thích  tập gym.", "Thích Tập Gym!"])
+    assert memory.all_facts() == ["Thích tập gym"]
+
+
+def test_outdated_fact_is_replaced(memory):
+    memory.add_facts(["Sống ở Huế", "Tên là Tân"])
+    client = FakeClient([json.dumps({"noi": "Chúc mừng nhà mới!", "ghi_nho": ["Sống ở Đà Nẵng"],
+                                     "quen": ["sống ở huế"]})])
+    Brain(memory, client=client).chat("Mình mới chuyển ra Đà Nẵng rồi")
+    assert memory.all_facts() == ["Tên là Tân", "Sống ở Đà Nẵng"]
+    assert "quen" in client.calls[0]["system"]
+
+
+def test_parse_bad_quen_is_ignored():
+    r = parse_reply('{"noi": "Hi", "quen": "không phải danh sách"}')
+    assert r.quen == []
