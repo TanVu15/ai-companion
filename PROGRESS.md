@@ -170,3 +170,7 @@
 - **Giọng nói:** sửa lỗi rảnh tay bật micro lại khi Bơ còn đang nói; tắt rảnh tay không còn tự gửi chữ đang gõ dở; nút micro không bị kẹt sau lỗi quyền micro.
 - **Sao lưu:** nạp sao lưu không bị việc khác ghi xen vào; file thiếu giờ vẫn nạp đúng.
 - 74 test qua hết.
+
+## 2026-10-10 – Giai đoạn 9: tách code giao diện
+- Phần chạy của web chuyển từ `web/index.html` sang `web/app.js` (index.html chỉ còn khung + màu sắc). Trình duyệt luôn lấy bản mới sau khi `git pull`.
+- 74 test qua hết.

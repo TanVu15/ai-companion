@@ -55,7 +55,9 @@ Muốn thêm tình huống thì sửa `tinh_huong.json`.
 app/brain.py    Bộ não: ghép tính cách + trí nhớ + lịch sử, hỏi Claude, đọc JSON
 app/memory.py   Trí nhớ: SQLite lưu tin nhắn và điều đáng nhớ (data/companion.db)
 app/main.py     Máy chủ web (FastAPI)
-web/index.html  Giao diện chat + khuôn mặt
+web/index.html  Giao diện chat + khuôn mặt (HTML + CSS)
+web/app.js      Phần chạy của giao diện: gửi tin, giọng nói, trí nhớ, chi phí, lời nhắc
+web/danh_thuc.js, web/doc_to.js   Từ đánh thức "Bơ ơi", dọn chữ trước khi đọc to
 persona.md      Tính cách
 app/thu_tinh_cach.py + tinh_huong.json   Bộ câu hỏi thử tính cách
 tests/          Test bằng bộ não giả, không tốn tiền API

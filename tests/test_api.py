@@ -75,8 +75,11 @@ def test_no_password_by_default(tmp_path):
 
 
 def test_index_has_voice_controls(tmp_path):
-    html = make_client(tmp_path, []).get("/").text
-    assert 'id="mic"' in html and 'id="voiceBtn"' in html and "vi-VN" in html
+    c = make_client(tmp_path, [])
+    html = c.get("/").text
+    assert 'id="mic"' in html and 'id="voiceBtn"' in html and "/web/app.js" in html
+    js = c.get("/web/app.js")
+    assert "vi-VN" in js.text and js.headers["cache-control"] == "no-cache"
 
 
 def test_cost_endpoint(tmp_path):

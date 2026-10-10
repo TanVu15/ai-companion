@@ -47,7 +47,10 @@ async def require_password(request: Request, call_next):
             headers={"WWW-Authenticate": 'Basic realm="Bo", charset="UTF-8"'},
             media_type="text/plain; charset=utf-8",
         )
-    return await call_next(request)
+    response = await call_next(request)
+    if request.url.path.startswith("/web/") or request.url.path == "/":
+        response.headers["Cache-Control"] = "no-cache"  # git pull xong mở lại là thấy bản mới ngay
+    return response
 
 
 class _DemoClient:

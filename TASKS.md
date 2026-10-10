@@ -50,7 +50,7 @@
 
 ## Giai đoạn 9 – Rà soát & gọn gàng (chỉ phần mềm, Claude tự thêm)
 - [x] Rà soát toàn bộ code tìm lỗi (một lượt review độc lập), sửa lỗi tìm được
-- [ ] Tách JS của web ra file riêng cho dễ sửa (index.html đang dài)
+- [x] Tách JS của web ra file riêng cho dễ sửa (index.html đang dài)
 - [ ] Bơ biết thứ trong tuần và buổi (sáng/trưa/tối) để chào hợp lúc
 
 ## Sau này
