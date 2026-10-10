@@ -109,3 +109,11 @@
 - 52 test qua hết.
 
 **Tân cần thử:** chat vài câu rồi bấm "Chi phí".
+
+## 2026-10-10 – Giai đoạn 7: sao lưu trí nhớ
+- Trong "Bơ nhớ gì về mình?" có **"Tải bản sao lưu"** (file `bo-sao-luu-NGÀY.json`: tin nhắn, tóm tắt, điều đáng nhớ, chuyện cần hỏi thăm) và **"Nạp bản sao lưu"** (thay toàn bộ trí nhớ hiện tại, có hỏi lại trước).
+- File hỏng/không phải của Bơ → báo lỗi, trí nhớ cũ giữ nguyên.
+- Dùng khi đổi máy tính, hoặc trước khi thử nghiệm gì đó.
+- 54 test qua hết.
+
+**Tân cần thử:** tải bản sao lưu, xóa 1 điều Bơ nhớ, rồi nạp lại file xem điều đó quay lại không.

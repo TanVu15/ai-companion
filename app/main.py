@@ -1,5 +1,6 @@
 """Máy chủ web: phục vụ trang chat và nhận tin nhắn gửi tới bộ não."""
 import base64
+import json
 import secrets
 
 from fastapi import FastAPI, HTTPException, Request
@@ -129,6 +130,28 @@ def usage():
     out["gioi_han_ngay"] = config.DAILY_LIMIT
     out["da_tra_loi_hom_nay"] = mem.replies_today()
     return out
+
+
+@app.get("/api/sao-luu")
+def backup():
+    """Tải toàn bộ trí nhớ về máy thành file JSON."""
+    from datetime import date
+
+    body = json.dumps(get_brain().memory.export_all(), ensure_ascii=False, indent=1)
+    name = f"bo-sao-luu-{date.today().isoformat()}.json"
+    return Response(body, media_type="application/json",
+                    headers={"Content-Disposition": f'attachment; filename="{name}"'})
+
+
+@app.post("/api/khoi-phuc")
+async def restore(request: Request):
+    """Nạp lại file sao lưu (thay toàn bộ trí nhớ hiện tại)."""
+    try:
+        data = json.loads(await request.body())
+        get_brain().memory.import_all(data)
+    except (ValueError, UnicodeDecodeError) as e:
+        raise HTTPException(400, str(e) if "Bơ" in str(e) or "hỏng" in str(e) else "File không đọc được")
+    return {"ok": True}
 
 
 @app.get("/api/history")

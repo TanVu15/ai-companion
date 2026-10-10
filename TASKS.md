@@ -37,7 +37,7 @@
 
 ## Giai đoạn 7 – Tiện ích (chỉ phần mềm, Claude tự thêm)
 - [x] Theo dõi chi phí: đếm token mỗi ngày, ước tính tiền, xem trên web
-- [ ] Sao lưu / khôi phục trí nhớ (tải file về, nạp lại)
+- [x] Sao lưu / khôi phục trí nhớ (tải file về, nạp lại)
 - [ ] Hiện giờ gửi tin nhắn, tải thêm tin cũ khi kéo lên
 - [ ] Thêm tình huống "hỏi thăm chuyện cũ" vào bộ chấm điểm tính cách
 

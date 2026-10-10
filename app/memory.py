@@ -187,3 +187,38 @@ class Memory:
     def clear_facts(self) -> None:
         self.conn.execute("DELETE FROM facts")
         self.conn.commit()
+
+    # --- Sao lưu / khôi phục ---
+    _BACKUP_TABLES = {
+        "messages": ("role", "content", "created_at"),
+        "summaries": ("content", "upto_id", "created_at"),
+        "followups": ("content", "done", "created_at"),
+        "facts": ("content", "created_at"),
+    }
+
+    def export_all(self) -> dict:
+        """Toàn bộ trí nhớ thành một dict (để lưu ra file JSON)."""
+        out: dict = {"phien_ban": 1}
+        for table, cols in self._BACKUP_TABLES.items():
+            id_col = "id, " if table == "messages" else ""
+            rows = self.conn.execute(f"SELECT {id_col}{', '.join(cols)} FROM {table} ORDER BY id").fetchall()
+            names = (("id",) if id_col else ()) + cols
+            out[table] = [dict(zip(names, r)) for r in rows]
+        return out
+
+    def import_all(self, data: dict) -> None:
+        """Thay toàn bộ trí nhớ bằng bản sao lưu. Bản lỗi thì báo ValueError và không đổi gì."""
+        if not isinstance(data, dict) or data.get("phien_ban") != 1:
+            raise ValueError("Không phải file sao lưu của Bơ")
+        try:
+            with self.conn:  # lỗi giữa chừng thì hoàn tác hết
+                for table, cols in self._BACKUP_TABLES.items():
+                    self.conn.execute(f"DELETE FROM {table}")
+                    for row in data.get(table, []):
+                        use = (("id",) if table == "messages" and "id" in row else ()) + cols
+                        self.conn.execute(
+                            f"INSERT INTO {table} ({', '.join(use)}) VALUES ({', '.join('?' * len(use))})",
+                            [row.get(c) for c in use],
+                        )
+        except (sqlite3.Error, AttributeError, TypeError) as e:
+            raise ValueError(f"File sao lưu bị hỏng: {e}") from e
