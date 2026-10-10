@@ -701,10 +701,14 @@ def persona_reset():
 
 @app.get("/api/tim")
 def search(q: str = "", limit: int = 30):
-    """Tìm trong lịch sử trò chuyện (gõ không dấu vẫn được). Mới nhất trước."""
+    """Tìm trong nhật ký + lịch sử trò chuyện (gõ không dấu vẫn được). Mới nhất trước.
+    Dòng nhật ký có role "nhat_ky" (không ghim được)."""
     brain = get_brain()
     with brain._lock:
-        return brain.memory.search_messages(q[:100], min(max(limit, 1), 100))
+        limit = min(max(limit, 1), 100)
+        msgs = brain.memory.search_messages(q[:100], limit)
+        diary = brain.memory.search_diary(q[:100], 10)  # nhật ký: vài dòng đầu danh sách
+    return diary + msgs
 
 
 @app.get("/api/facts")

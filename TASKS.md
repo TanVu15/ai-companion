@@ -184,6 +184,12 @@
 - [x] Tự ghi / sửa dòng nhật ký trên web, tải nhật ký (.txt)
 - [x] Rà soát code lần 15, sửa lỗi tìm được
 
+## Giai đoạn 36 – Kỷ niệm quen nhau & tìm nhật ký (chỉ phần mềm, Claude tự thêm)
+- [x] Chuỗi ngày liền trò chuyện trong nút "?"
+- [x] Tròn mốc quen nhau (7, 30, 100 ngày, mỗi năm...) Bơ chủ động nhắc (1 câu API mỗi mốc)
+- [x] "Tìm" tìm cả trong nhật ký
+- [ ] Rà soát code lần 16, sửa lỗi tìm được
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo

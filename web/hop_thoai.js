@@ -189,7 +189,8 @@ async function runSearch() {
   } else if (!list.length) { const li = document.createElement('li'); li.textContent = 'Không thấy.'; searchList.appendChild(li); }
   list.forEach(m => {
     const li = document.createElement('li'), s = document.createElement('small');
-    s.textContent = (m.role === 'user' ? 'Bạn' : 'Bơ') + ' · ' + timeLabel(m.created_at);
+    s.textContent = m.role === 'nhat_ky' ? 'Nhật ký · ' + diaryLabel(m.created_at)
+      : (m.role === 'user' ? 'Bạn' : 'Bơ') + ' · ' + timeLabel(m.created_at);
     li.appendChild(s); highlight(li, m.content, q); searchList.appendChild(li);
   });
 }
@@ -252,6 +253,7 @@ document.getElementById('openHelp').onclick = async () => {
     statsEl.textContent = s.quen_tu
       ? 'Bơ và bạn quen nhau ' + s.so_ngay_quen + ' ngày (từ ' + s.quen_tu + '), trò chuyện ' + s.so_ngay_tro_chuyen
         + ' ngày, ' + s.so_tin.toLocaleString('vi-VN') + ' tin nhắn. Bơ đang nhớ ' + s.so_dieu_nho + ' điều về bạn.'
+        + (s.chuoi_ngay >= 2 ? ' Chuỗi ' + s.chuoi_ngay + ' ngày liền trò chuyện.' : '')
       : 'Bơ và bạn mới quen thôi. Nhắn gì đó đi!';
   } catch (e) {}
   showMoods();

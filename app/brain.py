@@ -110,6 +110,11 @@ WEEK_TRIGGER = (
     "thật ấm áp, như bạn thân: nhắc 2-3 chuyện đáng nhớ, khen điều họ làm được, hỏi tuần tới có dự định gì. "
     "Ngắn gọn, đừng liệt kê khô khan. Những gì người dùng đã kể trong tuần:\n{items})"
 )
+MOC_TRIGGER = (
+    "(Tin nhắn hệ thống, không phải người dùng nói: hôm nay tròn {n} ngày bạn và người dùng quen nhau "
+    "(từ {tu}). Hãy chủ động nhắc dịp này thật dễ thương, ngắn gọn, có thể nhắc một kỷ niệm vui nếu biết.)"
+)
+MOC_QUEN = {7, 30, 50, 100, 200, 300, 500, 1000}  # cộng thêm mỗi tròn năm (365, 730...)
 MISS_TRIGGER = (
     "(Tin nhắn hệ thống, không phải người dùng nói: người dùng vừa quay lại sau {days} ngày không nói chuyện. "
     "Hãy chủ động chào kiểu bạn thân lâu không gặp, ngắn gọn, có thể nhắc nhẹ chuyện cũ nếu biết.)"
@@ -502,10 +507,11 @@ class Brain:
         followups = self.memory.pending_followups(config.FOLLOWUP_MIN_HOURS)
         days = (datetime.now() - last).days if last else 0
         week = self._recap_week()
-        recap = wish_holiday = False
+        recap = wish_holiday = wish_moc = False
         now = datetime.now()
         eve = self.memory.special_days_tomorrow(now.date()) if now.hour >= 8 else []
         holiday = self._holiday_today(now)
+        moc = self._moc_quen(now)
         if self.memory.special_days_today():
             trigger = SPECIAL_TRIGGER  # ngày đặc biệt chưa chúc thì chúc ngay, dù vừa mới nói chuyện
             eve = []
@@ -513,6 +519,8 @@ class Brain:
             trigger = EVE_TRIGGER.format(items="; ".join(d["viec"] for d in eve))
         elif holiday:
             trigger, wish_holiday = HOLIDAY_TRIGGER.format(items=", ".join(holiday)), True
+        elif moc:
+            trigger, wish_moc = MOC_TRIGGER.format(n=moc, tu=self.memory.stats(now.date())["quen_tu"]), True
         elif week:
             trigger, recap = WEEK_TRIGGER.format(items=self._week_items(now)), True
         elif only_occasion:
@@ -528,6 +536,8 @@ class Brain:
         history = clean_history(self.memory.recent_messages(config.HISTORY_LIMIT))
         history.append({"role": "user", "content": trigger})  # chỉ gửi đi, không lưu
         reply = self._ask(clean_history(history), followups, from_user=False)
+        if wish_moc:
+            self.memory.set_kv("moc_quen", str(moc))  # mốc này đã nhắc rồi
         if recap:
             self.memory.set_kv("tong_ket_tuan", week)  # tuần này đã điểm lại rồi
         if wish_holiday:
@@ -562,6 +572,15 @@ class Brain:
             return ngay_le(now.date())
         except Exception:
             return []
+
+    def _moc_quen(self, now: datetime) -> int:
+        """Hôm nay tròn mốc quen nhau (7, 30, 100 ngày, mỗi năm...) mà chưa nhắc → số ngày; không thì 0."""
+        if now.hour < 7:
+            return 0
+        n = self.memory.stats(now.date())["so_ngay_quen"]
+        if n <= 1 or (n not in MOC_QUEN and n % 365) or self.memory.get_kv("moc_quen") == str(n):
+            return 0
+        return n
 
     def _recap_week(self, now: datetime | None = None) -> str:
         """Tối Chủ nhật, tuần này chưa điểm lại, và trong tuần có nói chuyện (≥5 tin) → trả mã tuần ("2026-W41")."""

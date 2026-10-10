@@ -290,6 +290,7 @@ def test_thong_ke_quen_nhau(tmp_path):
     from datetime import date
 
     s = m.stats(today=date(2026, 10, 10))
+    assert isinstance(s.pop("chuoi_ngay"), int)
     assert s == {"quen_tu": "01/10/2026", "so_ngay_quen": 10, "so_tin": 3,
                  "so_ngay_tro_chuyen": 2, "so_dieu_nho": 1}
 

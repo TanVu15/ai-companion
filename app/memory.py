@@ -165,6 +165,19 @@ class Memory:
                     break
         return out
 
+    def search_diary(self, query: str, limit: int = 30) -> list[dict]:
+        """Tìm trong nhật ký giống search_messages: [{"id", "role": "nhat_ky", "content", "created_at": ngày}]."""
+        q = khong_dau(query)
+        if len(q) < 2:
+            return []
+        out = []
+        for i, d, c in self.conn.execute("SELECT id, day, content FROM diary ORDER BY day DESC, id DESC"):
+            if q in khong_dau(c):
+                out.append({"id": i, "role": "nhat_ky", "content": c, "created_at": d})
+                if len(out) >= limit:
+                    break
+        return out
+
     def chat_as_text(self) -> str:
         """Toàn bộ trò chuyện thành chữ dễ đọc, chia theo ngày (để tải về đọc lại)."""
         lines, day = [], None
@@ -194,7 +207,21 @@ class Memory:
             "so_tin": total,
             "so_ngay_tro_chuyen": days,
             "so_dieu_nho": len(self.all_facts()),
+            "chuoi_ngay": self.streak(today),
         }
+
+    def streak(self, today: date | None = None) -> int:
+        """Chuỗi ngày liền nhau có trò chuyện, tính tới hôm nay (hôm nay chưa nói thì tính tới hôm qua)."""
+        today = today or date.today()
+        days = {d for (d,) in self.conn.execute(
+            "SELECT DISTINCT substr(created_at, 1, 10) FROM messages WHERE role = 'user' AND created_at >= ?",
+            ((today - timedelta(days=400)).isoformat(),))}
+        d = today if today.isoformat() in days else today - timedelta(days=1)
+        n = 0
+        while d.isoformat() in days:
+            n += 1
+            d -= timedelta(days=1)
+        return n
 
     # --- Tâm trạng ---
     def set_mood(self, msg_id: int, mood: str) -> None:

@@ -630,3 +630,9 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 
 **Tân cần thử (giai đoạn 35):** "Nhật ký" → tự ghi một dòng, bấm "Sửa", "Tải nhật ký (.txt)". Tối Chủ nhật xem Bơ tổng kết tuần.
 
+## 2026-10-10 – Giai đoạn 36: kỷ niệm quen nhau
+- Nút "?" ghi thêm **"Chuỗi N ngày liền trò chuyện"**.
+- Tròn **7, 30, 50, 100, 200, 300, 500, 1000 ngày** hoặc **tròn năm** quen nhau → mở web là Bơ chủ động nhắc dịp này (mỗi mốc một lần, từ 7h sáng, 1 câu API).
+- **"Tìm"** giờ tìm cả trong nhật ký (dòng nhật ký hiện đầu, ghi "Nhật ký · Hôm qua, 09/10").
+- 231 test qua hết.
+
