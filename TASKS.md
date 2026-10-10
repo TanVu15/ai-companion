@@ -127,6 +127,11 @@
 - [x] Nhắc trước ngày đặc biệt 1 ngày ("mai là sinh nhật mẹ đó")
 - [x] Rà soát code lần 7 (phần mới), sửa lỗi tìm được
 
+## Giai đoạn 25 – Việc cần làm (chỉ phần mềm, Claude tự thêm)
+- [x] Bơ ghi việc cần làm ("nhớ giúp mình mua sữa"), gạch khi Tân kể đã làm
+- [ ] Hộp "Việc cần làm" trên web: xem, đánh dấu xong, thêm, xóa
+- [ ] Bộ chấm điểm thêm tình huống (việc cần làm, Tân buồn); README cập nhật
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo

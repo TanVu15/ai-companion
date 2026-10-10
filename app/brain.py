@@ -22,6 +22,8 @@ Chỉ trả về MỘT đối tượng JSON, không viết gì ngoài JSON:
   "da_hoi": ["chuyện trong phần 'Chuyện nên hỏi thăm' mà bạn vừa hỏi hoặc người dùng đã kể, chép y nguyên"],
   "nhac": [{{"luc": "YYYY-MM-DD HH:MM", "viec": "việc cần nhắc", "lap": ""}}],
   "ngay_dac_biet": [{{"ngay": "DD/MM", "viec": "ví dụ Sinh nhật Tân"}}],
+  "viec_can_lam": ["việc người dùng nhờ ghi vào danh sách việc cần làm, ví dụ 'Mua sữa'"],
+  "xong_viec": ["việc trong phần 'Việc cần làm' mà người dùng nói đã làm xong, chép y nguyên"],
   "tam_trang": tâm trạng của NGƯỜI DÙNG trong tin vừa rồi, một trong {config.MOODS}
 }}
 - "noi" ngắn gọn như nhắn tin với bạn bè, thường 1-3 câu.
@@ -39,6 +41,10 @@ Chỉ trả về MỘT đối tượng JSON, không viết gì ngoài JSON:
 - "ngay_dac_biet": ngày lặp lại mỗi năm mà người dùng kể (sinh nhật mình/người thân, ngày kỷ niệm...),
   chỉ khi biết rõ ngày và tháng. Không có thì để [].
 - Nếu có phần "Hôm nay là ngày đặc biệt", hãy chúc mừng thật vui ngay trong câu này.
+- "viec_can_lam": CHỈ khi người dùng nhờ ghi nhớ một việc phải làm mà KHÔNG có giờ cụ thể ("nhớ giúp mình mua sữa",
+  "thêm vào danh sách: trả sách thư viện"). Có giờ cụ thể thì dùng "nhac". Mỗi việc ngắn gọn. Không có thì để [].
+- "xong_viec": người dùng kể đã làm xong việc nào trong phần "Việc cần làm" thì chép y nguyên vào đây. Không có thì để [].
+- Hỏi "mình còn việc gì?" thì kể lại từ phần "Việc cần làm" (đừng bịa).
 - "tam_trang": đoán từ tin vừa rồi của người dùng (vui, binh_thuong, buon, met, lo, gian). Không rõ thì "binh_thuong".
 """
 
@@ -54,6 +60,8 @@ class Reply:
     da_hoi: list[str] = field(default_factory=list)
     nhac: list[dict] = field(default_factory=list)
     ngay_dac_biet: list[dict] = field(default_factory=list)
+    viec_can_lam: list[str] = field(default_factory=list)
+    xong_viec: list[str] = field(default_factory=list)
     tam_trang: str = ""  # tâm trạng người dùng Bơ đoán được (nội bộ, giao diện không dùng)
     viec_nhac: str = ""  # với lời nhắc tới giờ: việc gốc (để bấm "nhắc lại sau")
     msg_id: int = 0  # số thứ tự tin của Bơ trong lịch sử (để ghim)
@@ -136,6 +144,7 @@ def build_system_prompt(
     special: list[dict] | None = None,
     weather: str | None = None,
     low_mood: list[str] | None = None,
+    todos: list[str] | None = None,
 ) -> str:
     now = now or datetime.now()
     known = "\n".join(f"- {f}" for f in facts) if facts else "- (chưa biết gì)"
@@ -151,6 +160,9 @@ def build_system_prompt(
     if special:
         items = "\n".join(f"- {d['viec']}" for d in special)
         out += f"\n## Hôm nay là ngày đặc biệt\n{items}\n"
+    if todos:
+        items = "\n".join(f"- {t}" for t in todos)
+        out += f"\n## Việc cần làm (người dùng nhờ ghi, chưa xong)\n{items}\n"
     if low_mood:
         words = ", ".join(MOOD_WORDS.get(m, m) for m in low_mood)
         out += (
@@ -207,6 +219,8 @@ def parse_reply(text: str) -> Reply:
                     da_hoi=_str_list(data.get("da_hoi") or []),
                     nhac=_dict_list(data.get("nhac")),
                     ngay_dac_biet=_dict_list(data.get("ngay_dac_biet")),
+                    viec_can_lam=_str_list(data.get("viec_can_lam") or []),
+                    xong_viec=_str_list(data.get("xong_viec") or []),
                     tam_trang=data.get("tam_trang") if data.get("tam_trang") in config.MOODS else "",
                 )
         except json.JSONDecodeError:
@@ -457,6 +471,7 @@ class Brain:
         system = build_system_prompt(
             self.persona(), self.memory.all_facts(), summary, followups, special=special, weather=weather,
             low_mood=self.memory.low_mood(today),
+            todos=[t["viec"] for t in self.memory.todos(include_done=False)][:30],
         )
         resp = self._create(
             model=config.MODEL,
@@ -473,6 +488,8 @@ class Brain:
         self.memory.done_followups(reply.da_hoi)
         self.memory.add_followups(reply.hoi_tham)
         self.memory.add_reminders(reply.nhac)
+        self.memory.done_todos(reply.xong_viec)
+        self.memory.add_todos(reply.viec_can_lam)
         eve_before = {d["id"] for d in self.memory.special_days_tomorrow(today)}
         self.memory.add_special_days(reply.ngay_dac_biet)
         # Đã chúc trong câu này (hoặc người dùng vừa kể "hôm nay sinh nhật mình", Bơ đã biết) → không chúc lại trong năm

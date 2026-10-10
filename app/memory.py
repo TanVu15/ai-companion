@@ -58,6 +58,13 @@ class Memory:
                 content TEXT NOT NULL,       -- ví dụ "Sinh nhật Tân"
                 wished_year INTEGER NOT NULL DEFAULT 0  -- năm gần nhất Bơ đã chúc
             );
+            CREATE TABLE IF NOT EXISTS todos (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                content TEXT NOT NULL,       -- việc cần làm, ví dụ "Mua sữa"
+                done INTEGER NOT NULL DEFAULT 0,
+                created_at TEXT DEFAULT (datetime('now', 'localtime')),
+                done_at TEXT
+            );
             CREATE TABLE IF NOT EXISTS kv (
                 key TEXT PRIMARY KEY,        -- cài đặt nhỏ, ví dụ tuần đã tổng kết
                 value TEXT NOT NULL
@@ -493,6 +500,57 @@ class Memory:
                 self.conn.execute("UPDATE followups SET done = 1 WHERE id = ?", (i,))
         self.conn.commit()
 
+    # --- Việc cần làm ---
+    TODO_MAX = 50  # tối đa việc chưa xong (tránh danh sách phình mãi)
+
+    def add_todos(self, items: list[str]) -> int:
+        """Thêm việc cần làm, bỏ qua việc trùng với việc chưa xong. Trả về số việc đã thêm."""
+        known = {self._key(t["viec"]) for t in self.todos(include_done=False)}
+        added = 0
+        for item in items:
+            item = re.sub(r"\s+", " ", str(item)).strip()[:200]
+            key = self._key(item)
+            if key and key not in known and len(known) < self.TODO_MAX:
+                known.add(key)
+                self.conn.execute("INSERT INTO todos (content) VALUES (?)", (item,))
+                added += 1
+        self.conn.commit()
+        return added
+
+    def done_todos(self, items: list[str]) -> None:
+        """Đánh dấu xong theo nội dung (Bơ chép lại y nguyên việc trong danh sách)."""
+        keys = {self._key(str(t)) for t in items}
+        for i, c in self.conn.execute("SELECT id, content FROM todos WHERE done = 0").fetchall():
+            if self._key(c) in keys:
+                self.set_todo_done(i, True, commit=False)
+        self.conn.commit()
+
+    def set_todo_done(self, todo_id: int, done: bool, commit: bool = True) -> bool:
+        cur = self.conn.execute(
+            "UPDATE todos SET done = ?, done_at = CASE WHEN ? THEN datetime('now', 'localtime') ELSE NULL END WHERE id = ?",
+            (int(done), int(done), todo_id),
+        )
+        if commit:
+            self.conn.commit()
+        return cur.rowcount > 0
+
+    def delete_todo(self, todo_id: int) -> None:
+        self.conn.execute("DELETE FROM todos WHERE id = ?", (todo_id,))
+        self.conn.commit()
+
+    def todos(self, include_done: bool = True, done_days: int = 3) -> list[dict]:
+        """Việc chưa xong (cũ → mới), rồi việc đã xong trong `done_days` ngày gần đây (mới xong trước).
+        Việc xong lâu hơn thì tự dọn khỏi danh sách."""
+        since = (datetime.now() - timedelta(days=done_days)).strftime("%Y-%m-%d %H:%M:%S")
+        if self.conn.execute("DELETE FROM todos WHERE done = 1 AND done_at < ?", (since,)).rowcount:
+            self.conn.commit()
+        rows = self.conn.execute("SELECT id, content, 0, created_at FROM todos WHERE done = 0 ORDER BY id").fetchall()
+        if include_done:
+            rows += self.conn.execute(
+                "SELECT id, content, 1, created_at FROM todos WHERE done = 1 ORDER BY done_at DESC, id DESC"
+            ).fetchall()
+        return [{"id": i, "viec": c, "xong": bool(d), "created_at": t} for i, c, d, t in rows]
+
     # --- Điều đáng nhớ ---
     @staticmethod
     def _key(fact: str) -> str:
@@ -553,6 +611,7 @@ class Memory:
         "facts": ("content", "created_at"),
         "reminders": ("content", "due_at", "done", "lap"),
         "special_days": ("day", "content", "wished_year", "nhac_truoc_year"),
+        "todos": ("content", "done", "created_at", "done_at"),
     }
 
     def export_all(self) -> dict:

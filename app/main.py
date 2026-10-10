@@ -326,6 +326,51 @@ def moods(days: int = 7):
         return brain.memory.moods_by_day(min(max(days, 1), 31))
 
 
+class TodoIn(BaseModel):
+    viec: str
+
+
+class TodoDoneIn(BaseModel):
+    xong: bool = True
+
+
+@app.get("/api/viec")
+def todos():
+    """Việc cần làm: chưa xong trước, rồi việc vừa xong trong 3 ngày."""
+    brain = get_brain()
+    with brain._lock:
+        return brain.memory.todos()
+
+
+@app.post("/api/viec")
+def add_todo(body: TodoIn):
+    text = body.viec.strip()[:200]
+    if not text:
+        raise HTTPException(400, "Việc cần làm đang trống")
+    brain = get_brain()
+    with brain._lock:
+        if not brain.memory.add_todos([text]):
+            raise HTTPException(400, "Việc này đã có trong danh sách rồi (hoặc danh sách đã đầy 50 việc)")
+    return {"ok": True}
+
+
+@app.put("/api/viec/{todo_id}")
+def done_todo(todo_id: int, body: TodoDoneIn):
+    brain = get_brain()
+    with brain._lock:
+        if not brain.memory.set_todo_done(todo_id, body.xong):
+            raise HTTPException(404, "Không có việc này")
+    return {"ok": True}
+
+
+@app.delete("/api/viec/{todo_id}")
+def delete_todo(todo_id: int):
+    brain = get_brain()
+    with brain._lock:
+        brain.memory.delete_todo(todo_id)
+    return {"ok": True}
+
+
 @app.get("/api/ghim")
 def pinned():
     brain = get_brain()

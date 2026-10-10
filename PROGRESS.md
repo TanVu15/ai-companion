@@ -456,3 +456,9 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 
 **Tân cần thử:** nhắn vài câu vui/buồn, bấm "?" xem dải tâm trạng; kể một ngày đặc biệt rơi vào ngày kia.
 
+## 2026-10-10 – Giai đoạn 25: việc cần làm (bộ não)
+- Nhắn "nhớ giúp mình mua sữa" (không có giờ) → Bơ ghi vào **danh sách việc cần làm** (mục nội bộ `viec_can_lam`). Có giờ cụ thể thì vẫn là lời nhắc như cũ.
+- Kể "mua sữa rồi" → Bơ gạch việc đó (`xong_viec`). Hỏi "mình còn việc gì?" → Bơ kể lại đúng danh sách.
+- Việc xong quá 3 ngày tự dọn; tối đa 50 việc chưa xong; có trong bản sao lưu (bản sao lưu cũ vẫn nạp được).
+- 150 test qua hết.
+
