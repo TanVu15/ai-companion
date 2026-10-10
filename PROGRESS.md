@@ -190,3 +190,8 @@
 - Lỗi (mất mạng, sai key, tóm tắt hỏng...) được ghi vào `data/loi.log`: giờ, loại lỗi, vị trí trong code. **Không** ghi nội dung tin nhắn hay API key. Tự giới hạn tối đa ~3 MB.
 - Gặp sự cố: mở file đó, chép mấy dòng cuối vào FEEDBACK.md.
 - 76 test qua hết.
+
+## 2026-10-10 – Giai đoạn 10 xong (báo cáo)
+- `SU_CO.md`: bảng 17 sự cố hay gặp (run.bat tắt ngay, sai key, hết tiền, iPhone không vào được, không thấy micro, lời nhắc không kêu…) và cách sửa; cuối cùng là cách gửi `data/loi.log` vào FEEDBACK.md.
+- Cả giai đoạn: test tự chạy trên GitHub (lần đầu đã ✓ xanh), nhật ký lỗi, hướng dẫn sự cố.
+- **Lưu ý khi `git pull` lần này:** không thêm thư viện mới, chỉ cần tắt và chạy lại `run.bat`.

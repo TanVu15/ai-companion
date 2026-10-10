@@ -18,6 +18,8 @@ Chatbot trò chuyện có tính cách, có trí nhớ và có khuôn mặt biể
 
 **Dùng khi ra ngoài (không chung wifi):** xem [DUA_LEN_MANG.md](DUA_LEN_MANG.md). Nhớ đặt `APP_PASSWORD` trong `.env` trước.
 
+**Gặp lỗi?** Xem [SU_CO.md](SU_CO.md).
+
 ## Nói chuyện bằng giọng
 
 - **Bơ đọc to câu trả lời:** bấm "Giọng nói: tắt" dưới khuôn mặt để bật. Dùng giọng có sẵn của máy (iPhone và Windows thường có giọng tiếng Việt; không có thì máy đọc giọng khác).
