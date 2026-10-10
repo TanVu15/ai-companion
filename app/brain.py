@@ -313,7 +313,9 @@ class Brain:
         """Nhắc lại việc này sau `minutes` phút (nút "Nhắc lại sau 10 phút"). Trả về giờ sẽ nhắc."""
         from datetime import timedelta
 
-        luc = ((now or datetime.now()) + timedelta(minutes=minutes)).strftime("%Y-%m-%d %H:%M")
+        # làm tròn LÊN phút kế tiếp, để "10 phút" không thành 9 phút
+        start = (now or datetime.now()).replace(second=0, microsecond=0) + timedelta(minutes=1)
+        luc = (start + timedelta(minutes=minutes)).strftime("%Y-%m-%d %H:%M")
         with self._lock:
             self.memory.add_reminders([{"luc": luc, "viec": viec}], now=now)
         return luc
@@ -360,7 +362,10 @@ class Brain:
 
     def _ask(self, history: list[dict], followups: list[dict]) -> Reply:
         summary, _ = self.memory.latest_summary()
-        special = self.memory.special_days_today()
+        from datetime import date
+
+        today = date.today()  # tính một lần: trả lời xong qua nửa đêm thì không đánh dấu nhầm ngày mới
+        special = self.memory.special_days_today(today)
         system = build_system_prompt(self.persona(), self.memory.all_facts(), summary, followups, special=special)
         resp = self._create(
             model=config.MODEL,
@@ -379,7 +384,7 @@ class Brain:
         self.memory.add_reminders(reply.nhac)
         self.memory.add_special_days(reply.ngay_dac_biet)
         # Đã chúc trong câu này (hoặc người dùng vừa kể "hôm nay sinh nhật mình", Bơ đã biết) → không chúc lại trong năm
-        self.memory.mark_wished([d["id"] for d in self.memory.special_days_today()])
+        self.memory.mark_wished([d["id"] for d in self.memory.special_days_today(today)], year=today.year)
         if self._background:
             threading.Thread(target=self._housekeeping, daemon=True).start()
         else:

@@ -136,7 +136,7 @@ class Memory:
     def replies_today(self) -> int:
         today = date.today().isoformat()
         (n,) = self.conn.execute(
-            "SELECT COUNT(*) FROM messages WHERE role='assistant' AND created_at LIKE ?",
+            "SELECT COUNT(*) FROM messages WHERE role='assistant' AND tu_dong = 0 AND created_at LIKE ?",
             (today + "%",),
         ).fetchone()
         return n
@@ -228,6 +228,17 @@ class Memory:
                 "SELECT 1 FROM reminders WHERE done = 0 AND due_at = ? AND lower(content) = lower(?) AND lap = ?",
                 (due, viec, lap),
             ).fetchone()
+            if lap and not exists:  # lặp lại: cùng việc, cùng giờ (cùng thứ nếu mỗi tuần) là trùng, dù khác ngày
+                for (other,) in self.conn.execute(
+                    "SELECT due_at FROM reminders WHERE done = 0 AND lower(content) = lower(?) AND lap = ?", (viec, lap)
+                ):
+                    try:
+                        o = datetime.strptime(other, "%Y-%m-%d %H:%M")
+                    except ValueError:
+                        continue
+                    if o.time() == luc.time() and (lap == "ngay" or o.weekday() == luc.weekday()):
+                        exists = True
+                        break
             if not exists:
                 self.conn.execute("INSERT INTO reminders (content, due_at, lap) VALUES (?, ?, ?)", (viec, due, lap))
                 added += 1

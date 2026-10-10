@@ -280,3 +280,13 @@ Gặp lỗi: xem `SU_CO.md`, gửi mấy dòng cuối `data/loi.log` vào `FEEDB
 - 98 test qua hết.
 
 **Tân cần thử:** nhắn "1 phút nữa nhắc mình uống nước", chờ lời nhắc, bấm "Nhắc lại sau 10 phút".
+
+## 2026-10-10 – Giai đoạn 14 xong (báo cáo): rà soát lần 3 + sửa lỗi
+Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời nhắc lặp, nhắc lại sau). Không có lỗi nặng; đã sửa 7 lỗi vừa/nhỏ:
+- Lời nhắc lặp bị AI ghi 2 lần (khác ngày bắt đầu) → trước đây sẽ nhắc 2 lần mỗi ngày mãi mãi; giờ coi là trùng.
+- Trả lời đúng lúc qua nửa đêm có thể đánh dấu "đã chúc" nhầm sinh nhật của ngày mới.
+- Lời nhắc tự động không còn bị tính vào giới hạn số câu/ngày.
+- Cổng thiết bị `?khong_dau=1` bỏ dấu cả mục `viec`; "nhắc lại sau 10 phút" không còn thành 9 phút; tìm/tải chat không đọc dữ liệu giữa lúc đang nạp sao lưu; tô vàng đúng cả chữ gõ trên máy Mac.
+- 102 test qua hết.
+
+**Tân cần thử:** như các mục giai đoạn 14 ở trên.

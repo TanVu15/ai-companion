@@ -156,3 +156,33 @@ def main_memory():
     from app import main
 
     return main._brain.memory
+
+
+def test_nhac_lap_lai_khong_ghi_trung_khac_ngay(memory):
+    now = datetime(2026, 10, 10, 7, 0)
+    memory.add_reminders([{"luc": "2026-10-10 08:00", "viec": "Uống nước", "lap": "ngay"}], now)
+    # AI ghi lại cùng lời nhắc nhưng từ ngày mai → vẫn là một
+    assert memory.add_reminders([{"luc": "2026-10-11 08:00", "viec": "uống nước", "lap": "ngay"}], now) == 0
+    memory.add_reminders([{"luc": "2026-10-12 20:00", "viec": "Họp", "lap": "tuan"}], now)
+    assert memory.add_reminders([{"luc": "2026-10-19 20:00", "viec": "Họp", "lap": "tuan"}], now) == 0
+    assert memory.add_reminders([{"luc": "2026-10-13 20:00", "viec": "Họp", "lap": "tuan"}], now) == 1  # khác thứ
+    assert len(memory.upcoming_reminders()) == 3
+
+
+def test_nhac_lai_du_10_phut(memory):
+    brain = Brain(memory, client=FakeClient([]))
+    assert brain.snooze("X", 10, now=datetime(2026, 10, 10, 9, 0, 40)) == "2026-10-10 09:11"
+
+
+def test_loi_nhac_khong_tinh_vao_gioi_han_ngay(memory):
+    memory.add_reminders([{"luc": fmt(datetime.now()), "viec": "Uống nước"}])
+    Brain(memory, client=FakeClient([])).due_reminders()
+    assert memory.replies_today() == 0
+
+
+def test_thiet_bi_nhac_khong_dau(tmp_path, monkeypatch):
+    c = make_client(tmp_path, [])
+    monkeypatch.setattr(config, "DEVICE_KEY", "k")
+    main_memory().add_reminders([{"luc": fmt(datetime.now()), "viec": "Uống nước"}])
+    [x] = c.get("/api/thiet-bi/nhac?khong_dau=1", headers={"X-Device-Key": "k"}).json()
+    assert x["viec"] == "Uong nuoc" and x["noi"] == "Toi gio roi ne: uong nuoc!"

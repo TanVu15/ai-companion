@@ -165,7 +165,9 @@ def download_chat():
     from datetime import date
 
     name = f"bo-tro-chuyen-{date.today().isoformat()}.txt"
-    body = "\ufeff" + get_brain().memory.chat_as_text()  # BOM để Notepad cũ hiện đúng tiếng Việt
+    brain = get_brain()
+    with brain._lock:  # không đọc giữa lúc đang nạp sao lưu
+        body = "\ufeff" + brain.memory.chat_as_text()  # BOM để Notepad cũ hiện đúng tiếng Việt
     return Response(body, media_type="text/plain; charset=utf-8",
                     headers={"Content-Disposition": f'attachment; filename="{name}"'})
 
@@ -275,7 +277,9 @@ def special_day_delete(day_id: int):
 @app.get("/api/tim")
 def search(q: str = "", limit: int = 30):
     """Tìm trong lịch sử trò chuyện (gõ không dấu vẫn được). Mới nhất trước."""
-    return get_brain().memory.search_messages(q[:100], min(max(limit, 1), 100))
+    brain = get_brain()
+    with brain._lock:
+        return brain.memory.search_messages(q[:100], min(max(limit, 1), 100))
 
 
 @app.get("/api/facts")
@@ -319,8 +323,8 @@ def _check_device(request: Request) -> None:
 
 
 def _device_out(data: dict, khong_dau: int) -> dict:
-    if khong_dau and data.get("noi"):
-        data = {**data, "noi": bo_dau(data["noi"])}
+    if khong_dau:
+        data = {**data, **{k: bo_dau(data[k]) for k in ("noi", "viec") if data.get(k)}}
     return data
 
 

@@ -409,6 +409,7 @@ function boKhongDau(s) {
 }
 // Tô vàng chỗ khớp (so không dấu, nhưng vẫn hiện chữ gốc có dấu)
 function highlight(li, text, q) {
+  text = text.normalize('NFC');
   // bỏ dấu từng chữ một để vị trí khớp trên chữ gốc không bị lệch
   const plain = Array.from(text).map(ch => boKhongDau(ch).charAt(0) || ch).join('');
   const chars = Array.from(text), qq = boKhongDau(q).trim().replace(/\s+/g, ' ');
