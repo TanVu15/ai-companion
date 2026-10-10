@@ -95,3 +95,21 @@ def test_bo_tu_mo_loi_khong_ghi_nhat_ky(memory, monkeypatch):
     r = Brain(memory, client=client).greet()
     assert r is not None and client.calls
     assert memory.diary_recent() == []
+
+
+def test_api_them_sua_tai(tmp_path):
+    c = make_client(tmp_path, [])
+    assert c.post("/api/nhat-ky", json={"noi_dung": "Chạy bộ 5km"}).status_code == 200
+    assert c.post("/api/nhat-ky", json={"noi_dung": "chạy bộ 5km"}).status_code == 400  # trùng
+    assert c.post("/api/nhat-ky", json={"noi_dung": "  "}).status_code == 400
+    assert c.post("/api/nhat-ky", json={"noi_dung": "A", "ngay": "2099-01-01"}).status_code == 400
+    assert c.post("/api/nhat-ky", json={"noi_dung": "Đi Huế", "ngay": "2026-01-02"}).status_code == 200
+    days = c.get("/api/nhat-ky").json()
+    rid = days[0]["dong"][0]["id"]
+    assert c.put(f"/api/nhat-ky/{rid}", json={"noi_dung": "Chạy bộ 6km"}).status_code == 200
+    assert c.put(f"/api/nhat-ky/{rid}", json={"noi_dung": " "}).status_code == 400
+    assert c.put("/api/nhat-ky/9999", json={"noi_dung": "x"}).status_code == 404
+    r = c.get("/api/nhat-ky.txt")
+    assert r.status_code == 200 and "attachment" in r.headers["content-disposition"]
+    text = r.text.lstrip("﻿")
+    assert text.startswith("== 02/01/2026 ==\n- Đi Huế\n\n== ") and "- Chạy bộ 6km" in text

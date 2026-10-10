@@ -468,7 +468,19 @@ async function loadDiary(more) {
     const ul = document.createElement('ul'); ul.className = 'plain';
     day.dong.forEach(x => {
       const li = document.createElement('li'), b = document.createElement('button');
-      li.textContent = x.noi_dung + ' ';
+      const span = document.createElement('span'), sua = document.createElement('button');
+      span.textContent = x.noi_dung + ' ';
+      sua.textContent = 'Sửa'; sua.type = 'button'; sua.className = 'link'; sua.setAttribute('aria-label', 'Sửa dòng: ' + x.noi_dung);
+      sua.onclick = async () => {
+        const moi = prompt('Sửa dòng nhật ký:', x.noi_dung);
+        if (moi === null || !moi.trim() || moi.trim() === x.noi_dung) return;
+        try {
+          const r = await fetch('/api/nhat-ky/' + x.id, { method: 'PUT', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ noi_dung: moi }) });
+          if (r.ok) { x.noi_dung = moi.trim().replace(/\s+/g, ' '); span.textContent = x.noi_dung + ' '; }
+        } catch (e) {}
+      };
+      li.append(span, sua, ' ');
       b.textContent = 'Xóa'; b.type = 'button'; b.className = 'link'; b.setAttribute('aria-label', 'Xóa dòng: ' + x.noi_dung);
       b.onclick = async () => {
         try { const r = await fetch('/api/nhat-ky/' + x.id, { method: 'DELETE' }); if (r.ok) li.remove(); } catch (e) {}
@@ -483,3 +495,15 @@ async function loadDiary(more) {
 document.getElementById('openDiary').onclick = () => { diaryDlg.showModal(); loadDiary(false); };
 document.getElementById('closeDiary').onclick = () => diaryDlg.close();
 moreDiary.onclick = () => loadDiary(true);
+document.getElementById('addDiaryForm').addEventListener('submit', async (ev) => {
+  ev.preventDefault();
+  const inp = document.getElementById('newDiary'), err = document.getElementById('diaryErr'), text = inp.value.trim();
+  if (!text) return;
+  err.hidden = true;
+  try {
+    const r = await fetch('/api/nhat-ky', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ noi_dung: text }) });
+    if (r.ok) { inp.value = ''; loadDiary(false); return; }
+    const d = await r.json().catch(() => ({}));
+    err.textContent = typeof d.detail === 'string' ? d.detail : 'Không ghi được'; err.hidden = false;
+  } catch (e) { err.textContent = 'Mất mạng, thử lại nha.'; err.hidden = false; }
+});

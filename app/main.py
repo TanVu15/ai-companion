@@ -544,6 +544,54 @@ def diary(truoc: str | None = None):
         return brain.memory.diary_days(limit=14, before=truoc)
 
 
+class DiaryIn(BaseModel):
+    noi_dung: str
+    ngay: str | None = None  # "YYYY-MM-DD", trống = hôm nay
+
+
+@app.post("/api/nhat-ky")
+def diary_add(body: DiaryIn):
+    from datetime import date
+
+    try:
+        day = date.fromisoformat(body.ngay) if body.ngay else date.today()
+    except ValueError:
+        raise HTTPException(400, "Ngày không hợp lệ") from None
+    if day > date.today():
+        raise HTTPException(400, "Chưa tới ngày đó mà")
+    if not body.noi_dung.strip():
+        raise HTTPException(400, "Dòng nhật ký đang trống")
+    brain = get_brain()
+    with brain._lock:
+        if not brain.memory.add_diary(body.noi_dung, day):
+            raise HTTPException(400, "Dòng này có rồi, hoặc ngày đó đã đủ dòng")
+    return {"ok": True}
+
+
+@app.put("/api/nhat-ky/{diary_id}")
+def diary_update(diary_id: int, body: DiaryIn):
+    brain = get_brain()
+    try:
+        with brain._lock:
+            ok = brain.memory.update_diary(diary_id, body.noi_dung)
+    except ValueError as e:
+        raise HTTPException(400, str(e)) from None
+    if not ok:
+        raise HTTPException(404, "Không thấy dòng nhật ký này")
+    return {"ok": True}
+
+
+@app.get("/api/nhat-ky.txt")
+def diary_download():
+    from datetime import date
+
+    brain = get_brain()
+    with brain._lock:
+        body = "\ufeff" + brain.memory.diary_as_text()
+    return Response(body, media_type="text/plain; charset=utf-8",
+                    headers={"Content-Disposition": f'attachment; filename="bo-nhat-ky-{date.today().isoformat()}.txt"'})
+
+
 @app.delete("/api/nhat-ky/{diary_id}")
 def diary_delete(diary_id: int):
     brain = get_brain()

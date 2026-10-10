@@ -72,3 +72,19 @@ def test_chi_dip_khong_hoi_tham_thuong(memory):
 
     memory.add_special_days([{"ngay": date.today().strftime("%d/%m"), "viec": "Sinh nhật"}])
     assert brain.greet(only_occasion=True).noi == "Chúc mừng!"
+
+
+def test_recap_dung_nhat_ky_khi_co(memory, monkeypatch):
+    from datetime import date, timedelta
+
+    talk(memory, 6)
+    today = date.today()
+    for i, text in enumerate(["Đi phỏng vấn", "Đá bóng thắng", "Ăn sinh nhật mẹ"]):
+        memory.add_diary(text, today - timedelta(days=2 - i))
+    client = FakeClient([json.dumps({"noi": "Tuần vui ghê!", "cam_xuc": "vui"})])
+    brain = Brain(memory, client=client)
+    monkeypatch.setattr(brain, "_recap_week", lambda now=None: "2026-W41")
+    brain.greet()
+    trigger = client.calls[0]["messages"][-1]["content"].split("(Tin nhắn hệ thống")[-1]
+    assert "Đi phỏng vấn" in trigger and f"{today:%d/%m}: Ăn sinh nhật mẹ" in trigger
+    assert "- chuyện số 5" not in trigger

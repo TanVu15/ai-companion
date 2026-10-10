@@ -218,8 +218,14 @@
 <dialog id="diary">
   <h2>Nhật ký</h2>
   <p>Kể Bơ nghe chuyện trong ngày ("hôm nay mình đi đá bóng, thắng 3-1"), Bơ ghi lại ở đây.</p>
+  <form id="addDiaryForm" class="addfact">
+    <input id="newDiary" type="text" maxlength="200" placeholder="Tự ghi: ví dụ Chạy bộ 5km" aria-label="Dòng nhật ký mới cho hôm nay">
+    <button type="submit">Ghi</button>
+  </form>
+  <p id="diaryErr" class="err" hidden></p>
   <div id="diaryList" class="diary"></div>
-  <div class="row"><button class="link" id="moreDiary" type="button" hidden>Xem cũ hơn</button><button id="closeDiary" type="button">Xong</button></div>
+  <div class="row"><a class="link" href="/api/nhat-ky.txt" download>Tải nhật ký (.txt)</a>
+    <button class="link" id="moreDiary" type="button" hidden>Xem cũ hơn</button><button id="closeDiary" type="button">Xong</button></div>
 </dialog>
 <dialog id="help">
   <p id="stats"></p>

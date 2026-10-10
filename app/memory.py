@@ -801,6 +801,31 @@ class Memory:
             out.append({"ngay": d, "dong": [{"id": i, "noi_dung": c} for i, c in rows]})
         return out
 
+    def update_diary(self, diary_id: int, content: str) -> bool:
+        """Sửa một dòng nhật ký. Trống thì ValueError; không có dòng đó thì False."""
+        content = re.sub(r"\s+", " ", str(content or "")).strip()[:200]
+        if not content:
+            raise ValueError("Dòng nhật ký đang trống")
+        cur = self.conn.execute("UPDATE diary SET content = ? WHERE id = ?", (content, diary_id))
+        self.conn.commit()
+        return cur.rowcount > 0
+
+    def diary_as_text(self) -> str:
+        """Toàn bộ nhật ký thành chữ để tải về đọc (cũ trước)."""
+        out, last = [], None
+        for day, content in self.conn.execute("SELECT day, content FROM diary ORDER BY day, id"):
+            if day != last:
+                if last is not None:
+                    out.append("")
+                try:
+                    d = date.fromisoformat(day)
+                    out.append(f"== {d:%d/%m/%Y} ==")
+                except ValueError:
+                    out.append(f"== {day} ==")
+                last = day
+            out.append(f"- {content}")
+        return "\n".join(out) + ("\n" if out else "")
+
     def delete_diary(self, diary_id: int) -> None:
         self.conn.execute("DELETE FROM diary WHERE id = ?", (diary_id,))
         self.conn.commit()

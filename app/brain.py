@@ -514,8 +514,7 @@ class Brain:
         elif holiday:
             trigger, wish_holiday = HOLIDAY_TRIGGER.format(items=", ".join(holiday)), True
         elif week:
-            items = "\n".join(f"- {m['content'][:200]}" for m in self.memory.user_messages_since(datetime.now() - timedelta(days=7)))
-            trigger, recap = WEEK_TRIGGER.format(items=items[-4000:]), True
+            trigger, recap = WEEK_TRIGGER.format(items=self._week_items(now)), True
         elif only_occasion:
             return None
         elif last and (datetime.now() - last).total_seconds() < config.GREET_AFTER_HOURS * 3600:
@@ -536,6 +535,22 @@ class Brain:
         if eve:  # năm nay đã nhắc trước rồi
             self.memory.mark_eve_reminded([d["id"] for d in eve], now.date() + timedelta(days=1))
         return reply
+
+    def _week_items(self, now: datetime) -> str:
+        """Chuyện trong tuần để tổng kết: ưu tiên nhật ký (gọn, đúng ngày); ít nhật ký thì lấy tin nhắn."""
+        diary = self.memory.diary_recent(now.date(), days=7)
+        if len(diary) >= 3:
+            lines = []
+            for d in diary:
+                try:
+                    day = datetime.fromisoformat(d["ngay"])
+                    label = f"{THU[day.weekday()]} {day:%d/%m}"
+                except ValueError:
+                    label = d["ngay"]
+                lines.append(f"- {label}: {d['noi_dung']}")
+            return "\n".join(lines)[-4000:]
+        msgs = self.memory.user_messages_since(now - timedelta(days=7))
+        return "\n".join(f"- {m['content'][:200]}" for m in msgs)[-4000:]
 
     def _holiday_today(self, now: datetime) -> list[str]:
         """Ngày lễ hôm nay mà Bơ chưa chúc (từ 7h sáng; mỗi ngày lễ chúc một lần)."""

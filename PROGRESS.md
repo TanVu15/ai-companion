@@ -619,3 +619,8 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 
 **Tân cần thử (giai đoạn 34):** kể Bơ nghe một chuyện trong ngày, bấm "Nhật ký" xem dòng Bơ ghi; hôm sau hỏi "hôm qua mình làm gì nhỉ?".
 
+## 2026-10-10 – Giai đoạn 35: nhật ký tiện hơn
+- **Tổng kết tuần** tối Chủ nhật giờ dựa vào nhật ký (có ngày, có thứ) nếu tuần đó có từ 3 dòng → Bơ điểm lại đúng hơn, gửi ít chữ hơn (rẻ hơn). Ít nhật ký thì dùng tin nhắn như trước.
+- Trong "Nhật ký": ô **tự ghi** dòng cho hôm nay, nút **"Sửa"** từng dòng, link **"Tải nhật ký (.txt)"**.
+- 226 test qua hết.
+
