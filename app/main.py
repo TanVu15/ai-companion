@@ -565,3 +565,13 @@ def device_reminders(request: Request, khong_dau: int = 0):
     """Thiết bị hỏi định kỳ: có lời nhắc nào tới giờ không."""
     _check_device(request)
     return [_device_out({k: v for k, v in r.items() if k != "id"}, khong_dau) for r in reminders_due()]
+
+
+@app.get("/api/thiet-bi/viec")
+def device_todos(request: Request, khong_dau: int = 0):
+    """Việc cần làm chưa xong (cũ → mới), để màn hình nhỏ hiện danh sách: [{"viec": "Mua sữa"}]."""
+    _check_device(request)
+    brain = get_brain()
+    with brain._lock:
+        items = brain.memory.todos(include_done=False)
+    return [_device_out({"viec": t["viec"]}, khong_dau) for t in items]

@@ -479,3 +479,6 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - Việc cần làm ghi từ 3 ngày trước mà chưa xong → Bơ thấy "(ghi 5 ngày trước)" và thỉnh thoảng nhắc khéo một câu khi hợp lúc (không nhắc dồn, không nhắc khi Tân đang buồn). Không tốn thêm câu API.
 - 152 test qua hết.
 
+## 2026-10-10 – Giai đoạn 26: cổng thiết bị lấy việc cần làm
+- `GET /api/thiet-bi/viec` (cần `DEVICE_KEY`): danh sách việc chưa xong cho màn hình nhỏ sau này, có `?khong_dau=1`. Hướng dẫn trong `THIET_BI.md`. 153 test qua hết.
+

@@ -37,3 +37,14 @@ def test_device_greet_nothing(tmp_path, monkeypatch):
 
 def test_bo_dau():
     assert main.bo_dau("Đà Nẵng ơi, Bơ nhớ!") == "Da Nang oi, Bo nho!"
+
+
+def test_device_todos(tmp_path, monkeypatch):
+    monkeypatch.setattr(config, "DEVICE_KEY", "esp-123")
+    c = make_client(tmp_path, [])
+    main.get_brain().memory.add_todos(["Mua sữa", "Trả sách"])
+    main.get_brain().memory.done_todos(["Trả sách"])
+    h = {"X-Device-Key": "esp-123"}
+    assert c.get("/api/thiet-bi/viec", headers=h).json() == [{"viec": "Mua sữa"}]
+    assert c.get("/api/thiet-bi/viec?khong_dau=1", headers=h).json() == [{"viec": "Mua sua"}]
+    assert c.get("/api/thiet-bi/viec", headers={"X-Device-Key": "sai"}).status_code == 401

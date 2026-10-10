@@ -47,6 +47,11 @@ Thiết bị hỏi mỗi 30 giây. Có lời nhắc tới giờ (Tân nhờ "8h 
 `[{"noi": "Tới giờ rồi nè: gọi mẹ!", "cam_xuc": "hao_hung", "hanh_dong": "vay_tay"}]`, không có thì `[]`.
 Mỗi lời nhắc chỉ báo **một lần**: nếu web và thiết bị cùng mở, nơi nào hỏi trước thì nơi đó nhận.
 
+### 4. Việc cần làm: `GET /api/thiet-bi/viec`
+
+Danh sách việc Tân nhờ Bơ ghi mà chưa xong (cũ → mới), ví dụ `[{"viec": "Mua sữa"}, {"viec": "Trả sách"}]`.
+Màn hình nhỏ có thể hiện khi Tân hỏi "còn việc gì?" hoặc lúc rảnh. Thêm `?khong_dau=1` để bỏ dấu. Không tốn tiền API.
+
 ## Lỗi thường gặp
 
 | Mã | Nghĩa | Thiết bị nên làm |
