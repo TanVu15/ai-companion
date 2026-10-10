@@ -255,3 +255,8 @@ def test_tai_tro_chuyen_txt(tmp_path):
         "===== 09/10/2026 =====\n[20:05] Bạn: Chào Bơ\n[20:05] Bơ: Chào Tân!\n\n"
         "===== 10/10/2026 =====\n[08:30] Bạn: Mai gặp\n"
     )
+
+
+def test_trang_chu_co_huong_dan(tmp_path):
+    html = make_client(tmp_path, []).get("/").text
+    assert 'id="openHelp"' in html and "Bơ làm được gì?" in html and "Nhắc việc" in html

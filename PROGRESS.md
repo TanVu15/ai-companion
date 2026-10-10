@@ -290,3 +290,7 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - 102 test qua hết.
 
 **Tân cần thử:** như các mục giai đoạn 14 ở trên.
+
+## 2026-10-10 – Giai đoạn 15: nút "?" – Bơ làm được gì
+- Nút **"?"** dưới khuôn mặt: liệt kê ngắn các việc Bơ làm được (nhớ chuyện, hỏi thăm, nhắc việc, ngày đặc biệt, giọng nói, tìm, sao lưu, chi phí). Không tốn API.
+- 103 test qua hết.

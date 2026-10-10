@@ -437,3 +437,8 @@ async function runSearch() {
 searchInput.addEventListener('input', () => { clearTimeout(searchTimer); searchTimer = setTimeout(runSearch, 300); });
 document.getElementById('openSearch').onclick = () => { searchDlg.showModal(); searchInput.focus(); };
 document.getElementById('closeSearch').onclick = () => searchDlg.close();
+
+// ---- Bơ làm được gì? ----
+const helpDlg = document.getElementById('help');
+document.getElementById('openHelp').onclick = () => helpDlg.showModal();
+document.getElementById('closeHelp').onclick = () => helpDlg.close();

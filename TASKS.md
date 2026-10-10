@@ -77,6 +77,11 @@
 - [x] Nút "Nhắc lại sau 10 phút" ngay dưới lời nhắc
 - [x] Rà soát code lần 3 (review độc lập phần mới: tìm, ngày đặc biệt, lời nhắc lặp), sửa lỗi tìm được
 
+## Giai đoạn 15 – Bạn đồng hành (chỉ phần mềm, Claude tự thêm)
+- [x] Nút "?" – Bơ làm được gì: liệt kê mẹo dùng (không tốn API)
+- [ ] Ghim tin nhắn đáng nhớ, xem lại danh sách ghim
+- [ ] Tổng kết tuần: tối Chủ nhật mở web, Bơ điểm lại tuần qua (1 câu API/tuần)
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo
