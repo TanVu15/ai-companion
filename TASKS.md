@@ -132,6 +132,12 @@
 - [x] Hộp "Việc cần làm" trên web: xem, đánh dấu xong, thêm, xóa
 - [x] Bộ chấm điểm thêm tình huống (việc cần làm, Tân buồn); README cập nhật
 
+## Giai đoạn 26 – Nhắc khéo & bảo trì (chỉ phần mềm, Claude tự thêm)
+- [x] Việc cần làm để lâu (từ 3 ngày) → Bơ nhắc khéo khi hợp lúc
+- [ ] Cổng thiết bị: lấy danh sách việc cần làm (cho màn hình nhỏ sau này)
+- [ ] SU_CO.md thêm sự cố cho tâm trạng, việc cần làm, nhắc trước ngày đặc biệt
+- [ ] Rà soát code lần 8 (việc cần làm, chấm điểm, nhắc khéo), sửa lỗi tìm được
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo

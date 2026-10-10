@@ -88,3 +88,18 @@ def test_api_viec(tmp_path):
     assert c.put("/api/viec/999", json={"xong": True}).status_code == 404
     assert c.delete(f"/api/viec/{t['id']}").status_code == 200
     assert c.get("/api/viec").json() == []
+
+
+def test_viec_de_lau_duoc_nhac_kheo():
+    from datetime import datetime
+
+    now = datetime(2026, 10, 10, 9, 0)
+    todos = [
+        {"viec": "Trả sách", "created_at": "2026-10-05 08:00:00"},
+        {"viec": "Mua sữa", "created_at": "2026-10-09 20:00:00"},
+        {"viec": "Lỗi giờ", "created_at": "abc"},
+    ]
+    p = build_system_prompt("Bơ", [], now=now, todos=todos)
+    assert "- Trả sách (ghi 5 ngày trước)" in p and "- Mua sữa\n" in p and "- Lỗi giờ\n" in p
+    assert "nhắc khéo" in p
+    assert "nhắc khéo" not in build_system_prompt("Bơ", [], now=now, todos=todos[1:])

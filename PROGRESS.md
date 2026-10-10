@@ -475,3 +475,7 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 
 **Tân cần thử:** `python -m app.thu_tinh_cach` (khoảng 20 câu API) và gửi tổng điểm vào FEEDBACK.md.
 
+## 2026-10-10 – Giai đoạn 26: nhắc khéo việc để lâu
+- Việc cần làm ghi từ 3 ngày trước mà chưa xong → Bơ thấy "(ghi 5 ngày trước)" và thỉnh thoảng nhắc khéo một câu khi hợp lúc (không nhắc dồn, không nhắc khi Tân đang buồn). Không tốn thêm câu API.
+- 152 test qua hết.
+

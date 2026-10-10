@@ -161,8 +161,19 @@ def build_system_prompt(
         items = "\n".join(f"- {d['viec']}" for d in special)
         out += f"\n## Hôm nay là ngày đặc biệt\n{items}\n"
     if todos:
-        items = "\n".join(f"- {t}" for t in todos)
-        out += f"\n## Việc cần làm (người dùng nhờ ghi, chưa xong)\n{items}\n"
+        lines, old = [], False
+        for t in todos:
+            if isinstance(t, dict):  # {"viec", "created_at"}: ghi kèm "ghi 4 ngày trước" nếu để lâu
+                age = _when(t.get("created_at") or "", now)
+                stale = age.endswith("ngày trước") and int(age.split()[0]) >= 3
+                old = old or stale
+                lines.append(f"- {t['viec']}" + (f" (ghi {age})" if stale else ""))
+            else:
+                lines.append(f"- {t}")
+        out += f"\n## Việc cần làm (người dùng nhờ ghi, chưa xong)\n" + "\n".join(lines) + "\n"
+        if old:
+            out += ("Việc nào ghi đã lâu thì thỉnh thoảng nhắc khéo một câu khi hợp lúc (không nhắc dồn, "
+                    "không nhắc trong lúc người dùng đang buồn).\n")
     if low_mood:
         words = ", ".join(MOOD_WORDS.get(m, m) for m in low_mood)
         out += (
@@ -471,7 +482,7 @@ class Brain:
         system = build_system_prompt(
             self.persona(), self.memory.all_facts(), summary, followups, special=special, weather=weather,
             low_mood=self.memory.low_mood(today),
-            todos=[t["viec"] for t in self.memory.todos(include_done=False)][:30],
+            todos=self.memory.todos(include_done=False)[:30],
         )
         resp = self._create(
             model=config.MODEL,
