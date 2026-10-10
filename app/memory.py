@@ -38,6 +38,12 @@ class Memory:
                 output_tokens INTEGER NOT NULL DEFAULT 0,
                 PRIMARY KEY (day, kind)
             );
+            CREATE TABLE IF NOT EXISTS reminders (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                content TEXT NOT NULL,       -- việc cần nhắc, ví dụ "Gọi điện cho mẹ"
+                due_at TEXT NOT NULL,        -- "YYYY-MM-DD HH:MM" giờ máy tính
+                done INTEGER NOT NULL DEFAULT 0
+            );
             CREATE TABLE IF NOT EXISTS facts (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 content TEXT NOT NULL UNIQUE,
@@ -123,6 +129,48 @@ class Memory:
         ).fetchone()
         return {"calls": row[0], "input_tokens": row[1], "output_tokens": row[2]}
 
+    # --- Lời nhắc theo giờ ---
+    def add_reminders(self, items: list[dict], now: datetime | None = None) -> int:
+        """Thêm lời nhắc dạng {"luc": "YYYY-MM-DD HH:MM", "viec": "..."}. Giờ sai hoặc đã qua thì bỏ."""
+        now = now or datetime.now()
+        added = 0
+        for it in items:
+            if not isinstance(it, dict):
+                continue
+            viec = re.sub(r"\s+", " ", str(it.get("viec", ""))).strip()
+            try:
+                luc = datetime.strptime(str(it.get("luc", "")).strip()[:16], "%Y-%m-%d %H:%M")
+            except ValueError:
+                continue
+            if not viec or luc < now - timedelta(minutes=1):
+                continue
+            due = luc.strftime("%Y-%m-%d %H:%M")
+            exists = self.conn.execute(
+                "SELECT 1 FROM reminders WHERE done = 0 AND due_at = ? AND lower(content) = lower(?)", (due, viec)
+            ).fetchone()
+            if not exists:
+                self.conn.execute("INSERT INTO reminders (content, due_at) VALUES (?, ?)", (viec, due))
+                added += 1
+        self.conn.commit()
+        return added
+
+    def upcoming_reminders(self) -> list[dict]:
+        rows = self.conn.execute("SELECT id, content, due_at FROM reminders WHERE done = 0 ORDER BY due_at").fetchall()
+        return [{"id": i, "viec": c, "luc": t} for i, c, t in rows]
+
+    def pop_due_reminders(self, now: datetime | None = None) -> list[dict]:
+        """Lấy các lời nhắc đã tới giờ và đánh dấu đã nhắc (mỗi lời nhắc chỉ báo một lần)."""
+        now_s = (now or datetime.now()).strftime("%Y-%m-%d %H:%M")
+        due = [r for r in self.upcoming_reminders() if r["luc"] <= now_s]
+        for r in due:
+            self.conn.execute("UPDATE reminders SET done = 1 WHERE id = ?", (r["id"],))
+        self.conn.commit()
+        return due
+
+    def delete_reminder(self, reminder_id: int) -> None:
+        self.conn.execute("DELETE FROM reminders WHERE id = ?", (reminder_id,))
+        self.conn.commit()
+
     # --- Chuyện cần hỏi thăm ---
     def add_followups(self, items: list[str]) -> None:
         known = {self._key(f["content"]) for f in self.pending_followups(min_hours=0)}
@@ -202,6 +250,7 @@ class Memory:
         "summaries": ("content", "upto_id", "created_at"),
         "followups": ("content", "done", "created_at"),
         "facts": ("content", "created_at"),
+        "reminders": ("content", "due_at", "done"),
     }
 
     def export_all(self) -> dict:

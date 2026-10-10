@@ -152,3 +152,12 @@
 - 62 test qua hết.
 
 **Tân cần thử:** thêm Bơ vào màn hình chính iPhone (chung Wi-Fi), mở từ biểu tượng.
+
+## 2026-10-10 – Giai đoạn 8 xong (báo cáo): nhắc việc
+- Nhắn "8h tối nhắc mình gọi mẹ" → Bơ ghi lời nhắc (mục nội bộ `nhac` trong JSON). Tới giờ Bơ tự nhắn "Tới giờ rồi nè: gọi mẹ!", vẫy tay, đọc to nếu bật giọng. Có thông báo của trình duyệt nếu Tân cho phép và đang ở tab khác. Nhắc không tốn câu API.
+- Xem/xóa lời nhắc sắp tới trong "Bơ nhớ gì về mình?". Lời nhắc có trong file sao lưu. Thiết bị hỏi qua `/api/thiet-bi/nhac`.
+- Giới hạn: chỉ nhắc khi máy tính đang chạy Bơ và web đang mở.
+- Cả giai đoạn 8: xử lý 2 tin cùng lúc, ngân sách tháng, tự kiểm tra cấu hình, biểu tượng màn hình chính, nhắc việc.
+- 67 test qua hết.
+
+**Tân cần thử:** nhắn "2 phút nữa nhắc mình uống nước", để yên trang web, chờ Bơ nhắc.

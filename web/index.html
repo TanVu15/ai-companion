@@ -118,6 +118,8 @@
   <h2>Bơ nhớ gì về bạn</h2>
   <p>Xóa những điều sai hoặc bạn không muốn Bơ nhớ nữa.</p>
   <ul id="facts"></ul>
+  <h2 style="margin-top:8px">Lời nhắc sắp tới</h2>
+  <ul id="rems" class="plain"></ul>
   <p>
     <a class="link" href="/api/sao-luu" download>Tải bản sao lưu</a>
     <label class="link" for="restoreFile" style="cursor:pointer">Nạp bản sao lưu</label>
@@ -230,6 +232,7 @@ form.addEventListener('submit', (ev) => {
   const text = input.value.trim();
   if (!text || send.disabled) return;
   add('user', text); input.value = '';
+  if (/nhắc/i.test(text)) askNotify();
   sendText(text);
 });
 input.addEventListener('keydown', (e) => {
@@ -362,6 +365,23 @@ async function greet() {
     if (r.ok && data.noi) { add('assistant', data.noi); express(data.cam_xuc, data.hanh_dong); speak(data.noi); }
   } catch (e) {}
 }
+// ---- Lời nhắc: hỏi máy chủ mỗi 30 giây (chỉ khi web đang mở) ----
+async function pollReminders() {
+  try {
+    const r = await fetch('/api/nhac');
+    if (!r.ok) return;
+    for (const x of await r.json()) {
+      add('assistant', x.noi); express(x.cam_xuc, x.hanh_dong); speak(x.noi);
+      if (window.Notification && Notification.permission === 'granted' && document.hidden) new Notification('Bơ', { body: x.noi, icon: '/web/icon-180.png' });
+    }
+  } catch (e) {}
+}
+setInterval(pollReminders, 30000);
+// Lần đầu Tân nhờ nhắc việc thì xin phép hiện thông báo (để thấy được cả khi đang ở tab khác)
+function askNotify() {
+  if (window.Notification && Notification.permission === 'default') Notification.requestPermission().catch(() => {});
+}
+
 async function checkHealth() {
   try {
     const d = await (await fetch('/api/suc-khoe')).json();
@@ -370,7 +390,7 @@ async function checkHealth() {
     express('buon'); return false;
   } catch (e) { return true; }
 }
-loadHistory().then(checkHealth).then(ok => { if (ok) greet(); });
+loadHistory().then(checkHealth).then(ok => { if (ok) { pollReminders(); greet(); } });
 
 const mem = document.getElementById('mem'), factsEl = document.getElementById('facts');
 async function delFact(content) {
@@ -389,7 +409,21 @@ async function loadFacts() {
     li.append(span, b); factsEl.appendChild(li);
   });
 }
-document.getElementById('openMem').onclick = () => { loadFacts(); mem.showModal(); };
+const remsEl = document.getElementById('rems');
+async function loadReminders() {
+  remsEl.innerHTML = '';
+  let list = [];
+  try { const r = await fetch('/api/nhac/sap-toi'); if (r.ok) list = await r.json(); } catch (e) {}
+  if (!list.length) { const li = document.createElement('li'); li.textContent = 'Chưa có. Thử nhắn: "8h tối nhắc mình gọi mẹ".'; remsEl.appendChild(li); }
+  list.forEach(x => {
+    const li = document.createElement('li'), b = document.createElement('button');
+    li.textContent = x.luc.slice(11) + ' ' + x.luc.slice(8, 10) + '/' + x.luc.slice(5, 7) + ' — ' + x.viec + ' ';
+    b.textContent = 'Xóa'; b.type = 'button'; b.className = 'link'; b.setAttribute('aria-label', 'Xóa lời nhắc: ' + x.viec);
+    b.onclick = async () => { await fetch('/api/nhac/' + x.id, { method: 'DELETE' }); loadReminders(); };
+    li.appendChild(b); remsEl.appendChild(li);
+  });
+}
+document.getElementById('openMem').onclick = () => { loadFacts(); loadReminders(); mem.showModal(); };
 document.getElementById('closeMem').onclick = () => mem.close();
 document.getElementById('restoreFile').onchange = async (ev) => {
   const file = ev.target.files[0]; ev.target.value = '';

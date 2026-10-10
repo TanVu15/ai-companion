@@ -193,6 +193,23 @@ def health():
     return {"ok": all(c["muc"] != "loi" for c in checks), "model": config.MODEL, "kiem_tra": checks}
 
 
+@app.get("/api/nhac")
+def reminders_due():
+    """Web gọi mỗi 30 giây: trả các lời nhắc vừa tới giờ (mỗi cái chỉ trả một lần)."""
+    return [r.to_dict() for r in get_brain().due_reminders()]
+
+
+@app.get("/api/nhac/sap-toi")
+def reminders_upcoming():
+    return get_brain().memory.upcoming_reminders()
+
+
+@app.delete("/api/nhac/{reminder_id}")
+def reminder_delete(reminder_id: int):
+    get_brain().memory.delete_reminder(reminder_id)
+    return {"ok": True}
+
+
 @app.get("/api/history")
 def history(before_id: int | None = None, limit: int = 50):
     """Tin nhắn gần nhất (kèm giờ). Gửi before_id để lấy thêm tin cũ hơn."""
@@ -253,3 +270,10 @@ def device_greet(request: Request, khong_dau: int = 0):
     """Thiết bị gọi khi vừa bật / thấy người: Bơ chủ động hỏi thăm nếu có chuyện. Không thì {"noi": null}."""
     _check_device(request)
     return _device_out(greet(), khong_dau)
+
+
+@app.get("/api/thiet-bi/nhac")
+def device_reminders(request: Request, khong_dau: int = 0):
+    """Thiết bị hỏi định kỳ: có lời nhắc nào tới giờ không."""
+    _check_device(request)
+    return [_device_out(r, khong_dau) for r in reminders_due()]

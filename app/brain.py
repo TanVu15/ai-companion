@@ -18,7 +18,8 @@ Chỉ trả về MỘT đối tượng JSON, không viết gì ngoài JSON:
   "ghi_nho": ["điều MỚI đáng nhớ về người dùng trong tin nhắn vừa rồi, nếu có"],
   "quen": ["điều trong phần 'Điều bạn đã biết' nay đã sai/lỗi thời, chép y nguyên"],
   "hoi_tham": ["chuyện sắp diễn ra mà lần sau nên hỏi lại, ví dụ 'Chiều nay đi tập chân'"],
-  "da_hoi": ["chuyện trong phần 'Chuyện nên hỏi thăm' mà bạn vừa hỏi hoặc người dùng đã kể, chép y nguyên"]
+  "da_hoi": ["chuyện trong phần 'Chuyện nên hỏi thăm' mà bạn vừa hỏi hoặc người dùng đã kể, chép y nguyên"],
+  "nhac": [{{"luc": "YYYY-MM-DD HH:MM", "viec": "việc cần nhắc"}}]
 }}
 - "noi" ngắn gọn như nhắn tin với bạn bè, thường 1-3 câu.
 - "ghi_nho" chỉ ghi điều người dùng tự kể (tên, sở thích, kế hoạch, chuyện đáng nhớ). Không có thì để [].
@@ -29,6 +30,8 @@ Chỉ trả về MỘT đối tượng JSON, không viết gì ngoài JSON:
   ghi ngắn kèm thời điểm nếu có. Không có thì để [].
 - Nếu có phần "Chuyện nên hỏi thăm", hãy hỏi thăm TỰ NHIÊN một chuyện khi hợp lúc (không hỏi dồn),
   rồi chép chuyện đó vào "da_hoi". Không có thì để [].
+- "nhac": CHỈ khi người dùng nhờ nhắc việc vào một giờ cụ thể ("8h tối nhắc mình gọi mẹ").
+  Tính giờ theo "Bây giờ là..." ở trên, ghi đủ ngày giờ. Không có thì để []. Đừng tự hứa nhắc nếu không ghi vào đây.
 """
 
 
@@ -41,6 +44,7 @@ class Reply:
     quen: list[str] = field(default_factory=list)
     hoi_tham: list[str] = field(default_factory=list)
     da_hoi: list[str] = field(default_factory=list)
+    nhac: list[dict] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         return {"noi": self.noi, "cam_xuc": self.cam_xuc, "hanh_dong": self.hanh_dong}
@@ -129,6 +133,8 @@ def parse_reply(text: str) -> Reply:
                     quen=_str_list(quen),
                     hoi_tham=_str_list(data.get("hoi_tham") or []),
                     da_hoi=_str_list(data.get("da_hoi") or []),
+                    nhac=[x for x in (data.get("nhac") or []) if isinstance(x, dict)]
+                    if isinstance(data.get("nhac"), list) else [],
                 )
         except json.JSONDecodeError:
             pass
@@ -166,6 +172,11 @@ def friendly_error(e: Exception) -> str:
 def cost_usd(u: dict) -> float:
     """Ước tính tiền (đô la Mỹ) từ số token."""
     return (u["input_tokens"] * config.PRICE_INPUT_PER_MTOK + u["output_tokens"] * config.PRICE_OUTPUT_PER_MTOK) / 1e6
+
+
+def reminder_text(viec: str) -> str:
+    """Câu Bơ nói khi tới giờ nhắc."""
+    return f"Tới giờ rồi nè: {viec[:1].lower() + viec[1:]}!"
 
 
 class Brain:
@@ -223,6 +234,16 @@ class Brain:
     def over_budget(self) -> bool:
         return config.MONTHLY_USD_LIMIT > 0 and self.month_cost() >= config.MONTHLY_USD_LIMIT
 
+    def due_reminders(self) -> list[Reply]:
+        """Lời nhắc tới giờ → câu Bơ nói (lưu vào lịch sử). Không gọi API nên không tốn tiền."""
+        with self._lock:
+            out = []
+            for r in self.memory.pop_due_reminders():
+                reply = Reply(noi=reminder_text(r["viec"]), cam_xuc="hao_hung", hanh_dong="vay_tay")
+                self.memory.add_message("assistant", reply.noi)
+                out.append(reply)
+            return out
+
     def _chat(self, user_text: str) -> Reply:
         if self.memory.replies_today() >= config.DAILY_LIMIT:
             return Reply(noi="Hôm nay mình nói nhiều quá rồi, mai nói tiếp nha!", cam_xuc="thuong")
@@ -272,6 +293,7 @@ class Brain:
         self.memory.add_facts(reply.ghi_nho)
         self.memory.done_followups(reply.da_hoi)
         self.memory.add_followups(reply.hoi_tham)
+        self.memory.add_reminders(reply.nhac)
         self.maybe_merge_facts()
         self.maybe_summarize()
         return reply

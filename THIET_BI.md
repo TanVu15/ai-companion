@@ -41,6 +41,12 @@ Trả về:
 Nếu có chuyện cần hỏi thăm (ví dụ hôm qua Tân kể đi tập chân) và đã lâu không nói chuyện, Bơ mở lời trước.
 Không có thì trả `{"noi": null}` → thiết bị im lặng. Không tốn tiền API khi không có gì để hỏi.
 
+### 3. Lời nhắc tới giờ: `GET /api/thiet-bi/nhac`
+
+Thiết bị hỏi mỗi 30 giây. Có lời nhắc tới giờ (Tân nhờ "8h tối nhắc mình gọi mẹ") thì trả danh sách
+`[{"noi": "Tới giờ rồi nè: gọi mẹ!", "cam_xuc": "hao_hung", "hanh_dong": "vay_tay"}]`, không có thì `[]`.
+Mỗi lời nhắc chỉ báo **một lần**: nếu web và thiết bị cùng mở, nơi nào hỏi trước thì nơi đó nhận.
+
 ## Lỗi thường gặp
 
 | Mã | Nghĩa | Thiết bị nên làm |
