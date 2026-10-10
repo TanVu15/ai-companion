@@ -1,6 +1,7 @@
 """Bộ não: ghép tính cách + trí nhớ + lịch sử chat, hỏi Claude, rồi đọc kết quả JSON."""
 import json
 import re
+import threading
 import time
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -179,6 +180,9 @@ class Brain:
             )
         self.client = client
         self._sleep = sleep
+        # Mỗi lần chỉ xử lý một tin: hai tin tới cùng lúc (điện thoại + máy tính) thì tin sau chờ tin trước,
+        # để lịch sử không bị xen lẫn và SQLite không bị ghi chồng.
+        self._lock = threading.RLock()
         self._merged_at = 0  # số điều đáng nhớ còn lại sau lần gộp gần nhất
 
     def _create(self, retries: int | None = None, kind: str = "chat", **kwargs):
@@ -204,6 +208,14 @@ class Brain:
         return config.PERSONA_PATH.read_text(encoding="utf-8")
 
     def chat(self, user_text: str) -> Reply:
+        with self._lock:
+            return self._chat(user_text)
+
+    def greet(self) -> Reply | None:
+        with self._lock:
+            return self._greet()
+
+    def _chat(self, user_text: str) -> Reply:
         if self.memory.replies_today() >= config.DAILY_LIMIT:
             return Reply(noi="Hôm nay mình nói nhiều quá rồi, mai nói tiếp nha!", cam_xuc="thuong")
         msg_id = self.memory.add_message("user", user_text)
@@ -215,7 +227,7 @@ class Brain:
             self.memory.delete_message(msg_id)
             raise
 
-    def greet(self) -> Reply | None:
+    def _greet(self) -> Reply | None:
         """Bơ chủ động mở lời khi người dùng quay lại sau một thời gian và có chuyện nên hỏi thăm.
         Không có gì để hỏi hoặc vừa mới nói chuyện xong thì trả về None (không tốn câu API nào)."""
         if self.memory.replies_today() >= config.DAILY_LIMIT:

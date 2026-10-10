@@ -247,3 +247,20 @@ def test_usage_tracked_and_costed(memory, monkeypatch):
     monkeypatch.setattr(config, "PRICE_INPUT_PER_MTOK", 1.0)
     monkeypatch.setattr(config, "PRICE_OUTPUT_PER_MTOK", 5.0)
     assert cost_usd(u) == pytest.approx(0.004)
+
+
+def test_two_messages_at_once_do_not_interleave(memory):
+    import threading
+    import time as _time
+
+    class SlowClient(FakeClient):
+        def _create(self, **kwargs):
+            _time.sleep(0.05)
+            return super()._create(**kwargs)
+
+    brain = Brain(memory, client=SlowClient([json.dumps({"noi": "A"}), json.dumps({"noi": "B"})]))
+    ts = [threading.Thread(target=brain.chat, args=(t,)) for t in ("một", "hai")]
+    [t.start() for t in ts]
+    [t.join() for t in ts]
+    roles = [m["role"] for m in memory.recent_messages(10)]
+    assert roles == ["user", "assistant", "user", "assistant"]  # không bị user, user, assistant, assistant

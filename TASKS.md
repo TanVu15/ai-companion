@@ -41,6 +41,13 @@
 - [x] Hiện giờ gửi tin nhắn, tải thêm tin cũ khi kéo lên
 - [x] Thêm tình huống "hỏi thăm chuyện cũ" vào bộ chấm điểm tính cách
 
+## Giai đoạn 8 – Ổn định & tiện dùng (chỉ phần mềm, Claude tự thêm)
+- [x] An toàn khi 2 tin gửi cùng lúc (điện thoại + máy tính)
+- [ ] Giới hạn chi phí theo tiền mỗi tháng (ngoài giới hạn số câu/ngày)
+- [ ] Kiểm tra sức khỏe /api/suc-khoe: báo thiếu API key, thiếu persona, dung lượng dữ liệu
+- [ ] Thêm Bơ vào màn hình chính iPhone (biểu tượng, mở toàn màn hình)
+- [ ] Nhắc việc theo giờ ("8h tối nhắc mình gọi mẹ"), báo khi web đang mở
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo

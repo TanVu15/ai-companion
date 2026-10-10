@@ -129,3 +129,7 @@
 - 57 test qua hết.
 
 **Tân cần thử:** `python -m app.thu_tinh_cach` (12 câu API) và gửi tổng điểm vào FEEDBACK.md.
+
+## 2026-10-10 – Giai đoạn 8: gửi cùng lúc
+- Hai tin tới cùng lúc (ví dụ điện thoại và máy tính) thì Bơ trả lời lần lượt, lịch sử không bị xen lẫn.
+- 58 test qua hết.
