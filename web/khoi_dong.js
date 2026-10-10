@@ -84,3 +84,16 @@ async function checkHealth() {
   } catch (e) { return true; }
 }
 loadHistory().then(checkHealth).then(async ok => { if (ok) { await greet(); pollReminders(); } });
+
+// Dòng lịch dưới tên Bơ: "Thứ Bảy 10/10 · âm 30/8 · Tết Trung thu". Cập nhật mỗi 10 phút (qua nửa đêm tự đổi).
+async function showLich() {
+  try {
+    const d = await (await fetch('/api/hom-nay')).json();
+    const el = document.getElementById('lich');
+    el.textContent = d.thu.charAt(0).toUpperCase() + d.thu.slice(1) + ' ' + d.duong.slice(0, 5) + ' · âm ' + d.am;
+    el.title = 'Năm ' + d.nam_am + ' (âm lịch)';
+    if (d.le && d.le.length) { const b = document.createElement('b'); b.textContent = ' · ' + d.le.join(', '); el.appendChild(b); }
+  } catch (e) {}
+}
+showLich(); setInterval(showLich, 10 * 60 * 1000);
+

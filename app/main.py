@@ -338,6 +338,29 @@ def stats():
         return brain.memory.stats()
 
 
+def _hom_nay() -> dict:
+    """Thứ, ngày dương, ngày âm, ngày lễ hôm nay (tính offline, không tốn API)."""
+    from datetime import date
+
+    from .am_lich import duong_sang_am, ngay_le, ten_nam
+    from .brain import THU
+
+    d = date.today()
+    ngay, thang, nam, nhuan = duong_sang_am(d)
+    return {
+        "thu": THU[d.weekday()],
+        "duong": d.strftime("%d/%m/%Y"),
+        "am": f"{ngay}/{thang}{' nhuận' if nhuan else ''}",
+        "nam_am": ten_nam(nam),
+        "le": ngay_le(d),
+    }
+
+
+@app.get("/api/hom-nay")
+def today_info():
+    return _hom_nay()
+
+
 @app.get("/api/cai-dat")
 def settings():
     """Cài đặt đang dùng + những mục đã chỉnh trên web (khác .env)."""
@@ -643,3 +666,13 @@ def device_todos(request: Request, khong_dau: int = 0):
     with brain._lock:
         items = brain.memory.todos(include_done=False)
     return [_device_out({"viec": t["viec"]}, khong_dau) for t in items]
+
+
+@app.get("/api/thiet-bi/hom-nay")
+def device_today(request: Request, khong_dau: int = 0):
+    """Cho màn hình đồng hồ: {"thu", "duong", "am", "nam_am", "le": [...]}. ?khong_dau=1 để bỏ dấu."""
+    _check_device(request)
+    d = _hom_nay()
+    if khong_dau:
+        d = {k: ([bo_dau(x) for x in v] if isinstance(v, list) else bo_dau(v)) for k, v in d.items()}
+    return d

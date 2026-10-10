@@ -52,6 +52,11 @@ Mỗi lời nhắc chỉ báo **một lần**: nếu web và thiết bị cùng 
 Danh sách việc Tân nhờ Bơ ghi mà chưa xong (cũ → mới), ví dụ `[{"viec": "Mua sữa"}, {"viec": "Trả sách"}]`.
 Màn hình nhỏ có thể hiện khi Tân hỏi "còn việc gì?" hoặc lúc rảnh. Thêm `?khong_dau=1` để bỏ dấu. Không tốn tiền API.
 
+### 5. Lịch hôm nay: `GET /api/thiet-bi/hom-nay`
+
+`{"thu": "thứ Bảy", "duong": "10/10/2026", "am": "1/9", "nam_am": "Bính Ngọ", "le": []}` — cho màn hình đồng hồ
+(ngày âm tính sẵn trên máy chủ, thiết bị không cần tự tính). `?khong_dau=1` để bỏ dấu. Không tốn tiền API.
+
 ## Lỗi thường gặp
 
 | Mã | Nghĩa | Thiết bị nên làm |

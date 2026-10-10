@@ -149,6 +149,11 @@
 - [x] Ngày đặc biệt theo âm lịch ("giỗ ông 15/7 âm lịch")
 - [x] Rà soát code lần 10 (âm lịch, ngày lễ), sửa lỗi tìm được
 
+## Giai đoạn 29 – Lịch nhỏ (chỉ phần mềm, Claude tự thêm)
+- [x] Dòng lịch dưới tên Bơ: thứ, ngày dương, ngày âm, lễ hôm nay
+- [x] Cổng thiết bị /api/thiet-bi/hom-nay cho màn hình đồng hồ sau này
+- [ ] Chấm điểm thêm tình huống âm lịch, giỗ âm
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo

@@ -66,3 +66,18 @@ def test_ngay_hiem_khong_ra_ngay_0():
     for d in (date(2054, 5, 7), date(2062, 4, 9)):
         ngay, thang, nam, nhuan = duong_sang_am(d)
         assert ngay >= 1 and am_sang_duong(ngay, thang, nam, nhuan) == d
+
+
+def test_api_hom_nay(tmp_path, monkeypatch):
+    from app import config, main
+    from tests.test_api import make_client
+
+    c = make_client(tmp_path, [])
+    d = c.get("/api/hom-nay").json()
+    ngay, thang, nam, nhuan = duong_sang_am(date.today())
+    assert d["duong"] == date.today().strftime("%d/%m/%Y") and d["am"].startswith(f"{ngay}/{thang}")
+    assert d["nam_am"] == ten_nam(nam) and isinstance(d["le"], list)
+    monkeypatch.setattr(config, "DEVICE_KEY", "k")
+    r = c.get("/api/thiet-bi/hom-nay?khong_dau=1", headers={"X-Device-Key": "k"}).json()
+    assert r["nam_am"] == main.bo_dau(ten_nam(nam)) and r["thu"].isascii()
+    assert c.get("/api/thiet-bi/hom-nay", headers={"X-Device-Key": "sai"}).status_code == 401

@@ -534,3 +534,7 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 
 **Tân cần thử:** hỏi "hôm nay âm lịch ngày mấy?"; kể "giỗ ông 15/7 âm lịch".
 
+## 2026-10-10 – Giai đoạn 29: lịch nhỏ
+- Dưới tên Bơ có dòng lịch: "Thứ Bảy 10/10 · âm 1/9", ngày lễ thì thêm chữ đậm (ví dụ "· Tết Trung thu"). Tự cập nhật qua nửa đêm.
+- Cổng thiết bị `GET /api/thiet-bi/hom-nay` cho màn hình đồng hồ sau này (xem `THIET_BI.md`). 186 test qua hết.
+
