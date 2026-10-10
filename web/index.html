@@ -114,6 +114,8 @@
     header { padding-top: 8px; } .face { zoom: .65; } .name { margin-top: 2px; }
     #personaText { height: 35vh; }
   }
+  .diary { max-height: 55vh; overflow-y: auto; }
+  .diary h3 { font-size: 0.95em; margin: 10px 0 4px; opacity: 0.8; }
   .todos li { display: flex; gap: 8px; align-items: center; }
   .todos label { flex: 1; display: flex; gap: 10px; align-items: center; cursor: pointer; }
   .todos input[type=checkbox] { width: 20px; height: 20px; flex: none; }
@@ -157,6 +159,7 @@
     <div>
       <button class="link" id="openMem" type="button">Bơ nhớ gì về mình?</button>
       <button class="link" id="openTodo" type="button">Việc cần làm</button>
+      <button class="link" id="openDiary" type="button">Nhật ký</button>
       <button class="link" id="openSearch" type="button">Tìm</button>
       <button class="link" id="openHelp" type="button" aria-label="Bơ làm được gì?">?</button>
       <button class="link" id="openCost" type="button">Chi phí</button>
@@ -211,6 +214,12 @@
   <p id="todoErr" hidden></p>
   <ul id="todos" class="plain todos"></ul>
   <div class="row"><span></span><button id="closeTodo" type="button">Xong</button></div>
+</dialog>
+<dialog id="diary">
+  <h2>Nhật ký</h2>
+  <p>Kể Bơ nghe chuyện trong ngày ("hôm nay mình đi đá bóng, thắng 3-1"), Bơ ghi lại ở đây.</p>
+  <div id="diaryList" class="diary"></div>
+  <div class="row"><button class="link" id="moreDiary" type="button" hidden>Xem cũ hơn</button><button id="closeDiary" type="button">Xong</button></div>
 </dialog>
 <dialog id="help">
   <p id="stats"></p>

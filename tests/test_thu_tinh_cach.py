@@ -7,7 +7,7 @@ from tests.test_brain import FakeClient
 
 def test_file_tinh_huong_hop_le():
     ds = json.loads(t.TINH_HUONG_PATH.read_text(encoding="utf-8"))
-    assert len(ds) == 22
+    assert len(ds) == 25
     for th in ds:
         assert th["ten"] and th["tin_nhan"]
 
@@ -98,3 +98,14 @@ def test_am_lich():
     assert kq.diem == 1.0
     [kq] = t.chay(FakeClient([json.dumps({"noi": "Không biết", "ngay_dac_biet": [{"ngay": "15/7", "viec": "Giỗ"}]})]), [th])
     assert ("Nói đúng ngày âm hôm nay", False) in kq.kiem_tra and ("Ghi đúng là ngày âm lịch", False) in kq.kiem_tra
+
+
+
+def test_cham_nhat_ky():
+    from app.brain import parse_reply
+
+    co = json.dumps({"noi": "Đỉnh. Thắng mấy?", "cam_xuc": "vui", "nhat_ky": "Đá bóng"})
+    kq = t.cham({"ten": "Kể", "tin_nhan": "x", "phai_ghi_nhat_ky": True}, co, parse_reply(co))
+    assert ("Ghi nhật ký", True) in kq.kiem_tra
+    kq = t.cham({"ten": "Hỏi", "tin_nhan": "x", "khong_ghi_nhat_ky": True}, co, parse_reply(co))
+    assert ("Không ghi nhật ký chuyện vặt", False) in kq.kiem_tra

@@ -173,6 +173,12 @@
 - [x] Sửa lỗi: so trùng không phân biệt hoa/thường với chữ có dấu ("Đi làm" = "đi làm")
 - [x] Rà soát code lần 13, sửa lỗi tìm được
 
+## Giai đoạn 34 – Nhật ký ngày (chỉ phần mềm, Claude tự thêm)
+- [x] Tân kể chuyện trong ngày → Bơ ghi một dòng nhật ký; Bơ nhớ 3 ngày gần nhất ("hôm qua mình làm gì?")
+- [x] Nút "Nhật ký" trên web: xem theo ngày, xóa dòng, xem cũ hơn; có trong bản sao lưu
+- [x] Bộ chấm điểm thêm 3 tình huống (ghi nhật ký, không ghi chuyện vặt, nhắc thứ 2–6)
+- [ ] Rà soát code lần 14, sửa lỗi tìm được
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo

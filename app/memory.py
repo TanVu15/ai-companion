@@ -67,6 +67,12 @@ class Memory:
                 created_at TEXT DEFAULT (datetime('now', 'localtime')),
                 done_at TEXT
             );
+            CREATE TABLE IF NOT EXISTS diary (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                day TEXT NOT NULL,           -- "YYYY-MM-DD"
+                content TEXT NOT NULL,       -- một dòng nhật ký, ví dụ "Đi đá bóng, thắng 3-1"
+                created_at TEXT DEFAULT (datetime('now', 'localtime'))
+            );
             CREATE TABLE IF NOT EXISTS kv (
                 key TEXT PRIMARY KEY,        -- cài đặt nhỏ, ví dụ tuần đã tổng kết
                 value TEXT NOT NULL
@@ -760,6 +766,45 @@ class Memory:
         self.conn.execute("DELETE FROM facts")
         self.conn.commit()
 
+    # --- Nhật ký ngày ---
+    DIARY_PER_DAY = 12
+
+    def add_diary(self, content: str, day: date | None = None) -> bool:
+        """Thêm một dòng nhật ký cho ngày `day`. Trống, trùng hoặc đã đủ dòng trong ngày thì bỏ."""
+        content = re.sub(r"\s+", " ", str(content or "")).strip()[:200]
+        if not content:
+            return False
+        day_s = (day or date.today()).isoformat()
+        rows = [c for (c,) in self.conn.execute("SELECT content FROM diary WHERE day = ?", (day_s,))]
+        if len(rows) >= self.DIARY_PER_DAY or self._key(content) in {self._key(c) for c in rows}:
+            return False
+        self.conn.execute("INSERT INTO diary (day, content) VALUES (?, ?)", (day_s, content))
+        self.conn.commit()
+        return True
+
+    def diary_recent(self, today: date | None = None, days: int = 3) -> list[dict]:
+        """Nhật ký `days` ngày gần nhất (tính cả hôm nay), cũ trước: [{"id", "ngay", "noi_dung"}]."""
+        today = today or date.today()
+        since = (today - timedelta(days=days - 1)).isoformat()
+        rows = self.conn.execute(
+            "SELECT id, day, content FROM diary WHERE day >= ? AND day <= ? ORDER BY day, id", (since, today.isoformat())
+        ).fetchall()
+        return [{"id": i, "ngay": d, "noi_dung": c} for i, d, c in rows]
+
+    def diary_days(self, limit: int = 30, before: str | None = None) -> list[dict]:
+        """Nhật ký theo ngày, mới nhất trước: [{"ngay", "dong": [{"id", "noi_dung"}]}] (tối đa `limit` ngày)."""
+        q = "SELECT DISTINCT day FROM diary" + (" WHERE day < ?" if before else "") + " ORDER BY day DESC LIMIT ?"
+        days = [d for (d,) in self.conn.execute(q, (before, limit) if before else (limit,))]
+        out = []
+        for d in days:
+            rows = self.conn.execute("SELECT id, content FROM diary WHERE day = ? ORDER BY id", (d,)).fetchall()
+            out.append({"ngay": d, "dong": [{"id": i, "noi_dung": c} for i, c in rows]})
+        return out
+
+    def delete_diary(self, diary_id: int) -> None:
+        self.conn.execute("DELETE FROM diary WHERE id = ?", (diary_id,))
+        self.conn.commit()
+
     # --- Sao lưu / khôi phục ---
     _BACKUP_TABLES = {
         "messages": ("role", "content", "created_at", "cam_xuc", "tu_dong", "ghim", "tam_trang"),
@@ -769,6 +814,7 @@ class Memory:
         "reminders": ("content", "due_at", "done", "lap", "ngay_goc"),
         "special_days": ("day", "content", "wished_year", "nhac_truoc_year", "am"),
         "todos": ("content", "done", "created_at", "done_at"),
+        "diary": ("day", "content", "created_at"),
     }
 
     def export_all(self) -> dict:

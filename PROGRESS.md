@@ -605,3 +605,10 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 
 **Tân cần thử (giai đoạn 33):** "ngày đi làm 7h sáng nhắc mình uống nước" → xem "Lời nhắc sắp tới" ghi "(thứ 2–6)"; "ngày 5 hằng tháng nhắc đóng tiền nhà".
 
+## 2026-10-10 – Giai đoạn 34: nhật ký ngày
+- Tân kể việc đã làm trong ngày ("hôm nay đi đá bóng, thắng 3-1") → Bơ tự ghi một dòng nhật ký (tối đa 12 dòng/ngày, không trùng). Chào hỏi, hỏi linh tinh thì không ghi.
+- Bơ được xem nhật ký 3 ngày gần nhất → hỏi "hôm qua mình làm gì nhỉ?" là Bơ kể lại đúng. Tốn thêm rất ít chữ mỗi câu.
+- Nút **"Nhật ký"** cạnh "Việc cần làm": xem theo ngày (Hôm nay, Hôm qua, Thứ Năm 08/10...), xóa dòng sai, "Xem cũ hơn". Nhật ký nằm trong bản sao lưu.
+- Bộ chấm điểm `python -m app.thu_tinh_cach` thêm 3 tình huống (25 tình huống).
+- 223 test qua hết.
+

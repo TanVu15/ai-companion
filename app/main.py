@@ -1,6 +1,7 @@
 """Máy chủ web: phục vụ trang chat và nhận tin nhắn gửi tới bộ não."""
 import base64
 import json
+import re
 import threading
 import os
 import secrets
@@ -530,6 +531,24 @@ def delete_todo(todo_id: int):
     brain = get_brain()
     with brain._lock:
         brain.memory.delete_todo(todo_id)
+    return {"ok": True}
+
+
+@app.get("/api/nhat-ky")
+def diary(truoc: str | None = None):
+    """Nhật ký 14 ngày (có dòng) gần nhất; ?truoc=YYYY-MM-DD để xem cũ hơn."""
+    if truoc is not None and not re.fullmatch(r"\d{4}-\d{2}-\d{2}", truoc):
+        raise HTTPException(400, "Ngày không hợp lệ")
+    brain = get_brain()
+    with brain._lock:
+        return brain.memory.diary_days(limit=14, before=truoc)
+
+
+@app.delete("/api/nhat-ky/{diary_id}")
+def diary_delete(diary_id: int):
+    brain = get_brain()
+    with brain._lock:
+        brain.memory.delete_diary(diary_id)
     return {"ok": True}
 
 

@@ -443,3 +443,41 @@ document.getElementById('lichIcs').addEventListener('click', async (ev) => {
     location.href = '/api/lich.ics';  // mở thẳng: iPhone hiện "Thêm vào Lịch", máy tính thì tải file về
   } catch (e) { alert('Mất mạng, thử lại nha.'); }
 });
+
+// Nhật ký: các dòng Bơ ghi từ chuyện Tân kể, nhóm theo ngày, mới nhất trước.
+const diaryDlg = document.getElementById('diary'), diaryList = document.getElementById('diaryList');
+const moreDiary = document.getElementById('moreDiary');
+let diaryOldest = null;
+function diaryLabel(day) {
+  const d = new Date(day + 'T00:00:00'), t = new Date(); t.setHours(0, 0, 0, 0);
+  const diff = Math.round((t - d) / 86400000);
+  const thu = ['Chủ nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'][d.getDay()];
+  const dm = day.slice(8, 10) + '/' + day.slice(5, 7);
+  return diff === 0 ? 'Hôm nay, ' + dm : diff === 1 ? 'Hôm qua, ' + dm : thu + ' ' + dm + '/' + day.slice(0, 4);
+}
+async function loadDiary(more) {
+  if (!more) { diaryList.innerHTML = ''; diaryOldest = null; }
+  let list = [];
+  try {
+    const r = await fetch('/api/nhat-ky' + (more && diaryOldest ? '?truoc=' + diaryOldest : ''));
+    if (r.ok) list = await r.json();
+  } catch (e) {}
+  if (!list.length && !more) { const p = document.createElement('p'); p.textContent = 'Chưa có dòng nào.'; diaryList.appendChild(p); }
+  list.forEach(day => {
+    const h = document.createElement('h3'); h.textContent = diaryLabel(day.ngay);
+    const ul = document.createElement('ul'); ul.className = 'plain';
+    day.dong.forEach(x => {
+      const li = document.createElement('li'), b = document.createElement('button');
+      li.textContent = x.noi_dung + ' ';
+      b.textContent = 'Xóa'; b.type = 'button'; b.className = 'link'; b.setAttribute('aria-label', 'Xóa dòng: ' + x.noi_dung);
+      b.onclick = async () => { await fetch('/api/nhat-ky/' + x.id, { method: 'DELETE' }); li.remove(); };
+      li.appendChild(b); ul.appendChild(li);
+    });
+    diaryList.append(h, ul);
+    diaryOldest = day.ngay;
+  });
+  moreDiary.hidden = list.length < 14;
+}
+document.getElementById('openDiary').onclick = () => { diaryDlg.showModal(); loadDiary(false); };
+document.getElementById('closeDiary').onclick = () => diaryDlg.close();
+moreDiary.onclick = () => loadDiary(true);

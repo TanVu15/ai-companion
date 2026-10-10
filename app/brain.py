@@ -24,6 +24,7 @@ Chỉ trả về MỘT đối tượng JSON, không viết gì ngoài JSON:
   "ngay_dac_biet": [{{"ngay": "DD/MM", "viec": "ví dụ Sinh nhật Tân", "am_lich": false}}],
   "viec_can_lam": ["việc người dùng nhờ ghi vào danh sách việc cần làm, ví dụ 'Mua sữa'"],
   "xong_viec": ["việc trong phần 'Việc cần làm' mà người dùng nói đã làm xong, chép y nguyên"],
+  "nhat_ky": "một dòng nhật ký về chuyện đáng nhớ người dùng vừa kể HÔM NAY, hoặc chuỗi rỗng",
   "tam_trang": tâm trạng của NGƯỜI DÙNG trong tin vừa rồi, một trong {config.MOODS}
 }}
 - "noi" ngắn gọn như nhắn tin với bạn bè, thường 1-3 câu.
@@ -46,6 +47,10 @@ Chỉ trả về MỘT đối tượng JSON, không viết gì ngoài JSON:
   "thêm vào danh sách: trả sách thư viện"). Có giờ cụ thể thì dùng "nhac". Mỗi việc ngắn gọn. Không có thì để [].
 - "xong_viec": người dùng kể đã làm xong việc nào trong phần "Việc cần làm" thì chép y nguyên vào đây. Không có thì để [].
 - Hỏi "mình còn việc gì?" thì kể lại từ phần "Việc cần làm" (đừng bịa).
+- "nhat_ky": khi người dùng kể một việc đã xảy ra/đã làm trong ngày (đi đâu, gặp ai, làm được gì, chuyện vui buồn),
+  ghi MỘT dòng ngắn ngôi thứ ba, ví dụ "Đi đá bóng với nhóm bạn cũ, thắng 3-1". Chào hỏi, hỏi đáp thường thì để "".
+  Không chép lại dòng đã có cho hôm nay trong phần "Nhật ký mấy ngày gần đây".
+- Hỏi "hôm qua/mấy hôm trước mình làm gì?" thì kể lại từ phần "Nhật ký mấy ngày gần đây" (đừng bịa).
 - "tam_trang": đoán từ tin vừa rồi của người dùng (vui, binh_thuong, buon, met, lo, gian). Không rõ thì "binh_thuong".
 """
 
@@ -63,6 +68,7 @@ class Reply:
     ngay_dac_biet: list[dict] = field(default_factory=list)
     viec_can_lam: list[str] = field(default_factory=list)
     xong_viec: list[str] = field(default_factory=list)
+    nhat_ky: str = ""  # một dòng nhật ký ngày (nội bộ)
     tam_trang: str = ""  # tâm trạng người dùng Bơ đoán được (nội bộ, giao diện không dùng)
     viec_nhac: str = ""  # với lời nhắc tới giờ: việc gốc (để bấm "nhắc lại sau")
     msg_id: int = 0  # số thứ tự tin của Bơ trong lịch sử (để ghim)
@@ -186,6 +192,7 @@ def build_system_prompt(
     low_mood: list[str] | None = None,
     todos: list[dict | str] | None = None,
     upcoming: list[dict] | None = None,
+    diary: list[dict] | None = None,
 ) -> str:
     now = now or datetime.now()
     known = "\n".join(f"- {f}" for f in facts) if facts else "- (chưa biết gì)"
@@ -223,6 +230,19 @@ def build_system_prompt(
         if old:
             out += ("Việc nào ghi đã lâu thì thỉnh thoảng nhắc khéo một câu khi hợp lúc (không nhắc dồn, "
                     "không nhắc trong lúc người dùng đang buồn).\n")
+    if diary:
+        by_day: dict[str, list[str]] = {}
+        for d in diary:
+            by_day.setdefault(d["ngay"], []).append(d["noi_dung"])
+        today_s = now.strftime("%Y-%m-%d")
+        lines = []
+        for day in sorted(by_day):
+            try:
+                label = "hôm nay" if day == today_s else _when(day, now) + f" ({day[8:]}/{day[5:7]})"
+            except Exception:
+                label = day
+            lines.append(f"- {label}: " + "; ".join(by_day[day]))
+        out += "\n## Nhật ký mấy ngày gần đây (người dùng đã kể)\n" + "\n".join(lines) + "\n"
     if low_mood:
         words = ", ".join(MOOD_WORDS.get(m, m) for m in low_mood)
         out += (
@@ -281,6 +301,8 @@ def parse_reply(text: str) -> Reply:
                     ngay_dac_biet=_dict_list(data.get("ngay_dac_biet")),
                     viec_can_lam=_str_list(data.get("viec_can_lam") or []),
                     xong_viec=_str_list(data.get("xong_viec") or []),
+                    nhat_ky=re.sub(r"\s+", " ", data["nhat_ky"]).strip()[:200]
+                    if isinstance(data.get("nhat_ky"), str) else "",
                     tam_trang=data.get("tam_trang") if data.get("tam_trang") in config.MOODS else "",
                 )
         except json.JSONDecodeError:
@@ -558,6 +580,7 @@ class Brain:
             low_mood=self.memory.low_mood(today),
             todos=self.memory.todos(include_done=False),  # tối đa TODO_MAX (50) việc
             upcoming=self._upcoming(today),
+            diary=self.memory.diary_recent(today, days=3),
         )
         resp = self._create(
             model=config.MODEL,
@@ -576,6 +599,7 @@ class Brain:
         self.memory.add_reminders(reply.nhac)
         self.memory.done_todos(reply.xong_viec)
         self.memory.add_todos(reply.viec_can_lam)
+        self.memory.add_diary(reply.nhat_ky, today)
         eve_before = {d["id"] for d in self.memory.special_days_tomorrow(today)}
         self.memory.add_special_days(reply.ngay_dac_biet)
         # Đã chúc trong câu này (hoặc người dùng vừa kể "hôm nay sinh nhật mình", Bơ đã biết) → không chúc lại trong năm

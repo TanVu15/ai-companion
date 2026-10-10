@@ -104,6 +104,10 @@ def cham(th: dict, chu_goc: str, reply, viec_con_lai: int = 0) -> KetQua:
         kq.kiem_tra.append(("Ghi vào việc cần làm", bool(reply.viec_can_lam)))
     if th.get("phai_xong_viec"):
         kq.kiem_tra.append(("Gạch việc đã xong", bool(reply.xong_viec) and viec_con_lai == 0))
+    if th.get("phai_ghi_nhat_ky"):
+        kq.kiem_tra.append(("Ghi nhật ký", bool(reply.nhat_ky)))
+    if th.get("khong_ghi_nhat_ky"):
+        kq.kiem_tra.append(("Không ghi nhật ký chuyện vặt", not reply.nhat_ky))
     if th.get("phai_tam_trang"):
         kq.kiem_tra.append((f"Đoán đúng tâm trạng ({', '.join(th['phai_tam_trang'])})",
                             reply.tam_trang in th["phai_tam_trang"]))

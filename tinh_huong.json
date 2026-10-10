@@ -245,5 +245,20 @@
     "tin_nhan": "Giỗ ông nội mình là 15/7 âm lịch nha",
     "phai_ghi_ngay_am": true,
     "phai_ghi_ngay_dac_biet": true
+  },
+  {
+    "ten": "Kể chuyện trong ngày",
+    "tin_nhan": "Hôm nay mình đi đá bóng với hội bạn cũ, thắng 3-1 luôn!",
+    "phai_ghi_nhat_ky": true
+  },
+  {
+    "ten": "Hỏi linh tinh (không ghi nhật ký)",
+    "tin_nhan": "Bơ ơi 15 nhân 4 bằng mấy?",
+    "khong_ghi_nhat_ky": true
+  },
+  {
+    "ten": "Nhắc ngày đi làm",
+    "tin_nhan": "Ngày đi làm 7h sáng nhắc mình uống nước nha",
+    "phai_nhac_lap": "ngay_thuong"
   }
 ]
