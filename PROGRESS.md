@@ -377,3 +377,9 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 
 ## 2026-10-10 – Giai đoạn 19: màu mặt Bơ
 - Nút "?" → mục **Màu mặt Bơ**: vàng (mặc định), xanh bơ, hồng, xanh dương, cam, tím. Mỗi máy nhớ màu riêng.
+
+## 2026-10-10 – Giai đoạn 19 xong (báo cáo): cá nhân hóa giao diện
+- Chọn giọng đọc, chọn màu mặt Bơ, phím tắt (Esc: Bơ ngừng đọc; Ctrl+K: tìm). Tất cả lưu trên từng máy, không tốn API.
+- 125 test qua hết.
+
+**Tân cần thử:** nút "?" → đổi màu mặt; trên máy tính bấm Ctrl+K.

@@ -425,11 +425,13 @@ function wake() {
 scheduleSleep();
 
 // Chạm vào mặt Bơ khi đang đọc to → Bơ im ngay
-face.addEventListener('click', () => {
-  if (!speaking || !window.speechSynthesis) return;
+function stopSpeaking() {
+  if (!speaking || !window.speechSynthesis) return false;
   speakSeq++; speechSynthesis.cancel();
   speaking = false; face.classList.remove('talking'); resumeListening();
-});
+  return true;
+}
+face.addEventListener('click', stopSpeaking);
 
 // ---- Tìm trong chuyện cũ ----
 const searchDlg = document.getElementById('search'), searchInput = document.getElementById('searchInput');
@@ -578,3 +580,12 @@ function renderColors() {
   });
 }
 renderColors();
+
+// ---- Phím tắt: Esc = Bơ ngừng đọc (hộp đang mở thì trình duyệt tự đóng), Ctrl/Cmd+K = tìm ----
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && !document.querySelector('dialog[open]')) { if (stopSpeaking()) e.preventDefault(); return; }
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+    e.preventDefault();
+    if (!searchDlg.open) document.getElementById('openSearch').click();
+  }
+});
