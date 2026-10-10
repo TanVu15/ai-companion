@@ -63,6 +63,14 @@ class Memory:
         ).fetchall()
         return [{"role": r, "content": c} for r, c in reversed(rows)]
 
+    def history_page(self, limit: int = 50, before_id: int | None = None) -> list[dict]:
+        """Tin nhắn cho giao diện (có id và giờ), cũ → mới. `before_id` để tải thêm tin cũ hơn."""
+        rows = self.conn.execute(
+            "SELECT id, role, content, created_at FROM messages WHERE id < ? ORDER BY id DESC LIMIT ?",
+            (before_id if before_id else 2**62, limit),
+        ).fetchall()
+        return [{"id": i, "role": r, "content": c, "created_at": t} for i, r, c, t in reversed(rows)]
+
     def replies_today(self) -> int:
         today = date.today().isoformat()
         (n,) = self.conn.execute(

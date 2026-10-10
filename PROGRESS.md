@@ -117,3 +117,8 @@
 - 54 test qua hết.
 
 **Tân cần thử:** tải bản sao lưu, xóa 1 điều Bơ nhớ, rồi nạp lại file xem điều đó quay lại không.
+
+## 2026-10-10 – Giai đoạn 7: giờ tin nhắn + tin cũ
+- Mỗi tin nhắn có giờ nhỏ bên dưới ("14:05", "hôm qua 21:30", "08/10/2026 09:00").
+- Mở web hiện 50 tin gần nhất; kéo lên đầu thì tự tải thêm 50 tin cũ hơn, không bị nhảy chỗ đang đọc.
+- 55 test qua hết.

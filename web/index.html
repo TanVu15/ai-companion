@@ -52,6 +52,7 @@
   .msg { max-width: 82%; padding: 8px 12px; border-radius: 16px; white-space: pre-wrap; word-wrap: break-word; }
   .msg.user { align-self: flex-end; background: var(--me); color: var(--me-text); border-bottom-right-radius: 4px; }
   .msg.assistant { align-self: flex-start; background: var(--bot); border-bottom-left-radius: 4px; }
+  .msg .time { display: block; font-size: 11px; opacity: .6; margin-top: 2px; text-align: right; }
   .msg.error { align-self: center; color: #c0392b; font-size: 14px; background: none; }
   .msg.error .retry { margin-left: 8px; border: 1px solid #c0392b; color: #c0392b; background: #fff; border-radius: 12px; padding: 2px 10px; cursor: pointer; }
   form { display: flex; gap: 8px; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); border-top: 1px solid var(--border); background: var(--panel); }
@@ -132,10 +133,26 @@ const log = document.getElementById('log'), form = document.getElementById('form
 const input = document.getElementById('input'), send = document.getElementById('send');
 const face = document.getElementById('face'), statusEl = document.getElementById('status');
 
-function add(role, text) {
+function timeLabel(t) {
+  // t dạng "YYYY-MM-DD HH:MM:SS" (giờ máy chủ); không có thì là bây giờ
+  const d = t ? new Date(t.replace(' ', 'T')) : new Date();
+  if (isNaN(d)) return '';
+  const hm = d.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const days = Math.round((today - new Date(d).setHours(0, 0, 0, 0)) / 86400000);
+  return days <= 0 ? hm : days === 1 ? 'hôm qua ' + hm : d.toLocaleDateString('vi-VN') + ' ' + hm;
+}
+function makeMsg(role, text, t) {
   const d = document.createElement('div');
   d.className = 'msg ' + role; d.textContent = text;
-  log.appendChild(d); log.scrollTop = log.scrollHeight;
+  if (role !== 'error') {
+    const s = document.createElement('span'); s.className = 'time'; s.textContent = timeLabel(t);
+    d.appendChild(s);
+  }
+  return d;
+}
+function add(role, text, t) {
+  log.appendChild(makeMsg(role, text, t)); log.scrollTop = log.scrollHeight;
 }
 function express(emotion, action) {
   face.dataset.e = emotion || 'binh_thuong';
@@ -143,12 +160,35 @@ function express(emotion, action) {
   void face.offsetWidth;
   if (action && action !== 'khong') face.classList.add('a-' + action);
 }
+let oldestId = null, noMore = false, loadingOld = false;
 async function loadHistory() {
   try {
     const r = await fetch('/api/history');
-    if (r.ok) (await r.json()).forEach(m => add(m.role, m.content));
+    if (!r.ok) return;
+    const list = await r.json();
+    list.forEach(m => add(m.role, m.content, m.created_at));
+    if (list.length) oldestId = list[0].id; else noMore = true;
+    if (list.length < 50) noMore = true;
   } catch (e) {}
 }
+async function loadOlder() {
+  if (noMore || loadingOld || oldestId === null) return;
+  loadingOld = true;
+  try {
+    const r = await fetch('/api/history?before_id=' + oldestId);
+    const list = r.ok ? await r.json() : [];
+    if (list.length < 50) noMore = true;
+    if (list.length) {
+      oldestId = list[0].id;
+      const before = log.scrollHeight, frag = document.createDocumentFragment();
+      list.forEach(m => frag.appendChild(makeMsg(m.role, m.content, m.created_at)));
+      log.prepend(frag);
+      log.scrollTop += log.scrollHeight - before;  // giữ nguyên chỗ đang đọc
+    }
+  } catch (e) {}
+  loadingOld = false;
+}
+log.addEventListener('scroll', () => { if (log.scrollTop < 40) loadOlder(); });
 function addError(text, retry) {
   add('error', text);
   if (!retry) return;

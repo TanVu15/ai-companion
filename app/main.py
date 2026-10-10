@@ -155,8 +155,9 @@ async def restore(request: Request):
 
 
 @app.get("/api/history")
-def history():
-    return get_brain().memory.recent_messages(50)
+def history(before_id: int | None = None, limit: int = 50):
+    """Tin nhắn gần nhất (kèm giờ). Gửi before_id để lấy thêm tin cũ hơn."""
+    return get_brain().memory.history_page(min(max(limit, 1), 200), before_id)
 
 
 @app.get("/api/facts")

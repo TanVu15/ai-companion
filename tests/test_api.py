@@ -111,3 +111,14 @@ def test_restore_rejects_bad_file(tmp_path):
     bad = json.dumps({"phien_ban": 1, "facts": [{"content": None}]}).encode()
     assert c.post("/api/khoi-phuc", content=bad).status_code == 400
     assert c.get("/api/facts").json() == ["Giữ lại"]  # lỗi thì trí nhớ cũ còn nguyên
+
+
+def test_history_paging(tmp_path):
+    c = make_client(tmp_path, [])
+    mem = main._brain.memory
+    for i in range(7):
+        mem.add_message("user", f"tin {i}")
+    page = c.get("/api/history?limit=3").json()
+    assert [m["content"] for m in page] == ["tin 4", "tin 5", "tin 6"] and "created_at" in page[0]
+    older = c.get(f"/api/history?limit=3&before_id={page[0]['id']}").json()
+    assert [m["content"] for m in older] == ["tin 1", "tin 2", "tin 3"]
