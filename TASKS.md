@@ -32,8 +32,8 @@
 - [x] Câu trả lời dễ đọc to: bỏ ký hiệu/emoji khi đọc, đọc nhanh/chậm chỉnh được
 
 ## Giai đoạn 6 – Chuẩn bị cho phần cứng (chỉ phần mềm)
-- [ ] Tài liệu "giao tiếp với thiết bị": thiết bị gửi chữ, nhận JSON {noi, cam_xuc, hanh_dong}
-- [ ] Endpoint gọn cho thiết bị nhỏ (ESP32): trả JSON ngắn, có khóa thiết bị riêng
+- [x] Tài liệu "giao tiếp với thiết bị" (THIET_BI.md): thiết bị gửi chữ, nhận JSON {noi, cam_xuc, hanh_dong}
+- [x] Endpoint gọn cho thiết bị nhỏ (ESP32): trả JSON ngắn, có khóa thiết bị riêng
 
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định

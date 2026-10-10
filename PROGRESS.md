@@ -7,6 +7,8 @@
 
 ## Cần Tân quyết định
 - **Dùng Bơ ngoài nhà bằng cách nào?** Tailscale (riêng tư, cần tạo tài khoản miễn phí, cài app trên iPhone) hay Cloudflare Tunnel (link công khai, không cần cài trên điện thoại). Hướng dẫn cả hai trong `DUA_LEN_MANG.md`. Claude khuyên Tailscale. Cách nào cũng phải đặt `APP_PASSWORD`.
+- **Phần cứng:** mua linh kiện nào (ESP32 loại nào, màn hình, loa, servo) — cần tiền, Claude không tự làm.
+- **Nghe/nói trên thiết bị thật:** ESP32 không tự nhận dạng tiếng Việt được. Cần chọn: (a) điện thoại/máy tính làm "tai" rồi gửi chữ cho thiết bị, hoặc (b) dịch vụ nhận dạng/đọc giọng trả phí. Cần Tân chọn.
 
 ## 2026-10-11 – Giai đoạn 1 xong
 - Dựng toàn bộ khung: bộ não (Claude Haiku), trí nhớ SQLite, web chat có khuôn mặt biểu cảm.
@@ -92,3 +94,11 @@
 - 45 test qua hết.
 
 **Tân cần thử:** bật Giọng nói, bấm "Tốc độ đọc" vài lần nghe thử; chat câu nào Bơ trả lời có emoji xem đọc có mượt không.
+
+## 2026-10-10 – Giai đoạn 6 xong (báo cáo): chuẩn bị phần cứng
+- **Cổng thiết bị:** `POST /api/thiet-bi/chat` (gửi chữ, nhận `{noi, cam_xuc, hanh_dong}`) và `POST /api/thiet-bi/chao` (Bơ mở lời hỏi thăm). Bảo vệ bằng khóa riêng `DEVICE_KEY` trong .env; để trống = tắt.
+- `?khong_dau=1` → bỏ dấu tiếng Việt và emoji cho màn hình nhỏ ("Chào Tân" → "Chao Tan").
+- `THIET_BI.md`: cách gọi, bảng cảm xúc → mặt, hành động → servo, khung code ESP32 (chưa thử trên máy thật).
+- 50 test qua hết.
+
+**Tân cần thử (không cần phần cứng):** đặt `DEVICE_KEY=thu123` trong .env, chạy lại, rồi gõ lệnh `curl` trong THIET_BI.md (đổi IP thành `localhost`).

@@ -29,6 +29,8 @@ def _password_ok(header: str) -> bool:
 
 @app.middleware("http")
 async def require_password(request: Request, call_next):
+    if request.url.path.startswith("/api/thiet-bi/"):
+        return await call_next(request)  # thiết bị dùng khóa riêng (DEVICE_KEY), kiểm tra bên dưới
     if config.APP_PASSWORD and not _password_ok(request.headers.get("authorization", "")):
         return Response(
             "Cần mật khẩu để nói chuyện với Bơ.",
@@ -133,3 +135,42 @@ def clear_facts():
 def delete_fact(body: FactIn):
     get_brain().memory.delete_fact(body.content)
     return {"ok": True}
+
+
+# --- Cổng cho thiết bị phần cứng (ESP32...) — xem THIET_BI.md ---
+def bo_dau(text: str) -> str:
+    """Bỏ dấu tiếng Việt cho màn hình nhỏ không hiện được chữ có dấu: "Chào Tân" → "Chao Tan"."""
+    import unicodedata
+
+    text = text.replace("đ", "d").replace("Đ", "D")
+    text = "".join(c for c in unicodedata.normalize("NFD", text) if unicodedata.category(c) != "Mn")
+    text = "".join(c if c.isascii() else " " for c in text)  # emoji... → khoảng trắng
+    return " ".join(text.split())
+
+
+def _check_device(request: Request) -> None:
+    if not config.DEVICE_KEY:
+        raise HTTPException(403, "Cổng thiết bị đang tắt (chưa đặt DEVICE_KEY trong .env)")
+    key = request.headers.get("x-device-key", "")
+    if not secrets.compare_digest(key.encode(), config.DEVICE_KEY.encode()):
+        raise HTTPException(401, "Sai khóa thiết bị")
+
+
+def _device_out(data: dict, khong_dau: int) -> dict:
+    if khong_dau and data.get("noi"):
+        data = {**data, "noi": bo_dau(data["noi"])}
+    return data
+
+
+@app.post("/api/thiet-bi/chat")
+def device_chat(body: ChatIn, request: Request, khong_dau: int = 0):
+    """Thiết bị gửi chữ (đã nghe được), nhận {noi, cam_xuc, hanh_dong}. ?khong_dau=1 để bỏ dấu."""
+    _check_device(request)
+    return _device_out(chat(body), khong_dau)
+
+
+@app.post("/api/thiet-bi/chao")
+def device_greet(request: Request, khong_dau: int = 0):
+    """Thiết bị gọi khi vừa bật / thấy người: Bơ chủ động hỏi thăm nếu có chuyện. Không thì {"noi": null}."""
+    _check_device(request)
+    return _device_out(greet(), khong_dau)
