@@ -1,6 +1,6 @@
 # Gặp sự cố thì làm gì
 
-Đầu tiên mở http://localhost:8000/api/suc-khoe: trang này cho biết đang thiếu gì (API key, persona, thư mục dữ liệu…).
+Đầu tiên bấm nút **"?"** trên web → mục **Tình trạng** (hoặc mở http://localhost:8000/api/suc-khoe): cho biết đang thiếu gì (API key, tính cách, thư mục dữ liệu, thời tiết…).
 
 | Hiện tượng | Nguyên nhân hay gặp | Cách sửa |
 |---|---|---|
@@ -17,7 +17,12 @@
 | Bấm micro báo "chưa cho dùng micro" | Đã bấm "Chặn" lúc trình duyệt hỏi | Bấm biểu tượng ổ khóa cạnh địa chỉ web → cho phép Micro |
 | Bơ đọc giọng không phải tiếng Việt | Máy chưa có giọng tiếng Việt | Windows: Cài đặt → Thời gian & ngôn ngữ → Giọng nói → thêm Tiếng Việt |
 | Lời nhắc không kêu | Lúc đó web không mở, hoặc máy tính tắt/ngủ | Để trang Bơ mở. Nhắc trễ thì Bơ vẫn báo khi mở lại web |
-| Bơ nhớ sai điều gì đó | AI ghi nhầm | "Bơ nhớ gì về mình?" → Xóa dòng sai. Hoặc nhắn Bơ "không phải, mình…" |
+| Bơ nhớ sai điều gì đó | AI ghi nhầm | "Bơ nhớ gì về mình?" → Sửa hoặc Xóa dòng sai (lỡ xóa thì bấm "Hoàn tác"). Hoặc nhắn Bơ "không phải, mình…" |
+| Sửa tính cách xong Bơ nói chuyện lạ | Bản tự sửa thiếu ý | Nút "Tính cách" → "Về mặc định". Bản cũ hơn nằm ở `data/persona_tu_sua.<ngày giờ>.md` |
+| Bơ không biết thời tiết | Chưa đặt hoặc gõ sai `THANH_PHO` | Thêm `THANH_PHO=Da Nang` vào `.env`, chạy lại. Nút "?" → Tình trạng báo "không tìm thấy thành phố" thì thử tên tiếng Anh (Hanoi, Ho Chi Minh City) |
+| Không thấy nút "Giọng: …" | Máy chỉ có 1 giọng tiếng Việt | Bình thường. Edge thường có nhiều giọng tiếng Việt hơn Chrome |
+| Đêm khuya lời nhắc không đọc to | Giờ yên lặng (mặc định 23h–6h) | Đổi `GIO_YEN_LANG` trong `.env`, để trống để tắt |
+| Lỡ đổi màu mặt Bơ | — | Nút "?" → Màu mặt Bơ → chọn "Vàng (mặc định)" |
 | Mới `git pull` mà web vẫn cũ | Cửa sổ `run.bat` cũ còn chạy | Tắt cửa sổ đó, chạy lại `run.bat` (nó tự cài thêm thư viện mới nếu có). Vẫn lỗi thư viện thì xóa thư mục `.venv` rồi chạy lại |
 | Hỏi mật khẩu mãi | Gõ sai `APP_PASSWORD` | Mật khẩu phân biệt hoa/thường, tên đăng nhập gõ gì cũng được |
 
