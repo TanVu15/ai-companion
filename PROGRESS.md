@@ -394,3 +394,10 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - Tự thêm/sửa điều Bơ nhớ (xem mục trên).
 - `web/app.js` (600 dòng) tách thành 4 file theo chức năng: `app.js` (khung chat), `giong_noi.js`, `khoi_dong.js`, `hop_thoai.js`. Chạy y như cũ (đã thử tự động trên trình duyệt: gửi tin, ghim, tìm, nhắc lại, các hộp thoại — không lỗi).
 - 126 test qua hết.
+
+## 2026-10-10 – Giai đoạn 21: rà soát lần 6
+- Rà soát độc lập phần giọng đọc, màu mặt, phím tắt, sửa điều nhớ, tách file JS: không lỗi nặng. Đã sửa:
+  - Nút "Gửi" chỉ bật khi đã tải xong mọi file JS (mạng chậm mà gửi sớm thì trước đây mất câu trả lời của Bơ).
+  - Ctrl+K không còn chen khi đang gõ dấu tiếng Việt hoặc khi hộp khác đang mở.
+  - Nút chọn giọng hiện được trên Safari cũ.
+- 126 test qua hết.

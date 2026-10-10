@@ -46,6 +46,7 @@ let speakSeq = 0;
 function speak(text) {
   text = boChuDeDoc(text);
   if (!voiceOn || !window.speechSynthesis || !text) return;
+  showPick();  // Safari cũ không báo "voiceschanged": cập nhật nút chọn giọng mỗi lần đọc
   const id = ++speakSeq;  // chỉ lần đọc mới nhất được báo "đọc xong"
   if (handsFree) pauseListening();  // đừng để micro nghe giọng của chính Bơ
   speechSynthesis.cancel();

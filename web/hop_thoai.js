@@ -253,7 +253,11 @@ renderColors();
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && !document.querySelector('dialog[open]')) { if (stopSpeaking()) e.preventDefault(); return; }
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+    if (e.isComposing || document.querySelector('dialog[open]:not(#search)')) return;  // đang gõ dấu / hộp khác đang mở
     e.preventDefault();
     if (!searchDlg.open) document.getElementById('openSearch').click();
   }
 });
+
+// Tải xong hết các file JS mới cho gửi tin (nút Gửi tắt sẵn trong HTML)
+send.disabled = false;
