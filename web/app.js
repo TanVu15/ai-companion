@@ -42,7 +42,13 @@ function add(role, text, t) {
 }
 const wait = ms => new Promise(r => setTimeout(r, ms));
 // Bơ "gõ" từng bong bóng một, có dấu ba chấm ở giữa
-async function addBo(text) {
+// Mọi lời của Bơ xếp hàng: lời nhắc/lời chào/câu trả lời không chen vào giữa các bong bóng của nhau
+let boQueue = Promise.resolve();
+function addBo(text) {
+  boQueue = boQueue.then(() => addBoNow(text)).catch(() => {});
+  return boQueue;
+}
+async function addBoNow(text) {
   const bubbles = makeMsgs('assistant', text);
   for (let i = 0; i < bubbles.length; i++) {
     if (i > 0) {
@@ -111,7 +117,7 @@ async function sendText(text) {
     let data = {};
     try { data = await r.json(); } catch (e) {}
     if (!r.ok) throw new Error(data.detail || 'Máy chủ trả lỗi ' + r.status);
-    express(data.cam_xuc, data.hanh_dong); speak(data.noi); addBo(data.noi);
+    express(data.cam_xuc, data.hanh_dong); speak(data.noi); await addBo(data.noi);
   } catch (e) {
     const msg = e.name === 'AbortError' ? 'Bơ nghĩ lâu quá, thử lại nha.'
       : e instanceof TypeError ? 'Không kết nối được máy chủ. Máy chủ còn chạy không?' : e.message;
@@ -265,7 +271,7 @@ async function greet() {
   try {
     const r = await fetch('/api/chao', { method: 'POST' });
     const data = await r.json();
-    if (r.ok && data.noi) { express(data.cam_xuc, data.hanh_dong); speak(data.noi); addBo(data.noi); }
+    if (r.ok && data.noi) { express(data.cam_xuc, data.hanh_dong); speak(data.noi); await addBo(data.noi); }
   } catch (e) {}
 }
 // ---- Lời nhắc: hỏi máy chủ mỗi 30 giây (chỉ khi web đang mở) ----
@@ -274,7 +280,7 @@ async function pollReminders() {
     const r = await fetch('/api/nhac');
     if (!r.ok) return;
     for (const x of await r.json()) {
-      add('assistant', x.noi); express(x.cam_xuc, x.hanh_dong); speak(x.noi);
+      await addBo(x.noi); express(x.cam_xuc, x.hanh_dong); speak(x.noi);
       if (window.Notification && Notification.permission === 'granted' && document.hidden) new Notification('Bơ', { body: x.noi, icon: '/web/icon-180.png' });
     }
   } catch (e) {}

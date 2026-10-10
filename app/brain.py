@@ -234,6 +234,7 @@ class Brain:
         # Mỗi lần chỉ xử lý một tin: hai tin tới cùng lúc (điện thoại + máy tính) thì tin sau chờ tin trước,
         # để lịch sử không bị xen lẫn và SQLite không bị ghi chồng.
         self._lock = threading.RLock()
+        self._hk_lock = threading.Lock()
         # background=True (máy chủ web): tóm tắt/gộp trí nhớ chạy sau khi đã trả lời, người dùng không phải chờ
         self._background = background
         self._merged_at = 0  # số điều đáng nhớ còn lại sau lần gộp gần nhất
@@ -246,11 +247,12 @@ class Brain:
             try:
                 resp = self.client.messages.create(**kwargs)
                 usage = getattr(resp, "usage", None)
-                self.memory.add_usage(
-                    kind,
-                    int(getattr(usage, "input_tokens", 0) or 0),
-                    int(getattr(usage, "output_tokens", 0) or 0),
-                )
+                with self._lock:
+                    self.memory.add_usage(
+                        kind,
+                        int(getattr(usage, "input_tokens", 0) or 0),
+                        int(getattr(usage, "output_tokens", 0) or 0),
+                    )
                 return resp
             except Exception as e:
                 if attempt >= retries or not is_transient(e):
@@ -350,16 +352,23 @@ class Brain:
         return reply
 
     def _housekeeping(self) -> None:
-        with self._lock:
+        # Việc nền chỉ chạy một lượt một lúc; đang chạy thì bỏ qua (lần sau làm).
+        # Không giữ khóa chính trong lúc chờ API, để tin nhắn mới không phải đợi.
+        if not self._hk_lock.acquire(blocking=False):
+            return
+        try:
             self.maybe_merge_facts()
             self.maybe_summarize()
+        finally:
+            self._hk_lock.release()
 
     def maybe_summarize(self) -> None:
         """Gom tin nhắn cũ thành một đoạn tóm tắt ngắn, để Bơ nhớ chuyện xa mà không tốn nhiều tiền."""
-        old = self.memory.messages_to_summarize(config.HISTORY_LIMIT)
-        if len(old) < config.SUMMARY_BATCH:
-            return
-        previous, _ = self.memory.latest_summary()
+        with self._lock:
+            old = self.memory.messages_to_summarize(config.HISTORY_LIMIT)
+            if len(old) < config.SUMMARY_BATCH:
+                return
+            previous, upto_before = self.memory.latest_summary()
         lines = "\n".join(f"{'Người dùng' if m['role'] == 'user' else 'Bơ'}: {m['content']}" for m in old)
         prompt = f"Bản tóm tắt cũ:\n{previous or '(chưa có)'}\n\nĐoạn trò chuyện mới:\n{lines}"
         try:
@@ -375,12 +384,15 @@ class Brain:
             log.warning("Tóm tắt lỗi (sẽ thử lại sau): %s", friendly_error(e) + f" [{type(e).__name__}]")
             return  # tóm tắt lỗi thì lần sau thử lại, không làm hỏng câu trả lời
         text = "".join(b.text for b in resp.content if getattr(b, "type", "") == "text").strip()
-        if text:
-            self.memory.add_summary(text, old[-1]["id"])
+        with self._lock:
+            # trong lúc chờ API mà đã có bản tóm tắt khác (ví dụ vừa nạp sao lưu) thì bỏ bản này
+            if text and self.memory.latest_summary()[1] == upto_before:
+                self.memory.add_summary(text, old[-1]["id"])
 
     def maybe_merge_facts(self) -> None:
         """Danh sách dài thì nhờ AI gộp điều trùng ý, bỏ điều mâu thuẫn cũ. Lỗi thì giữ nguyên."""
-        facts = self.memory.all_facts()
+        with self._lock:
+            facts = self.memory.all_facts()
         if len(facts) < config.FACTS_MERGE_AT or (self._merged_at and len(facts) < self._merged_at + 10):
             return
         listing = "\n".join(f"- {f}" for f in facts)
@@ -400,8 +412,11 @@ class Brain:
             log.warning("Gộp trí nhớ lỗi: %s", type(e).__name__)
             merged = []
         # Chỉ nhận kết quả hợp lý: không rỗng và không dài hơn danh sách cũ
-        if merged and len(merged) <= len(facts):
-            self.memory.replace_facts(merged)
-            self._merged_at = len(self.memory.all_facts())
-        else:
-            self._merged_at = len(facts)  # chờ thêm 10 điều mới rồi mới thử lại
+        with self._lock:
+            if self.memory.all_facts() != facts:
+                return  # trong lúc gộp, người dùng đã xóa/thêm điều mới → bỏ kết quả, lần sau gộp lại
+            if merged and len(merged) <= len(facts):
+                self.memory.replace_facts(merged)
+                self._merged_at = len(self.memory.all_facts())
+                return
+            self._merged_at = len(facts)  # kết quả lạ: chờ thêm 10 điều mới rồi mới thử lại

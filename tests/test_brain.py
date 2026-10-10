@@ -307,3 +307,40 @@ def test_background_housekeeping_does_not_block(memory, monkeypatch):
             break
         _t.sleep(0.02)
     assert memory.latest_summary()[0] == "Tóm tắt nè"
+
+
+def test_merge_dropped_if_user_deleted_fact_meanwhile(memory, monkeypatch):
+    monkeypatch.setattr(config, "FACTS_MERGE_AT", 3)
+    memory.add_facts(["A", "B", "C"])
+
+    class DeletingClient(FakeClient):
+        def _create(self, **kwargs):
+            if kwargs.get("system", "").startswith("Đây là danh sách"):
+                memory.delete_fact("C")  # Tân bấm "Xóa" đúng lúc Bơ đang gộp
+            return super()._create(**kwargs)
+
+    brain = Brain(memory, client=DeletingClient([json.dumps({"noi": "ok"}), '["A", "B", "C"]']))
+    brain.chat("hi")
+    assert memory.all_facts() == ["A", "B"]  # "C" không quay lại
+
+
+def test_chat_not_blocked_by_slow_background_job(memory):
+    import threading
+
+    gate = threading.Event()
+
+    class SlowSummary(FakeClient):
+        def _create(self, **kwargs):
+            if kwargs.get("system", "").startswith("Bạn tóm tắt"):
+                gate.wait(2)
+            return super()._create(**kwargs)
+
+    brain = Brain(memory, client=SlowSummary([json.dumps({"noi": "1"}), json.dumps({"noi": "2"})]), background=True)
+    brain._hk_lock.acquire()  # giả vờ việc nền đang chạy chậm
+    try:
+        assert brain._lock.acquire(timeout=0.5)  # khóa chính vẫn rảnh
+        brain._lock.release()
+        assert brain.chat("hi").noi == "1"
+    finally:
+        brain._hk_lock.release()
+        gate.set()

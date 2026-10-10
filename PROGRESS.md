@@ -212,3 +212,10 @@
 - 2 ngày trở lên không nói chuyện, mở web là Bơ tự chào kiểu bạn thân lâu không gặp (tốn 1 câu API). Đổi số ngày bằng `GREET_MISS_DAYS` trong .env, 0 = tắt.
 - Sửa lỗi nhỏ do lượt trước gây ra: nếu Tân không trả lời lời chào, mở lại web Bơ có thể chào lặp lại. Giờ lời chào cũng tính là "vừa nói chuyện"; chỉ lời nhắc tự động là không tính.
 - 82 test qua hết.
+
+## 2026-10-10 – Rà soát lần 2 và sửa
+- **iPhone/iPad đời cũ** (Safari < 16.4) không chạy được web vì một biểu thức tách câu mới → đã viết lại cách tách cho máy cũ hiểu.
+- Lời nhắc / lời chào / câu trả lời giờ xếp hàng, không chen vào giữa các bong bóng của nhau.
+- Xóa một điều Bơ nhớ đúng lúc Bơ đang gộp trí nhớ → trước đây điều đó có thể quay lại; giờ không.
+- Việc nền (tóm tắt, gộp) không còn bắt tin nhắn mới phải chờ.
+- 84 test qua hết.

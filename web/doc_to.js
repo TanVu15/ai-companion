@@ -17,7 +17,10 @@ function boChuDeDoc(text) {
 function boTachTin(text, toiDa = 3) {
   const t = (text || '').trim();
   if (t.length < 60) return t ? [t] : [];
-  const cau = t.split(/(?<=[.!?…])\s+/).map(c => c.trim()).filter(Boolean);  // "3.5 triệu" không bị tách
+  // Tách sau dấu câu + khoảng trắng ("3.5 triệu" không bị tách). Không dùng lookbehind vì Safari cũ không hiểu.
+  const raw = t.split(/([.!?…]+)\s+/), cau = [];
+  for (let i = 0; i < raw.length; i += 2) cau.push((raw[i] + (raw[i + 1] || '')).trim());
+  cau.splice(0, cau.length, ...cau.filter(Boolean));
   if (cau.length < 2) return [t];
   // gộp câu quá ngắn ("Ừa.", "Wow!") vào câu kế tiếp cho tự nhiên
   const gom = [];

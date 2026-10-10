@@ -222,7 +222,9 @@ def reminders_upcoming():
 
 @app.delete("/api/nhac/{reminder_id}")
 def reminder_delete(reminder_id: int):
-    get_brain().memory.delete_reminder(reminder_id)
+    brain = get_brain()
+    with brain._lock:
+        brain.memory.delete_reminder(reminder_id)
     return {"ok": True}
 
 
@@ -239,13 +241,17 @@ def facts():
 
 @app.delete("/api/facts/all")
 def clear_facts():
-    get_brain().memory.clear_facts()
+    brain = get_brain()
+    with brain._lock:  # chờ việc gộp trí nhớ đang chạy (nếu có) xong, để điều đã xóa không quay lại
+        brain.memory.clear_facts()
     return {"ok": True}
 
 
 @app.delete("/api/facts")
 def delete_fact(body: FactIn):
-    get_brain().memory.delete_fact(body.content)
+    brain = get_brain()
+    with brain._lock:
+        brain.memory.delete_fact(body.content)
     return {"ok": True}
 
 
