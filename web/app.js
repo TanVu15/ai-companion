@@ -81,9 +81,26 @@ async function loadHistory() {
     list.forEach(m => add(m.role, m.content, m.created_at, m.id, m.ghim));
     const lastBo = list.filter(m => m.role === 'assistant' && m.cam_xuc).pop();
     if (lastBo) express(lastBo.cam_xuc);  // mở lại web: Bơ giữ vẻ mặt lúc nói câu cuối
-    if (list.length) oldestId = list[0].id; else noMore = true;
+    if (list.length) oldestId = list[0].id; else { noMore = true; showChips(); }
     if (list.length < 50) noMore = true;
   } catch (e) {}
+}
+// Lần đầu (chưa có tin nhắn nào): vài câu gợi ý, bấm là gửi
+const STARTERS = ['Chào Bơ! Mình tên là ...', 'Kể mình nghe chuyện gì vui đi', '8h tối nay nhắc mình gọi mẹ nha', 'Bơ làm được những gì?'];
+function showChips() {
+  const box = document.createElement('div');
+  box.className = 'chips'; box.id = 'chips';
+  STARTERS.forEach(t => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.textContent = t;
+    b.onclick = () => {
+      input.value = t;
+      if (t.endsWith('...')) { input.value = t.slice(0, -3); input.focus(); return; }  // để Tân tự gõ tên
+      form.requestSubmit();
+    };
+    box.appendChild(b);
+  });
+  log.appendChild(box);
 }
 async function loadOlder() {
   if (noMore || loadingOld || oldestId === null) return;
@@ -136,6 +153,7 @@ form.addEventListener('submit', (ev) => {
   ev.preventDefault();
   const text = input.value.trim();
   if (!text || send.disabled) return;
+  const chips = document.getElementById('chips'); if (chips) chips.remove();
   const bubble = add('user', text); input.value = '';
   if (/nhắc/i.test(text)) askNotify();
   sendText(text, bubble);

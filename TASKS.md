@@ -112,6 +112,11 @@
 - [x] Chi phí chia theo loại (trò chuyện / tóm tắt / gộp trí nhớ) và 7 ngày gần nhất
 - [x] Hoàn tác khi lỡ xóa một điều Bơ nhớ
 
+## Giai đoạn 22 – Dễ làm quen (chỉ phần mềm, Claude tự thêm)
+- [x] Gợi ý câu mở đầu khi chưa có tin nhắn nào (bấm là gửi)
+- [ ] Giờ yên lặng: đêm khuya Bơ không tự đọc to lời nhắc/lời chào
+- [ ] Cập nhật SU_CO.md (thời tiết, tính cách tự sửa, giọng đọc)
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo

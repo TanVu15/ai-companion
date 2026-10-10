@@ -411,3 +411,7 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - 127 test qua hết.
 
 **Tân cần thử:** mở "Chi phí" xem bảng 7 ngày; xóa thử một điều rồi bấm "Hoàn tác".
+
+## 2026-10-10 – Giai đoạn 22: gợi ý câu mở đầu
+- Lần đầu mở (chưa có tin nhắn nào): hiện 4 câu gợi ý ("Chào Bơ! Mình tên là ...", "Kể mình nghe chuyện gì vui đi", "8h tối nay nhắc mình gọi mẹ nha"...). Bấm là gửi (câu giới thiệu tên thì để Tân gõ tiếp). Gửi tin đầu tiên là gợi ý biến mất.
+- 127 test qua hết.
