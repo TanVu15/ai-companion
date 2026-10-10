@@ -1,9 +1,17 @@
 # Nhật ký tiến độ
 
-## 2026-10-11 – Giai đoạn 1 xong, chờ nghiệm thu
-- Dựng toàn bộ khung: bộ não (Claude Haiku), trí nhớ SQLite, web chat có khuôn mặt biểu cảm.
-- Tính cách đang là bản TẠM (persona.md, tên "Bơ"). Chờ Tân chọn tên + tính cách.
-- 13 test tự động qua hết (dùng bộ não giả).
-- Chưa test với API thật (máy làm việc của Claude không gọi được API từ bên ngoài) → Tân chạy thử trên máy.
+## Cách dừng / góp ý (dành cho Tân)
+- **Dừng tự chạy:** tạo file tên `STOP` ở thư mục gốc repo (trên github.com: Add file → Create new file → gõ `STOP` → Commit). Xóa file đó để chạy lại. Hoặc nhắn Claude "dừng".
+- **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
+- **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
-**Trạng thái: Chờ nghiệm thu.** Không làm tiếp giai đoạn 2 cho đến khi Tân đồng ý.
+## Cần Tân quyết định
+- Tên + tính cách thật cho "người bạn" (đang dùng tạm "Bơ" trong persona.md).
+
+## 2026-10-11 – Giai đoạn 1 xong
+- Dựng toàn bộ khung: bộ não (Claude Haiku), trí nhớ SQLite, web chat có khuôn mặt biểu cảm.
+- 13 test tự động qua hết (dùng bộ não giả).
+- Chưa test với API thật (máy làm việc của Claude không gọi được API ra ngoài) → Tân chạy thử trên máy.
+- Tân chọn chế độ "làm liền, báo sau": Claude tự chạy mỗi giờ, làm tiếp giai đoạn 2 mà không chờ duyệt.
+
+**Tiếp theo:** Giai đoạn 2 (dùng tính cách tạm "Bơ" cho đến khi Tân chọn).

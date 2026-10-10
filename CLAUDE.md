@@ -11,11 +11,23 @@ Chủ dự án: Tân (TanVu15). Giao tiếp tiếng Việt, đơn giản, giải
 - Không bao giờ commit .env hay data/.
 - Giữ chi phí thấp: model Haiku, giới hạn lịch sử và số câu trả lời mỗi ngày.
 
-## Quy trình mỗi phiên
-1. Đọc PROGRESS.md, rồi lấy việc chưa xong đầu tiên trong TASKS.md.
-2. Làm việc đó, chạy `python -m pytest -q` cho đến khi qua hết.
-3. Commit (tin nhắn commit tiếng Việt, ngắn gọn), cập nhật TASKS.md và PROGRESS.md.
-4. Hết một giai đoạn thì DỪNG, ghi "Chờ nghiệm thu" vào PROGRESS.md, không tự sang giai đoạn sau.
+## Chế độ tự chạy (Tân chọn ngày 2026-10-11: "làm liền, báo sau")
+Một tác vụ hẹn giờ chạy mỗi giờ. Mỗi lần chạy là một phiên mới, không nhớ phiên trước,
+nên mọi thứ cần biết phải nằm trong repo.
+
+0. Nếu repo có file `STOP` ở thư mục gốc → không làm gì, kết thúc ngay.
+1. `git pull`. Đọc PROGRESS.md, lấy việc chưa xong đầu tiên trong TASKS.md
+   (bỏ qua dòng "Chờ Tân nghiệm thu" — đó chỉ là ghi chú để Tân duyệt sau).
+2. Làm 1–2 việc, chạy `python -m pytest -q` cho đến khi qua hết. Không commit code test đỏ.
+3. Commit (tiếng Việt, ngắn gọn), cập nhật TASKS.md và PROGRESS.md, `git push`.
+4. Hết một giai đoạn: viết báo cáo ngắn trong PROGRESS.md (làm gì, Tân cần thử gì),
+   rồi làm tiếp giai đoạn sau. Không dừng chờ duyệt.
+5. Nếu Tân góp ý trong file FEEDBACK.md, ưu tiên xử lý góp ý trước việc mới.
+6. Hết việc trong TASKS.md: tự thêm việc từ mục "Sau này" nhưng CHỈ phần mềm.
+   Việc cần phần cứng, cần tiền, cần tài khoản mới hay cần Tân quyết định → ghi vào
+   mục "Cần Tân quyết định" trong PROGRESS.md và không làm.
+7. Một phiên bị dừng giữa chừng (hết lượt dùng) là bình thường: phiên sau đọc PROGRESS.md
+   và `git status` để làm tiếp. Luôn commit từng bước nhỏ.
 
 ## Chạy
 - `run.bat` (Windows) hoặc `python -m uvicorn app.main:app --host 0.0.0.0 --port 8000`

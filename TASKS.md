@@ -8,10 +8,10 @@
 - [x] Chế độ DEMO không cần API key
 - [x] Giới hạn chi phí (lịch sử 20 tin, 300 câu/ngày)
 - [x] Test tự động (13 test)
-- [ ] **Chờ Tân nghiệm thu**: chạy thử, chọn tên + tính cách thật
+- Chờ Tân nghiệm thu: chạy thử, chọn tên + tính cách thật (không chặn việc khác)
 
-## Giai đoạn 2 – Tính cách (sau nghiệm thu GĐ1)
-- [ ] Viết persona.md theo tính cách Tân chọn
+## Giai đoạn 2 – Tính cách
+- [ ] Hoàn thiện persona.md (giữ tạm "Bơ"; khi Tân chọn tính cách thì viết lại)
 - [ ] Bộ câu hỏi thử tính cách (10 tình huống) để chấm điểm "giống người"
 - [ ] Trang cài đặt nhỏ: xem/xóa những điều Bơ đã nhớ
 
