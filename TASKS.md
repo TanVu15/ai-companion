@@ -159,7 +159,7 @@
 
 ## Giai đoạn 31 – Đếm ngược & tự sao lưu (chỉ phần mềm, Claude tự thêm)
 - [x] Đếm ngược ngày đặc biệt: danh sách hiện "còn X ngày", Bơ biết ngày đặc biệt trong 7 ngày tới
-- [ ] Tự sao lưu mỗi ngày vào data/sao_luu/ (giữ 7 bản gần nhất)
+- [x] Tự sao lưu mỗi ngày vào data/sao_luu/ (giữ 7 bản gần nhất)
 - [ ] Rà soát code lần 11 (đếm ngược, tự sao lưu), sửa lỗi tìm được
 
 ## Sau này

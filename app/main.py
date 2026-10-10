@@ -109,6 +109,26 @@ class FactIn(BaseModel):
     content: str
 
 
+_sao_luu_ngay = None  # ngày đã tự sao lưu (khỏi kiểm tra file mỗi tin nhắn)
+
+
+def _tu_sao_luu() -> None:
+    """Mỗi ngày một bản vào data/sao_luu/. Lỗi (đầy ổ, không ghi được) thì ghi log, không làm phiền."""
+    global _sao_luu_ngay
+    from datetime import date
+
+    today = date.today()
+    if not config.TU_SAO_LUU or config.DEMO or _brain is None or _sao_luu_ngay == today:
+        return
+    from .sao_luu import tu_sao_luu
+
+    try:
+        tu_sao_luu(_brain.memory, config.SAO_LUU_DIR, today, config.SAO_LUU_GIU, lock=_brain._lock)
+        _sao_luu_ngay = today
+    except Exception as e:
+        log.warning("Tự sao lưu lỗi: %s", e)
+
+
 @app.get("/")
 def index():
     return FileResponse(config.ROOT / "web" / "index.html")
@@ -126,6 +146,7 @@ def chat(body: ChatIn):
     except Exception as e:  # lỗi mạng, hết tiền API... (đã thử lại vài lần trong bộ não)
         log.exception("Trả lời lỗi: %s", friendly_error(e))
         raise HTTPException(502, friendly_error(e))
+    _tu_sao_luu()
     # id: để web ghim được tin vừa nói (giao diện khác bỏ qua cũng không sao)
     return {**reply.to_dict(), "id": reply.msg_id, "id_nguoi_dung": reply.user_msg_id}
 
@@ -140,6 +161,7 @@ def greet(chi_dip: int = 0):
     except Exception as e:
         log.warning("Mở lời lỗi: %s", type(e).__name__)
         reply = None  # mở lời không được thì thôi, không báo lỗi làm phiền
+    _tu_sao_luu()
     return {**reply.to_dict(), "id": reply.msg_id} if reply else {"noi": None}
 
 
@@ -259,6 +281,14 @@ def health():
         add("Dữ liệu", True, f"Ghi được vào {db.parent.name}/, trí nhớ nặng {size:.1f} MB")
     except OSError as e:
         add("Dữ liệu", False, f"Không ghi được thư mục dữ liệu: {e}")
+    if not config.DEMO:
+        from .sao_luu import ds_ban_sao
+
+        bans = ds_ban_sao(config.SAO_LUU_DIR) if config.TU_SAO_LUU else []
+        add("Tự sao lưu", config.TU_SAO_LUU,
+            (f"{len(bans)} bản trong {config.SAO_LUU_DIR.parent.name}/sao_luu/, mới nhất {bans[0].stem[3:]}" if bans
+             else "Bật, bản đầu tiên ghi khi bạn nhắn tin") if config.TU_SAO_LUU else "Đang tắt (TU_SAO_LUU=0)",
+            "canh_bao")
     add("Mật khẩu web", bool(config.APP_PASSWORD),
         "Đã đặt APP_PASSWORD" if config.APP_PASSWORD else "Chưa đặt APP_PASSWORD (ổn nếu chỉ dùng trong nhà)", "canh_bao")
     add("Ngân sách tháng", config.MONTHLY_USD_LIMIT > 0,

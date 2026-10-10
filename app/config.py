@@ -40,6 +40,11 @@ WEEKLY_RECAP = os.getenv("WEEKLY_RECAP", "1") == "1"
 # Ngày lễ (Tết, Trung thu, 20/10...) mở web thì Bơ chủ động chúc (1 câu API mỗi ngày lễ). 0 = tắt.
 CHUC_LE = os.getenv("CHUC_LE", "1") == "1"
 
+# Mỗi ngày tự sao lưu trí nhớ vào data/sao_luu/ (giữ SAO_LUU_GIU bản gần nhất). 0 = tắt.
+TU_SAO_LUU = os.getenv("TU_SAO_LUU", "1") == "1"
+SAO_LUU_GIU = int(os.getenv("SAO_LUU_GIU", "7"))
+SAO_LUU_DIR = (ROOT / DB_PATH).resolve().parent / "sao_luu"
+
 # Giờ yên lặng "23-6": trong khoảng này Bơ không TỰ đọc to (lời nhắc, lời chào); vẫn hiện chữ. Để trống = tắt.
 GIO_YEN_LANG = os.getenv("GIO_YEN_LANG", "23-6")
 

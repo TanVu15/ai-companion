@@ -564,3 +564,9 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - Bơ biết các ngày đặc biệt trong 7 ngày tới → hỏi "còn mấy ngày nữa sinh nhật mẹ?" là Bơ trả lời đúng.
 - 195 test qua hết.
 
+## 2026-10-10 – Giai đoạn 31: tự sao lưu mỗi ngày
+- Mỗi ngày, lần đầu Tân nhắn tin (hoặc mở web), Bơ ghi một bản sao lưu vào `data/sao_luu/bo-NGÀY.json`, giữ 7 bản gần nhất. Không tốn câu API nào.
+- Lỡ "Xóa hết" hay file trí nhớ hỏng → "Bơ nhớ gì về mình?" → Khôi phục → chọn file trong `data/sao_luu/`.
+- Nút "?" → tình trạng có dòng "Tự sao lưu" (mấy bản, bản mới nhất). Tắt bằng `TU_SAO_LUU=0`; đổi số bản bằng `SAO_LUU_GIU`.
+- 200 test qua hết.
+

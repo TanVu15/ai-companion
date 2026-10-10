@@ -39,14 +39,14 @@ Chỉ nhắc được khi **máy tính đang chạy Bơ và trang web đang mở
 
 - **Nút "?"**: danh sách mẹo dùng + Bơ và bạn đã quen bao nhiêu ngày.
 - **Hỏi thăm chuyện cũ:** kể "tối nay đi đá bóng" → hôm sau mở web Bơ tự hỏi. 2 ngày không chat thì Bơ chào "lâu quá không gặp".
-- **Âm lịch & ngày lễ:** Bơ tự tính ngày âm (không cần mạng) và biết hôm nay/ngày mai là lễ gì (Tết, Trung thu, 20/10...); ngày lễ mở web là Bơ chúc (tắt bằng `CHUC_LE=0`).
+- **Âm lịch & ngày lễ:** Bơ tự tính ngày âm (không cần mạng) và biết hôm nay/ngày mai là lễ gì (Tết, Trung thu, 20/10...); ngày lễ mở web là Bơ chúc (tắt bằng `CHUC_LE=0`). Danh sách ngày đặc biệt ghi "còn mấy ngày"; hỏi "còn mấy ngày nữa sinh nhật mẹ?" Bơ trả lời được.
 - **Ngày đặc biệt:** kể "sinh nhật mẹ 5/3" hoặc "giỗ ông 15/7 âm lịch" → hôm trước Bơ nhắc "mai sinh nhật mẹ đó", đúng ngày Bơ chúc (mỗi năm một lần).
 - **Việc cần làm:** "nhớ giúp mình mua sữa" (không có giờ) → Bơ ghi vào danh sách; "mua sữa rồi" → Bơ gạch. Nút "Việc cần làm" để xem, đánh dấu xong, thêm, xóa.
 - **Tâm trạng:** Bơ đoán bạn vui/buồn/mệt qua tin nhắn; nút "?" có dải tâm trạng 7 ngày. Mấy hôm liền buồn/mệt thì Bơ nhẹ nhàng, quan tâm hơn.
 - **Tổng kết tuần:** tối Chủ nhật (từ 17h) mở web, Bơ điểm lại tuần qua. Tắt bằng `WEEKLY_RECAP=0`.
 - **Tìm chuyện cũ:** nút "Tìm", gõ không dấu cũng được.
 - **Ghim tin nhắn:** chạm vào một tin → "Ghim tin này". Xem lại ở nút "Tìm" (khi chưa gõ gì).
-- **Sao lưu:** trong "Bơ nhớ gì về mình?" → tải bản sao lưu (.json, nạp lại được) hoặc tải trò chuyện (.txt, để đọc).
+- **Sao lưu:** trong "Bơ nhớ gì về mình?" → tải bản sao lưu (.json, nạp lại được) hoặc tải trò chuyện (.txt, để đọc). Ngoài ra Bơ **tự sao lưu mỗi ngày** vào `data/sao_luu/` (giữ 7 bản; tắt bằng `TU_SAO_LUU=0`) — lỡ "Xóa hết" thì nạp lại bản hôm qua.
 - **Thời tiết:** đặt `THANH_PHO=Da Nang` (tên thành phố, không dấu cũng được) trong `.env` → Bơ biết trời nắng/mưa hôm nay và ngày mai, nhắc mang áo mưa khi hợp chuyện. Miễn phí (Open-Meteo), không cần tài khoản.
 - **Cài đặt trên web:** nút "?" → mục Cài đặt: thành phố, giờ yên lặng, tổng kết tuần. Lưu ở `data/cai_dat.json`, ưu tiên hơn `.env`; "Về như file .env" để bỏ.
 - **Chi phí:** nút "Chi phí". Đặt `MONTHLY_USD_LIMIT` trong `.env` để giới hạn tiền mỗi tháng.
