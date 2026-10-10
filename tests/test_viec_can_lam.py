@@ -103,3 +103,47 @@ def test_viec_de_lau_duoc_nhac_kheo():
     assert "- Trả sách (ghi 5 ngày trước)" in p and "- Mua sữa\n" in p and "- Lỗi giờ\n" in p
     assert "nhắc khéo" in p
     assert "nhắc khéo" not in build_system_prompt("Bơ", [], now=now, todos=todos[1:])
+
+
+def test_xong_viec_co_ghi_chu_tuoi_van_gach_duoc(tmp_path):
+    mem = Memory(tmp_path / "a.db")
+    mem.add_todos(["Mua sữa"])
+    mem.done_todos(["Mua sữa (ghi 4 ngày trước)"])
+    assert mem.todos(include_done=False) == []
+
+
+def test_bo_danh_dau_khong_tao_viec_trung(tmp_path):
+    import pytest
+
+    mem = Memory(tmp_path / "a.db")
+    mem.add_todos(["Mua sữa"])
+    [old] = mem.todos()
+    mem.set_todo_done(old["id"], True)
+    mem.add_todos(["Mua sữa"])
+    with pytest.raises(ValueError):
+        mem.set_todo_done(old["id"], False)
+    assert len(mem.todos(include_done=False)) == 1
+
+
+def test_viec_xong_thieu_gio_xong_cung_duoc_don(tmp_path):
+    mem = Memory(tmp_path / "a.db")
+    mem.conn.execute("INSERT INTO todos (content, done) VALUES ('Cũ', 1)")
+    assert mem.todos() == []
+
+
+def test_api_bo_danh_dau_trung_bao_409(tmp_path):
+    main._brain = Brain(Memory(tmp_path / "api.db"), client=FakeClient([]))
+    c = TestClient(main.app, headers={"X-Bo": "1"})
+    c.post("/api/viec", json={"viec": "Mua sữa"})
+    [t] = c.get("/api/viec").json()
+    c.put(f"/api/viec/{t['id']}", json={"xong": True})
+    c.post("/api/viec", json={"viec": "Mua sữa"})
+    assert c.put(f"/api/viec/{t['id']}", json={"xong": False}).status_code == 409
+
+
+def test_brain_gui_ca_50_viec(tmp_path):
+    mem = Memory(tmp_path / "a.db")
+    mem.add_todos([f"Việc số {i}" for i in range(45)])
+    client = FakeClient([reply()])
+    Brain(mem, client=client).chat("còn gì không")
+    assert "Việc số 44" in client.calls[0]["system"]

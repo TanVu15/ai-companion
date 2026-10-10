@@ -349,8 +349,10 @@ def add_todo(body: TodoIn):
         raise HTTPException(400, "Việc cần làm đang trống")
     brain = get_brain()
     with brain._lock:
+        if len(brain.memory.todos(include_done=False)) >= brain.memory.TODO_MAX:
+            raise HTTPException(400, f"Danh sách đã đủ {brain.memory.TODO_MAX} việc chưa xong, gạch bớt nha")
         if not brain.memory.add_todos([text]):
-            raise HTTPException(400, "Việc này đã có trong danh sách rồi (hoặc danh sách đã đầy 50 việc)")
+            raise HTTPException(400, "Việc này đã có trong danh sách rồi")
     return {"ok": True}
 
 
@@ -358,7 +360,11 @@ def add_todo(body: TodoIn):
 def done_todo(todo_id: int, body: TodoDoneIn):
     brain = get_brain()
     with brain._lock:
-        if not brain.memory.set_todo_done(todo_id, body.xong):
+        try:
+            ok = brain.memory.set_todo_done(todo_id, body.xong)
+        except ValueError as e:
+            raise HTTPException(409, str(e))
+        if not ok:
             raise HTTPException(404, "Không có việc này")
     return {"ok": True}
 

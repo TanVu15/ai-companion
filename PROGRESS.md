@@ -482,3 +482,13 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 ## 2026-10-10 – Giai đoạn 26: cổng thiết bị lấy việc cần làm
 - `GET /api/thiet-bi/viec` (cần `DEVICE_KEY`): danh sách việc chưa xong cho màn hình nhỏ sau này, có `?khong_dau=1`. Hướng dẫn trong `THIET_BI.md`. 153 test qua hết.
 
+## 2026-10-10 – Giai đoạn 26 xong (báo cáo): nhắc khéo & bảo trì
+- Rà soát lần 8 (độc lập) phần việc cần làm. Đã sửa:
+  - Bơ chép kèm "(ghi 4 ngày trước)" khi gạch việc thì trước đây không gạch được → giờ được.
+  - Danh sách dài hơn 30 việc thì việc mới bị Bơ "không thấy" → giờ Bơ thấy đủ 50.
+  - Bỏ đánh dấu một việc đã xong mà đã có việc y hệt đang mở → báo, không tạo việc trùng.
+  - Báo lỗi rõ hơn (trùng / danh sách đầy), hộp "Việc cần làm" báo khi mất mạng.
+  - Bộ chấm điểm: "Gạch việc đã xong" chỉ đạt khi việc thật sự được gạch.
+- `SU_CO.md` thêm 5 dòng (tâm trạng đoán sai, việc cần làm ghi nhầm, nhắc trước ngày đặc biệt...).
+- 158 test qua hết.
+

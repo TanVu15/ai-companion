@@ -144,7 +144,7 @@ def build_system_prompt(
     special: list[dict] | None = None,
     weather: str | None = None,
     low_mood: list[str] | None = None,
-    todos: list[str] | None = None,
+    todos: list[dict | str] | None = None,
 ) -> str:
     now = now or datetime.now()
     known = "\n".join(f"- {f}" for f in facts) if facts else "- (chưa biết gì)"
@@ -482,7 +482,7 @@ class Brain:
         system = build_system_prompt(
             self.persona(), self.memory.all_facts(), summary, followups, special=special, weather=weather,
             low_mood=self.memory.low_mood(today),
-            todos=self.memory.todos(include_done=False)[:30],
+            todos=self.memory.todos(include_done=False),  # tối đa TODO_MAX (50) việc
         )
         resp = self._create(
             model=config.MODEL,

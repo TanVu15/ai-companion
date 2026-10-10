@@ -64,7 +64,7 @@ def la_json_hop_le(text: str) -> bool:
     return isinstance(data, dict) and bool(str(data.get("noi", "")).strip())
 
 
-def cham(th: dict, chu_goc: str, reply) -> KetQua:
+def cham(th: dict, chu_goc: str, reply, viec_con_lai: int = 0) -> KetQua:
     noi = reply.noi
     thuong = noi.lower()
     kq = KetQua(ten=th["ten"], noi=noi, cam_xuc=reply.cam_xuc)
@@ -92,7 +92,7 @@ def cham(th: dict, chu_goc: str, reply) -> KetQua:
     if th.get("phai_ghi_viec"):
         kq.kiem_tra.append(("Ghi vào việc cần làm", bool(reply.viec_can_lam)))
     if th.get("phai_xong_viec"):
-        kq.kiem_tra.append(("Gạch việc đã xong", bool(reply.xong_viec)))
+        kq.kiem_tra.append(("Gạch việc đã xong", bool(reply.xong_viec) and viec_con_lai == 0))
     if th.get("phai_tam_trang"):
         kq.kiem_tra.append((f"Đoán đúng tâm trạng ({', '.join(th['phai_tam_trang'])})",
                             reply.tam_trang in th["phai_tam_trang"]))
@@ -130,9 +130,11 @@ def chay(client, tinh_huong: list[dict] | None = None) -> list[KetQua]:
             ghi = _GhiLaiClient(client)
             try:
                 reply = Brain(memory, client=ghi).chat(th["tin_nhan"])
+                cu = set(th.get("viec_dang_co", []))  # việc có sẵn từ trước mà vẫn chưa được gạch
+                con_lai = sum(t["viec"] in cu for t in memory.todos(include_done=False))
             finally:
                 memory.conn.close()
-            ket_qua.append(cham(th, ghi.chu_cuoi, reply))
+            ket_qua.append(cham(th, ghi.chu_cuoi, reply, con_lai))
     return ket_qua
 
 

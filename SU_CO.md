@@ -22,6 +22,11 @@
 | Bơ không biết thời tiết | Chưa đặt hoặc gõ sai `THANH_PHO` | Thêm `THANH_PHO=Da Nang` vào `.env`, chạy lại. Nút "?" → Tình trạng báo "không tìm thấy thành phố" thì thử tên tiếng Anh (Hanoi, Ho Chi Minh City) |
 | Không thấy nút "Giọng: …" | Máy chỉ có 1 giọng tiếng Việt | Bình thường. Edge thường có nhiều giọng tiếng Việt hơn Chrome |
 | Đêm khuya lời nhắc không đọc to | Giờ yên lặng (mặc định 23h–6h) | Đổi `GIO_YEN_LANG` trong `.env`, để trống để tắt |
+| Dải tâm trạng đoán sai (đang vui mà hiện 😢) | Bơ chỉ đoán qua chữ | Không sao, chỉ là ước chừng. Nhắn rõ hơn ("hôm nay vui lắm") là ngày đó đổi theo |
+| Bơ cứ an ủi dù mình hết buồn rồi | Mấy hôm trước buồn nên Bơ được dặn nhẹ nhàng | Nhắn một câu vui là Bơ thôi ngay trong ngày |
+| Bơ ghi nhầm "việc cần làm" (hoặc không ghi) | AI hiểu nhầm nhờ nhắc với nhờ ghi | Nút "Việc cần làm" → Xóa hoặc tự thêm. Có giờ cụ thể ("8h tối...") thì Bơ đặt lời nhắc thay vì ghi việc |
+| Bỏ đánh dấu việc thì báo "đang có trong danh sách rồi" | Đã có việc y hệt chưa xong | Bình thường, giữ một việc là đủ |
+| Hôm trước ngày đặc biệt Bơ không nhắc | Hôm đó không mở web (hoặc mở trước 8h sáng), hoặc Tân vừa mới kể ngày đó | Đúng ngày Bơ vẫn chúc |
 | Lỡ đổi màu mặt Bơ | — | Nút "?" → Màu mặt Bơ → chọn "Vàng (mặc định)" |
 | Mới `git pull` mà web vẫn cũ | Cửa sổ `run.bat` cũ còn chạy | Tắt cửa sổ đó, chạy lại `run.bat` (nó tự cài thêm thư viện mới nếu có). Vẫn lỗi thư viện thì xóa thư mục `.venv` rồi chạy lại |
 | Hỏi mật khẩu mãi | Gõ sai `APP_PASSWORD` | Mật khẩu phân biệt hoa/thường, tên đăng nhập gõ gì cũng được |

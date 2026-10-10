@@ -519,13 +519,24 @@ class Memory:
 
     def done_todos(self, items: list[str]) -> None:
         """Đánh dấu xong theo nội dung (Bơ chép lại y nguyên việc trong danh sách)."""
-        keys = {self._key(str(t)) for t in items}
+        # Bơ có thể chép cả ghi chú "(ghi 4 ngày trước)" trong lời dặn → bỏ đi trước khi so
+        keys = {self._key(re.sub(r"\s*\(ghi [^()]*\)\s*$", "", str(t))) for t in items}
         for i, c in self.conn.execute("SELECT id, content FROM todos WHERE done = 0").fetchall():
             if self._key(c) in keys:
                 self.set_todo_done(i, True, commit=False)
         self.conn.commit()
 
     def set_todo_done(self, todo_id: int, done: bool, commit: bool = True) -> bool:
+        """Đánh dấu xong / chưa xong. Bỏ đánh dấu mà đã có việc y hệt đang mở (hoặc danh sách đầy)
+        thì báo ValueError, để danh sách không có hai việc trùng."""
+        if not done:
+            row = self.conn.execute("SELECT content, done FROM todos WHERE id = ?", (todo_id,)).fetchone()
+            if row and row[1]:
+                opened = [t["viec"] for t in self.todos(include_done=False)]
+                if self._key(row[0]) in {self._key(t) for t in opened}:
+                    raise ValueError("Việc này đang có trong danh sách rồi")
+                if len(opened) >= self.TODO_MAX:
+                    raise ValueError(f"Danh sách đã đủ {self.TODO_MAX} việc chưa xong")
         cur = self.conn.execute(
             "UPDATE todos SET done = ?, done_at = CASE WHEN ? THEN datetime('now', 'localtime') ELSE NULL END WHERE id = ?",
             (int(done), int(done), todo_id),
@@ -542,7 +553,7 @@ class Memory:
         """Việc chưa xong (cũ → mới), rồi việc đã xong trong `done_days` ngày gần đây (mới xong trước).
         Việc xong lâu hơn thì tự dọn khỏi danh sách."""
         since = (datetime.now() - timedelta(days=done_days)).strftime("%Y-%m-%d %H:%M:%S")
-        if self.conn.execute("DELETE FROM todos WHERE done = 1 AND done_at < ?", (since,)).rowcount:
+        if self.conn.execute("DELETE FROM todos WHERE done = 1 AND (done_at IS NULL OR done_at < ?)", (since,)).rowcount:
             self.conn.commit()
         rows = self.conn.execute("SELECT id, content, 0, created_at FROM todos WHERE done = 0 ORDER BY id").fetchall()
         if include_done:

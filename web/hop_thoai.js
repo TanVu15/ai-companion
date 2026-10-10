@@ -177,11 +177,18 @@ async function loadTodos() {
     cb.type = 'checkbox'; cb.checked = x.xong;
     span.textContent = x.viec;
     cb.onchange = async () => {
-      await fetch('/api/viec/' + x.id, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ xong: cb.checked }) });
+      todoErr.hidden = true;
+      try {
+        const r = await fetch('/api/viec/' + x.id, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ xong: cb.checked }) });
+        if (!r.ok) { try { todoErr.textContent = (await r.json()).detail; } catch (e2) { todoErr.textContent = 'Không đổi được'; } todoErr.hidden = false; }
+      } catch (e) { todoErr.textContent = 'Mất mạng, thử lại nha.'; todoErr.hidden = false; }
       loadTodos();
     };
     b.textContent = 'Xóa'; b.type = 'button'; b.setAttribute('aria-label', 'Xóa việc: ' + x.viec);
-    b.onclick = async () => { await fetch('/api/viec/' + x.id, { method: 'DELETE' }); loadTodos(); };
+    b.onclick = async () => {
+      try { await fetch('/api/viec/' + x.id, { method: 'DELETE' }); } catch (e) { todoErr.textContent = 'Mất mạng, thử lại nha.'; todoErr.hidden = false; }
+      loadTodos();
+    };
     lab.append(cb, span); li.append(lab, b); todosEl.appendChild(li);
   });
 }
