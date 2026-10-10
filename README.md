@@ -39,7 +39,9 @@ Chỉ nhắc được khi **máy tính đang chạy Bơ và trang web đang mở
 
 - **Nút "?"**: danh sách mẹo dùng + Bơ và bạn đã quen bao nhiêu ngày.
 - **Hỏi thăm chuyện cũ:** kể "tối nay đi đá bóng" → hôm sau mở web Bơ tự hỏi. 2 ngày không chat thì Bơ chào "lâu quá không gặp".
-- **Ngày đặc biệt:** kể "sinh nhật mình 5/3" → đúng ngày Bơ chúc (mỗi năm một lần).
+- **Ngày đặc biệt:** kể "sinh nhật mẹ 5/3" → hôm trước Bơ nhắc "mai sinh nhật mẹ đó", đúng ngày Bơ chúc (mỗi năm một lần).
+- **Việc cần làm:** "nhớ giúp mình mua sữa" (không có giờ) → Bơ ghi vào danh sách; "mua sữa rồi" → Bơ gạch. Nút "Việc cần làm" để xem, đánh dấu xong, thêm, xóa.
+- **Tâm trạng:** Bơ đoán bạn vui/buồn/mệt qua tin nhắn; nút "?" có dải tâm trạng 7 ngày. Mấy hôm liền buồn/mệt thì Bơ nhẹ nhàng, quan tâm hơn.
 - **Tổng kết tuần:** tối Chủ nhật (từ 17h) mở web, Bơ điểm lại tuần qua. Tắt bằng `WEEKLY_RECAP=0`.
 - **Tìm chuyện cũ:** nút "Tìm", gõ không dấu cũng được.
 - **Ghim tin nhắn:** chạm vào một tin → "Ghim tin này". Xem lại ở nút "Tìm" (khi chưa gõ gì).
@@ -57,7 +59,7 @@ Bấm nút **"Tính cách"** trên web, sửa rồi bấm "Lưu" — áp dụng 
 
 ## Thử tính cách (chấm điểm)
 
-Bơ trả lời 15 tình huống trong `tinh_huong.json` (buồn, mệt, khoe thành tích, hỏi điều không biết, hỏi thăm chuyện cũ, sinh nhật, nhắc mỗi ngày...) và được chấm điểm tự động. Tốn khoảng 15 câu API (rất rẻ), không đụng vào trí nhớ thật.
+Bơ trả lời 20 tình huống trong `tinh_huong.json` (buồn, mệt, khoe thành tích, hỏi điều không biết, hỏi thăm chuyện cũ, sinh nhật, nhắc mỗi ngày, việc cần làm, đoán tâm trạng...) và được chấm điểm tự động. Tốn khoảng 20 câu API (rất rẻ), không đụng vào trí nhớ thật.
 
 ```
 .venv\Scripts\activate

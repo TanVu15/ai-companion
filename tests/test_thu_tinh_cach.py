@@ -7,7 +7,7 @@ from tests.test_brain import FakeClient
 
 def test_file_tinh_huong_hop_le():
     ds = json.loads(t.TINH_HUONG_PATH.read_text(encoding="utf-8"))
-    assert len(ds) == 15
+    assert len(ds) == 20
     for th in ds:
         assert th["ten"] and th["tin_nhan"]
 
@@ -70,3 +70,16 @@ def test_ngay_dac_biet_va_nhac_lap():
     assert kq.diem == 1.0 and "Sinh nhật Tân" in client.calls[0]["system"]
     [kq] = t.chay(client, [{**th, "hom_nay_dac_biet": []}])
     assert ("Ghi ngày đặc biệt", False) in kq.kiem_tra and ("Nhắc lặp lại (ngay)", False) in kq.kiem_tra
+
+
+def test_viec_can_lam_va_tam_trang():
+    tot = json.dumps({"noi": "Mua sữa rồi hả, giỏi!", "cam_xuc": "vui", "viec_can_lam": ["Trả sách"],
+                      "xong_viec": ["Mua sữa"], "tam_trang": "met"})
+    th = {"ten": "x", "tin_nhan": "hi", "viec_dang_co": ["Mua sữa"], "buon_may_ngay": True,
+          "phai_ghi_viec": True, "phai_xong_viec": True, "phai_tam_trang": ["met"]}
+    client = FakeClient([tot, json.dumps({"noi": "Ok"})])
+    [kq] = t.chay(client, [th])
+    system = client.calls[0]["system"]
+    assert kq.diem == 1.0 and "- Mua sữa" in system and "Tâm trạng gần đây" in system
+    [kq] = t.chay(client, [{**th, "viec_dang_co": [], "buon_may_ngay": False}])
+    assert ("Gạch việc đã xong", False) in kq.kiem_tra and ("Đoán đúng tâm trạng (met)", False) in kq.kiem_tra

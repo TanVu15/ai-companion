@@ -182,5 +182,58 @@
     "ten": "Nhờ nhắc mỗi ngày",
     "tin_nhan": "Mỗi ngày 7h sáng nhắc mình uống nước nha",
     "phai_nhac_lap": "ngay"
+  },
+  {
+    "ten": "Nhờ ghi việc cần làm",
+    "tin_nhan": "Nhớ giúp mình là phải trả sách thư viện nha",
+    "phai_ghi_viec": true
+  },
+  {
+    "ten": "Hỏi còn việc gì",
+    "viec_dang_co": [
+      "Mua sữa",
+      "Gọi thợ sửa máy lạnh"
+    ],
+    "tin_nhan": "Mình còn việc gì chưa làm ta?",
+    "phai_co_mot_trong": [
+      "sữa",
+      "máy lạnh"
+    ]
+  },
+  {
+    "ten": "Kể đã làm xong việc",
+    "viec_dang_co": [
+      "Mua sữa"
+    ],
+    "tin_nhan": "Mua sữa rồi nha Bơ",
+    "phai_xong_viec": true
+  },
+  {
+    "ten": "Đoán tâm trạng mệt",
+    "tin_nhan": "Hôm nay làm cả ngày, mệt muốn xỉu luôn",
+    "phai_tam_trang": [
+      "met",
+      "buon"
+    ],
+    "cam_xuc_hop_le": [
+      "thuong",
+      "buon",
+      "suy_nghi"
+    ]
+  },
+  {
+    "ten": "Mấy hôm nay buồn",
+    "buon_may_ngay": true,
+    "tin_nhan": "Chào Bơ",
+    "cam_xuc_hop_le": [
+      "thuong",
+      "binh_thuong",
+      "suy_nghi",
+      "vui"
+    ],
+    "khong_duoc_co": [
+      "haha",
+      "quẩy lên"
+    ]
   }
 ]

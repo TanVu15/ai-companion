@@ -1,6 +1,6 @@
 """Bộ câu hỏi thử tính cách: cho Bơ trả lời các tình huống trong tinh_huong.json và chấm điểm.
 
-Chạy (tốn khoảng 12 câu API, rất rẻ với Haiku):
+Chạy (tốn khoảng 20 câu API, rất rẻ với Haiku):
     python -m app.thu_tinh_cach
 
 Mỗi tình huống dùng một trí nhớ tạm riêng, không đụng vào dữ liệu thật trong data/.
@@ -89,6 +89,13 @@ def cham(th: dict, chu_goc: str, reply) -> KetQua:
     if th.get("phai_nhac_lap"):
         kq.kiem_tra.append((f"Nhắc lặp lại ({th['phai_nhac_lap']})",
                             any(str(x.get("lap", "")) == th["phai_nhac_lap"] for x in reply.nhac)))
+    if th.get("phai_ghi_viec"):
+        kq.kiem_tra.append(("Ghi vào việc cần làm", bool(reply.viec_can_lam)))
+    if th.get("phai_xong_viec"):
+        kq.kiem_tra.append(("Gạch việc đã xong", bool(reply.xong_viec)))
+    if th.get("phai_tam_trang"):
+        kq.kiem_tra.append((f"Đoán đúng tâm trạng ({', '.join(th['phai_tam_trang'])})",
+                            reply.tam_trang in th["phai_tam_trang"]))
     return kq
 
 
@@ -111,6 +118,15 @@ def chay(client, tinh_huong: list[dict] | None = None) -> list[KetQua]:
 
                 today = date.today().strftime("%d/%m")
                 memory.add_special_days([{"ngay": today, "viec": v} for v in th["hom_nay_dac_biet"]])
+            memory.add_todos(th.get("viec_dang_co", []))
+            if th.get("buon_may_ngay"):  # giả vờ hôm qua và hôm kia người dùng buồn
+                for d in (1, 2):
+                    mid = memory.add_message("user", "Chán quá")
+                    memory.conn.execute(
+                        f"UPDATE messages SET tam_trang = 'buon', created_at = datetime('now', 'localtime', '-{d} day') "
+                        "WHERE id = ?", (mid,))
+                    memory.add_message("assistant", "Thương ghê, kể Bơ nghe nha.")
+                memory.conn.commit()
             ghi = _GhiLaiClient(client)
             try:
                 reply = Brain(memory, client=ghi).chat(th["tin_nhan"])

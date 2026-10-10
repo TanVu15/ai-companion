@@ -468,3 +468,10 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 
 **Tân cần thử:** nhắn "nhớ giúp mình mua sữa", mở "Việc cần làm" xem; rồi nhắn "mua sữa rồi nha".
 
+## 2026-10-10 – Giai đoạn 25 xong (báo cáo): việc cần làm
+- Bơ ghi/gạch việc cần làm qua trò chuyện; hộp "Việc cần làm" trên web.
+- Bộ chấm điểm tính cách thêm 5 tình huống (tổng 20): nhờ ghi việc, hỏi còn việc gì, kể đã làm xong, đoán tâm trạng mệt, mấy hôm nay buồn.
+- README cập nhật (việc cần làm, tâm trạng, nhắc trước ngày đặc biệt). 151 test qua hết.
+
+**Tân cần thử:** `python -m app.thu_tinh_cach` (khoảng 20 câu API) và gửi tổng điểm vào FEEDBACK.md.
+
