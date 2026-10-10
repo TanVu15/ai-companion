@@ -82,3 +82,16 @@ def test_api_nhat_ky_va_sao_luu(tmp_path):
     assert c.get("/api/nhat-ky").json() == []
     c.post("/api/khoi-phuc", json=backup)
     assert c.get("/api/nhat-ky").json()[0]["dong"][0]["noi_dung"] == "Đi chơi"
+
+
+def test_bo_tu_mo_loi_khong_ghi_nhat_ky(memory, monkeypatch):
+    from app import config
+
+    monkeypatch.setattr(config, "GREET_AFTER_HOURS", 0)
+    memory.add_followups(["Chiều nay đi đá bóng"])
+    memory.conn.execute("UPDATE followups SET created_at = datetime('now', 'localtime', '-1 day')")
+    memory.conn.commit()
+    client = FakeClient([reply("Đá bóng sao rồi?", nhat_ky="Đi đá bóng")])
+    r = Brain(memory, client=client).greet()
+    assert r is not None and client.calls
+    assert memory.diary_recent() == []

@@ -612,3 +612,10 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - Bộ chấm điểm `python -m app.thu_tinh_cach` thêm 3 tình huống (25 tình huống).
 - 223 test qua hết.
 
+## 2026-10-10 – Giai đoạn 34 xong: rà soát lần 14
+- Sửa lỗi: khi Bơ tự mở lời (tổng kết tuần, lâu không gặp...) có thể ghi chuyện cũ vào nhật ký HÔM NAY. Giờ chỉ ghi khi Tân nhắn.
+- Nút "Xóa" trong nhật ký chỉ xóa trên màn hình khi máy chủ xóa được thật.
+- 224 test qua hết.
+
+**Tân cần thử (giai đoạn 34):** kể Bơ nghe một chuyện trong ngày, bấm "Nhật ký" xem dòng Bơ ghi; hôm sau hỏi "hôm qua mình làm gì nhỉ?".
+

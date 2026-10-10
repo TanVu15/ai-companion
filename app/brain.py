@@ -528,7 +528,7 @@ class Brain:
             return None
         history = clean_history(self.memory.recent_messages(config.HISTORY_LIMIT))
         history.append({"role": "user", "content": trigger})  # chỉ gửi đi, không lưu
-        reply = self._ask(clean_history(history), followups)
+        reply = self._ask(clean_history(history), followups, from_user=False)
         if recap:
             self.memory.set_kv("tong_ket_tuan", week)  # tuần này đã điểm lại rồi
         if wish_holiday:
@@ -568,7 +568,7 @@ class Brain:
         except Exception:
             return []
 
-    def _ask(self, history: list[dict], followups: list[dict]) -> Reply:
+    def _ask(self, history: list[dict], followups: list[dict], from_user: bool = True) -> Reply:
         summary, _ = self.memory.latest_summary()
         from datetime import date
 
@@ -599,7 +599,8 @@ class Brain:
         self.memory.add_reminders(reply.nhac)
         self.memory.done_todos(reply.xong_viec)
         self.memory.add_todos(reply.viec_can_lam)
-        self.memory.add_diary(reply.nhat_ky, today)
+        if from_user:  # Bơ tự mở lời (tổng kết tuần...) thì không ghi: chuyện cũ sẽ bị ghi nhầm vào hôm nay
+            self.memory.add_diary(reply.nhat_ky, today)
         eve_before = {d["id"] for d in self.memory.special_days_tomorrow(today)}
         self.memory.add_special_days(reply.ngay_dac_biet)
         # Đã chúc trong câu này (hoặc người dùng vừa kể "hôm nay sinh nhật mình", Bơ đã biết) → không chúc lại trong năm

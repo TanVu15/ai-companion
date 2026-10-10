@@ -470,7 +470,9 @@ async function loadDiary(more) {
       const li = document.createElement('li'), b = document.createElement('button');
       li.textContent = x.noi_dung + ' ';
       b.textContent = 'Xóa'; b.type = 'button'; b.className = 'link'; b.setAttribute('aria-label', 'Xóa dòng: ' + x.noi_dung);
-      b.onclick = async () => { await fetch('/api/nhat-ky/' + x.id, { method: 'DELETE' }); li.remove(); };
+      b.onclick = async () => {
+        try { const r = await fetch('/api/nhat-ky/' + x.id, { method: 'DELETE' }); if (r.ok) li.remove(); } catch (e) {}
+      };
       li.appendChild(b); ul.appendChild(li);
     });
     diaryList.append(h, ul);
