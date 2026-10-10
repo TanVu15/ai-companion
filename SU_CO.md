@@ -18,7 +18,7 @@
 | Bơ đọc giọng không phải tiếng Việt | Máy chưa có giọng tiếng Việt | Windows: Cài đặt → Thời gian & ngôn ngữ → Giọng nói → thêm Tiếng Việt |
 | Lời nhắc không kêu | Lúc đó web không mở, hoặc máy tính tắt/ngủ | Để trang Bơ mở. Nhắc trễ thì Bơ vẫn báo khi mở lại web |
 | Bơ nhớ sai điều gì đó | AI ghi nhầm | "Bơ nhớ gì về mình?" → Xóa dòng sai. Hoặc nhắn Bơ "không phải, mình…" |
-| Mới `git pull` mà web vẫn cũ | Cửa sổ `run.bat` cũ còn chạy | Tắt cửa sổ đó, chạy lại `run.bat`. Nếu thêm thư viện mới: xóa thư mục `.venv` rồi chạy lại |
+| Mới `git pull` mà web vẫn cũ | Cửa sổ `run.bat` cũ còn chạy | Tắt cửa sổ đó, chạy lại `run.bat` (nó tự cài thêm thư viện mới nếu có). Vẫn lỗi thư viện thì xóa thư mục `.venv` rồi chạy lại |
 | Hỏi mật khẩu mãi | Gõ sai `APP_PASSWORD` | Mật khẩu phân biệt hoa/thường, tên đăng nhập gõ gì cũng được |
 
 ## Vẫn không được?

@@ -194,7 +194,7 @@
 ## 2026-10-10 – Giai đoạn 10 xong (báo cáo)
 - `SU_CO.md`: bảng 17 sự cố hay gặp (run.bat tắt ngay, sai key, hết tiền, iPhone không vào được, không thấy micro, lời nhắc không kêu…) và cách sửa; cuối cùng là cách gửi `data/loi.log` vào FEEDBACK.md.
 - Cả giai đoạn: test tự chạy trên GitHub (lần đầu đã ✓ xanh), nhật ký lỗi, hướng dẫn sự cố.
-- **Lưu ý khi `git pull` lần này:** không thêm thư viện mới, chỉ cần tắt và chạy lại `run.bat`.
+- **Lưu ý khi `git pull`:** chỉ cần tắt và chạy lại `run.bat`.
 
 ## 2026-10-10 – Giai đoạn 11: khuôn mặt sống động
 - Cảm xúc được lưu cùng tin nhắn → tải lại web, Bơ vẫn giữ vẻ mặt lúc nói câu cuối (dữ liệu cũ tự nâng cấp, không mất gì).
@@ -219,3 +219,8 @@
 - Xóa một điều Bơ nhớ đúng lúc Bơ đang gộp trí nhớ → trước đây điều đó có thể quay lại; giờ không.
 - Việc nền (tóm tắt, gộp) không còn bắt tin nhắn mới phải chờ.
 - 84 test qua hết.
+
+## 2026-10-10 – run.bat tự cập nhật thư viện
+- Mỗi lần chạy, `run.bat` kiểm tra và cài thư viện còn thiếu (nhanh nếu đã đủ). Sau `git pull` không cần xóa `.venv` nữa.
+- `run.bat` được lưu với kiểu xuống dòng của Windows (file `.gitattributes`).
+- Chưa thử trên Windows thật (máy của Claude chạy Linux) → **Tân cần thử:** `git pull` rồi nhấp đúp `run.bat`.
