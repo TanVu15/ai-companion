@@ -162,6 +162,44 @@ searchInput.addEventListener('input', () => { clearTimeout(searchTimer); searchT
 document.getElementById('openSearch').onclick = () => { searchDlg.showModal(); searchInput.focus(); runSearch(); };
 document.getElementById('closeSearch').onclick = () => searchDlg.close();
 
+// ---- Việc cần làm ----
+const todoDlg = document.getElementById('todo'), todosEl = document.getElementById('todos');
+const todoErr = document.getElementById('todoErr');
+async function loadTodos() {
+  let list = [];
+  try { const r = await fetch('/api/viec'); if (r.ok) list = await r.json(); } catch (e) {}
+  todosEl.innerHTML = '';
+  if (!list.length) { const li = document.createElement('li'); li.textContent = 'Chưa có việc nào.'; todosEl.appendChild(li); }
+  list.forEach(x => {
+    const li = document.createElement('li'), lab = document.createElement('label');
+    const cb = document.createElement('input'), span = document.createElement('span'), b = document.createElement('button');
+    if (x.xong) li.className = 'xong';
+    cb.type = 'checkbox'; cb.checked = x.xong;
+    span.textContent = x.viec;
+    cb.onchange = async () => {
+      await fetch('/api/viec/' + x.id, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ xong: cb.checked }) });
+      loadTodos();
+    };
+    b.textContent = 'Xóa'; b.type = 'button'; b.setAttribute('aria-label', 'Xóa việc: ' + x.viec);
+    b.onclick = async () => { await fetch('/api/viec/' + x.id, { method: 'DELETE' }); loadTodos(); };
+    lab.append(cb, span); li.append(lab, b); todosEl.appendChild(li);
+  });
+}
+document.getElementById('openTodo').onclick = () => { todoErr.hidden = true; todoDlg.showModal(); loadTodos(); };
+document.getElementById('closeTodo').onclick = () => todoDlg.close();
+document.getElementById('addTodoForm').addEventListener('submit', async (ev) => {
+  ev.preventDefault();
+  const inp = document.getElementById('newTodo'), text = inp.value.trim();
+  if (!text) return;
+  todoErr.hidden = true;
+  try {
+    const r = await fetch('/api/viec', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ viec: text }) });
+    if (r.ok) inp.value = '';
+    else { try { todoErr.textContent = (await r.json()).detail; } catch (x) { todoErr.textContent = 'Không thêm được'; } todoErr.hidden = false; }
+  } catch (e) { todoErr.textContent = 'Mất mạng, thử lại nha.'; todoErr.hidden = false; }
+  loadTodos();
+});
+
 // ---- Bơ làm được gì? ----
 const helpDlg = document.getElementById('help');
 const statsEl = document.getElementById('stats');

@@ -113,6 +113,11 @@
     header { padding-top: 8px; } .face { zoom: .65; } .name { margin-top: 2px; }
     #personaText { height: 35vh; }
   }
+  .todos li { display: flex; gap: 8px; align-items: center; }
+  .todos label { flex: 1; display: flex; gap: 10px; align-items: center; cursor: pointer; }
+  .todos input[type=checkbox] { width: 20px; height: 20px; flex: none; }
+  .todos li.xong label span { text-decoration: line-through; color: var(--muted); }
+  .todos li button { background: none; color: #c0392b; padding: 4px 10px; font-weight: 400; }
   .addfact { display: flex; gap: 8px; padding: 0; border: none; background: none; margin-bottom: 10px; }
   .addfact input { flex: 1; min-width: 0; border: 1px solid var(--border); border-radius: 12px; padding: 8px 12px; font: inherit;
     background: var(--bg); color: var(--text); }
@@ -140,6 +145,7 @@
     <div class="status" id="status"></div>
     <div>
       <button class="link" id="openMem" type="button">Bơ nhớ gì về mình?</button>
+      <button class="link" id="openTodo" type="button">Việc cần làm</button>
       <button class="link" id="openSearch" type="button">Tìm</button>
       <button class="link" id="openHelp" type="button" aria-label="Bơ làm được gì?">?</button>
       <button class="link" id="openCost" type="button">Chi phí</button>
@@ -183,6 +189,17 @@
     <button id="closeMem" type="button">Xong</button>
   </div>
 </dialog>
+<dialog id="todo">
+  <h2>Việc cần làm</h2>
+  <p>Nhắn Bơ "nhớ giúp mình mua sữa" hoặc tự thêm ở đây. Chạm ô vuông khi làm xong.</p>
+  <form id="addTodoForm" class="addfact">
+    <input id="newTodo" type="text" maxlength="200" placeholder="ví dụ: Trả sách thư viện" aria-label="Việc cần làm mới">
+    <button type="submit">Thêm</button>
+  </form>
+  <p id="todoErr" hidden></p>
+  <ul id="todos" class="plain todos"></ul>
+  <div class="row"><span></span><button id="closeTodo" type="button">Xong</button></div>
+</dialog>
 <dialog id="help">
   <p id="stats"></p>
   <div id="moods" class="moods" hidden></div>
@@ -194,6 +211,7 @@
     <li><b>Nhắc việc:</b> "8h tối nhắc mình gọi mẹ", "mỗi ngày 7h sáng nhắc uống nước". Để trang mở thì Bơ mới nhắc được.</li>
     <li><b>Tổng kết tuần:</b> tối Chủ nhật mở web, Bơ điểm lại tuần qua của bạn.</li>
     <li><b>Tâm trạng:</b> Bơ đoán bạn vui hay buồn qua tin nhắn (xem dải 7 ngày ở trên). Mấy hôm liền buồn/mệt thì Bơ nhẹ nhàng hơn.</li>
+    <li><b>Việc cần làm:</b> "nhớ giúp mình mua sữa" → Bơ ghi vào danh sách; "mua sữa rồi" → Bơ gạch. Xem ở nút "Việc cần làm".</li>
     <li><b>Ngày đặc biệt:</b> "sinh nhật mẹ 5/3" → hôm trước Bơ nhắc, đúng ngày Bơ chúc.</li>
     <li><b>Giọng nói:</b> bật "Giọng nói" để Bơ đọc to; bấm micro để nói. "Rảnh tay": gọi "Bơ ơi" rồi nói. Chạm mặt Bơ để Bơ im.</li>
     <li><b>Tìm chuyện cũ:</b> nút "Tìm" (hoặc Ctrl+K), gõ không dấu cũng được.</li>

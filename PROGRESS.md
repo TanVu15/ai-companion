@@ -462,3 +462,9 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - Việc xong quá 3 ngày tự dọn; tối đa 50 việc chưa xong; có trong bản sao lưu (bản sao lưu cũ vẫn nạp được).
 - 150 test qua hết.
 
+## 2026-10-10 – Giai đoạn 25: hộp "Việc cần làm"
+- Nút **"Việc cần làm"** trên đầu trang: danh sách việc, chạm ô vuông để đánh dấu xong (chữ gạch ngang), "Xóa", và ô tự thêm việc. Thêm trùng thì báo.
+- Đã thử tự động trên màn hình điện thoại nhỏ (360px), không vỡ, không lỗi JS. 150 test qua hết.
+
+**Tân cần thử:** nhắn "nhớ giúp mình mua sữa", mở "Việc cần làm" xem; rồi nhắn "mua sữa rồi nha".
+

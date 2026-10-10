@@ -129,7 +129,7 @@
 
 ## Giai đoạn 25 – Việc cần làm (chỉ phần mềm, Claude tự thêm)
 - [x] Bơ ghi việc cần làm ("nhớ giúp mình mua sữa"), gạch khi Tân kể đã làm
-- [ ] Hộp "Việc cần làm" trên web: xem, đánh dấu xong, thêm, xóa
+- [x] Hộp "Việc cần làm" trên web: xem, đánh dấu xong, thêm, xóa
 - [ ] Bộ chấm điểm thêm tình huống (việc cần làm, Tân buồn); README cập nhật
 
 ## Sau này
