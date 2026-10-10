@@ -401,3 +401,7 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
   - Ctrl+K không còn chen khi đang gõ dấu tiếng Việt hoặc khi hộp khác đang mở.
   - Nút chọn giọng hiện được trên Safari cũ.
 - 126 test qua hết.
+
+## 2026-10-10 – Giai đoạn 21: chi phí chi tiết
+- Nút "Chi phí" có thêm: tháng này tốn bao nhiêu cho **trò chuyện / tóm tắt chuyện cũ / gộp trí nhớ**, và số câu gọi API **từng ngày trong 7 ngày gần nhất**.
+- 127 test qua hết.

@@ -153,6 +153,26 @@ def usage():
     for name, since in (("hom_nay", today), ("thang_nay", today.replace(day=1))):
         u = mem.usage_since(since.isoformat())
         out[name] = {**u, "usd": round(cost_usd(u), 4)}
+    # Theo loại (tháng này) và theo ngày (7 ngày gần nhất, kể cả ngày không dùng)
+    from datetime import timedelta
+
+    rows = mem.usage_rows_since(min(today.replace(day=1), today - timedelta(days=6)).isoformat())
+    loai: dict = {}
+    for r in rows:
+        if r["day"] >= today.replace(day=1).isoformat():
+            x = loai.setdefault(r["kind"], {"calls": 0, "input_tokens": 0, "output_tokens": 0})
+            for k in x:
+                x[k] += r[k]
+    out["theo_loai"] = {k: {**v, "usd": round(cost_usd(v), 4)} for k, v in loai.items()}
+    days = [(today - timedelta(days=i)).isoformat() for i in range(6, -1, -1)]
+    out["bay_ngay"] = []
+    for d in days:
+        u = {"calls": 0, "input_tokens": 0, "output_tokens": 0}
+        for r in rows:
+            if r["day"] == d:
+                for k in u:
+                    u[k] += r[k]
+        out["bay_ngay"].append({"ngay": d, "calls": u["calls"], "usd": round(cost_usd(u), 4)})
     out["gioi_han_ngay"] = config.DAILY_LIMIT
     out["ngan_sach_thang"] = config.MONTHLY_USD_LIMIT
     out["da_tra_loi_hom_nay"] = mem.replies_today()

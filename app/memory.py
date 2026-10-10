@@ -245,6 +245,13 @@ class Memory:
         ).fetchone()
         return {"calls": row[0], "input_tokens": row[1], "output_tokens": row[2]}
 
+    def usage_rows_since(self, day: str) -> list[dict]:
+        """Chi tiết từng ngày × từng loại ('chat', 'tom_tat', 'gop') từ ngày `day`."""
+        rows = self.conn.execute(
+            "SELECT day, kind, calls, input_tokens, output_tokens FROM usage WHERE day >= ? ORDER BY day, kind", (day,)
+        ).fetchall()
+        return [{"day": d, "kind": k, "calls": c, "input_tokens": i, "output_tokens": o} for d, k, c, i, o in rows]
+
     # --- Lời nhắc theo giờ ---
     _LAP = {"ngay": timedelta(days=1), "tuan": timedelta(weeks=1)}
 

@@ -306,3 +306,22 @@ def test_them_va_sua_dieu_nho(tmp_path):
     assert c.put("/api/facts", json={"cu": "Thích ăn phở", "moi": " "}).status_code == 400
     assert c.put("/api/facts", json={"cu": "Thích ăn phở", "moi": "Thích ăn phở bò"}).status_code == 200
     assert c.get("/api/facts").json() == ["Thích ăn phở bò", "Sống ở Đà Nẵng"]
+
+
+def test_chi_phi_theo_loai_va_bay_ngay(tmp_path):
+    from datetime import date, timedelta
+
+    c = make_client(tmp_path, [])
+    m = main._brain.memory
+    m.add_usage("chat", 1000, 100)
+    m.add_usage("chat", 1000, 100)
+    m.add_usage("tom_tat", 500, 50)
+    old = (date.today() - timedelta(days=3)).isoformat()
+    m.conn.execute("INSERT INTO usage VALUES (?, 'gop', 1, 10, 10)", (old,))
+    m.conn.execute("INSERT INTO usage VALUES ('2000-01-01', 'chat', 9, 9, 9)")  # quá cũ, không tính
+    m.conn.commit()
+    d = c.get("/api/chi-phi").json()
+    assert d["theo_loai"]["chat"]["calls"] == 2 and d["theo_loai"]["tom_tat"]["calls"] == 1
+    assert len(d["bay_ngay"]) == 7 and d["bay_ngay"][-1] == {"ngay": date.today().isoformat(), "calls": 3,
+                                                             "usd": d["hom_nay"]["usd"]}
+    assert d["bay_ngay"][3]["calls"] == 1 and sum(x["calls"] for x in d["bay_ngay"]) == 4

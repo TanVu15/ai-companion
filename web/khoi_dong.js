@@ -13,6 +13,10 @@ document.getElementById('openCost').onclick = async () => {
         ? money(d.ngan_sach_thang) + ' — đã dùng ' + Math.min(100, Math.round(d.thang_nay.usd / d.ngan_sach_thang * 100)) + '%'
         : 'không giới hạn (đặt MONTHLY_USD_LIMIT trong .env)'],
     ];
+    const TEN = { chat: 'Trò chuyện', tom_tat: 'Tóm tắt chuyện cũ', gop: 'Gộp trí nhớ' };
+    Object.entries(d.theo_loai || {}).forEach(([k, v]) =>
+      rows.push(['  · ' + (TEN[k] || k) + ' (tháng này)', v.calls + ' câu, ' + money(v.usd)]));
+    if (d.bay_ngay) rows.push(['7 ngày gần nhất', d.bay_ngay.map(x => x.ngay.slice(8, 10) + '/' + x.ngay.slice(5, 7) + ': ' + x.calls).join(' · ')]);
     costList.innerHTML = '';
     rows.forEach(([k, v]) => { const li = document.createElement('li'); li.textContent = k + ': ' + v; costList.appendChild(li); });
   } catch (e) { costList.innerHTML = '<li>Không tải được.</li>'; }

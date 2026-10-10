@@ -109,7 +109,7 @@
 
 ## Giai đoạn 21 – Chăm chút tiếp (chỉ phần mềm, Claude tự thêm)
 - [x] Rà soát code lần 6 (giọng đọc, màu mặt, phím tắt, sửa điều nhớ, tách file JS), sửa lỗi tìm được
-- [ ] Chi phí chia theo loại (trò chuyện / tóm tắt / gộp trí nhớ) và 7 ngày gần nhất
+- [x] Chi phí chia theo loại (trò chuyện / tóm tắt / gộp trí nhớ) và 7 ngày gần nhất
 - [ ] Hoàn tác khi lỡ xóa một điều Bơ nhớ
 
 ## Sau này
