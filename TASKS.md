@@ -45,7 +45,7 @@
 - [x] An toàn khi 2 tin gửi cùng lúc (điện thoại + máy tính)
 - [x] Giới hạn chi phí theo tiền mỗi tháng (ngoài giới hạn số câu/ngày)
 - [x] Kiểm tra sức khỏe /api/suc-khoe: báo thiếu API key, thiếu persona, dung lượng dữ liệu
-- [ ] Thêm Bơ vào màn hình chính iPhone (biểu tượng, mở toàn màn hình)
+- [x] Thêm Bơ vào màn hình chính iPhone (biểu tượng, mở toàn màn hình)
 - [ ] Nhắc việc theo giờ ("8h tối nhắc mình gọi mẹ"), báo khi web đang mở
 
 ## Sau này

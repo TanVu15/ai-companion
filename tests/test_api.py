@@ -146,3 +146,14 @@ def test_health_ok_with_key(tmp_path, monkeypatch):
     d = make_client(tmp_path, []).get("/api/suc-khoe").json()
     assert d["ok"] is True  # thiếu mật khẩu/ngân sách chỉ là cảnh báo
     assert {k["ten"] for k in d["kiem_tra"]} >= {"API key", "Tính cách", "Dữ liệu"}
+
+
+def test_home_screen_files(tmp_path):
+    c = make_client(tmp_path, [])
+    html = c.get("/").text
+    assert 'rel="manifest"' in html and 'apple-touch-icon' in html
+    m = c.get("/web/manifest.json").json()
+    assert m["short_name"] == "Bơ" and m["display"] == "standalone"
+    for icon in m["icons"]:
+        r = c.get(icon["src"])
+        assert r.status_code == 200 and r.content[:4] == b"\x89PNG"

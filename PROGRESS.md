@@ -146,3 +146,9 @@
 - Mở web mà thiếu API key / thiếu persona.md / không ghi được dữ liệu → hiện ngay dòng đỏ giải thích, ví dụ "API key: Chưa có ANTHROPIC_API_KEY trong .env".
 - Xem chi tiết ở http://localhost:8000/api/suc-khoe (có cả cảnh báo nhẹ: chưa đặt mật khẩu, chưa đặt ngân sách). Không tốn tiền API.
 - 61 test qua hết.
+
+## 2026-10-10 – Giai đoạn 8: biểu tượng trên màn hình chính
+- Bơ có biểu tượng mặt cười vàng. Trên iPhone: Safari → Chia sẻ → "Thêm vào MH chính" → mở như ứng dụng, toàn màn hình.
+- 62 test qua hết.
+
+**Tân cần thử:** thêm Bơ vào màn hình chính iPhone (chung Wi-Fi), mở từ biểu tượng.
