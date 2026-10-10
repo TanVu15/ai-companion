@@ -374,3 +374,6 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - 125 test qua hết.
 
 **Tân cần thử:** mở bằng Edge, bật "Giọng nói", bấm "Giọng: ..." vài lần chọn giọng dễ nghe nhất.
+
+## 2026-10-10 – Giai đoạn 19: màu mặt Bơ
+- Nút "?" → mục **Màu mặt Bơ**: vàng (mặc định), xanh bơ, hồng, xanh dương, cam, tím. Mỗi máy nhớ màu riêng.

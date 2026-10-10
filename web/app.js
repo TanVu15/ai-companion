@@ -550,3 +550,31 @@ document.getElementById('resetPersona').onclick = async () => {
   if (!confirm('Bỏ bản tự sửa, dùng lại tính cách mặc định?')) return;
   await fetch('/api/tinh-cach', { method: 'DELETE' }); loadPersona();
 };
+
+// ---- Màu mặt Bơ (lưu trên máy này) ----
+const FACE_COLORS = [['', 'Vàng (mặc định)'], ['#a8d672', 'Xanh bơ'], ['#ffb3c1', 'Hồng'], ['#9fd3ff', 'Xanh dương'],
+  ['#ffb26b', 'Cam'], ['#d3b8ff', 'Tím']];
+function applyFaceColor(c) {
+  if (c) document.documentElement.style.setProperty('--face', c);
+  else document.documentElement.style.removeProperty('--face');
+}
+let faceColor = '';
+try { faceColor = localStorage.getItem('bo_mau') || ''; } catch (e) {}
+if (!FACE_COLORS.some(x => x[0] === faceColor)) faceColor = '';
+applyFaceColor(faceColor);
+const colorsEl = document.getElementById('colors');
+function renderColors() {
+  colorsEl.innerHTML = '';
+  FACE_COLORS.forEach(([c, name]) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', c === faceColor);
+    b.setAttribute('aria-label', name); b.title = name;
+    b.style.background = c || '#ffd36e';
+    b.onclick = () => {
+      faceColor = c; applyFaceColor(c); renderColors();
+      try { localStorage.setItem('bo_mau', c); } catch (e) {}
+    };
+    colorsEl.appendChild(b);
+  });
+}
+renderColors();

@@ -100,7 +100,7 @@
 
 ## Giai đoạn 19 – Cá nhân hóa giao diện (chỉ phần mềm, Claude tự thêm)
 - [x] Chọn giọng đọc (khi máy có nhiều giọng tiếng Việt)
-- [ ] Chọn màu khuôn mặt Bơ (lưu trên máy)
+- [x] Chọn màu khuôn mặt Bơ (lưu trên máy)
 - [ ] Phím tắt: Esc để Bơ ngừng đọc / đóng hộp, Ctrl+K để tìm
 
 ## Sau này
