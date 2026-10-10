@@ -387,6 +387,31 @@ class Memory:
         self.conn.commit()
         return due
 
+    def update_reminder(self, reminder_id: int, viec: str, luc: str, lap: str = "",
+                        now: datetime | None = None) -> bool:
+        """Sửa lời nhắc chưa nhắc (việc, giờ, lặp lại). Sai/đã qua giờ thì ValueError; không có thì False."""
+        now = now or datetime.now()
+        viec = re.sub(r"\s+", " ", str(viec)).strip()[:200]
+        lap = str(lap or "").strip().lower()
+        if lap not in self._LAP:
+            lap = ""
+        if not viec:
+            raise ValueError("Việc cần nhắc đang trống")
+        try:
+            t = datetime.strptime(str(luc).strip().replace("T", " ")[:16], "%Y-%m-%d %H:%M")
+        except ValueError:
+            raise ValueError("Giờ nhắc không hợp lệ") from None
+        if lap:
+            t = self._next_time(t, lap, now - timedelta(minutes=1))
+        elif t < now - timedelta(minutes=1):
+            raise ValueError("Giờ này đã qua rồi, chọn giờ sau nha")
+        cur = self.conn.execute(
+            "UPDATE reminders SET content = ?, due_at = ?, lap = ? WHERE id = ? AND done = 0",
+            (viec, t.strftime("%Y-%m-%d %H:%M"), lap, reminder_id),
+        )
+        self.conn.commit()
+        return cur.rowcount > 0
+
     def delete_reminder(self, reminder_id: int) -> None:
         self.conn.execute("DELETE FROM reminders WHERE id = ?", (reminder_id,))
         self.conn.commit()

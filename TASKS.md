@@ -140,7 +140,7 @@
 
 ## Giai đoạn 27 – Cài đặt trên web (chỉ phần mềm, Claude tự thêm)
 - [x] Hộp "Cài đặt": thành phố thời tiết, giờ yên lặng, tổng kết tuần (không cần sửa .env)
-- [ ] Sửa giờ / nội dung lời nhắc sắp tới ngay trên web
+- [x] Sửa giờ / nội dung lời nhắc sắp tới ngay trên web
 - [ ] Rà soát code lần 9 (cài đặt, sửa lời nhắc), sửa lỗi tìm được
 
 ## Sau này

@@ -293,6 +293,25 @@ def reminders_upcoming():
     return get_brain().memory.upcoming_reminders()
 
 
+class ReminderEditIn(BaseModel):
+    viec: str
+    luc: str  # "YYYY-MM-DD HH:MM" (hoặc "YYYY-MM-DDTHH:MM" từ ô chọn giờ của trình duyệt)
+    lap: str = ""
+
+
+@app.put("/api/nhac/{reminder_id}")
+def reminder_edit(reminder_id: int, body: ReminderEditIn):
+    brain = get_brain()
+    with brain._lock:
+        try:
+            ok = brain.memory.update_reminder(reminder_id, body.viec, body.luc, body.lap)
+        except ValueError as e:
+            raise HTTPException(400, str(e))
+    if not ok:
+        raise HTTPException(404, "Lời nhắc này đã nhắc xong hoặc bị xóa rồi")
+    return {"ok": True}
+
+
 @app.delete("/api/nhac/{reminder_id}")
 def reminder_delete(reminder_id: int):
     brain = get_brain()

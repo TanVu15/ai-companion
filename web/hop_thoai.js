@@ -53,8 +53,39 @@ async function loadReminders() {
     li.textContent = x.luc.slice(11) + ' ' + x.luc.slice(8, 10) + '/' + x.luc.slice(5, 7) + ' — ' + x.viec + lap + ' ';
     b.textContent = 'Xóa'; b.type = 'button'; b.className = 'link'; b.setAttribute('aria-label', 'Xóa lời nhắc: ' + x.viec);
     b.onclick = async () => { await fetch('/api/nhac/' + x.id, { method: 'DELETE' }); loadReminders(); };
-    li.appendChild(b); remsEl.appendChild(li);
+    const e = document.createElement('button');
+    e.textContent = 'Sửa'; e.type = 'button'; e.className = 'link'; e.setAttribute('aria-label', 'Sửa lời nhắc: ' + x.viec);
+    e.onclick = () => editReminder(li, x);
+    li.append(e, document.createTextNode(' '), b); remsEl.appendChild(li);
   });
+}
+// Sửa lời nhắc ngay trong danh sách: việc, ngày giờ, lặp lại
+function editReminder(li, x) {
+  li.innerHTML = '';
+  const f = document.createElement('form'); f.className = 'rem-edit';
+  const viec = document.createElement('input'); viec.type = 'text'; viec.maxLength = 200; viec.value = x.viec;
+  viec.setAttribute('aria-label', 'Việc cần nhắc');
+  const luc = document.createElement('input'); luc.type = 'datetime-local'; luc.value = x.luc.replace(' ', 'T');
+  luc.setAttribute('aria-label', 'Ngày giờ nhắc');
+  const lap = document.createElement('select'); lap.setAttribute('aria-label', 'Lặp lại');
+  [['', 'Một lần'], ['ngay', 'Mỗi ngày'], ['tuan', 'Mỗi tuần']].forEach(([v, t]) => {
+    const o = document.createElement('option'); o.value = v; o.textContent = t; if ((x.lap || '') === v) o.selected = true; lap.appendChild(o);
+  });
+  const err = document.createElement('span'); err.className = 'err';
+  const save = document.createElement('button'); save.type = 'submit'; save.textContent = 'Lưu';
+  const cancel = document.createElement('button'); cancel.type = 'button'; cancel.className = 'link'; cancel.textContent = 'Hủy';
+  cancel.onclick = () => loadReminders();
+  f.onsubmit = async (ev) => {
+    ev.preventDefault(); err.textContent = '';
+    try {
+      const r = await fetch('/api/nhac/' + x.id, { method: 'PUT', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ viec: viec.value, luc: luc.value, lap: lap.value }) });
+      if (r.ok) { loadReminders(); return; }
+      err.textContent = (await r.json().catch(() => ({}))).detail || 'Không lưu được';
+    } catch (e2) { err.textContent = 'Mất mạng, thử lại nha.'; }
+  };
+  const row = document.createElement('div'); row.className = 'row'; row.append(err, cancel, save);
+  f.append(viec, luc, lap, row); li.appendChild(f); viec.focus();
 }
 const daysEl = document.getElementById('days');
 async function loadDays() {

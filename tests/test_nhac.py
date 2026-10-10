@@ -197,3 +197,39 @@ def test_loi_nhac_co_id_de_ghim_nhung_thiet_bi_khong_nhan(tmp_path, monkeypatch)
     main_memory().add_reminders([{"luc": fmt(datetime.now()), "viec": "B"}])
     [y] = c.get("/api/thiet-bi/nhac", headers={"X-Device-Key": "k"}).json()
     assert "id" not in y and y["viec"] == "B"
+
+
+def test_sua_loi_nhac(tmp_path):
+    from datetime import datetime as _dt
+
+    import pytest as _pt
+
+    from app.memory import Memory as _M
+
+    mem = _M(tmp_path / "s.db")
+    now = _dt(2026, 10, 10, 9, 0)
+    mem.add_reminders([{"luc": "2026-10-10 20:00", "viec": "Gọi mẹ"}], now=now)
+    [r] = mem.upcoming_reminders()
+    assert mem.update_reminder(r["id"], "Gọi  bố", "2026-10-11T21:30", "", now=now)
+    assert mem.upcoming_reminders() == [{"id": r["id"], "viec": "Gọi bố", "luc": "2026-10-11 21:30", "lap": ""}]
+    # lặp lại mỗi ngày: giờ đã qua thì dời tới lần sau
+    assert mem.update_reminder(r["id"], "Uống nước", "2026-10-01 07:00", "ngay", now=now)
+    assert mem.upcoming_reminders()[0]["luc"] == "2026-10-11 07:00"
+    for viec, luc in [("", "2026-10-11 07:00"), ("x", "hôm nay"), ("x", "2026-10-09 07:00")]:
+        with _pt.raises(ValueError):
+            mem.update_reminder(r["id"], viec, luc, "", now=now)
+    assert mem.update_reminder(999, "x", "2026-10-11 07:00", "", now=now) is False
+
+
+def test_api_sua_loi_nhac(tmp_path):
+    from tests.test_api import make_client
+
+    c = make_client(tmp_path, [])
+    from app import main as _main
+
+    _main.get_brain().memory.add_reminders([{"luc": "2099-01-01 08:00", "viec": "Gọi mẹ"}])
+    [r] = c.get("/api/nhac/sap-toi").json()
+    assert c.put(f"/api/nhac/{r['id']}", json={"viec": "Gọi bố", "luc": "2099-01-02T09:15"}).status_code == 200
+    assert c.get("/api/nhac/sap-toi").json()[0]["luc"] == "2099-01-02 09:15"
+    assert c.put(f"/api/nhac/{r['id']}", json={"viec": "x", "luc": "2000-01-01 09:00"}).status_code == 400
+    assert c.put("/api/nhac/999", json={"viec": "x", "luc": "2099-01-01 09:00"}).status_code == 404

@@ -500,3 +500,9 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 
 **Tân cần thử:** bấm "?", gõ thành phố "Da Nang", Lưu; rồi hỏi Bơ "mai trời sao?".
 
+## 2026-10-10 – Giai đoạn 27: sửa lời nhắc trên web
+- "Bơ nhớ gì về mình?" → Lời nhắc sắp tới → nút **"Sửa"**: đổi việc, ngày giờ, một lần / mỗi ngày / mỗi tuần. Chọn giờ đã qua thì báo, không lưu. Không tốn câu API.
+- Đã thử tự động trên trình duyệt. 165 test qua hết.
+
+**Tân cần thử:** nhắn "8h tối nhắc mình gọi mẹ", rồi vào "Bơ nhớ gì về mình?" → Sửa thành 9h.
+
