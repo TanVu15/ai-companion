@@ -47,6 +47,7 @@ Chỉ nhắc được khi **máy tính đang chạy Bơ và trang web đang mở
 - **Ghim tin nhắn:** chạm vào một tin → "Ghim tin này". Xem lại ở nút "Tìm" (khi chưa gõ gì).
 - **Sao lưu:** trong "Bơ nhớ gì về mình?" → tải bản sao lưu (.json, nạp lại được) hoặc tải trò chuyện (.txt, để đọc).
 - **Thời tiết:** đặt `THANH_PHO=Da Nang` (tên thành phố, không dấu cũng được) trong `.env` → Bơ biết trời nắng/mưa hôm nay và ngày mai, nhắc mang áo mưa khi hợp chuyện. Miễn phí (Open-Meteo), không cần tài khoản.
+- **Cài đặt trên web:** nút "?" → mục Cài đặt: thành phố, giờ yên lặng, tổng kết tuần. Lưu ở `data/cai_dat.json`, ưu tiên hơn `.env`; "Về như file .env" để bỏ.
 - **Chi phí:** nút "Chi phí". Đặt `MONTHLY_USD_LIMIT` trong `.env` để giới hạn tiền mỗi tháng.
 
 ## Nối phần cứng (ESP32)

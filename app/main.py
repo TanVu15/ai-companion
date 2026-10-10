@@ -9,7 +9,7 @@ from fastapi.responses import FileResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from . import config
+from . import cai_dat, config
 from .brain import Brain, cost_usd, current_persona, friendly_error
 from .memory import Memory
 from .nhat_ky import bat_ghi_file, log
@@ -90,6 +90,7 @@ def get_brain() -> Brain:
     global _brain
     if _brain is None:
         bat_ghi_file(config.DB_PATH.parent / "loi.log")
+        cai_dat.ap_dung()  # cài đặt chỉnh trên web (thành phố, giờ yên lặng...) ưu tiên hơn .env
         if config.DEMO:
             _brain = Brain(Memory(config.DB_PATH.with_name("demo.db")), client=_DemoClient(), background=True,
                            weather=_weather())
@@ -316,6 +317,48 @@ def stats():
     brain = get_brain()
     with brain._lock:
         return brain.memory.stats()
+
+
+@app.get("/api/cai-dat")
+def settings():
+    """Cài đặt đang dùng + những mục đã chỉnh trên web (khác .env)."""
+    get_brain()
+    return {"hien_tai": cai_dat.ap_dung(), "da_chinh": sorted(cai_dat.doc())}
+
+
+def _after_settings(old_city: str) -> dict:
+    brain = get_brain()
+    if config.THANH_PHO != old_city:  # đổi thành phố → tạo lại bộ lấy thời tiết
+        brain.weather = _weather()
+        brain._weather_text = None
+    return {"hien_tai": cai_dat.ap_dung(), "da_chinh": sorted(cai_dat.doc())}
+
+
+@app.put("/api/cai-dat")
+def settings_save(body: dict):
+    brain = get_brain()
+    old_city = config.THANH_PHO
+    with brain._lock:
+        try:
+            cai_dat.luu(body)
+        except ValueError as e:
+            raise HTTPException(400, str(e))
+        except OSError as e:
+            log.warning("Lưu cài đặt lỗi: %s", e)
+            raise HTTPException(500, "Không lưu được cài đặt (thử lại sau giây lát)")
+        return _after_settings(old_city)
+
+
+@app.delete("/api/cai-dat")
+def settings_reset():
+    brain = get_brain()
+    old_city = config.THANH_PHO
+    with brain._lock:
+        try:
+            cai_dat.ve_mac_dinh()
+        except OSError as e:
+            raise HTTPException(500, f"Không xóa được cài đặt: {e}")
+        return _after_settings(old_city)
 
 
 @app.get("/api/tam-trang")

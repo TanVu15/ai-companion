@@ -118,6 +118,11 @@
   .todos input[type=checkbox] { width: 20px; height: 20px; flex: none; }
   .todos li.xong label span { text-decoration: line-through; color: var(--muted); }
   .todos li button { background: none; color: #c0392b; padding: 4px 10px; font-weight: 400; }
+  .settings { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; padding: 0; border: none; background: none; }
+  .settings label { display: flex; flex-direction: column; gap: 4px; font-size: 14px; color: var(--muted); }
+  .settings label.check { flex-direction: row; align-items: center; gap: 8px; color: var(--text); }
+  .settings input[type=text] { border: 1px solid var(--border); border-radius: 12px; padding: 8px 12px; font: inherit; background: var(--bg); color: var(--text); }
+  .settings input[type=checkbox] { width: 20px; height: 20px; }
   .addfact { display: flex; gap: 8px; padding: 0; border: none; background: none; margin-bottom: 10px; }
   .addfact input { flex: 1; min-width: 0; border: 1px solid var(--border); border-radius: 12px; padding: 8px 12px; font: inherit;
     background: var(--bg); color: var(--text); }
@@ -220,9 +225,18 @@
     <li><b>Sao lưu:</b> trong "Bơ nhớ gì về mình?" → tải bản sao lưu hoặc tải trò chuyện (.txt).</li>
     <li><b>Tính cách:</b> nút "Tính cách" để sửa cách Bơ nói chuyện (lỡ hỏng thì bấm "Về mặc định").</li>
     <li><b>Chi phí:</b> nút "Chi phí" xem đã tiêu bao nhiêu tiền API.</li>
+    <li><b>Cài đặt:</b> thành phố (thời tiết), giờ yên lặng, tổng kết tuần — chỉnh ngay bên dưới, không cần sửa .env.</li>
   </ul>
   <h2>Màu mặt Bơ</h2>
   <div id="colors" class="colors" role="radiogroup" aria-label="Màu mặt Bơ"></div>
+  <h2>Cài đặt</h2>
+  <form id="settingsForm" class="settings">
+    <label>Thành phố (để biết thời tiết) <input id="setCity" type="text" maxlength="60" placeholder="ví dụ: Da Nang — để trống = tắt"></label>
+    <label>Giờ yên lặng (Bơ không tự đọc to) <input id="setQuiet" type="text" maxlength="9" placeholder="ví dụ: 23-6 — để trống = tắt"></label>
+    <label class="check"><input id="setRecap" type="checkbox"> Tổng kết tuần vào tối Chủ nhật</label>
+    <p id="settingsMsg" hidden></p>
+    <div class="row"><button class="link" id="resetSettings" type="button">Về như file .env</button><button type="submit">Lưu cài đặt</button></div>
+  </form>
   <h2>Tình trạng</h2>
   <ul id="healthList" class="plain"></ul>
   <p>Gặp lỗi: xem file SU_CO.md trong thư mục dự án.</p>

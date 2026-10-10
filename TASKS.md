@@ -138,6 +138,11 @@
 - [x] SU_CO.md thêm sự cố cho tâm trạng, việc cần làm, nhắc trước ngày đặc biệt
 - [x] Rà soát code lần 8 (việc cần làm, chấm điểm, nhắc khéo), sửa lỗi tìm được
 
+## Giai đoạn 27 – Cài đặt trên web (chỉ phần mềm, Claude tự thêm)
+- [x] Hộp "Cài đặt": thành phố thời tiết, giờ yên lặng, tổng kết tuần (không cần sửa .env)
+- [ ] Sửa giờ / nội dung lời nhắc sắp tới ngay trên web
+- [ ] Rà soát code lần 9 (cài đặt, sửa lời nhắc), sửa lỗi tìm được
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo

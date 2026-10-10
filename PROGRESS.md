@@ -492,3 +492,11 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - `SU_CO.md` thêm 5 dòng (tâm trạng đoán sai, việc cần làm ghi nhầm, nhắc trước ngày đặc biệt...).
 - 158 test qua hết.
 
+## 2026-10-10 – Giai đoạn 27: cài đặt trên web
+- Nút **"?"** có mục **Cài đặt**: thành phố (thời tiết), giờ yên lặng, bật/tắt tổng kết tuần. Bấm "Lưu cài đặt" là áp dụng ngay, không cần sửa `.env` hay chạy lại.
+- Lưu ở `data/cai_dat.json` (ưu tiên hơn `.env`). "Về như file .env" để bỏ. Gõ sai (ví dụ giờ 25-6) thì báo rõ, không lưu.
+- API key, mật khẩu vẫn chỉ ở `.env` (không chỉnh trên web, cho an toàn).
+- Đã thử tự động trên trình duyệt (màn hình điện thoại). 163 test qua hết.
+
+**Tân cần thử:** bấm "?", gõ thành phố "Da Nang", Lưu; rồi hỏi Bơ "mai trời sao?".
+

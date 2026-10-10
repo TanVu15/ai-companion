@@ -15,6 +15,8 @@ PERSONA_PATH = ROOT / "persona.md"
 # Tính cách Tân tự sửa trên web (nằm trong data/ nên git pull không đè, không bị đưa lên GitHub)
 # (tính theo thư mục dự án, và tên khác persona.md, để không bao giờ đè lên file gốc)
 PERSONA_CUSTOM_PATH = (ROOT / DB_PATH).resolve().parent / "persona_tu_sua.md"
+# Cài đặt Tân chỉnh trên web (thành phố, giờ yên lặng...), ưu tiên hơn .env. Xem app/cai_dat.py
+CAI_DAT_PATH = (ROOT / DB_PATH).resolve().parent / "cai_dat.json"
 
 # Số tin nhắn gần nhất gửi kèm mỗi lần hỏi bộ não (giữ chi phí thấp)
 HISTORY_LIMIT = int(os.getenv("HISTORY_LIMIT", "20"))

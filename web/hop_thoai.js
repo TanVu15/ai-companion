@@ -220,6 +220,7 @@ document.getElementById('openHelp').onclick = async () => {
       : 'Bơ và bạn mới quen thôi. Nhắn gì đó đi!';
   } catch (e) {}
   showMoods();
+  loadSettings();
   const hl = document.getElementById('healthList'); hl.innerHTML = '';
   try {
     const d = await (await fetch('/api/suc-khoe')).json();
@@ -230,6 +231,40 @@ document.getElementById('openHelp').onclick = async () => {
     });
   } catch (e) {}
 };
+// ---- Cài đặt (thành phố, giờ yên lặng, tổng kết tuần): lưu trên máy chủ, ưu tiên hơn .env ----
+const settingsMsg = document.getElementById('settingsMsg');
+function fillSettings(d) {
+  if (!d || !d.hien_tai) return;
+  document.getElementById('setCity').value = d.hien_tai.thanh_pho || '';
+  document.getElementById('setQuiet').value = d.hien_tai.gio_yen_lang || '';
+  document.getElementById('setRecap').checked = !!d.hien_tai.tong_ket_tuan;
+  quietRange = d.hien_tai.gio_yen_lang || '';  // áp dụng ngay cho giọng đọc
+}
+function settingsNote(text) { settingsMsg.textContent = text; settingsMsg.hidden = !text; }
+async function loadSettings() {
+  settingsNote('');
+  try { const r = await fetch('/api/cai-dat'); if (r.ok) fillSettings(await r.json()); } catch (e) {}
+}
+async function sendSettings(method, body) {
+  try {
+    const r = await fetch('/api/cai-dat', { method, headers: { 'Content-Type': 'application/json' }, body: body && JSON.stringify(body) });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) { settingsNote(d.detail || 'Không lưu được'); return; }
+    fillSettings(d); settingsNote(method === 'DELETE' ? 'Đã về như file .env.' : 'Đã lưu, áp dụng ngay.');
+  } catch (e) { settingsNote('Mất mạng, thử lại nha.'); }
+}
+document.getElementById('settingsForm').addEventListener('submit', (ev) => {
+  ev.preventDefault();
+  sendSettings('PUT', {
+    thanh_pho: document.getElementById('setCity').value,
+    gio_yen_lang: document.getElementById('setQuiet').value,
+    tong_ket_tuan: document.getElementById('setRecap').checked,
+  });
+});
+document.getElementById('resetSettings').onclick = () => {
+  if (confirm('Bỏ cài đặt đã chỉnh trên web, dùng lại giá trị trong file .env?')) sendSettings('DELETE');
+};
+
 // Tâm trạng 7 ngày: mỗi ngày một biểu tượng (Bơ đoán từ tin nhắn). Chưa có ngày nào thì ẩn.
 const MOOD_ICON = { vui: '😊', binh_thuong: '🙂', buon: '😢', met: '😩', lo: '😟', gian: '😠' };
 const MOOD_NAME = { vui: 'vui', binh_thuong: 'bình thường', buon: 'buồn', met: 'mệt', lo: 'lo lắng', gian: 'bực bội' };
