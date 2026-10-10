@@ -277,3 +277,13 @@ document.addEventListener('keydown', (e) => {
 
 // Tải xong hết các file JS mới cho gửi tin (nút Gửi tắt sẵn trong HTML)
 send.disabled = false;
+
+// ---- Bản nháp: chữ đang gõ dở được giữ lại khi tải lại trang (lưu trên máy này) ----
+try { const d = localStorage.getItem('bo_nhap'); if (d && !input.value) input.value = d; } catch (e) {}
+let draftTimer = null;
+function saveDraft() {
+  clearTimeout(draftTimer);
+  draftTimer = setTimeout(() => { try { localStorage.setItem('bo_nhap', input.value); } catch (e) {} }, 300);
+}
+input.addEventListener('input', saveDraft);
+form.addEventListener('submit', () => { clearTimeout(draftTimer); try { localStorage.removeItem('bo_nhap'); } catch (e) {} });

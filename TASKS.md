@@ -117,6 +117,10 @@
 - [x] Giờ yên lặng: đêm khuya Bơ không tự đọc to lời nhắc/lời chào
 - [x] Cập nhật SU_CO.md (thời tiết, tính cách tự sửa, giọng đọc)
 
+## Giai đoạn 23 – Không mất chữ (chỉ phần mềm, Claude tự thêm)
+- [x] Giữ bản nháp tin nhắn đang gõ dở khi tải lại trang / tắt trình duyệt
+- [x] Tin gửi lỗi (mất mạng) vẫn giữ trong ô nhập để gửi lại khi tải lại trang
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo

@@ -423,3 +423,8 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 ## 2026-10-10 – Giai đoạn 22 xong (báo cáo): dễ làm quen
 - Gợi ý câu mở đầu, giờ yên lặng ban đêm, `SU_CO.md` thêm cách xử lý: tính cách tự sửa bị lạ, thời tiết, giọng đọc, giờ yên lặng, màu mặt.
 - 128 test qua hết.
+
+## 2026-10-10 – Giai đoạn 23 xong (báo cáo): không mất chữ
+- Đang gõ dở mà lỡ tải lại trang / tắt trình duyệt → mở lại chữ vẫn còn trong ô nhập (lưu trên máy này).
+- Gửi tin bị lỗi (mất mạng) → tin được giữ lại; lỡ tải lại trang thì tin nằm sẵn trong ô nhập, bấm Gửi là xong.
+- Đã thử tự động trên trình duyệt (giả lập mất mạng). 128 test qua hết.

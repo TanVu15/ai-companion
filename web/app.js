@@ -138,11 +138,14 @@ async function sendText(text, userBubble) {
     try { data = await r.json(); } catch (e) {}
     if (!r.ok) throw new Error(data.detail || 'Máy chủ trả lỗi ' + r.status);
     if (userBubble && data.id_nguoi_dung) userBubble.dataset.id = data.id_nguoi_dung;
+    try { if (localStorage.getItem('bo_nhap') === text && !input.value) localStorage.removeItem('bo_nhap'); } catch (x) {}
     express(data.cam_xuc, data.hanh_dong); speak(data.noi); await addBo(data.noi, data.id);
   } catch (e) {
     const msg = e.name === 'AbortError' ? 'Bơ nghĩ lâu quá, thử lại nha.'
       : e instanceof TypeError ? 'Không kết nối được máy chủ. Máy chủ còn chạy không?' : e.message;
     addError(msg, () => sendText(text, userBubble)); express('buon');
+    // Gửi lỗi: giữ tin vào bản nháp, lỡ tải lại trang thì tin vẫn nằm trong ô nhập để gửi lại
+    try { if (!input.value) localStorage.setItem('bo_nhap', text); } catch (x) {}
   } finally {
     clearTimeout(timer);
     send.disabled = false; statusEl.textContent = ''; input.focus();
