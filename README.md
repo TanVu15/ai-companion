@@ -16,6 +16,12 @@ Chatbot trò chuyện có tính cách, có trí nhớ và có khuôn mặt biể
 
 **Dùng khi ra ngoài (không chung wifi):** xem [DUA_LEN_MANG.md](DUA_LEN_MANG.md). Nhớ đặt `APP_PASSWORD` trong `.env` trước.
 
+## Nói chuyện bằng giọng
+
+- **Bơ đọc to câu trả lời:** bấm "Giọng nói: tắt" dưới khuôn mặt để bật. Dùng giọng có sẵn của máy (iPhone và Windows thường có giọng tiếng Việt; không có thì máy đọc giọng khác).
+- **Nói thay vì gõ:** bấm nút micro cạnh nút Gửi, nói xong ngừng một chút là tự gửi. Chạy tốt nhất trên Chrome, Edge, Safari.
+- Nút micro chỉ hiện khi mở bằng `http://localhost:8000` hoặc link `https://...` (trình duyệt chặn micro trên địa chỉ `http://192.168...`). Trên iPhone muốn dùng micro thì dùng link https ở [DUA_LEN_MANG.md](DUA_LEN_MANG.md) (Cách 2), hoặc dùng nút micro trên bàn phím iPhone để đọc chính tả.
+
 ## Đổi tính cách
 
 Sửa file `persona.md` rồi gửi tin nhắn mới. Không cần khởi động lại.

@@ -63,3 +63,16 @@
 - 41 test qua hết.
 
 **Tân cần thử:** đặt `APP_PASSWORD` trong `.env`, chạy lại `run.bat`, mở web xem có hỏi mật khẩu không.
+
+## 2026-10-10 – Giai đoạn 4 xong (báo cáo)
+- Làm được: Bơ tự thử lại khi mất mạng + báo lỗi dễ hiểu + nút "Thử lại"; mật khẩu `APP_PASSWORD`; hướng dẫn dùng ngoài nhà `DUA_LEN_MANG.md`.
+- Còn lại "dùng thử 1 tuần" là việc của Tân: dùng hằng ngày, ghi điều gì chưa ổn vào `FEEDBACK.md`.
+- **Tân cần thử:** tắt Wi-Fi gửi tin xem nút "Thử lại"; đặt mật khẩu; chọn Tailscale hay Cloudflare.
+
+## 2026-10-10 – Giai đoạn 5: giọng nói (bắt đầu)
+- Nút **micro** cạnh nút Gửi: nói tiếng Việt, ngừng một chút là tự gửi. Nút **"Giọng nói: bật/tắt"**: Bơ đọc to câu trả lời, miệng mấp máy khi nói. Máy nhớ lựa chọn bật/tắt.
+- Dùng tính năng có sẵn của trình duyệt → miễn phí, không cần tài khoản. Giọng hơi "máy"; giọng tự nhiên hơn cần dịch vụ trả phí (để sau, cần Tân quyết định).
+- Micro chỉ dùng được trên `localhost` hoặc link `https` (trình duyệt chặn trên `http://192.168...`).
+- 42 test qua hết.
+
+**Tân cần thử:** mở http://localhost:8000 trên Chrome/Edge, bật "Giọng nói", bấm micro và nói "chào Bơ".

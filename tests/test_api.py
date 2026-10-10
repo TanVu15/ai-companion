@@ -72,3 +72,8 @@ def test_password_required_when_set(tmp_path, monkeypatch):
 def test_no_password_by_default(tmp_path):
     c = make_client(tmp_path, [])
     assert c.get("/api/facts").status_code == 200
+
+
+def test_index_has_voice_controls(tmp_path):
+    html = make_client(tmp_path, []).get("/").text
+    assert 'id="mic"' in html and 'id="voiceBtn"' in html and "vi-VN" in html

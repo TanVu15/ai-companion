@@ -67,6 +67,15 @@
   #facts { list-style: none; margin: 0 0 12px; padding: 0; display: flex; flex-direction: column; gap: 6px; }
   #facts li { display: flex; gap: 8px; align-items: center; background: var(--bg); border-radius: 10px; padding: 6px 6px 6px 12px; }
   #facts li span { flex: 1; } #facts li button { background: none; color: #c0392b; padding: 4px 10px; font-weight: 400; }
+  .mic { padding: 0 14px; background: var(--bot); color: var(--text); display: flex; align-items: center; }
+  .mic svg { width: 20px; height: 20px; fill: currentColor; }
+  .mic.on { background: #c0392b; color: #fff; }
+  @media (prefers-reduced-motion: no-preference) {
+    .mic.on { animation: pulse 1.2s infinite; }
+    .face.talking .mouth { animation: talk .25s infinite alternate; }
+  }
+  @keyframes pulse { 50% { opacity: .6; } }
+  @keyframes talk { to { height: 6px; } }
   .row { display: flex; justify-content: space-between; } .row button { padding: 8px 18px; }
 </style>
 </head>
@@ -78,11 +87,17 @@
     </div>
     <div class="name">Bơ</div>
     <div class="status" id="status"></div>
-    <button class="link" id="openMem" type="button">Bơ nhớ gì về mình?</button>
+    <div>
+      <button class="link" id="openMem" type="button">Bơ nhớ gì về mình?</button>
+      <button class="link" id="voiceBtn" type="button" aria-pressed="false">Giọng nói: tắt</button>
+    </div>
   </header>
   <main id="log" aria-live="polite"></main>
   <form id="form">
     <textarea id="input" rows="1" placeholder="Nhắn gì đó..." autocomplete="off"></textarea>
+    <button id="mic" class="mic" type="button" hidden aria-label="Nói với Bơ" title="Bấm để nói">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11h-2z"/></svg>
+    </button>
     <button id="send" type="submit">Gửi</button>
   </form>
 </div>
@@ -134,7 +149,7 @@ async function sendText(text) {
     let data = {};
     try { data = await r.json(); } catch (e) {}
     if (!r.ok) throw new Error(data.detail || 'Máy chủ trả lỗi ' + r.status);
-    add('assistant', data.noi); express(data.cam_xuc, data.hanh_dong);
+    add('assistant', data.noi); express(data.cam_xuc, data.hanh_dong); speak(data.noi);
   } catch (e) {
     const msg = e.name === 'AbortError' ? 'Bơ nghĩ lâu quá, thử lại nha.'
       : e instanceof TypeError ? 'Không kết nối được máy chủ. Máy chủ còn chạy không?' : e.message;
@@ -154,11 +169,59 @@ form.addEventListener('submit', (ev) => {
 input.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); }
 });
+// ---- Giọng nói: dùng sẵn của trình duyệt (miễn phí, không cần tài khoản) ----
+let voiceOn = false;
+try { voiceOn = localStorage.getItem('bo_voice') === '1'; } catch (e) {}
+const voiceBtn = document.getElementById('voiceBtn'), micBtn = document.getElementById('mic');
+function showVoice() { voiceBtn.textContent = 'Giọng nói: ' + (voiceOn ? 'bật' : 'tắt'); voiceBtn.setAttribute('aria-pressed', voiceOn); }
+showVoice();
+voiceBtn.onclick = () => {
+  voiceOn = !voiceOn; showVoice();
+  try { localStorage.setItem('bo_voice', voiceOn ? '1' : '0'); } catch (e) {}
+  if (!voiceOn && window.speechSynthesis) speechSynthesis.cancel();
+};
+function viVoice() {
+  const all = window.speechSynthesis ? speechSynthesis.getVoices() : [];
+  return all.find(v => v.lang && v.lang.toLowerCase().startsWith('vi')) || null;
+}
+function speak(text) {
+  if (!voiceOn || !window.speechSynthesis || !text) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'vi-VN'; const v = viVoice(); if (v) u.voice = v;
+  u.onstart = () => face.classList.add('talking');
+  u.onend = u.onerror = () => face.classList.remove('talking');
+  speechSynthesis.speak(u);
+}
+const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
+let rec = null, listening = false;
+if (Rec && window.isSecureContext) {
+  micBtn.hidden = false;
+  rec = new Rec(); rec.lang = 'vi-VN'; rec.interimResults = true; rec.continuous = false;
+  rec.onresult = (ev) => {
+    input.value = Array.from(ev.results).map(r => r[0].transcript).join('');
+  };
+  rec.onend = () => {
+    listening = false; micBtn.classList.remove('on'); statusEl.textContent = '';
+    if (input.value.trim() && !send.disabled) form.requestSubmit();
+  };
+  rec.onerror = (ev) => {
+    if (ev.error === 'not-allowed') addError('Trình duyệt chưa cho dùng micro. Bấm vào biểu tượng ổ khóa trên thanh địa chỉ để cho phép.');
+    else if (ev.error !== 'no-speech' && ev.error !== 'aborted') addError('Không nghe được: ' + ev.error);
+  };
+  micBtn.onclick = () => {
+    if (listening) { rec.stop(); return; }
+    if (window.speechSynthesis) speechSynthesis.cancel();
+    input.value = ''; listening = true; micBtn.classList.add('on'); statusEl.textContent = 'Bơ đang nghe...';
+    try { rec.start(); } catch (e) { listening = false; micBtn.classList.remove('on'); }
+  };
+}
+
 async function greet() {
   try {
     const r = await fetch('/api/chao', { method: 'POST' });
     const data = await r.json();
-    if (r.ok && data.noi) { add('assistant', data.noi); express(data.cam_xuc, data.hanh_dong); }
+    if (r.ok && data.noi) { add('assistant', data.noi); express(data.cam_xuc, data.hanh_dong); speak(data.noi); }
   } catch (e) {}
 }
 loadHistory().then(greet);

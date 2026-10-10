@@ -24,8 +24,17 @@
 ## Giai đoạn 4 – Hoàn thiện
 - [x] Xử lý lỗi mạng, thử lại
 - [x] Hướng dẫn đưa lên mạng để dùng ngoài nhà (DUA_LEN_MANG.md + mật khẩu APP_PASSWORD)
-- [ ] Dùng thử 1 tuần, sửa theo góp ý
+- Chờ Tân: dùng thử 1 tuần, ghi góp ý vào FEEDBACK.md (không chặn việc khác)
+
+## Giai đoạn 5 – Giọng nói (chỉ phần mềm, dùng sẵn của trình duyệt, miễn phí)
+- [x] Bấm micro để nói, Bơ đọc to câu trả lời (bật/tắt, nhớ lựa chọn)
+- [ ] Chế độ rảnh tay: nghe liên tục, gọi "Bơ ơi" mới trả lời
+- [ ] Câu trả lời dễ đọc to: bỏ ký hiệu/emoji khi đọc, đọc nhanh/chậm chỉnh được
+
+## Giai đoạn 6 – Chuẩn bị cho phần cứng (chỉ phần mềm)
+- [ ] Tài liệu "giao tiếp với thiết bị": thiết bị gửi chữ, nhận JSON {noi, cam_xuc, hanh_dong}
+- [ ] Endpoint gọn cho thiết bị nhỏ (ESP32): trả JSON ngắn, có khóa thiết bị riêng
 
 ## Sau này
-- Giọng nói (nghe + nói), từ khóa đánh thức
+- Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo
