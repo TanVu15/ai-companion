@@ -473,9 +473,13 @@ class Brain:
         self.memory.done_followups(reply.da_hoi)
         self.memory.add_followups(reply.hoi_tham)
         self.memory.add_reminders(reply.nhac)
+        eve_before = {d["id"] for d in self.memory.special_days_tomorrow(today)}
         self.memory.add_special_days(reply.ngay_dac_biet)
         # Đã chúc trong câu này (hoặc người dùng vừa kể "hôm nay sinh nhật mình", Bơ đã biết) → không chúc lại trong năm
         self.memory.mark_wished([d["id"] for d in self.memory.special_days_today(today)], year=today.year)
+        # Người dùng vừa kể một ngày đặc biệt rơi vào ngày mai → Bơ đã biết, khỏi nhắc trước nữa
+        new_eve = [d["id"] for d in self.memory.special_days_tomorrow(today) if d["id"] not in eve_before]
+        self.memory.mark_eve_reminded(new_eve, (today + timedelta(days=1)).year)
         if self._background:
             threading.Thread(target=self._housekeeping, daemon=True).start()
         else:

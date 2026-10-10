@@ -125,7 +125,7 @@
 - [x] Bơ ghi tâm trạng của Tân mỗi tin; xem "Tâm trạng 7 ngày" trong nút "?"
 - [x] Mấy ngày liền Tân buồn/mệt → Bơ quan tâm nhẹ nhàng hơn
 - [x] Nhắc trước ngày đặc biệt 1 ngày ("mai là sinh nhật mẹ đó")
-- [ ] Rà soát code lần 7 (phần mới), sửa lỗi tìm được
+- [x] Rà soát code lần 7 (phần mới), sửa lỗi tìm được
 
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định

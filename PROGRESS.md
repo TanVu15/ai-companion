@@ -445,5 +445,14 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - Hôm trước ngày đặc biệt (sinh nhật mẹ, kỷ niệm...), lần đầu Tân mở web từ 8h sáng (hoặc web đang mở sẵn), Bơ chủ động nhắc: "Mai sinh nhật mẹ đó, chuẩn bị quà chưa?". Mỗi năm nhắc 1 lần, tốn 1 câu API.
 - Đúng ngày vẫn chúc như cũ. 139 test qua hết.
 
-**Tân cần thử:** nhắn "sinh nhật mẹ mình là ngày [ngày mai]" rồi tải lại trang xem Bơ có nhắc không (hôm nay Bơ đã biết nên sẽ nhắc ngay).
+**Tân cần thử:** kể Bơ một ngày đặc biệt rơi vào ngày kia (ví dụ "sinh nhật mẹ mình 12/10"), ngày mai mở web xem Bơ có nhắc không. (Kể ngày mai luôn thì Bơ không nhắc lại, vì Tân vừa nói xong.)
+
+## 2026-10-10 – Giai đoạn 24 xong (báo cáo): hiểu tâm trạng
+- Rà soát lần 7 (độc lập) phần mới, không lỗi nặng. Đã sửa:
+  - Tân vừa kể "mai sinh nhật mẹ" thì Bơ không nhắc trước lại vài phút sau nữa.
+  - Hôm nay Tân đã vui lại thì Bơ thôi "nhẹ nhàng" kiểu an ủi.
+- Cả giai đoạn: Bơ đoán tâm trạng mỗi tin + dải "Tâm trạng 7 ngày" (nút "?"); mấy hôm buồn/mệt thì Bơ quan tâm hơn; nhắc trước ngày đặc biệt 1 ngày.
+- 142 test qua hết.
+
+**Tân cần thử:** nhắn vài câu vui/buồn, bấm "?" xem dải tâm trạng; kể một ngày đặc biệt rơi vào ngày kia.
 

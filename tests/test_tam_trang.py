@@ -92,3 +92,12 @@ def test_api_tam_trang(tmp_path):
     days = c.get("/api/tam-trang").json()
     assert len(days) == 7 and days[-1] == {"ngay": date.today().isoformat(), "tam_trang": "vui"}
     assert len(c.get("/api/tam-trang?days=999").json()) == 31
+
+
+def test_hom_nay_vui_lai_thi_thoi_nhe_nhang(tmp_path):
+    mem = Memory(tmp_path / "a.db")
+    _msg(mem, "2026-10-08", "buon")
+    _msg(mem, "2026-10-09", "met")
+    assert mem.low_mood(date(2026, 10, 10)) == ["buon", "met"]
+    _msg(mem, "2026-10-10", "vui")
+    assert mem.low_mood(date(2026, 10, 10)) == []

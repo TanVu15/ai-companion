@@ -209,8 +209,11 @@ class Memory:
 
     def low_mood(self, today: date | None = None, days: int = 3, min_days: int = 2) -> list[str]:
         """Trong `days` ngày gần đây có ít nhất `min_days` ngày tâm trạng nổi bật là buồn/mệt/lo/giận
-        → trả các tâm trạng đó (cũ → mới, không lặp). Không thì trả []."""
-        low = [d["tam_trang"] for d in self.moods_by_day(days, today) if d["tam_trang"] in ("buon", "met", "lo", "gian")]
+        → trả các tâm trạng đó (cũ → mới, không lặp). Không thì (hoặc hôm nay đã vui lại) trả []."""
+        recent = self.moods_by_day(days, today)
+        if recent[-1]["tam_trang"] == "vui":
+            return []  # hôm nay đã vui lại rồi thì thôi
+        low = [d["tam_trang"] for d in recent if d["tam_trang"] in ("buon", "met", "lo", "gian")]
         if len(low) < min_days:
             return []
         return list(dict.fromkeys(low))

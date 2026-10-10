@@ -148,3 +148,21 @@ def test_greet_khong_nhac_truoc_luc_nua_dem(memory, monkeypatch):
     memory.add_special_days([{"ngay": today_ddmm(1), "viec": "Sinh nhật mẹ"}])
     client = FakeClient([])
     assert Brain(memory, client=client).greet(only_occasion=True) is None
+
+
+def test_vua_ke_ngay_mai_thi_khong_nhac_truoc(memory, monkeypatch):
+    _fixed_morning(monkeypatch)
+    client = FakeClient([reply("Ghi nhớ rồi!", ngay_dac_biet=[{"ngay": today_ddmm(1), "viec": "Sinh nhật mẹ"}])])
+    brain = Brain(memory, client=client)
+    brain.chat("mai sinh nhật mẹ mình")
+    assert brain.greet(only_occasion=True) is None
+    assert len(client.calls) == 1
+
+
+def test_tro_chuyen_binh_thuong_khong_lam_mat_loi_nhac_truoc(memory, monkeypatch):
+    _fixed_morning(monkeypatch)
+    memory.add_special_days([{"ngay": today_ddmm(1), "viec": "Sinh nhật mẹ"}])
+    client = FakeClient([reply("Ừa"), reply("Mai sinh nhật mẹ đó!")])
+    brain = Brain(memory, client=client)
+    brain.chat("chào")
+    assert brain.greet(only_occasion=True).noi == "Mai sinh nhật mẹ đó!"
