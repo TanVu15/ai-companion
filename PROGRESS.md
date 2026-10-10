@@ -515,3 +515,10 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 
 **Tân cần thử:** "?" → Cài đặt; "Bơ nhớ gì về mình?" → Sửa lời nhắc.
 
+## 2026-10-10 – Giai đoạn 28: âm lịch & ngày lễ
+- Bơ tự tính **âm lịch** (không cần mạng, không tốn tiền): biết hôm nay "mùng 1 tháng 9 năm Bính Ngọ", đã kiểm tra với ngày Tết 2000–2027, Trung thu, tháng nhuận.
+- Bơ biết hôm nay/ngày mai là lễ gì: Tết, Giao thừa, Rằm tháng Giêng, Giỗ Tổ, Trung thu, Vu Lan, ông Táo, 8/3, 30/4, 2/9, **20/10**, 20/11, Noel... và nhắc tự nhiên khi hợp chuyện.
+- 181 test qua hết.
+
+**Tân cần thử:** hỏi Bơ "hôm nay âm lịch ngày mấy?"; ngày 19/10 thử chào Bơ xem có nhắc mai 20/10 không.
+

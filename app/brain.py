@@ -135,6 +135,24 @@ def _when(created_at: str, now: datetime) -> str:
     return "hôm nay" if days <= 0 else "hôm qua" if days == 1 else f"{days} ngày trước"
 
 
+def _am_lich_va_le(today) -> str:
+    """Dòng âm lịch + ngày lễ hôm nay/ngày mai (tính offline, lỗi thì bỏ qua)."""
+    try:
+        from .am_lich import mo_ta_am, ngay_le
+
+        out = f"Âm lịch: {mo_ta_am(today)}.\n"
+        hom_nay, ngay_mai = ngay_le(today), ngay_le(today + timedelta(days=1))
+        if hom_nay:
+            out += f"Hôm nay là: {', '.join(hom_nay)}.\n"
+        if ngay_mai:
+            out += f"Ngày mai là: {', '.join(ngay_mai)}.\n"
+        if hom_nay or ngay_mai:
+            out += "(Nhắc tới ngày lễ một cách tự nhiên khi hợp chuyện, đừng lặp lại nếu đã nói rồi.)\n"
+        return out
+    except Exception:  # không bao giờ để lịch làm hỏng câu trả lời
+        return ""
+
+
 def build_system_prompt(
     persona: str,
     facts: list[str],
@@ -149,6 +167,7 @@ def build_system_prompt(
     now = now or datetime.now()
     known = "\n".join(f"- {f}" for f in facts) if facts else "- (chưa biết gì)"
     out = f"{persona.strip()}\n\nBây giờ là {now.strftime('%H:%M')} ({buoi(now)}), {THU[now.weekday()]} ngày {now.strftime('%d/%m/%Y')}.\n"
+    out += _am_lich_va_le(now.date())
     if weather:
         out += f"{weather} (Chỉ nhắc tới thời tiết khi hợp chuyện, ví dụ trời mưa mà người dùng sắp ra ngoài.)\n"
     out += f"\n## Điều bạn đã biết về người dùng\n{known}\n"
