@@ -211,7 +211,7 @@ def test_sua_loi_nhac(tmp_path):
     mem.add_reminders([{"luc": "2026-10-10 20:00", "viec": "Gọi mẹ"}], now=now)
     [r] = mem.upcoming_reminders()
     assert mem.update_reminder(r["id"], "Gọi  bố", "2026-10-11T21:30", "", now=now)
-    assert mem.upcoming_reminders() == [{"id": r["id"], "viec": "Gọi bố", "luc": "2026-10-11 21:30", "lap": ""}]
+    assert mem.upcoming_reminders() == [{"id": r["id"], "viec": "Gọi bố", "luc": "2026-10-11 21:30", "lap": "", "ngay_goc": 0}]
     # lặp lại mỗi ngày: giờ đã qua thì dời tới lần sau
     assert mem.update_reminder(r["id"], "Uống nước", "2026-10-01 07:00", "ngay", now=now)
     assert mem.upcoming_reminders()[0]["luc"] == "2026-10-11 07:00"
@@ -295,3 +295,26 @@ def test_ics_lap_moi():
     ics = tao_ics([], [{"id": 1, "viec": "A", "luc": "2026-10-12 08:00", "lap": "ngay_thuong"},
                        {"id": 2, "viec": "B", "luc": "2026-11-05 09:00", "lap": "thang"}], today=date(2026, 10, 10))
     assert "RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR" in ics and "RRULE:FREQ=MONTHLY" in ics
+
+
+def test_nhac_thang_ngay_31_khong_troi(tmp_path):
+    from datetime import datetime
+
+    from app.lich_ics import tao_ics
+    from app.memory import Memory
+
+    mem = Memory(tmp_path / "m31.db")
+    mem.add_reminders([{"luc": "2027-01-31 20:00", "viec": "Tổng kết", "lap": "thang"}], now=datetime(2027, 1, 10))
+    lucs = []
+    for now in (datetime(2027, 1, 31, 20), datetime(2027, 2, 28, 20), datetime(2027, 3, 31, 20)):
+        mem.pop_due_reminders(now)
+        lucs.append(mem.upcoming_reminders()[0]["luc"])
+    assert lucs == ["2027-02-28 20:00", "2027-03-31 20:00", "2027-04-30 20:00"]
+    ics = tao_ics([], mem.upcoming_reminders())
+    assert "RRULE:FREQ=MONTHLY;BYMONTHDAY=28,29,30,31;BYSETPOS=-1" in ics.replace("\r\n ", "")
+    # sửa trên web cũng giữ ngày gốc
+    rid = mem.upcoming_reminders()[0]["id"]
+    mem.update_reminder(rid, "Tổng kết", "2027-05-31 20:00", "thang", now=datetime(2027, 4, 1))
+    assert mem.upcoming_reminders()[0]["ngay_goc"] == 31
+    data = mem.export_all()
+    assert data["reminders"][0]["ngay_goc"] == 31

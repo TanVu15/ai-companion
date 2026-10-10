@@ -86,7 +86,11 @@ def tao_ics(special_days: list[dict], reminders: list[dict], today: date | None 
             continue
         props = [f"DTSTART:{luc:%Y%m%dT%H%M00}", f"DTEND:{luc + timedelta(minutes=15):%Y%m%dT%H%M00}"]
         if r.get("lap") in RRULE:
-            props.append(f"RRULE:{RRULE[r['lap']]}")
+            rule = RRULE[r["lap"]]
+            goc = r.get("ngay_goc") or luc.day
+            if r["lap"] == "thang" and goc > 28:  # ngày 29–31: tháng thiếu thì lấy ngày cuối tháng
+                rule += f";BYMONTHDAY={','.join(str(x) for x in range(28, goc + 1))};BYSETPOS=-1"
+            props.append(f"RRULE:{rule}")
         event(f"nhac-{r.get('id')}", [*props, f"SUMMARY:{_esc(r['viec'])}"], "PT0M")
     lines.append("END:VCALENDAR")
     return "\r\n".join(x for line in lines for x in _fold(line)) + "\r\n"
