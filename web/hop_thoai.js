@@ -477,8 +477,11 @@ async function loadDiary(more) {
         try {
           const r = await fetch('/api/nhat-ky/' + x.id, { method: 'PUT', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ noi_dung: moi }) });
-          if (r.ok) { x.noi_dung = moi.trim().replace(/\s+/g, ' '); span.textContent = x.noi_dung + ' '; }
-        } catch (e) {}
+          if (r.ok) {
+            x.noi_dung = moi.trim().replace(/\s+/g, ' '); span.textContent = x.noi_dung + ' ';
+            sua.setAttribute('aria-label', 'Sửa dòng: ' + x.noi_dung); b.setAttribute('aria-label', 'Xóa dòng: ' + x.noi_dung);
+          } else { const d = await r.json().catch(() => ({})); alert(typeof d.detail === 'string' ? d.detail : 'Không sửa được'); }
+        } catch (e) { alert('Mất mạng, thử lại nha.'); }
       };
       li.append(span, sua, ' ');
       b.textContent = 'Xóa'; b.type = 'button'; b.className = 'link'; b.setAttribute('aria-label', 'Xóa dòng: ' + x.noi_dung);

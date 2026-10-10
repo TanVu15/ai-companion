@@ -113,3 +113,13 @@ def test_api_them_sua_tai(tmp_path):
     assert r.status_code == 200 and "attachment" in r.headers["content-disposition"]
     text = r.text.lstrip("﻿")
     assert text.startswith("== 02/01/2026 ==\n- Đi Huế\n\n== ") and "- Chạy bộ 6km" in text
+
+
+def test_sua_khong_tao_trung(memory):
+    d = date(2026, 10, 10)
+    memory.add_diary("Chạy bộ 5km", d)
+    memory.add_diary("Đi học", d)
+    rid = memory.diary_recent(d, 1)[1]["id"]
+    with pytest.raises(ValueError):
+        memory.update_diary(rid, "chạy bộ 5km")
+    assert memory.update_diary(rid, "Đi học thêm")

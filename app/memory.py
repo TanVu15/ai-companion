@@ -806,6 +806,12 @@ class Memory:
         content = re.sub(r"\s+", " ", str(content or "")).strip()[:200]
         if not content:
             raise ValueError("Dòng nhật ký đang trống")
+        row = self.conn.execute("SELECT day FROM diary WHERE id = ?", (diary_id,)).fetchone()
+        if not row:
+            return False
+        others = self.conn.execute("SELECT content FROM diary WHERE day = ? AND id != ?", (row[0], diary_id))
+        if self._key(content) in {self._key(c) for (c,) in others}:
+            raise ValueError("Ngày đó đã có dòng này rồi")
         cur = self.conn.execute("UPDATE diary SET content = ? WHERE id = ?", (content, diary_id))
         self.conn.commit()
         return cur.rowcount > 0

@@ -182,7 +182,7 @@
 ## Giai đoạn 35 – Nhật ký tiện hơn (chỉ phần mềm, Claude tự thêm)
 - [x] Tổng kết tuần dựa vào nhật ký (gọn, đúng ngày); ít nhật ký thì dùng tin nhắn như cũ
 - [x] Tự ghi / sửa dòng nhật ký trên web, tải nhật ký (.txt)
-- [ ] Rà soát code lần 15, sửa lỗi tìm được
+- [x] Rà soát code lần 15, sửa lỗi tìm được
 
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định

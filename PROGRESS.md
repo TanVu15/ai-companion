@@ -624,3 +624,9 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - Trong "Nhật ký": ô **tự ghi** dòng cho hôm nay, nút **"Sửa"** từng dòng, link **"Tải nhật ký (.txt)"**.
 - 226 test qua hết.
 
+## 2026-10-10 – Giai đoạn 35 xong: rà soát lần 15
+- Sửa lỗi: sửa một dòng nhật ký thành y hệt dòng khác cùng ngày thì bị trùng → giờ báo "Ngày đó đã có dòng này rồi". Sửa không được thì web báo rõ.
+- 227 test qua hết.
+
+**Tân cần thử (giai đoạn 35):** "Nhật ký" → tự ghi một dòng, bấm "Sửa", "Tải nhật ký (.txt)". Tối Chủ nhật xem Bơ tổng kết tuần.
+
