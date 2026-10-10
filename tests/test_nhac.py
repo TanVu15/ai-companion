@@ -135,3 +135,24 @@ def test_nhac_lap_lai_sao_luu(memory, tmp_path):
     m2 = Memory(tmp_path / "n2.db")
     m2.import_all(data)
     assert m2.upcoming_reminders()[0]["lap"] == "ngay"
+
+
+def test_nhac_lai_sau_10_phut(tmp_path):
+    c = make_client(tmp_path, [])
+    mem = main_memory()
+    mem.add_reminders([{"luc": fmt(datetime.now()), "viec": "Uống nước"}])
+    [x] = c.get("/api/nhac").json()
+    assert x["viec"] == "Uống nước" and x["noi"] == "Tới giờ rồi nè: uống nước!"
+    r = c.post("/api/nhac/hoan", json={"viec": "Uống nước"})
+    assert r.status_code == 200
+    [up] = c.get("/api/nhac/sap-toi").json()
+    assert up["viec"] == "Uống nước" and up["luc"] == r.json()["luc"] and up["lap"] == ""
+    assert up["luc"] > fmt(datetime.now() + timedelta(minutes=8))
+    assert c.post("/api/nhac/hoan", json={"viec": " "}).status_code == 400
+    assert c.post("/api/nhac/hoan", json={"viec": "x", "phut": 0}).status_code == 400
+
+
+def main_memory():
+    from app import main
+
+    return main._brain.memory

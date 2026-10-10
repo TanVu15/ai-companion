@@ -281,11 +281,28 @@ async function pollReminders() {
     if (!r.ok) return;
     for (const x of await r.json()) {
       await addBo(x.noi); express(x.cam_xuc, x.hanh_dong); speak(x.noi);
+      if (x.viec) addSnooze(x.viec);
       if (window.Notification && Notification.permission === 'granted' && document.hidden) new Notification('Bơ', { body: x.noi, icon: '/web/icon-180.png' });
     }
   } catch (e) {}
 }
 setInterval(pollReminders, 30000);
+// Nút "Nhắc lại sau 10 phút" ngay dưới lời nhắc vừa tới
+function addSnooze(viec) {
+  const bubble = log.lastElementChild;
+  if (!bubble) return;
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'retry snooze'; b.textContent = 'Nhắc lại sau 10 phút';
+  b.onclick = async () => {
+    b.disabled = true;
+    try {
+      const r = await fetch('/api/nhac/hoan', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ viec, phut: 10 }) });
+      if (!r.ok) throw new Error();
+      b.replaceWith(Object.assign(document.createElement('span'), { className: 'time', textContent: 'Ok, 10 phút nữa Bơ nhắc lại' }));
+    } catch (e) { b.disabled = false; b.textContent = 'Lỗi, bấm lại'; }
+  };
+  bubble.appendChild(b);
+}
 // Lần đầu Tân nhờ nhắc việc thì xin phép hiện thông báo (để thấy được cả khi đang ở tab khác)
 function askNotify() {
   if (window.Notification && Notification.permission === 'default') Notification.requestPermission().catch(() => {});

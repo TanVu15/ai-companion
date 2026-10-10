@@ -52,6 +52,7 @@ class Reply:
     da_hoi: list[str] = field(default_factory=list)
     nhac: list[dict] = field(default_factory=list)
     ngay_dac_biet: list[dict] = field(default_factory=list)
+    viec_nhac: str = ""  # với lời nhắc tới giờ: việc gốc (để bấm "nhắc lại sau")
 
     def to_dict(self) -> dict:
         return {"noi": self.noi, "cam_xuc": self.cam_xuc, "hanh_dong": self.hanh_dong}
@@ -302,10 +303,20 @@ class Brain:
         with self._lock:
             out = []
             for r in self.memory.pop_due_reminders():
-                reply = Reply(noi=reminder_text(r["viec"], r["luc"]), cam_xuc="hao_hung", hanh_dong="vay_tay")
+                reply = Reply(noi=reminder_text(r["viec"], r["luc"]), cam_xuc="hao_hung", hanh_dong="vay_tay",
+                              viec_nhac=r["viec"])
                 self.memory.add_message("assistant", reply.noi, reply.cam_xuc, tu_dong=True)
                 out.append(reply)
             return out
+
+    def snooze(self, viec: str, minutes: int, now: datetime | None = None) -> str:
+        """Nhắc lại việc này sau `minutes` phút (nút "Nhắc lại sau 10 phút"). Trả về giờ sẽ nhắc."""
+        from datetime import timedelta
+
+        luc = ((now or datetime.now()) + timedelta(minutes=minutes)).strftime("%Y-%m-%d %H:%M")
+        with self._lock:
+            self.memory.add_reminders([{"luc": luc, "viec": viec}], now=now)
+        return luc
 
     def _chat(self, user_text: str) -> Reply:
         if self.memory.replies_today() >= config.DAILY_LIMIT:

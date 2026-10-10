@@ -223,7 +223,21 @@ def health():
 @app.get("/api/nhac")
 def reminders_due():
     """Web gọi mỗi 30 giây: trả các lời nhắc vừa tới giờ (mỗi cái chỉ trả một lần)."""
-    return [r.to_dict() for r in get_brain().due_reminders()]
+    return [{**r.to_dict(), "viec": r.viec_nhac} for r in get_brain().due_reminders()]
+
+
+class SnoozeIn(BaseModel):
+    viec: str
+    phut: int = 10
+
+
+@app.post("/api/nhac/hoan")
+def reminder_snooze(body: SnoozeIn):
+    """Nút "Nhắc lại sau 10 phút" dưới lời nhắc."""
+    viec = body.viec.strip()[:300]
+    if not viec or not 1 <= body.phut <= 24 * 60:
+        raise HTTPException(400, "Lời nhắc không hợp lệ")
+    return {"luc": get_brain().snooze(viec, body.phut)}
 
 
 @app.get("/api/nhac/sap-toi")

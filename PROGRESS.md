@@ -273,3 +273,10 @@ Gặp lỗi: xem `SU_CO.md`, gửi mấy dòng cuối `data/loi.log` vào `FEEDB
 - 97 test qua hết.
 
 **Tân cần thử:** nhắn "mỗi ngày 9h tối nhắc mình đánh răng", mở "Bơ nhớ gì về mình?" xem có dòng "(mỗi ngày)".
+
+## 2026-10-10 – Giai đoạn 14: nhắc lại sau 10 phút
+- Dưới mỗi lời nhắc vừa tới giờ có nút **"Nhắc lại sau 10 phút"**. Bấm là Bơ hẹn lại, hiện "Ok, 10 phút nữa Bơ nhắc lại". Không tốn câu API.
+- `/api/nhac` (và cổng thiết bị) trả thêm mục `viec` = việc gốc, để nút biết nhắc lại việc gì.
+- 98 test qua hết.
+
+**Tân cần thử:** nhắn "1 phút nữa nhắc mình uống nước", chờ lời nhắc, bấm "Nhắc lại sau 10 phút".
