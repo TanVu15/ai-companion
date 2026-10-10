@@ -229,3 +229,21 @@ def test_friendly_errors():
     assert "hết tiền" in friendly_error(_StatusError(400, "Your credit balance is too low"))
     assert "quá tải" in friendly_error(_StatusError(529))
     assert "Mất mạng" in friendly_error(ConnectionError())
+
+
+def test_usage_tracked_and_costed(memory, monkeypatch):
+    from app.brain import cost_usd
+
+    class UsageClient(FakeClient):
+        def _create(self, **kwargs):
+            r = super()._create(**kwargs)
+            r.usage = SimpleNamespace(input_tokens=1000, output_tokens=200)
+            return r
+
+    Brain(memory, client=UsageClient([json.dumps({"noi": "a"}), json.dumps({"noi": "b"})])).chat("1")
+    Brain(memory, client=UsageClient([json.dumps({"noi": "b"})])).chat("2")
+    u = memory.usage_since("2000-01-01")
+    assert u == {"calls": 2, "input_tokens": 2000, "output_tokens": 400}
+    monkeypatch.setattr(config, "PRICE_INPUT_PER_MTOK", 1.0)
+    monkeypatch.setattr(config, "PRICE_OUTPUT_PER_MTOK", 5.0)
+    assert cost_usd(u) == pytest.approx(0.004)

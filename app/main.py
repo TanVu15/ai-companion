@@ -8,7 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from . import config
-from .brain import Brain, friendly_error
+from .brain import Brain, cost_usd, friendly_error
 from .memory import Memory
 
 app = FastAPI(title="AI Companion")
@@ -113,6 +113,22 @@ def greet():
     except Exception:
         reply = None  # mở lời không được thì thôi, không báo lỗi làm phiền
     return reply.to_dict() if reply else {"noi": None}
+
+
+@app.get("/api/chi-phi")
+def usage():
+    """Chi phí API hôm nay và từ đầu tháng (ước tính theo giá trong .env)."""
+    from datetime import date
+
+    mem = get_brain().memory
+    today = date.today()
+    out = {}
+    for name, since in (("hom_nay", today), ("thang_nay", today.replace(day=1))):
+        u = mem.usage_since(since.isoformat())
+        out[name] = {**u, "usd": round(cost_usd(u), 4)}
+    out["gioi_han_ngay"] = config.DAILY_LIMIT
+    out["da_tra_loi_hom_nay"] = mem.replies_today()
+    return out
 
 
 @app.get("/api/history")

@@ -162,6 +162,11 @@ def friendly_error(e: Exception) -> str:
     return f"Bơ gặp lỗi lạ: {type(e).__name__}. Thử lại xem sao."
 
 
+def cost_usd(u: dict) -> float:
+    """Ước tính tiền (đô la Mỹ) từ số token."""
+    return (u["input_tokens"] * config.PRICE_INPUT_PER_MTOK + u["output_tokens"] * config.PRICE_OUTPUT_PER_MTOK) / 1e6
+
+
 class Brain:
     def __init__(self, memory, client=None, sleep=time.sleep):
         self.memory = memory
@@ -176,12 +181,20 @@ class Brain:
         self._sleep = sleep
         self._merged_at = 0  # số điều đáng nhớ còn lại sau lần gộp gần nhất
 
-    def _create(self, retries: int | None = None, **kwargs):
-        """Gọi API, gặp lỗi tạm thời thì chờ 1s, 2s, 4s... rồi thử lại (mặc định API_RETRIES lần)."""
+    def _create(self, retries: int | None = None, kind: str = "chat", **kwargs):
+        """Gọi API, gặp lỗi tạm thời thì chờ 1s, 2s, 4s... rồi thử lại (mặc định API_RETRIES lần).
+        Mỗi lần thành công thì ghi lại số token để theo dõi chi phí."""
         retries = config.API_RETRIES if retries is None else retries
         for attempt in range(retries + 1):
             try:
-                return self.client.messages.create(**kwargs)
+                resp = self.client.messages.create(**kwargs)
+                usage = getattr(resp, "usage", None)
+                self.memory.add_usage(
+                    kind,
+                    int(getattr(usage, "input_tokens", 0) or 0),
+                    int(getattr(usage, "output_tokens", 0) or 0),
+                )
+                return resp
             except Exception as e:
                 if attempt >= retries or not is_transient(e):
                     raise
@@ -249,6 +262,7 @@ class Brain:
         try:
             resp = self._create(
                 retries=0,  # việc phụ: lỗi thì lần sau làm, không bắt người dùng chờ
+                kind="tom_tat",
                 model=config.MODEL,
                 max_tokens=400,
                 system=SUMMARY_PROMPT,
@@ -269,6 +283,7 @@ class Brain:
         try:
             resp = self._create(
                 retries=0,
+                kind="gop",
                 model=config.MODEL,
                 max_tokens=800,
                 system=MERGE_PROMPT,

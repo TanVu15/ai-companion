@@ -76,6 +76,7 @@
   }
   @keyframes pulse { 50% { opacity: .6; } }
   @keyframes talk { to { height: 6px; } }
+  ul.plain { list-style: none; padding: 0; margin: 0 0 12px; } ul.plain li { padding: 4px 0; border-bottom: 1px solid var(--border); }
   .row { display: flex; justify-content: space-between; } .row button { padding: 8px 18px; }
 </style>
 </head>
@@ -89,6 +90,7 @@
     <div class="status" id="status"></div>
     <div>
       <button class="link" id="openMem" type="button">Bơ nhớ gì về mình?</button>
+      <button class="link" id="openCost" type="button">Chi phí</button>
       <button class="link" id="voiceBtn" type="button" aria-pressed="false">Giọng nói: tắt</button>
       <button class="link" id="rateBtn" type="button" hidden>Tốc độ đọc: vừa</button>
       <button class="link" id="handsBtn" type="button" aria-pressed="false" hidden>Rảnh tay: tắt</button>
@@ -111,6 +113,12 @@
     <button class="link" id="clearMem" type="button">Xóa hết</button>
     <button id="closeMem" type="button">Xong</button>
   </div>
+</dialog>
+<dialog id="cost">
+  <h2>Chi phí API</h2>
+  <p>Ước tính theo giá đặt trong .env (PRICE_INPUT_PER_MTOK, PRICE_OUTPUT_PER_MTOK). Số tiền thật xem ở trang console của Anthropic.</p>
+  <ul id="costList" class="plain"></ul>
+  <div class="row"><span></span><button id="closeCost" type="button">Xong</button></div>
 </dialog>
 <script src="/web/danh_thuc.js"></script>
 <script src="/web/doc_to.js"></script>
@@ -273,6 +281,23 @@ if (Rec && window.isSecureContext) {
     if (listening) rec.abort(); else if (handsFree) startRec();
   };
 }
+
+const costDlg = document.getElementById('cost'), costList = document.getElementById('costList');
+function money(usd) { return '$' + usd.toFixed(usd < 1 ? 4 : 2) + ' (~' + Math.round(usd * 25000).toLocaleString('vi-VN') + 'đ)'; }
+document.getElementById('openCost').onclick = async () => {
+  costList.innerHTML = '<li>Đang tải...</li>'; costDlg.showModal();
+  try {
+    const d = await (await fetch('/api/chi-phi')).json();
+    const rows = [
+      ['Hôm nay', d.hom_nay.calls + ' câu gọi API, ' + money(d.hom_nay.usd)],
+      ['Tháng này', d.thang_nay.calls + ' câu gọi API, ' + money(d.thang_nay.usd)],
+      ['Bơ đã trả lời hôm nay', d.da_tra_loi_hom_nay + ' / ' + d.gioi_han_ngay + ' câu (giới hạn ngày)'],
+    ];
+    costList.innerHTML = '';
+    rows.forEach(([k, v]) => { const li = document.createElement('li'); li.textContent = k + ': ' + v; costList.appendChild(li); });
+  } catch (e) { costList.innerHTML = '<li>Không tải được.</li>'; }
+};
+document.getElementById('closeCost').onclick = () => costDlg.close();
 
 async function greet() {
   try {

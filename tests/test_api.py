@@ -77,3 +77,11 @@ def test_no_password_by_default(tmp_path):
 def test_index_has_voice_controls(tmp_path):
     html = make_client(tmp_path, []).get("/").text
     assert 'id="mic"' in html and 'id="voiceBtn"' in html and "vi-VN" in html
+
+
+def test_cost_endpoint(tmp_path):
+    c = make_client(tmp_path, [json.dumps({"noi": "Hello!"})])
+    c.post("/api/chat", json={"text": "hi"})
+    d = c.get("/api/chi-phi").json()
+    assert d["hom_nay"]["calls"] == 1 and d["thang_nay"]["calls"] == 1 and d["da_tra_loi_hom_nay"] == 1
+    assert 'id="openCost"' in c.get("/").text

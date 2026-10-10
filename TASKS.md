@@ -35,6 +35,12 @@
 - [x] Tài liệu "giao tiếp với thiết bị" (THIET_BI.md): thiết bị gửi chữ, nhận JSON {noi, cam_xuc, hanh_dong}
 - [x] Endpoint gọn cho thiết bị nhỏ (ESP32): trả JSON ngắn, có khóa thiết bị riêng
 
+## Giai đoạn 7 – Tiện ích (chỉ phần mềm, Claude tự thêm)
+- [x] Theo dõi chi phí: đếm token mỗi ngày, ước tính tiền, xem trên web
+- [ ] Sao lưu / khôi phục trí nhớ (tải file về, nạp lại)
+- [ ] Hiện giờ gửi tin nhắn, tải thêm tin cũ khi kéo lên
+- [ ] Thêm tình huống "hỏi thăm chuyện cũ" vào bộ chấm điểm tính cách
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo

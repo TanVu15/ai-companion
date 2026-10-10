@@ -30,6 +30,14 @@ class Memory:
                 done INTEGER NOT NULL DEFAULT 0,
                 created_at TEXT DEFAULT (datetime('now', 'localtime'))
             );
+            CREATE TABLE IF NOT EXISTS usage (
+                day TEXT NOT NULL,           -- YYYY-MM-DD
+                kind TEXT NOT NULL,          -- 'chat', 'tom_tat', 'gop'
+                calls INTEGER NOT NULL DEFAULT 0,
+                input_tokens INTEGER NOT NULL DEFAULT 0,
+                output_tokens INTEGER NOT NULL DEFAULT 0,
+                PRIMARY KEY (day, kind)
+            );
             CREATE TABLE IF NOT EXISTS facts (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 content TEXT NOT NULL UNIQUE,
@@ -86,6 +94,26 @@ class Memory:
     def last_message_time(self) -> datetime | None:
         row = self.conn.execute("SELECT created_at FROM messages ORDER BY id DESC LIMIT 1").fetchone()
         return datetime.fromisoformat(row[0]) if row else None
+
+    # --- Chi phí API ---
+    def add_usage(self, kind: str, input_tokens: int, output_tokens: int) -> None:
+        self.conn.execute(
+            """INSERT INTO usage (day, kind, calls, input_tokens, output_tokens) VALUES (?, ?, 1, ?, ?)
+               ON CONFLICT(day, kind) DO UPDATE SET calls = calls + 1,
+                 input_tokens = input_tokens + excluded.input_tokens,
+                 output_tokens = output_tokens + excluded.output_tokens""",
+            (date.today().isoformat(), kind, input_tokens, output_tokens),
+        )
+        self.conn.commit()
+
+    def usage_since(self, day: str) -> dict:
+        """Tổng số câu gọi API và token từ ngày `day` (YYYY-MM-DD) tới nay."""
+        row = self.conn.execute(
+            "SELECT COALESCE(SUM(calls),0), COALESCE(SUM(input_tokens),0), COALESCE(SUM(output_tokens),0)"
+            " FROM usage WHERE day >= ?",
+            (day,),
+        ).fetchone()
+        return {"calls": row[0], "input_tokens": row[1], "output_tokens": row[2]}
 
     # --- Chuyện cần hỏi thăm ---
     def add_followups(self, items: list[str]) -> None:

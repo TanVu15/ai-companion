@@ -38,5 +38,9 @@ APP_PASSWORD = os.getenv("APP_PASSWORD", "")
 # Khóa riêng cho thiết bị phần cứng (ESP32) gọi /api/thiet-bi/... Để trống = tắt cổng thiết bị.
 DEVICE_KEY = os.getenv("DEVICE_KEY", "")
 
+# Giá API (đô la Mỹ cho 1 triệu token) để ước tính chi phí. Kiểm tra giá mới ở trang giá của Anthropic.
+PRICE_INPUT_PER_MTOK = float(os.getenv("PRICE_INPUT_PER_MTOK", "1"))
+PRICE_OUTPUT_PER_MTOK = float(os.getenv("PRICE_OUTPUT_PER_MTOK", "5"))
+
 EMOTIONS = ["vui", "hao_hung", "binh_thuong", "suy_nghi", "ngac_nhien", "buon", "thuong"]
 ACTIONS = ["khong", "gat_dau", "lac_dau", "nghieng_dau", "nhay", "vay_tay"]

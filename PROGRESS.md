@@ -102,3 +102,10 @@
 - 50 test qua hết.
 
 **Tân cần thử (không cần phần cứng):** đặt `DEVICE_KEY=thu123` trong .env, chạy lại, rồi gõ lệnh `curl` trong THIET_BI.md (đổi IP thành `localhost`).
+
+## 2026-10-10 – Giai đoạn 7: theo dõi chi phí
+- Mỗi câu gọi API được ghi số token (chat, tóm tắt, gộp trí nhớ). Nút **"Chi phí"** trên web hiện: hôm nay, tháng này (đô la + quy ra tiền Việt ước chừng), và số câu Bơ đã trả lời so với giới hạn ngày.
+- Giá dùng để tính đặt trong .env (`PRICE_INPUT_PER_MTOK=1`, `PRICE_OUTPUT_PER_MTOK=5`, theo giá Haiku Claude biết). Tân nên so với trang giá Anthropic và số tiền thật trên console.
+- 52 test qua hết.
+
+**Tân cần thử:** chat vài câu rồi bấm "Chi phí".
