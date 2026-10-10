@@ -5,6 +5,16 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## Tóm tắt nhanh lần chạy 2026-10-10 (18:44–19:20 UTC)
+Xong giai đoạn 3 → 12. Đáng thử nhất, theo thứ tự:
+1. `git pull`, nhấp đúp `run.bat` (giờ tự cài thư viện còn thiếu).
+2. Kể "tối nay mình đi đá bóng" → hôm sau mở web, Bơ tự hỏi thăm. 2 ngày không chat thì Bơ chào "lâu quá không gặp".
+3. Nhắn "2 phút nữa nhắc mình uống nước", để trang mở chờ Bơ nhắc.
+4. Bật "Giọng nói" + "Rảnh tay", nói "Bơ ơi, kể chuyện vui đi" (Chrome/Edge trên máy tính).
+5. Nút "Chi phí"; thêm `MONTHLY_USD_LIMIT=5` vào `.env`. Đặt `APP_PASSWORD` nếu dùng ngoài nhà.
+6. iPhone: Safari → Chia sẻ → "Thêm vào MH chính".
+Gặp lỗi: xem `SU_CO.md`, gửi mấy dòng cuối `data/loi.log` vào `FEEDBACK.md`.
+
 ## Cần Tân quyết định
 - **Dùng Bơ ngoài nhà bằng cách nào?** Tailscale (riêng tư, cần tạo tài khoản miễn phí, cài app trên iPhone) hay Cloudflare Tunnel (link công khai, không cần cài trên điện thoại). Hướng dẫn cả hai trong `DUA_LEN_MANG.md`. Claude khuyên Tailscale. Cách nào cũng phải đặt `APP_PASSWORD`.
 - **Ngân sách tháng:** `.env.example` đặt sẵn `MONTHLY_USD_LIMIT=5` (5 đô/tháng). File `.env` cũ của Tân chưa có dòng này nên đang không giới hạn. Tân tự chọn mức và thêm vào `.env`.
