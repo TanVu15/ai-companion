@@ -598,3 +598,10 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - Sửa lỗi cũ: Bơ so trùng lời nhắc / ngày đặc biệt bằng chữ thường của SQLite, vốn không hiểu chữ có dấu ("Đi làm" khác "đi làm") → có thể ghi trùng. Giờ so đúng tiếng Việt.
 - 214 test qua hết.
 
+## 2026-10-10 – Giai đoạn 33 xong: rà soát lần 13
+- Nhắc mỗi tháng ngày 29–31 không bị trôi (31/1 → 28/2 → 31/3), file lịch .ics cũng vậy.
+- Rà soát độc lập tìm 2 lỗi, đã sửa: sửa lời nhắc "ngày 31" đúng tháng 2 làm mất ngày gốc; file sao lưu hỏng có thể làm mọi lời nhắc ngừng báo.
+- 216 test qua hết.
+
+**Tân cần thử (giai đoạn 33):** "ngày đi làm 7h sáng nhắc mình uống nước" → xem "Lời nhắc sắp tới" ghi "(thứ 2–6)"; "ngày 5 hằng tháng nhắc đóng tiền nhà".
+

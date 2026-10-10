@@ -326,6 +326,15 @@ class Memory:
         cuoi = (date(y + (m == 12), m % 12 + 1, 1) - timedelta(days=1)).day
         return t.replace(year=y, month=m, day=min(ngay, cuoi))
 
+    @staticmethod
+    def _goc(v) -> int:
+        """Ngày gốc hợp lệ 0–31 (file sao lưu lỗi thì coi như 0)."""
+        try:
+            v = int(v or 0)
+        except (TypeError, ValueError):
+            return 0
+        return v if 0 <= v <= 31 else 0
+
     @classmethod
     def _next_time(cls, luc: datetime, lap: str, now: datetime, ngay_goc: int = 0) -> datetime:
         """Lời nhắc lặp lại: dời tới lần kế tiếp sau `now` (bỏ qua các lần đã lỡ)."""
@@ -339,7 +348,7 @@ class Memory:
                 t += timedelta(days=1)
             return t
         if lap == "thang":
-            t, ngay = luc, max(ngay_goc or 0, luc.day)
+            t, ngay = luc, max(cls._goc(ngay_goc), luc.day)
             while t <= now:
                 t = cls._cong_thang(t, ngay)
             return t
@@ -436,6 +445,9 @@ class Memory:
         except ValueError:
             raise ValueError("Giờ nhắc không hợp lệ") from None
         goc = t.day if lap == "thang" else 0
+        cu = self.conn.execute("SELECT due_at, lap, ngay_goc FROM reminders WHERE id = ?", (reminder_id,)).fetchone()
+        if lap == "thang" and cu and cu[1] == "thang" and cu[0] == t.strftime("%Y-%m-%d %H:%M"):
+            goc = max(goc, self._goc(cu[2]))  # giữ giờ cũ (vd 28/02 của "ngày 31") thì không mất ngày gốc
         if lap:
             t = self._next_time(t, lap, now - timedelta(minutes=1), goc)
         elif t < now - timedelta(minutes=1):
@@ -781,6 +793,8 @@ class Memory:
                         if not isinstance(row, dict):
                             raise TypeError("dòng không hợp lệ")
                         # cột thiếu thì để SQLite tự điền mặc định (giờ tạo, done = 0)
+                        if table == "reminders" and "ngay_goc" in row:
+                            row = {**row, "ngay_goc": self._goc(row["ngay_goc"])}
                         use = (("id",) if table == "messages" and "id" in row else ()) + tuple(
                             c for c in cols if c in row
                         )

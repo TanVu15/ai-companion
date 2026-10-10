@@ -318,3 +318,24 @@ def test_nhac_thang_ngay_31_khong_troi(tmp_path):
     assert mem.upcoming_reminders()[0]["ngay_goc"] == 31
     data = mem.export_all()
     assert data["reminders"][0]["ngay_goc"] == 31
+
+
+def test_sua_nhac_thang_giu_ngay_goc_va_sao_luu_loi(tmp_path):
+    from datetime import datetime
+
+    from app.memory import Memory
+
+    mem = Memory(tmp_path / "g.db")
+    mem.add_reminders([{"luc": "2027-01-31 20:00", "viec": "A", "lap": "thang"}], now=datetime(2027, 1, 10))
+    mem.pop_due_reminders(datetime(2027, 1, 31, 20))
+    r = mem.upcoming_reminders()[0]
+    assert r["luc"] == "2027-02-28 20:00"
+    mem.update_reminder(r["id"], "A mới", "2027-02-28T20:00", "thang", now=datetime(2027, 2, 1))
+    assert mem.upcoming_reminders()[0]["ngay_goc"] == 31
+    data = mem.export_all()
+    data["reminders"][0]["ngay_goc"] = "x"
+    mem.import_all(data)
+    assert mem.upcoming_reminders()[0]["ngay_goc"] == 0
+    data["reminders"][0]["ngay_goc"] = None
+    mem.import_all(data)
+    assert mem.pop_due_reminders(datetime(2027, 2, 28, 20))  # không lỗi
