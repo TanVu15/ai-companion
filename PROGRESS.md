@@ -325,3 +325,11 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - Rà soát độc lập phần ghim/tổng kết tuần: không có lỗi nặng. Đã sửa: lời nhắc vừa tới giờ ghim được ngay (trước phải tải lại trang); sao lưu/thống kê/tin đã ghim không đọc dữ liệu dở dang khi đang nạp sao lưu; cổng thiết bị (chào, nhắc) vẫn chỉ trả các mục gọn như cũ.
 - Biết nhưng chưa sửa (nhỏ): tổng kết tuần chỉ kiểm tra lúc mở/tải lại trang; để trang mở từ chiều qua 17h thì phải tải lại mới thấy.
 - 110 test qua hết.
+
+## 2026-10-10 – Giai đoạn 17: sửa tính cách trên web
+- Nút **"Tính cách"** dưới khuôn mặt: hiện tính cách đang dùng, sửa thẳng rồi "Lưu" → áp dụng từ tin nhắn sau, không cần khởi động lại.
+- Bản tự sửa lưu ở `data/persona.md` (không lên GitHub, `git pull` không đè). Bản trước đó giữ ở `data/persona.md.truoc`. "Về mặc định" dùng lại `persona.md` gốc.
+- Chặn tính cách quá ngắn (<20 ký tự) hoặc quá dài (>20.000 ký tự, vì gửi kèm mỗi câu sẽ tốn tiền).
+- 113 test qua hết.
+
+**Tân cần thử:** bấm "Tính cách", thêm dòng "Gọi mình là đại ca", Lưu, rồi nhắn "hello".

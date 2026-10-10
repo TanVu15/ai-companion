@@ -228,6 +228,17 @@ def friendly_error(e: Exception) -> str:
     return f"Bơ gặp lỗi lạ: {type(e).__name__}. Thử lại xem sao."
 
 
+def current_persona() -> tuple[str, bool]:
+    """Tính cách đang dùng và có phải bản Tân tự sửa không. Bản tự sửa trống/lỗi thì dùng persona.md gốc."""
+    try:
+        custom = config.PERSONA_CUSTOM_PATH.read_text(encoding="utf-8")
+        if custom.strip():
+            return custom, True
+    except OSError:
+        pass
+    return config.PERSONA_PATH.read_text(encoding="utf-8"), False
+
+
 def cost_usd(u: dict) -> float:
     """Ước tính tiền (đô la Mỹ) từ số token."""
     return (u["input_tokens"] * config.PRICE_INPUT_PER_MTOK + u["output_tokens"] * config.PRICE_OUTPUT_PER_MTOK) / 1e6
@@ -287,7 +298,7 @@ class Brain:
                 self._sleep(2**attempt)
 
     def persona(self) -> str:
-        return config.PERSONA_PATH.read_text(encoding="utf-8")
+        return current_persona()[0]
 
     def chat(self, user_text: str) -> Reply:
         with self._lock:

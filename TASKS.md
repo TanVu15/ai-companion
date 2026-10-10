@@ -88,6 +88,11 @@
 - [x] Cập nhật README cho các tính năng mới
 - [x] Rà soát code lần 4 (ghim, tổng kết tuần), sửa lỗi tìm được
 
+## Giai đoạn 17 – Tự tay chỉnh Bơ (chỉ phần mềm, Claude tự thêm)
+- [x] Sửa tính cách Bơ ngay trên web (lưu riêng trong data/, có nút về mặc định)
+- [ ] Dịp đặc biệt (sinh nhật, tổng kết tuần) kiểm tra cả khi trang đang mở
+- [ ] Kiểm tra giao diện trên màn hình điện thoại nhỏ (chụp ảnh tự động), sửa chỗ vỡ
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo

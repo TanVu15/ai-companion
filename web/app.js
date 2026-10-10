@@ -486,3 +486,32 @@ log.addEventListener('click', (ev) => {
   };
   bubble.appendChild(b);
 });
+
+// ---- Sửa tính cách Bơ ----
+const personaDlg = document.getElementById('persona'), personaText = document.getElementById('personaText');
+const personaNote = document.getElementById('personaNote');
+const PERSONA_HINT = personaNote.textContent;
+async function loadPersona() {
+  personaText.value = 'Đang tải...'; personaText.disabled = true;
+  try {
+    const d = await (await fetch('/api/tinh-cach')).json();
+    personaText.value = d.noi_dung;
+    personaNote.textContent = PERSONA_HINT + (d.tu_sua ? ' (Đang dùng bản bạn tự sửa.)' : ' (Đang dùng bản mặc định.)');
+  } catch (e) { personaText.value = ''; personaNote.textContent = 'Không tải được.'; }
+  personaText.disabled = false;
+}
+document.getElementById('openPersona').onclick = () => { personaDlg.showModal(); loadPersona(); };
+document.getElementById('closePersona').onclick = () => personaDlg.close();
+document.getElementById('savePersona').onclick = async () => {
+  try {
+    const r = await fetch('/api/tinh-cach', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ noi_dung: personaText.value }) });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.detail || 'Lỗi');
+    personaDlg.close(); statusEl.textContent = 'Đã lưu tính cách mới';
+    setTimeout(() => { if (statusEl.textContent === 'Đã lưu tính cách mới') statusEl.textContent = ''; }, 3000);
+  } catch (e) { alert('Không lưu được: ' + e.message); }
+};
+document.getElementById('resetPersona').onclick = async () => {
+  if (!confirm('Bỏ bản tự sửa, dùng lại tính cách mặc định?')) return;
+  await fetch('/api/tinh-cach', { method: 'DELETE' }); loadPersona();
+};

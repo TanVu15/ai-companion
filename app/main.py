@@ -9,7 +9,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from . import config
-from .brain import Brain, cost_usd, friendly_error
+from .brain import Brain, cost_usd, current_persona, friendly_error
 from .memory import Memory
 from .nhat_ky import bat_ghi_file, log
 
@@ -204,7 +204,7 @@ def health():
             "Có API key" if key.startswith("sk-") else
             ("Chưa có ANTHROPIC_API_KEY trong .env" if not key else "API key trông không đúng (thường bắt đầu bằng sk-)"))
     try:
-        persona_ok = bool(config.PERSONA_PATH.read_text(encoding="utf-8").strip())
+        persona_ok = bool(current_persona()[0].strip())
     except OSError:
         persona_ok = False
     add("Tính cách", persona_ok, "Có persona.md" if persona_ok else "Thiếu hoặc trống file persona.md")
@@ -303,6 +303,44 @@ def special_day_delete(day_id: int):
     brain = get_brain()
     with brain._lock:
         brain.memory.delete_special_day(day_id)
+    return {"ok": True}
+
+
+class PersonaIn(BaseModel):
+    noi_dung: str
+
+
+@app.get("/api/tinh-cach")
+def persona_get():
+    try:
+        text, custom = current_persona()
+    except OSError:
+        text, custom = "", False
+    return {"noi_dung": text, "tu_sua": custom}
+
+
+@app.put("/api/tinh-cach")
+def persona_put(body: PersonaIn):
+    """Lưu tính cách Tân tự sửa. Áp dụng ngay từ tin nhắn sau."""
+    text = body.noi_dung.replace("\r\n", "\n").strip()
+    if len(text) < 20:
+        raise HTTPException(400, "Tính cách ngắn quá, viết thêm vài dòng nha")
+    if len(text) > 20000:
+        raise HTTPException(400, "Tính cách dài quá (tối đa 20.000 ký tự) — dài thì tốn tiền API mỗi câu")
+    path = config.PERSONA_CUSTOM_PATH
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if path.exists():  # giữ bản trước, lỡ sửa hỏng còn lấy lại
+        path.replace(path.with_suffix(".md.truoc"))
+    path.write_text(text + "\n", encoding="utf-8")
+    return {"ok": True}
+
+
+@app.delete("/api/tinh-cach")
+def persona_reset():
+    """Về tính cách mặc định (persona.md trong dự án)."""
+    path = config.PERSONA_CUSTOM_PATH
+    if path.exists():
+        path.replace(path.with_suffix(".md.truoc"))
     return {"ok": True}
 
 

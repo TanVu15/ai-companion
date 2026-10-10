@@ -123,6 +123,7 @@
       <button class="link" id="openSearch" type="button">Tìm</button>
       <button class="link" id="openHelp" type="button" aria-label="Bơ làm được gì?">?</button>
       <button class="link" id="openCost" type="button">Chi phí</button>
+      <button class="link" id="openPersona" type="button">Tính cách</button>
       <button class="link" id="voiceBtn" type="button" aria-pressed="false">Giọng nói: tắt</button>
       <button class="link" id="rateBtn" type="button" hidden>Tốc độ đọc: vừa</button>
       <button class="link" id="handsBtn" type="button" aria-pressed="false" hidden>Rảnh tay: tắt</button>
@@ -170,10 +171,20 @@
     <li><b>Tìm chuyện cũ:</b> nút "Tìm", gõ không dấu cũng được.</li>
     <li><b>Ghim:</b> chạm vào một tin nhắn → "Ghim tin này". Xem lại trong nút "Tìm".</li>
     <li><b>Sao lưu:</b> trong "Bơ nhớ gì về mình?" → tải bản sao lưu hoặc tải trò chuyện (.txt).</li>
+    <li><b>Tính cách:</b> nút "Tính cách" để sửa cách Bơ nói chuyện (lỡ hỏng thì bấm "Về mặc định").</li>
     <li><b>Chi phí:</b> nút "Chi phí" xem đã tiêu bao nhiêu tiền API.</li>
   </ul>
   <p>Gặp lỗi: xem file SU_CO.md trong thư mục dự án.</p>
   <div class="row"><span></span><button id="closeHelp" type="button">Xong</button></div>
+</dialog>
+<dialog id="persona">
+  <h2>Tính cách của Bơ</h2>
+  <p id="personaNote">Viết Bơ là ai, nói chuyện ra sao, gọi bạn là gì. Lưu xong là áp dụng từ tin nhắn sau.</p>
+  <textarea id="personaText" rows="14" aria-label="Tính cách của Bơ" style="width:100%;border-radius:12px;max-height:55vh"></textarea>
+  <div class="row" style="margin-top:8px">
+    <button class="link" id="resetPersona" type="button">Về mặc định</button>
+    <span><button class="link" id="closePersona" type="button">Hủy</button> <button id="savePersona" type="button">Lưu</button></span>
+  </div>
 </dialog>
 <dialog id="search">
   <h2>Tìm trong chuyện cũ</h2>
