@@ -7,7 +7,7 @@ from tests.test_brain import FakeClient
 
 def test_file_tinh_huong_hop_le():
     ds = json.loads(t.TINH_HUONG_PATH.read_text(encoding="utf-8"))
-    assert len(ds) == 20
+    assert len(ds) == 22
     for th in ds:
         assert th["ten"] and th["tin_nhan"]
 
@@ -83,3 +83,18 @@ def test_viec_can_lam_va_tam_trang():
     assert kq.diem == 1.0 and "- Mua sữa" in system and "Tâm trạng gần đây" in system
     [kq] = t.chay(client, [{**th, "viec_dang_co": [], "buon_may_ngay": False}])
     assert ("Gạch việc đã xong", False) in kq.kiem_tra and ("Đoán đúng tâm trạng (met)", False) in kq.kiem_tra
+
+
+def test_am_lich():
+    from datetime import date
+
+    from app.am_lich import duong_sang_am
+
+    ngay, thang, _, _ = duong_sang_am(date.today())
+    tot = json.dumps({"noi": f"Hôm nay mùng {ngay} tháng {thang} âm nè!",
+                      "ngay_dac_biet": [{"ngay": "15/7", "viec": "Giỗ ông", "am_lich": True}]})
+    th = {"ten": "x", "tin_nhan": "hi", "phai_noi_ngay_am": True, "phai_ghi_ngay_am": True}
+    [kq] = t.chay(FakeClient([tot]), [th])
+    assert kq.diem == 1.0
+    [kq] = t.chay(FakeClient([json.dumps({"noi": "Không biết", "ngay_dac_biet": [{"ngay": "15/7", "viec": "Giỗ"}]})]), [th])
+    assert ("Nói đúng ngày âm hôm nay", False) in kq.kiem_tra and ("Ghi đúng là ngày âm lịch", False) in kq.kiem_tra

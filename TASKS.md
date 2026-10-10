@@ -152,7 +152,7 @@
 ## Giai đoạn 29 – Lịch nhỏ (chỉ phần mềm, Claude tự thêm)
 - [x] Dòng lịch dưới tên Bơ: thứ, ngày dương, ngày âm, lễ hôm nay
 - [x] Cổng thiết bị /api/thiet-bi/hom-nay cho màn hình đồng hồ sau này
-- [ ] Chấm điểm thêm tình huống âm lịch, giỗ âm
+- [x] Chấm điểm thêm tình huống âm lịch, giỗ âm
 
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định

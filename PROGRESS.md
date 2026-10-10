@@ -538,3 +538,9 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - Dưới tên Bơ có dòng lịch: "Thứ Bảy 10/10 · âm 1/9", ngày lễ thì thêm chữ đậm (ví dụ "· Tết Trung thu"). Tự cập nhật qua nửa đêm.
 - Cổng thiết bị `GET /api/thiet-bi/hom-nay` cho màn hình đồng hồ sau này (xem `THIET_BI.md`). 186 test qua hết.
 
+## 2026-10-10 – Giai đoạn 29 xong (báo cáo): lịch nhỏ
+- Dòng lịch dương/âm dưới tên Bơ; cổng thiết bị lịch hôm nay; bộ chấm điểm thêm 2 tình huống (tổng 22): hỏi ngày âm, kể ngày giỗ âm lịch.
+- 187 test qua hết.
+
+**Tân cần thử:** `git pull`, chạy lại, nhìn dòng lịch dưới tên Bơ; chạy `python -m app.thu_tinh_cach` gửi điểm vào FEEDBACK.md.
+

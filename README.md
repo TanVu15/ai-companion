@@ -61,7 +61,7 @@ Bấm nút **"Tính cách"** trên web, sửa rồi bấm "Lưu" — áp dụng 
 
 ## Thử tính cách (chấm điểm)
 
-Bơ trả lời 20 tình huống trong `tinh_huong.json` (buồn, mệt, khoe thành tích, hỏi điều không biết, hỏi thăm chuyện cũ, sinh nhật, nhắc mỗi ngày, việc cần làm, đoán tâm trạng...) và được chấm điểm tự động. Tốn khoảng 20 câu API (rất rẻ), không đụng vào trí nhớ thật.
+Bơ trả lời 22 tình huống trong `tinh_huong.json` (buồn, mệt, khoe thành tích, hỏi điều không biết, hỏi thăm chuyện cũ, sinh nhật, nhắc mỗi ngày, việc cần làm, đoán tâm trạng, âm lịch...) và được chấm điểm tự động. Tốn khoảng 22 câu API (rất rẻ), không đụng vào trí nhớ thật.
 
 ```
 .venv\Scripts\activate

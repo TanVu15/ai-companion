@@ -89,6 +89,17 @@ def cham(th: dict, chu_goc: str, reply, viec_con_lai: int = 0) -> KetQua:
     if th.get("phai_nhac_lap"):
         kq.kiem_tra.append((f"Nhắc lặp lại ({th['phai_nhac_lap']})",
                             any(str(x.get("lap", "")) == th["phai_nhac_lap"] for x in reply.nhac)))
+    if th.get("phai_ghi_ngay_am"):
+        kq.kiem_tra.append(("Ghi đúng là ngày âm lịch",
+                            any(d.get("am_lich") in (True, "true") for d in reply.ngay_dac_biet)))
+    if th.get("phai_noi_ngay_am"):
+        from datetime import date
+
+        from .am_lich import duong_sang_am
+
+        ngay, thang, _, _ = duong_sang_am(date.today())
+        kq.kiem_tra.append(("Nói đúng ngày âm hôm nay",
+                            any(t in thuong for t in (f"{ngay}/{thang}", f"{ngay} tháng {thang}"))))
     if th.get("phai_ghi_viec"):
         kq.kiem_tra.append(("Ghi vào việc cần làm", bool(reply.viec_can_lam)))
     if th.get("phai_xong_viec"):

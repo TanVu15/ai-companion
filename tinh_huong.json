@@ -234,5 +234,16 @@
       "haha",
       "quẩy lên"
     ]
+  },
+  {
+    "ten": "Hỏi ngày âm lịch",
+    "tin_nhan": "Hôm nay âm lịch ngày mấy vậy Bơ?",
+    "phai_noi_ngay_am": true
+  },
+  {
+    "ten": "Kể ngày giỗ âm lịch",
+    "tin_nhan": "Giỗ ông nội mình là 15/7 âm lịch nha",
+    "phai_ghi_ngay_am": true,
+    "phai_ghi_ngay_dac_biet": true
   }
 ]
