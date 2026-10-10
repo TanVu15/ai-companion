@@ -39,6 +39,11 @@ SUMMARY_PROMPT = """Bạn tóm tắt cuộc trò chuyện giữa người dùng 
 Viết tiếng Việt, tối đa 150 chữ, chỉ giữ ý chính: chuyện người dùng kể, cảm xúc, kế hoạch, lời hứa.
 Gộp với bản tóm tắt cũ (nếu có) thành MỘT bản mới. Chỉ trả về đoạn tóm tắt, không thêm gì khác."""
 
+MERGE_PROMPT = """Đây là danh sách những điều Bơ (người bạn AI) nhớ về người dùng, xếp từ cũ đến mới.
+Hãy dọn lại: gộp các điều trùng ý thành một, nếu hai điều mâu thuẫn thì giữ điều MỚI hơn (nằm sau),
+không bịa thêm gì. Mỗi điều ngắn gọn, tiếng Việt.
+Chỉ trả về một mảng JSON các chuỗi, ví dụ: ["Tên là Tân", "Thích tập gym"]."""
+
 
 def build_system_prompt(persona: str, facts: list[str], summary: str = "") -> str:
     known = "\n".join(f"- {f}" for f in facts) if facts else "- (chưa biết gì)"
@@ -99,6 +104,7 @@ class Brain:
 
             client = anthropic.Anthropic(api_key=config.ANTHROPIC_API_KEY)
         self.client = client
+        self._merged_at = 0  # số điều đáng nhớ còn lại sau lần gộp gần nhất
 
     def persona(self) -> str:
         return config.PERSONA_PATH.read_text(encoding="utf-8")
@@ -124,6 +130,7 @@ class Brain:
         self.memory.add_message("assistant", reply.noi)
         self.memory.forget_facts(reply.quen)
         self.memory.add_facts(reply.ghi_nho)
+        self.maybe_merge_facts()
         self.maybe_summarize()
         return reply
 
@@ -147,3 +154,28 @@ class Brain:
         text = "".join(b.text for b in resp.content if getattr(b, "type", "") == "text").strip()
         if text:
             self.memory.add_summary(text, old[-1]["id"])
+
+    def maybe_merge_facts(self) -> None:
+        """Danh sách dài thì nhờ AI gộp điều trùng ý, bỏ điều mâu thuẫn cũ. Lỗi thì giữ nguyên."""
+        facts = self.memory.all_facts()
+        if len(facts) < config.FACTS_MERGE_AT or (self._merged_at and len(facts) < self._merged_at + 10):
+            return
+        listing = "\n".join(f"- {f}" for f in facts)
+        try:
+            resp = self.client.messages.create(
+                model=config.MODEL,
+                max_tokens=800,
+                system=MERGE_PROMPT,
+                messages=[{"role": "user", "content": listing}],
+            )
+            text = "".join(b.text for b in resp.content if getattr(b, "type", "") == "text")
+            match = re.search(r"\[.*\]", text, re.DOTALL)
+            merged = [str(x).strip() for x in json.loads(match.group(0)) if str(x).strip()] if match else []
+        except Exception:
+            merged = []
+        # Chỉ nhận kết quả hợp lý: không rỗng và không dài hơn danh sách cũ
+        if merged and len(merged) <= len(facts):
+            self.memory.replace_facts(merged)
+            self._merged_at = len(self.memory.all_facts())
+        else:
+            self._merged_at = len(facts)  # chờ thêm 10 điều mới rồi mới thử lại

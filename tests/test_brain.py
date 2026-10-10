@@ -150,3 +150,29 @@ def test_outdated_fact_is_replaced(memory):
 def test_parse_bad_quen_is_ignored():
     r = parse_reply('{"noi": "Hi", "quen": "không phải danh sách"}')
     assert r.quen == []
+
+
+def test_long_fact_list_gets_merged(memory, monkeypatch):
+    monkeypatch.setattr(config, "FACTS_MERGE_AT", 3)
+    memory.add_facts(["Thích gym", "Mê tập gym"])
+    client = FakeClient([
+        json.dumps({"noi": "ok", "ghi_nho": ["Tên là Tân"]}),
+        'Đây: ["Thích tập gym", "Tên là Tân"]',
+    ])
+    Brain(memory, client=client).chat("Mình là Tân")
+    assert memory.all_facts() == ["Thích tập gym", "Tên là Tân"]
+    assert "Mê tập gym" in client.calls[1]["messages"][0]["content"]
+
+
+def test_bad_merge_keeps_facts_and_waits(memory, monkeypatch):
+    monkeypatch.setattr(config, "FACTS_MERGE_AT", 2)
+    client = FakeClient([
+        json.dumps({"noi": "ok", "ghi_nho": ["A", "B"]}),
+        "xin lỗi, không làm được",                      # gộp lỗi -> giữ nguyên
+        json.dumps({"noi": "ok2", "ghi_nho": ["C"]}),     # chưa thêm đủ 10 điều -> không gộp lại
+    ])
+    brain = Brain(memory, client=client)
+    brain.chat("1")
+    brain.chat("2")
+    assert memory.all_facts() == ["A", "B", "C"]
+    assert len(client.calls) == 3

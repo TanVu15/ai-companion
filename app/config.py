@@ -20,6 +20,8 @@ DAILY_LIMIT = int(os.getenv("DAILY_LIMIT", "300"))
 
 # Khi có đủ ngần này tin nhắn cũ (ngoài lịch sử gần nhất) thì tóm tắt lại một lần
 SUMMARY_BATCH = int(os.getenv("SUMMARY_BATCH", "20"))
+# Khi danh sách điều đáng nhớ dài tới ngần này thì nhờ AI gộp/dọn lại (mỗi lần thêm 10 điều mới thử lại)
+FACTS_MERGE_AT = int(os.getenv("FACTS_MERGE_AT", "30"))
 
 EMOTIONS = ["vui", "hao_hung", "binh_thuong", "suy_nghi", "ngac_nhien", "buon", "thuong"]
 ACTIONS = ["khong", "gat_dau", "lac_dau", "nghieng_dau", "nhay", "vay_tay"]

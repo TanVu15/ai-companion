@@ -28,4 +28,12 @@
 - Nếu tóm tắt bị lỗi (mạng...) thì bỏ qua, lần sau thử lại; câu trả lời của Bơ không bị ảnh hưởng.
 - 22 test qua hết.
 
-**Tiếp theo:** Giai đoạn 3, việc "Gộp/sửa điều đáng nhớ bị trùng hoặc lỗi thời".
+## 2026-10-10 – Giai đoạn 3: dọn điều đáng nhớ
+- **Không ghi trùng:** "Thích tập gym" và "thích  tập gym." được coi là một (bỏ qua hoa/thường, khoảng trắng, dấu câu cuối).
+- **Tự quên điều lỗi thời:** câu trả lời JSON của bộ não có thêm mục nội bộ `quen`. Ví dụ Tân kể "mới chuyển ra Đà Nẵng" → Bơ xóa "Sống ở Huế", ghi "Sống ở Đà Nẵng". Giao diện không bị ảnh hưởng (vẫn chỉ đọc noi/cam_xuc/hanh_dong).
+- **Gộp định kỳ:** khi danh sách dài tới 30 điều (đổi bằng `FACTS_MERGE_AT` trong .env), Bơ nhờ AI gộp các điều trùng ý, giữ điều mới hơn khi mâu thuẫn. Tốn 1 câu API mỗi lần, và chỉ thử lại sau khi có thêm 10 điều mới. Kết quả lạ (rỗng, dài hơn) thì bỏ, giữ nguyên danh sách cũ.
+- 27 test qua hết.
+
+**Tân cần thử:** kể cho Bơ một chuyện rồi "đổi ý" (ví dụ "mình hết thích cà phê rồi"), bấm "Bơ nhớ gì về mình?" xem điều cũ đã biến mất chưa.
+
+**Tiếp theo:** Giai đoạn 3, việc "Bơ chủ động hỏi thăm chuyện cũ".
