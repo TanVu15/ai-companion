@@ -157,6 +157,11 @@
 ## Giai đoạn 30 – Chúc ngày lễ (chỉ phần mềm, Claude tự thêm)
 - [x] Ngày lễ (Tết, Trung thu, 20/10...) mở web là Bơ chủ động chúc (mỗi ngày lễ 1 lần, 1 câu API)
 
+## Giai đoạn 31 – Đếm ngược & tự sao lưu (chỉ phần mềm, Claude tự thêm)
+- [x] Đếm ngược ngày đặc biệt: danh sách hiện "còn X ngày", Bơ biết ngày đặc biệt trong 7 ngày tới
+- [ ] Tự sao lưu mỗi ngày vào data/sao_luu/ (giữ 7 bản gần nhất)
+- [ ] Rà soát code lần 11 (đếm ngược, tự sao lưu), sửa lỗi tìm được
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo

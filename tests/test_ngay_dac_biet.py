@@ -58,7 +58,8 @@ def test_chat_wishes_once_per_year(memory):
     client = FakeClient([reply("Chúc mừng sinh nhật!"), reply("Ừ")])
     brain = Brain(memory, client=client)
     brain.chat("hi")
-    assert "Sinh nhật Tân" in client.calls[0]["system"] and "- Mai" not in client.calls[0]["system"]
+    hom_nay = client.calls[0]["system"].split("## Hôm nay là ngày đặc biệt")[1].split("##")[0]
+    assert "Sinh nhật Tân" in hom_nay and "Mai" not in hom_nay
     brain.chat("hi nữa")
     assert "ngày đặc biệt\n" not in client.calls[1]["system"]  # đã chúc rồi
     assert memory.special_days_today() == []
@@ -229,3 +230,53 @@ def test_khong_chuc_le_ngay_thuong_hoac_qua_som(memory, monkeypatch):
     assert Brain(memory, client=FakeClient([])).greet(only_occasion=True) is None
     _fixed_day(monkeypatch, datetime(2026, 10, 21, 9, 0))
     assert Brain(memory, client=FakeClient([])).greet(only_occasion=True) is None
+
+
+def test_dem_nguoc(memory):
+    memory.add_special_days([
+        {"ngay": "5/3", "viec": "Sinh nhật Tân"},
+        {"ngay": "20/10", "viec": "Kỷ niệm"},
+        {"ngay": "29/2", "viec": "Nhuận"},
+    ])
+    out = memory.upcoming_special_days(date(2026, 10, 10))
+    assert [d["viec"] for d in out] == ["Kỷ niệm", "Nhuận", "Sinh nhật Tân"]
+    assert out[0]["con_ngay"] == 10 and out[0]["ngay_duong"] == "20/10/2026"
+    assert out[1]["ngay_duong"] == "28/02/2027"  # 2027 không nhuận → tính vào 28/02
+    assert out[2]["con_ngay"] == (date(2027, 3, 5) - date(2026, 10, 10)).days
+    assert memory.upcoming_special_days(date(2026, 10, 20))[0]["con_ngay"] == 0
+
+
+def test_dem_nguoc_am_lich_va_gioi_han(memory):
+    from app.am_lich import duong_sang_am
+
+    memory.add_special_days([{"ngay": "15/7", "viec": "Giỗ ông", "am_lich": True}])
+    (d,) = memory.upcoming_special_days(date(2026, 10, 10))
+    on = date(2026, 10, 10) + timedelta(days=d["con_ngay"])
+    assert duong_sang_am(on)[:2] == (15, 7) and d["con_ngay"] > 0
+    (d,) = memory.upcoming_special_days(date(2026, 10, 10), days=7)
+    assert "con_ngay" not in d  # ngoài 7 ngày
+
+
+def test_prompt_ngay_sap_toi():
+    up = [{"viec": "Sinh nhật mẹ", "con_ngay": 3, "ngay_duong": "13/10/2026"},
+          {"viec": "Hôm nay", "con_ngay": 0, "ngay_duong": "10/10/2026"},
+          {"viec": "Xa", "con_ngay": 30, "ngay_duong": "09/11/2026"}]
+    p = build_system_prompt("P", [], upcoming=up)
+    assert "Ngày đặc biệt sắp tới" in p and "Sinh nhật mẹ: còn 3 ngày (13/10/2026)" in p
+    assert "Xa" not in p and "- Hôm nay" not in p
+    assert "sắp tới" not in build_system_prompt("P", [], upcoming=[])
+
+
+def test_chat_gui_kem_ngay_sap_toi(memory):
+    memory.add_special_days([{"ngay": today_ddmm(2), "viec": "Sinh nhật mẹ"}])
+    client = FakeClient([reply()])
+    Brain(client=client, memory=memory).chat("còn mấy ngày nữa sinh nhật mẹ?")
+    assert "Sinh nhật mẹ: còn 2 ngày" in client.calls[0]["system"]
+
+
+def test_api_dem_nguoc(tmp_path):
+    brain = Brain(client=FakeClient([]), memory=Memory(tmp_path / "a.db"))
+    main._brain = brain
+    brain.memory.add_special_days([{"ngay": today_ddmm(5), "viec": "A"}, {"ngay": today_ddmm(1), "viec": "B"}])
+    data = TestClient(main.app).get("/api/ngay-dac-biet").json()
+    assert [(d["viec"], d["con_ngay"]) for d in data] == [("B", 1), ("A", 5)]

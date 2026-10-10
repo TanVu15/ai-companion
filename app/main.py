@@ -480,7 +480,12 @@ def pin(msg_id: int, body: PinIn):
 
 @app.get("/api/ngay-dac-biet")
 def special_days():
-    return get_brain().memory.special_days()
+    """Danh sách ngày đặc biệt, gần nhất trước, kèm "con_ngay" (còn mấy ngày, 0 = hôm nay)."""
+    mem = get_brain().memory
+    try:
+        return mem.upcoming_special_days()
+    except Exception:
+        return mem.special_days()
 
 
 @app.delete("/api/ngay-dac-biet/{day_id}")

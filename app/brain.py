@@ -167,6 +167,7 @@ def build_system_prompt(
     weather: str | None = None,
     low_mood: list[str] | None = None,
     todos: list[dict | str] | None = None,
+    upcoming: list[dict] | None = None,
 ) -> str:
     now = now or datetime.now()
     known = "\n".join(f"- {f}" for f in facts) if facts else "- (chưa biết gì)"
@@ -183,6 +184,13 @@ def build_system_prompt(
     if special:
         items = "\n".join(f"- {d['viec']}" for d in special)
         out += f"\n## Hôm nay là ngày đặc biệt\n{items}\n"
+    soon = [d for d in (upcoming or []) if 1 <= d.get("con_ngay", 0) <= 7]
+    if soon:
+        items = "\n".join(
+            f"- {d['viec']}: {'ngày mai' if d['con_ngay'] == 1 else 'còn ' + str(d['con_ngay']) + ' ngày'} ({d['ngay_duong']})"
+            for d in soon)
+        out += (f"\n## Ngày đặc biệt sắp tới\n{items}\n"
+                "(Dùng khi người dùng hỏi \"còn mấy ngày\" hoặc khi hợp chuyện; đừng tự nhắc mãi.)\n")
     if todos:
         lines, old = [], False
         for t in todos:
@@ -513,6 +521,13 @@ class Brain:
             return ""
         return week
 
+    def _upcoming(self, today) -> list[dict]:
+        """Ngày đặc biệt trong 7 ngày tới (lỗi thì bỏ qua, không làm hỏng câu trả lời)."""
+        try:
+            return self.memory.upcoming_special_days(today, days=7)
+        except Exception:
+            return []
+
     def _ask(self, history: list[dict], followups: list[dict]) -> Reply:
         summary, _ = self.memory.latest_summary()
         from datetime import date
@@ -524,6 +539,7 @@ class Brain:
             self.persona(), self.memory.all_facts(), summary, followups, special=special, weather=weather,
             low_mood=self.memory.low_mood(today),
             todos=self.memory.todos(include_done=False),  # tối đa TODO_MAX (50) việc
+            upcoming=self._upcoming(today),
         )
         resp = self._create(
             model=config.MODEL,

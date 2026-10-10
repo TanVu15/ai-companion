@@ -501,6 +501,36 @@ class Memory:
             out.append({"id": i, "viec": c, "am_lich": bool(a)})
         return out
 
+    def upcoming_special_days(self, today: date | None = None, days: int = 385) -> list[dict]:
+        """Mỗi ngày đặc biệt kèm lần tới gần nhất (tính cả hôm nay) trong `days` ngày:
+        {"id", "viec", "am_lich", "ngay", "con_ngay", "ngay_duong": "DD/MM/YYYY"}, sắp theo con_ngay.
+        385 ngày đủ cho một năm âm có tháng nhuận. Ngày âm không tính được (lỗi lịch) thì không có con_ngay."""
+        today = today or date.today()
+        all_days = self.special_days()
+        if not all_days:
+            return []
+        rows = self.conn.execute("SELECT id, day, am FROM special_days").fetchall()
+        key_of = {i: (d, bool(a)) for i, d, a in rows}
+        found: dict[int, int] = {}
+        for off in range(days + 1):
+            if len(found) == len(key_of):
+                break
+            on = date.fromordinal(today.toordinal() + off)
+            duong, am, _ = self._keys_for(on)
+            for i, (k, is_am) in key_of.items():
+                if i not in found and k in (am if is_am else duong):
+                    found[i] = off
+        out = []
+        for d in all_days:
+            item = dict(d)
+            if d["id"] in found:
+                off = found[d["id"]]
+                item["con_ngay"] = off
+                item["ngay_duong"] = date.fromordinal(today.toordinal() + off).strftime("%d/%m/%Y")
+            out.append(item)
+        out.sort(key=lambda x: (x.get("con_ngay", 10**6), x["id"]))
+        return out
+
     def _year_key(self, day_id: int, on: date) -> int:
         """Năm dùng để đánh dấu "đã chúc": năm dương với ngày dương, năm âm với ngày âm lịch."""
         row = self.conn.execute("SELECT am FROM special_days WHERE id = ?", (day_id,)).fetchone()

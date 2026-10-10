@@ -559,3 +559,8 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 
 **Tân cần thử:** sáng 20/10 mở web xem Bơ chúc gì.
 
+## 2026-10-10 – Giai đoạn 31: đếm ngược ngày đặc biệt
+- Danh sách "Ngày đặc biệt" trên web giờ sắp theo ngày gần nhất, ghi "(còn 10 ngày)", "(ngày mai)", "(hôm nay!)". Ngày âm lịch ghi thêm ngày dương năm nay rơi vào.
+- Bơ biết các ngày đặc biệt trong 7 ngày tới → hỏi "còn mấy ngày nữa sinh nhật mẹ?" là Bơ trả lời đúng.
+- 195 test qua hết.
+
