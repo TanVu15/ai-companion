@@ -576,3 +576,9 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 
 **Tân cần thử (giai đoạn 31):** mở "Bơ nhớ gì về mình?" xem danh sách ngày đặc biệt có "(còn X ngày)"; nhắn một tin rồi xem thư mục `data/sao_luu/` có file `bo-<ngày>.json`.
 
+## 2026-10-10 – Giai đoạn 32: ngày lễ sắp tới
+- Bơ biết các ngày lễ trong 45 ngày tới và Tết còn mấy ngày → hỏi "còn mấy ngày nữa Tết?", "20/10 còn bao lâu?" là Bơ trả lời đúng (tính sẵn, không tốn thêm câu API).
+- Dòng lịch dưới tên Bơ: trong 7 ngày tới có lễ / ngày đặc biệt thì ghi "còn 3 ngày nữa là Sinh nhật mẹ"; rê chuột vào dòng lịch xem 3 ngày sắp tới.
+- Cổng thiết bị `/api/thiet-bi/hom-nay` có thêm `sap_toi` (xem THIET_BI.md).
+- 204 test qua hết.
+

@@ -54,7 +54,9 @@ Màn hình nhỏ có thể hiện khi Tân hỏi "còn việc gì?" hoặc lúc 
 
 ### 5. Lịch hôm nay: `GET /api/thiet-bi/hom-nay`
 
-`{"thu": "thứ Bảy", "duong": "10/10/2026", "am": "1/9", "nam_am": "Bính Ngọ", "le": []}` — cho màn hình đồng hồ
+`{"thu": "thứ Bảy", "duong": "10/10/2026", "am": "1/9", "nam_am": "Bính Ngọ", "le": [],
+"sap_toi": [{"ten": "Ngày Phụ nữ Việt Nam 20/10", "con_ngay": 10, "ngay": "20/10/2026"}]}` — cho màn hình đồng hồ.
+`sap_toi`: tối đa 3 ngày lễ / ngày đặc biệt của bạn trong 30 ngày tới, gần nhất trước
 (ngày âm tính sẵn trên máy chủ, thiết bị không cần tự tính). `?khong_dau=1` để bỏ dấu. Không tốn tiền API.
 
 ## Lỗi thường gặp

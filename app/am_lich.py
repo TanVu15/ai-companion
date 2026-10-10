@@ -183,3 +183,27 @@ def ngay_le(d: date) -> list[str]:
         if thang == 12 and duong_sang_am(date.fromordinal(d.toordinal() + 1))[:2] == (1, 1):
             out.append("Giao thừa (đêm cuối năm âm lịch)")
     return out
+
+
+def le_sap_toi(d: date, days: int = 45) -> list[dict]:
+    """Ngày lễ trong `days` ngày tới (không tính hôm nay), mỗi lễ một lần, gần nhất trước:
+    [{"ten", "con_ngay", "ngay": date}]. Mùng 2, mùng 3 Tết bỏ (đã có mùng 1)."""
+    out, seen = [], set()
+    for off in range(1, days + 1):
+        on = date.fromordinal(d.toordinal() + off)
+        for ten in ngay_le(on):
+            if ten in seen or ten in ("mùng 2 Tết", "mùng 3 Tết"):
+                continue
+            seen.add(ten)
+            out.append({"ten": ten, "con_ngay": off, "ngay": on})
+    return out
+
+
+def tet_sap_toi(d: date) -> dict | None:
+    """Mùng 1 Tết Nguyên đán kế tiếp (tính cả hôm nay): {"con_ngay", "ngay": date}."""
+    _, _, nam, _ = duong_sang_am(d)
+    for y in (nam, nam + 1):
+        tet = am_sang_duong(1, 1, y)
+        if tet and tet >= d:
+            return {"con_ngay": (tet - d).days, "ngay": tet}
+    return None

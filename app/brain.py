@@ -152,9 +152,26 @@ def _am_lich_va_le(today) -> str:
             out += f"Ngày mai là: {', '.join(ngay_mai)}.\n"
         if hom_nay or ngay_mai:
             out += "(Nhắc tới ngày lễ một cách tự nhiên khi hợp chuyện, đừng lặp lại nếu đã nói rồi.)\n"
+        out += _le_sap_toi(today)
         return out
     except Exception:  # không bao giờ để lịch làm hỏng câu trả lời
         return ""
+
+
+def _le_sap_toi(today) -> str:
+    """Một dòng ngày lễ sắp tới (2–45 ngày) + Tết còn mấy ngày, để Bơ trả lời "còn mấy ngày nữa Tết?"."""
+    from .am_lich import le_sap_toi, tet_sap_toi
+
+    items = []
+    for x in le_sap_toi(today):
+        if x["con_ngay"] >= 2 and len(items) < 4:
+            dm = x["ngay"].strftime("%d/%m")
+            ten = x["ten"] if x["ten"].endswith(dm.lstrip("0").replace("/0", "/")) else f"{x['ten']} {dm}"
+            items.append(f"{ten} (còn {x['con_ngay']} ngày)")
+    tet = tet_sap_toi(today)
+    if tet and tet["con_ngay"] >= 2 and not any("Tết Nguyên đán" in i for i in items):
+        items.append(f"Tết Nguyên đán {tet['ngay'].strftime('%d/%m/%Y')} (còn {tet['con_ngay']} ngày)")
+    return f"Ngày lễ sắp tới: {'; '.join(items)}.\n" if items else ""
 
 
 def build_system_prompt(

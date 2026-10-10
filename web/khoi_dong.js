@@ -93,6 +93,9 @@ async function showLich() {
     el.textContent = d.thu.charAt(0).toUpperCase() + d.thu.slice(1) + ' ' + d.duong.slice(0, 5) + ' · âm ' + d.am;
     el.title = 'Năm ' + d.nam_am + ' (âm lịch)';
     if (d.le && d.le.length) { const b = document.createElement('b'); b.textContent = ' · ' + d.le.join(', '); el.appendChild(b); }
+    const s = (d.sap_toi || [])[0];
+    if (s && s.con_ngay <= 7) el.appendChild(document.createTextNode(' · ' + (s.con_ngay === 1 ? 'mai là ' : 'còn ' + s.con_ngay + ' ngày nữa là ') + s.ten));
+    el.title += (d.sap_toi || []).map(x => '\n' + x.ten + ': còn ' + x.con_ngay + ' ngày (' + x.ngay + ')').join('');
   } catch (e) {}
 }
 showLich(); setInterval(showLich, 10 * 60 * 1000);

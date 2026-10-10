@@ -162,6 +162,12 @@
 - [x] Tự sao lưu mỗi ngày vào data/sao_luu/ (giữ 7 bản gần nhất)
 - [x] Rà soát code lần 11 (đếm ngược, tự sao lưu), sửa lỗi tìm được
 
+## Giai đoạn 32 – Ngày lễ sắp tới & lịch điện thoại (chỉ phần mềm, Claude tự thêm)
+- [x] Bơ biết ngày lễ sắp tới và Tết còn mấy ngày ("còn mấy ngày nữa Tết?")
+- [x] Dòng lịch trên web + cổng thiết bị: ngày lễ / ngày đặc biệt sắp tới
+- [ ] Tải lịch .ics (ngày đặc biệt + lời nhắc) để thêm vào lịch điện thoại
+- [ ] Rà soát code lần 12, sửa lỗi tìm được
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo

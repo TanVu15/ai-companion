@@ -391,7 +391,26 @@ def _hom_nay() -> dict:
         "am": f"{ngay}/{thang}{' nhuận' if nhuan else ''}",
         "nam_am": ten_nam(nam),
         "le": ngay_le(d),
+        "sap_toi": _sap_toi(d),
     }
+
+
+def _sap_toi(d, days: int = 30, toi_da: int = 3) -> list[dict]:
+    """Ngày lễ + ngày đặc biệt của Tân trong `days` ngày tới, gần nhất trước: [{"ten", "con_ngay", "ngay"}]."""
+    from .am_lich import le_sap_toi
+
+    out = [{"ten": x["ten"], "con_ngay": x["con_ngay"], "ngay": x["ngay"].strftime("%d/%m/%Y")}
+           for x in le_sap_toi(d, days)]
+    if _brain is not None:
+        try:
+            with _brain._lock:
+                rieng = _brain.memory.upcoming_special_days(d, days)
+            out += [{"ten": x["viec"], "con_ngay": x["con_ngay"], "ngay": x["ngay_duong"]}
+                    for x in rieng if x.get("con_ngay", 0) >= 1]
+        except Exception:
+            pass
+    out.sort(key=lambda x: x["con_ngay"])  # sort ổn định: cùng ngày thì ngày lễ trước
+    return out[:toi_da]
 
 
 @app.get("/api/hom-nay")
@@ -714,9 +733,17 @@ def device_todos(request: Request, khong_dau: int = 0):
 
 @app.get("/api/thiet-bi/hom-nay")
 def device_today(request: Request, khong_dau: int = 0):
-    """Cho màn hình đồng hồ: {"thu", "duong", "am", "nam_am", "le": [...]}. ?khong_dau=1 để bỏ dấu."""
+    """Cho màn hình đồng hồ: {"thu", "duong", "am", "nam_am", "le": [...], "sap_toi": [{"ten", "con_ngay", "ngay"}]}.
+    ?khong_dau=1 để bỏ dấu."""
     _check_device(request)
     d = _hom_nay()
     if khong_dau:
-        d = {k: ([bo_dau(x) for x in v] if isinstance(v, list) else bo_dau(v)) for k, v in d.items()}
+        def _bd(v):
+            if isinstance(v, list):
+                return [_bd(x) for x in v]
+            if isinstance(v, dict):
+                return {k: _bd(x) for k, x in v.items()}
+            return bo_dau(v) if isinstance(v, str) else v
+
+        d = _bd(d)
     return d

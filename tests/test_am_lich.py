@@ -81,3 +81,48 @@ def test_api_hom_nay(tmp_path, monkeypatch):
     r = c.get("/api/thiet-bi/hom-nay?khong_dau=1", headers={"X-Device-Key": "k"}).json()
     assert r["nam_am"] == main.bo_dau(ten_nam(nam)) and r["thu"].isascii()
     assert c.get("/api/thiet-bi/hom-nay", headers={"X-Device-Key": "sai"}).status_code == 401
+
+
+def test_le_sap_toi_va_tet():
+    from app.am_lich import le_sap_toi, tet_sap_toi
+
+    xs = le_sap_toi(date(2026, 10, 10), 45)
+    assert [(x["ten"], x["con_ngay"]) for x in xs] == [
+        ("Ngày Phụ nữ Việt Nam 20/10", 10), ("Ngày Nhà giáo Việt Nam 20/11", 41)]
+    tet = [x["ten"] for x in le_sap_toi(date(2027, 1, 20), 45)]
+    assert "mùng 1 Tết Nguyên đán" in tet and "mùng 2 Tết" not in tet
+    assert tet_sap_toi(date(2026, 10, 10)) == {"con_ngay": 119, "ngay": date(2027, 2, 6)}
+    assert tet_sap_toi(date(2026, 2, 17))["con_ngay"] == 0  # đúng mùng 1
+    assert tet_sap_toi(date(2026, 2, 18))["ngay"] == date(2027, 2, 6)
+
+
+def test_prompt_le_sap_toi():
+    from datetime import datetime
+
+    from app.brain import build_system_prompt
+
+    p = build_system_prompt("Bơ", [], now=datetime(2026, 10, 10, 9, 0))
+    assert ("Ngày lễ sắp tới: Ngày Phụ nữ Việt Nam 20/10 (còn 10 ngày); Ngày Nhà giáo Việt Nam 20/11 (còn 41 ngày); "
+            "Tết Nguyên đán 06/02/2027 (còn 119 ngày).") in p
+    p = build_system_prompt("Bơ", [], now=datetime(2026, 10, 19, 9, 0))
+    assert "Phụ nữ Việt Nam 20/10 (còn" not in p  # ngày mai đã có dòng "Ngày mai là"
+    p = build_system_prompt("Bơ", [], now=datetime(2027, 1, 20, 9, 0))
+    assert p.count("Tết Nguyên đán") == 1 and "mùng 1 Tết Nguyên đán 06/02 (còn 17 ngày)" in p
+
+
+def test_api_hom_nay_sap_toi(tmp_path, monkeypatch):
+    from datetime import timedelta
+
+    from app import config, main
+    from tests.test_api import make_client
+
+    c = make_client(tmp_path, [])
+    main._brain.memory.add_special_days([{"ngay": (date.today() + timedelta(days=3)).strftime("%d/%m"),
+                                          "viec": "Sinh nhật mẹ"}])
+    d = c.get("/api/hom-nay").json()
+    assert len(d["sap_toi"]) <= 3 and {"ten": "Sinh nhật mẹ", "con_ngay": 3,
+            "ngay": (date.today() + timedelta(days=3)).strftime("%d/%m/%Y")} in d["sap_toi"]
+    assert [x["con_ngay"] for x in d["sap_toi"]] == sorted(x["con_ngay"] for x in d["sap_toi"])
+    monkeypatch.setattr(config, "DEVICE_KEY", "k")
+    r = c.get("/api/thiet-bi/hom-nay?khong_dau=1", headers={"X-Device-Key": "k"}).json()
+    assert any(x["ten"] == "Sinh nhat me" and x["con_ngay"] == 3 for x in r["sap_toi"])

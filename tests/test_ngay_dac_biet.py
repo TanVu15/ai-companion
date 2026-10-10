@@ -264,7 +264,7 @@ def test_prompt_ngay_sap_toi():
     p = build_system_prompt("P", [], upcoming=up)
     assert "Ngày đặc biệt sắp tới" in p and "Sinh nhật mẹ: còn 3 ngày (13/10/2026)" in p
     assert "Xa" not in p and "- Hôm nay" not in p
-    assert "sắp tới" not in build_system_prompt("P", [], upcoming=[])
+    assert "Ngày đặc biệt sắp tới" not in build_system_prompt("P", [], upcoming=[])
 
 
 def test_chat_gui_kem_ngay_sap_toi(memory):
