@@ -84,6 +84,8 @@ def duong_sang_am(d: date) -> tuple[int, int, int, bool]:
     month_start = _new_moon(k + 1)
     if month_start > day_number:
         month_start = _new_moon(k)
+    if month_start > day_number:  # đoán k cao quá một tuần trăng (vài ngày hiếm, ví dụ 2054-05-07)
+        month_start = _new_moon(k - 1)
     a11 = _month11(d.year)
     b11 = a11
     if a11 >= month_start:

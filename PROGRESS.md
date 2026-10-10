@@ -528,3 +528,9 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 
 **Tân cần thử:** kể Bơ một ngày giỗ hoặc sinh nhật âm của người nhà, rồi mở "Bơ nhớ gì về mình?" xem.
 
+## 2026-10-10 – Giai đoạn 28 xong (báo cáo): âm lịch & ngày lễ
+- Rà soát lần 10 (độc lập): so bộ đổi âm lịch với bản gốc của Hồ Ngọc Đức trên **mọi ngày 1900–2099** → khớp hết. Giỗ/sinh nhật âm được chúc đúng 1 lần mỗi năm âm. Đã sửa 2 điểm nhỏ (2 ngày hiếm năm 2054/2062; Bơ ghi "âm lịch" bằng chữ khác vẫn hiểu).
+- Cả giai đoạn: âm lịch offline, ngày lễ Việt Nam, ngày đặc biệt theo âm lịch. 185 test qua hết.
+
+**Tân cần thử:** hỏi "hôm nay âm lịch ngày mấy?"; kể "giỗ ông 15/7 âm lịch".
+

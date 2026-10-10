@@ -60,3 +60,9 @@ def test_prompt_co_am_lich_va_le():
     assert "Ngày mai là: Ngày Phụ nữ Việt Nam 20/10." in p and "Hôm nay là: " not in p
     p = build_system_prompt("Bơ", [], now=datetime(2026, 10, 12, 9, 0))
     assert "Ngày mai là" not in p and "đừng lặp lại" not in p
+
+
+def test_ngay_hiem_khong_ra_ngay_0():
+    for d in (date(2054, 5, 7), date(2062, 4, 9)):
+        ngay, thang, nam, nhuan = duong_sang_am(d)
+        assert ngay >= 1 and am_sang_duong(ngay, thang, nam, nhuan) == d

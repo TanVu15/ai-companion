@@ -438,7 +438,8 @@ class Memory:
             if not viec or not m:
                 continue
             d, mo = int(m.group(1)), int(m.group(2))
-            am = it.get("am_lich") is True or str(it.get("am_lich")).lower() in ("1", "true")
+            am = it.get("am_lich") is True or str(it.get("am_lich")).strip().lower() in (
+                "1", "true", "yes", "co", "có", "am", "âm", "am lich", "âm lịch")
             if am:
                 if not (1 <= mo <= 12 and 1 <= d <= 30):
                     continue
