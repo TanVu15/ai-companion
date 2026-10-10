@@ -27,7 +27,7 @@ async function greet() {
   try {
     const r = await fetch('/api/chao', { method: 'POST' });
     const data = await r.json();
-    if (r.ok && data.noi) { express(data.cam_xuc, data.hanh_dong); speak(data.noi); await addBo(data.noi, data.id); }
+    if (r.ok && data.noi) { express(data.cam_xuc, data.hanh_dong); speakAuto(data.noi); await addBo(data.noi, data.id); }
   } catch (e) {}
 }
 // ---- Lời nhắc: hỏi máy chủ mỗi 30 giây (chỉ khi web đang mở) ----
@@ -36,7 +36,7 @@ async function pollReminders() {
     const r = await fetch('/api/nhac');
     if (!r.ok) return;
     for (const x of await r.json()) {
-      await addBo(x.noi, x.id); express(x.cam_xuc, x.hanh_dong); speak(x.noi);
+      await addBo(x.noi, x.id); express(x.cam_xuc, x.hanh_dong); speakAuto(x.noi);
       if (x.viec) addSnooze(x.viec);
       if (window.Notification && Notification.permission === 'granted' && document.hidden) new Notification('Bơ', { body: x.noi, icon: '/web/icon-180.png' });
     }
@@ -50,7 +50,7 @@ setInterval(async () => {
   try {
     const r = await fetch('/api/chao?chi_dip=1', { method: 'POST' });
     const data = await r.json();
-    if (r.ok && data.noi) { express(data.cam_xuc, data.hanh_dong); speak(data.noi); await addBo(data.noi, data.id); }
+    if (r.ok && data.noi) { express(data.cam_xuc, data.hanh_dong); speakAuto(data.noi); await addBo(data.noi, data.id); }
   } catch (e) {}
 }, 10 * 60 * 1000);
 // Nút "Nhắc lại sau 10 phút" ngay dưới lời nhắc vừa tới
@@ -77,6 +77,7 @@ function askNotify() {
 async function checkHealth() {
   try {
     const d = await (await fetch('/api/suc-khoe')).json();
+    quietRange = d.gio_yen_lang || '';
     if (d.ok) return true;
     d.kiem_tra.filter(c => c.muc === 'loi').forEach(c => add('error', c.ten + ': ' + c.ghi_chu));
     express('buon'); return false;

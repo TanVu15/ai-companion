@@ -415,3 +415,7 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 ## 2026-10-10 – Giai đoạn 22: gợi ý câu mở đầu
 - Lần đầu mở (chưa có tin nhắn nào): hiện 4 câu gợi ý ("Chào Bơ! Mình tên là ...", "Kể mình nghe chuyện gì vui đi", "8h tối nay nhắc mình gọi mẹ nha"...). Bấm là gửi (câu giới thiệu tên thì để Tân gõ tiếp). Gửi tin đầu tiên là gợi ý biến mất.
 - 127 test qua hết.
+
+## 2026-10-10 – Giai đoạn 22: giờ yên lặng
+- Mặc định 23h–6h (`GIO_YEN_LANG=23-6` trong `.env`, để trống = tắt): lời nhắc, lời chào, chúc mừng mà Bơ **tự** nói thì chỉ hiện chữ, không đọc to (không làm giật mình ban đêm). Câu trả lời khi Tân hỏi vẫn đọc bình thường.
+- 128 test qua hết.

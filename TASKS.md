@@ -114,7 +114,7 @@
 
 ## Giai đoạn 22 – Dễ làm quen (chỉ phần mềm, Claude tự thêm)
 - [x] Gợi ý câu mở đầu khi chưa có tin nhắn nào (bấm là gửi)
-- [ ] Giờ yên lặng: đêm khuya Bơ không tự đọc to lời nhắc/lời chào
+- [x] Giờ yên lặng: đêm khuya Bơ không tự đọc to lời nhắc/lời chào
 - [ ] Cập nhật SU_CO.md (thời tiết, tính cách tự sửa, giọng đọc)
 
 ## Sau này

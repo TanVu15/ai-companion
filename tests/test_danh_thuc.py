@@ -94,3 +94,14 @@ def test_chon_giong_doc():
     """
     out = subprocess.run(["node", "-e", code], capture_output=True, text=True, encoding="utf-8", check=True)
     assert json.loads(out.stdout) == [2, "An", "HoaiMy", "An", "HoaiMy", "An", None, None]
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="cần Node.js")
+def test_gio_yen_lang():
+    code = """
+    const { boGioYenLang: q } = require('./web/doc_to.js');
+    console.log(JSON.stringify([q(23,'23-6'), q(2,'23-6'), q(6,'23-6'), q(12,'23-6'), q(13,'13-14'), q(14,'13-14'),
+      q(2,''), q(2,'abc'), q(5,'5-5'), q(0,'22-24'), q(23,'22-24')]));
+    """
+    out = subprocess.run(["node", "-e", code], capture_output=True, text=True, encoding="utf-8", check=True)
+    assert json.loads(out.stdout) == [True, True, False, False, True, False, False, False, False, False, True]

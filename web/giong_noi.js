@@ -43,6 +43,12 @@ pickBtn.onclick = () => {
 };
 showPick();
 let speakSeq = 0;
+let quietRange = '';  // lấy từ /api/suc-khoe lúc mở trang
+// Bơ tự nói (lời nhắc, lời chào): đêm khuya trong giờ yên lặng thì chỉ hiện chữ, không đọc to
+function speakAuto(text) {
+  if (boGioYenLang(new Date().getHours(), quietRange)) return;
+  speak(text);
+}
 function speak(text) {
   text = boChuDeDoc(text);
   if (!voiceOn || !window.speechSynthesis || !text) return;

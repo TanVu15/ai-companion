@@ -35,6 +35,9 @@ GREET_MISS_DAYS = int(os.getenv("GREET_MISS_DAYS", "2"))
 # Tối Chủ nhật (từ 17h) mở web thì Bơ điểm lại tuần qua (1 câu API mỗi tuần). 0 = tắt.
 WEEKLY_RECAP = os.getenv("WEEKLY_RECAP", "1") == "1"
 
+# Giờ yên lặng "23-6": trong khoảng này Bơ không TỰ đọc to (lời nhắc, lời chào); vẫn hiện chữ. Để trống = tắt.
+GIO_YEN_LANG = os.getenv("GIO_YEN_LANG", "23-6")
+
 # Thành phố để Bơ biết thời tiết (Open-Meteo, miễn phí). Ví dụ "Da Nang". Để trống = tắt.
 THANH_PHO = os.getenv("THANH_PHO", "")
 

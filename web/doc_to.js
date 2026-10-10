@@ -48,4 +48,13 @@ function boGiongKe(voices, tenHienTai) {
   return vi[(i + 1) % vi.length];
 }
 
-if (typeof module !== 'undefined') module.exports = { boChuDeDoc, boTachTin, boGiongViet, boChonGiong, boGiongKe };
+// Giờ yên lặng dạng "23-6" (qua nửa đêm) hoặc "13-14". Sai định dạng / trống → không yên lặng.
+function boGioYenLang(gio, khoang) {
+  const m = /^\s*(\d{1,2})\s*-\s*(\d{1,2})\s*$/.exec(khoang || '');
+  if (!m) return false;
+  const a = +m[1], b = +m[2];
+  if (a > 23 || b > 24 || a === b) return false;
+  return a < b ? gio >= a && gio < b : gio >= a || gio < b;
+}
+
+if (typeof module !== 'undefined') module.exports = { boChuDeDoc, boTachTin, boGiongViet, boChonGiong, boGiongKe, boGioYenLang };

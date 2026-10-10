@@ -263,7 +263,8 @@ def health():
     add("Ngân sách tháng", config.MONTHLY_USD_LIMIT > 0,
         f"{config.MONTHLY_USD_LIMIT:g} đô/tháng" if config.MONTHLY_USD_LIMIT > 0 else "Không giới hạn (đặt MONTHLY_USD_LIMIT)",
         "canh_bao")
-    return {"ok": all(c["muc"] != "loi" for c in checks), "model": config.MODEL, "kiem_tra": checks}
+    return {"ok": all(c["muc"] != "loi" for c in checks), "model": config.MODEL, "kiem_tra": checks,
+            "gio_yen_lang": config.GIO_YEN_LANG}
 
 
 @app.get("/api/nhac")
