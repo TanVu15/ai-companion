@@ -7,7 +7,7 @@ from tests.test_brain import FakeClient
 
 def test_file_tinh_huong_hop_le():
     ds = json.loads(t.TINH_HUONG_PATH.read_text(encoding="utf-8"))
-    assert len(ds) == 12
+    assert len(ds) == 15
     for th in ds:
         assert th["ten"] and th["tin_nhan"]
 
@@ -57,3 +57,16 @@ def test_phai_ghi_hoi_tham():
     th = {"ten": "Sắp phỏng vấn", "tin_nhan": "chiều nay phỏng vấn", "phai_ghi_hoi_tham": True}
     [kq] = t.chay(FakeClient([json.dumps({"noi": "Cố lên!"})]), [th])
     assert ("Ghi lại để hỏi thăm sau", False) in kq.kiem_tra
+
+
+def test_ngay_dac_biet_va_nhac_lap():
+    tot = json.dumps({"noi": "Chúc mừng sinh nhật Tân!", "cam_xuc": "vui",
+                      "ngay_dac_biet": [{"ngay": "5/3", "viec": "Sinh nhật"}],
+                      "nhac": [{"luc": "2030-01-01 07:00", "viec": "Uống nước", "lap": "ngay"}]})
+    th = {"ten": "x", "tin_nhan": "hi", "hom_nay_dac_biet": ["Sinh nhật Tân"], "phai_co_mot_trong": ["sinh nhật"],
+          "phai_ghi_ngay_dac_biet": True, "phai_nhac_lap": "ngay"}
+    client = FakeClient([tot, json.dumps({"noi": "Ok"})])
+    [kq] = t.chay(client, [th])
+    assert kq.diem == 1.0 and "Sinh nhật Tân" in client.calls[0]["system"]
+    [kq] = t.chay(client, [{**th, "hom_nay_dac_biet": []}])
+    assert ("Ghi ngày đặc biệt", False) in kq.kiem_tra and ("Nhắc lặp lại (ngay)", False) in kq.kiem_tra

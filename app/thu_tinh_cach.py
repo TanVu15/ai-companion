@@ -84,6 +84,11 @@ def cham(th: dict, chu_goc: str, reply) -> KetQua:
         kq.kiem_tra.append(("Ghi lại để hỏi thăm sau", bool(reply.hoi_tham)))
     if th.get("phai_da_hoi"):
         kq.kiem_tra.append(("Đánh dấu đã hỏi thăm", bool(reply.da_hoi)))
+    if th.get("phai_ghi_ngay_dac_biet"):
+        kq.kiem_tra.append(("Ghi ngày đặc biệt", any(str(d.get("ngay", "")).strip() for d in reply.ngay_dac_biet)))
+    if th.get("phai_nhac_lap"):
+        kq.kiem_tra.append((f"Nhắc lặp lại ({th['phai_nhac_lap']})",
+                            any(str(x.get("lap", "")) == th["phai_nhac_lap"] for x in reply.nhac)))
     return kq
 
 
@@ -101,6 +106,11 @@ def chay(client, tinh_huong: list[dict] | None = None) -> list[KetQua]:
                     "UPDATE followups SET created_at = datetime('now', 'localtime', '-1 day')"
                 )
                 memory.conn.commit()
+            if th.get("hom_nay_dac_biet"):  # giả vờ hôm nay là ngày đặc biệt này
+                from datetime import date
+
+                today = date.today().strftime("%d/%m")
+                memory.add_special_days([{"ngay": today, "viec": v} for v in th["hom_nay_dac_biet"]])
             ghi = _GhiLaiClient(client)
             try:
                 reply = Brain(memory, client=ghi).chat(th["tin_nhan"])

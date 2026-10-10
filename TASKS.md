@@ -82,6 +82,12 @@
 - [x] Ghim tin nhắn đáng nhớ, xem lại danh sách ghim
 - [x] Tổng kết tuần: tối Chủ nhật mở web, Bơ điểm lại tuần qua (1 câu API/tuần)
 
+## Giai đoạn 16 – Chăm chút (chỉ phần mềm, Claude tự thêm)
+- [x] Bộ chấm điểm tính cách: thêm tình huống sinh nhật, nhắc mỗi ngày
+- [ ] "Bơ và bạn": đã quen bao nhiêu ngày, bao nhiêu tin nhắn (trong nút "?")
+- [ ] Cập nhật README cho các tính năng mới
+- [ ] Rà soát code lần 4 (ghim, tổng kết tuần), sửa lỗi tìm được
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo

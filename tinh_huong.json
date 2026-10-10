@@ -147,5 +147,40 @@
       "tập"
     ],
     "phai_da_hoi": true
+  },
+  {
+    "ten": "Kể ngày sinh nhật",
+    "tin_nhan": "À sinh nhật mình là 5/3 nha, nhớ đó",
+    "cam_xuc_hop_le": [
+      "vui",
+      "hao_hung",
+      "thuong"
+    ],
+    "phai_ghi_ngay_dac_biet": true
+  },
+  {
+    "ten": "Đúng ngày sinh nhật",
+    "da_biet": [
+      "Tên là Tân"
+    ],
+    "hom_nay_dac_biet": [
+      "Sinh nhật Tân"
+    ],
+    "tin_nhan": "Hello Bơ",
+    "cam_xuc_hop_le": [
+      "vui",
+      "hao_hung"
+    ],
+    "phai_co_mot_trong": [
+      "chúc mừng",
+      "sinh nhật",
+      "happy birthday",
+      "tuổi mới"
+    ]
+  },
+  {
+    "ten": "Nhờ nhắc mỗi ngày",
+    "tin_nhan": "Mỗi ngày 7h sáng nhắc mình uống nước nha",
+    "phai_nhac_lap": "ngay"
   }
 ]

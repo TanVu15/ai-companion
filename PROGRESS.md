@@ -310,3 +310,8 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - 107 test qua hết.
 
 **Tân cần thử:** tối Chủ nhật này mở web xem Bơ điểm lại tuần; chạm vào một tin để ghim.
+
+## 2026-10-10 – Giai đoạn 16: thêm tình huống chấm điểm
+- `tinh_huong.json` có 15 tình huống (thêm: kể ngày sinh nhật → phải ghi ngày; đúng ngày sinh nhật → phải chúc; "mỗi ngày 7h nhắc uống nước" → phải ghi nhắc lặp `ngay`).
+- Chạy `python -m app.thu_tinh_cach` (tốn ~15 câu API) để xem Bơ thật có làm đúng không.
+- 108 test qua hết.
