@@ -128,6 +128,7 @@ def usage():
         u = mem.usage_since(since.isoformat())
         out[name] = {**u, "usd": round(cost_usd(u), 4)}
     out["gioi_han_ngay"] = config.DAILY_LIMIT
+    out["ngan_sach_thang"] = config.MONTHLY_USD_LIMIT
     out["da_tra_loi_hom_nay"] = mem.replies_today()
     return out
 

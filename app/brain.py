@@ -215,9 +215,22 @@ class Brain:
         with self._lock:
             return self._greet()
 
+    def month_cost(self) -> float:
+        from datetime import date
+
+        return cost_usd(self.memory.usage_since(date.today().replace(day=1).isoformat()))
+
+    def over_budget(self) -> bool:
+        return config.MONTHLY_USD_LIMIT > 0 and self.month_cost() >= config.MONTHLY_USD_LIMIT
+
     def _chat(self, user_text: str) -> Reply:
         if self.memory.replies_today() >= config.DAILY_LIMIT:
             return Reply(noi="Hôm nay mình nói nhiều quá rồi, mai nói tiếp nha!", cam_xuc="thuong")
+        if self.over_budget():
+            return Reply(
+                noi="Tháng này Bơ tiêu hết ngân sách rồi, tháng sau nói tiếp nha! (Muốn tăng thì sửa MONTHLY_USD_LIMIT trong .env)",
+                cam_xuc="thuong",
+            )
         msg_id = self.memory.add_message("user", user_text)
         history = clean_history(self.memory.recent_messages(config.HISTORY_LIMIT))
         try:
@@ -230,7 +243,7 @@ class Brain:
     def _greet(self) -> Reply | None:
         """Bơ chủ động mở lời khi người dùng quay lại sau một thời gian và có chuyện nên hỏi thăm.
         Không có gì để hỏi hoặc vừa mới nói chuyện xong thì trả về None (không tốn câu API nào)."""
-        if self.memory.replies_today() >= config.DAILY_LIMIT:
+        if self.memory.replies_today() >= config.DAILY_LIMIT or self.over_budget():
             return None
         last = self.memory.last_message_time()
         if last and (datetime.now() - last).total_seconds() < config.GREET_AFTER_HOURS * 3600:

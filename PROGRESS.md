@@ -7,6 +7,7 @@
 
 ## Cần Tân quyết định
 - **Dùng Bơ ngoài nhà bằng cách nào?** Tailscale (riêng tư, cần tạo tài khoản miễn phí, cài app trên iPhone) hay Cloudflare Tunnel (link công khai, không cần cài trên điện thoại). Hướng dẫn cả hai trong `DUA_LEN_MANG.md`. Claude khuyên Tailscale. Cách nào cũng phải đặt `APP_PASSWORD`.
+- **Ngân sách tháng:** `.env.example` đặt sẵn `MONTHLY_USD_LIMIT=5` (5 đô/tháng). File `.env` cũ của Tân chưa có dòng này nên đang không giới hạn. Tân tự chọn mức và thêm vào `.env`.
 - **Phần cứng:** mua linh kiện nào (ESP32 loại nào, màn hình, loa, servo) — cần tiền, Claude không tự làm.
 - **Nghe/nói trên thiết bị thật:** ESP32 không tự nhận dạng tiếng Việt được. Cần chọn: (a) điện thoại/máy tính làm "tai" rồi gửi chữ cho thiết bị, hoặc (b) dịch vụ nhận dạng/đọc giọng trả phí. Cần Tân chọn.
 
@@ -133,3 +134,10 @@
 ## 2026-10-10 – Giai đoạn 8: gửi cùng lúc
 - Hai tin tới cùng lúc (ví dụ điện thoại và máy tính) thì Bơ trả lời lần lượt, lịch sử không bị xen lẫn.
 - 58 test qua hết.
+
+## 2026-10-10 – Giai đoạn 8: ngân sách tháng
+- `MONTHLY_USD_LIMIT` trong .env: tiêu (ước tính) tới mức này thì Bơ báo "hết ngân sách" và nghỉ tới tháng sau, không gọi API nữa. 0 = không giới hạn.
+- Nút "Chi phí" hiện thêm ngân sách tháng và đã dùng bao nhiêu %.
+- 59 test qua hết.
+
+**Tân cần thử:** thêm dòng `MONTHLY_USD_LIMIT=5` (hoặc mức Tân muốn) vào `.env`.

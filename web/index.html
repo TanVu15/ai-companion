@@ -337,6 +337,9 @@ document.getElementById('openCost').onclick = async () => {
       ['Hôm nay', d.hom_nay.calls + ' câu gọi API, ' + money(d.hom_nay.usd)],
       ['Tháng này', d.thang_nay.calls + ' câu gọi API, ' + money(d.thang_nay.usd)],
       ['Bơ đã trả lời hôm nay', d.da_tra_loi_hom_nay + ' / ' + d.gioi_han_ngay + ' câu (giới hạn ngày)'],
+      ['Ngân sách tháng', d.ngan_sach_thang > 0
+        ? money(d.ngan_sach_thang) + ' — đã dùng ' + Math.min(100, Math.round(d.thang_nay.usd / d.ngan_sach_thang * 100)) + '%'
+        : 'không giới hạn (đặt MONTHLY_USD_LIMIT trong .env)'],
     ];
     costList.innerHTML = '';
     rows.forEach(([k, v]) => { const li = document.createElement('li'); li.textContent = k + ': ' + v; costList.appendChild(li); });

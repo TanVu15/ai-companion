@@ -264,3 +264,18 @@ def test_two_messages_at_once_do_not_interleave(memory):
     [t.join() for t in ts]
     roles = [m["role"] for m in memory.recent_messages(10)]
     assert roles == ["user", "assistant", "user", "assistant"]  # không bị user, user, assistant, assistant
+
+
+def test_monthly_budget_stops_brain(memory, monkeypatch):
+    monkeypatch.setattr(config, "MONTHLY_USD_LIMIT", 0.01)
+    monkeypatch.setattr(config, "PRICE_INPUT_PER_MTOK", 1.0)
+    monkeypatch.setattr(config, "PRICE_OUTPUT_PER_MTOK", 5.0)
+    memory.add_usage("chat", 5000, 1000)  # = 0.005 + 0.005 = 0.01 đô
+    client = FakeClient([])
+    brain = Brain(memory, client=client)
+    r = brain.chat("hi")
+    assert "ngân sách" in r.noi and client.calls == []
+    memory.add_followups(["Đi thi"])
+    assert brain.greet() is None
+    monkeypatch.setattr(config, "MONTHLY_USD_LIMIT", 0)  # 0 = không giới hạn
+    assert not brain.over_budget()

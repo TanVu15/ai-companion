@@ -42,5 +42,8 @@ DEVICE_KEY = os.getenv("DEVICE_KEY", "")
 PRICE_INPUT_PER_MTOK = float(os.getenv("PRICE_INPUT_PER_MTOK", "1"))
 PRICE_OUTPUT_PER_MTOK = float(os.getenv("PRICE_OUTPUT_PER_MTOK", "5"))
 
+# Ngân sách mỗi tháng (đô la Mỹ, ước tính theo giá ở trên). Tiêu tới mức này thì Bơ nghỉ tới tháng sau. 0 = không giới hạn.
+MONTHLY_USD_LIMIT = float(os.getenv("MONTHLY_USD_LIMIT", "0"))
+
 EMOTIONS = ["vui", "hao_hung", "binh_thuong", "suy_nghi", "ngac_nhien", "buon", "thuong"]
 ACTIONS = ["khong", "gat_dau", "lac_dau", "nghieng_dau", "nhay", "vay_tay"]
