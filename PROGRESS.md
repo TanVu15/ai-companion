@@ -234,3 +234,10 @@ Gặp lỗi: xem `SU_CO.md`, gửi mấy dòng cuối `data/loi.log` vào `FEEDB
 - Mỗi lần chạy, `run.bat` kiểm tra và cài thư viện còn thiếu (nhanh nếu đã đủ). Sau `git pull` không cần xóa `.venv` nữa.
 - `run.bat` được lưu với kiểu xuống dòng của Windows (file `.gitattributes`).
 - Chưa thử trên Windows thật (máy của Claude chạy Linux) → **Tân cần thử:** `git pull` rồi nhấp đúp `run.bat`.
+
+## 2026-10-10 – Giai đoạn 12 xong (báo cáo)
+- Chạm vào mặt Bơ lúc đang đọc to → Bơ im ngay (rảnh tay thì nghe tiếp).
+- Cả giai đoạn: bong bóng + ba chấm đang gõ, chào khi lâu không gặp, chạm để im.
+- 84 test qua hết, test trên GitHub đều xanh.
+
+**Tiếp theo (lần chạy sau):** các việc phần mềm lớn đã xong. Lần sau ưu tiên góp ý trong FEEDBACK.md; nếu chưa có góp ý thì tiếp tục rà soát/đánh bóng nhỏ, không thêm tính năng tốn tiền.

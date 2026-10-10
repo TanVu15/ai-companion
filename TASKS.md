@@ -65,6 +65,7 @@
 ## Giai đoạn 12 – Trò chuyện tự nhiên (chỉ phần mềm, Claude tự thêm)
 - [x] Câu trả lời dài tách thành 2–3 bong bóng, có "Bơ đang gõ..." ở giữa
 - [x] Lâu không gặp (2 ngày) thì Bơ chủ động chào dù không có chuyện để hỏi
+- [x] Chạm vào mặt Bơ để Bơ ngừng đọc to
 
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định

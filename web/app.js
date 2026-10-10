@@ -361,3 +361,10 @@ function wake() {
 }
 ['pointerdown', 'keydown', 'focusin'].forEach(ev => document.addEventListener(ev, wake, { passive: true }));
 scheduleSleep();
+
+// Chạm vào mặt Bơ khi đang đọc to → Bơ im ngay
+face.addEventListener('click', () => {
+  if (!speaking || !window.speechSynthesis) return;
+  speakSeq++; speechSynthesis.cancel();
+  speaking = false; face.classList.remove('talking'); resumeListening();
+});
