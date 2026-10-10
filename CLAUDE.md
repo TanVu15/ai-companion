@@ -12,13 +12,15 @@ Chủ dự án: Tân (TanVu15). Giao tiếp tiếng Việt, đơn giản, giải
 - Giữ chi phí thấp: model Haiku, giới hạn lịch sử và số câu trả lời mỗi ngày.
 
 ## Chế độ tự chạy (Tân chọn ngày 2026-10-11: "làm liền, báo sau")
-Một tác vụ hẹn giờ chạy mỗi giờ. Mỗi lần chạy là một phiên mới, không nhớ phiên trước,
+Một tác vụ hẹn giờ chạy mỗi giờ, mỗi lần làm khoảng 50 phút. Mỗi lần chạy là một phiên mới, không nhớ phiên trước,
 nên mọi thứ cần biết phải nằm trong repo.
 
 0. Nếu repo có file `STOP` ở thư mục gốc → không làm gì, kết thúc ngay.
 1. `git pull`. Đọc PROGRESS.md, lấy việc chưa xong đầu tiên trong TASKS.md
    (bỏ qua dòng "Chờ Tân nghiệm thu" — đó chỉ là ghi chú để Tân duyệt sau).
-2. Làm 1–2 việc, chạy `python -m pytest -q` cho đến khi qua hết. Không commit code test đỏ.
+2. Làm LIÊN TỤC hết việc này sang việc kia (Tân yêu cầu ngày 2026-10-11: chạy đến khi hết hạn mức,
+   reset thì chạy tiếp). Mỗi việc: chạy `python -m pytest -q` cho đến khi qua hết, không commit code test đỏ.
+   Dừng khi đã làm khoảng 50 phút trong một lần chạy (lần chạy giờ sau sẽ tiếp tục).
 3. Commit (tiếng Việt, ngắn gọn), cập nhật TASKS.md và PROGRESS.md, `git push`.
 4. Hết một giai đoạn: viết báo cáo ngắn trong PROGRESS.md (làm gì, Tân cần thử gì),
    rồi làm tiếp giai đoạn sau. Không dừng chờ duyệt.
