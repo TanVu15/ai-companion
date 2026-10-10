@@ -13,7 +13,8 @@ DEMO = os.getenv("DEMO", "0") == "1"
 DB_PATH = Path(os.getenv("DB_PATH", ROOT / "data" / "companion.db"))
 PERSONA_PATH = ROOT / "persona.md"
 # Tính cách Tân tự sửa trên web (nằm trong data/ nên git pull không đè, không bị đưa lên GitHub)
-PERSONA_CUSTOM_PATH = DB_PATH.parent / "persona.md"
+# (tính theo thư mục dự án, và tên khác persona.md, để không bao giờ đè lên file gốc)
+PERSONA_CUSTOM_PATH = (ROOT / DB_PATH).resolve().parent / "persona_tu_sua.md"
 
 # Số tin nhắn gần nhất gửi kèm mỗi lần hỏi bộ não (giữ chi phí thấp)
 HISTORY_LIMIT = int(os.getenv("HISTORY_LIMIT", "20"))

@@ -53,7 +53,7 @@ Xem [THIET_BI.md](THIET_BI.md): đặt `DEVICE_KEY` trong `.env`, thiết bị g
 
 ## Đổi tính cách
 
-Bấm nút **"Tính cách"** trên web, sửa rồi bấm "Lưu" — áp dụng từ tin nhắn sau. Bản bạn sửa lưu riêng ở `data/persona.md` (git pull không đè, bản trước giữ ở `data/persona.md.truoc`). Bấm "Về mặc định" để dùng lại `persona.md` gốc của dự án.
+Bấm nút **"Tính cách"** trên web, sửa rồi bấm "Lưu" — áp dụng từ tin nhắn sau. Bản bạn sửa lưu riêng ở `data/persona_tu_sua.md` (git pull không đè; 10 bản trước giữ ở `data/persona_tu_sua.<ngày giờ>.md`). Bấm "Về mặc định" để dùng lại `persona.md` gốc của dự án.
 
 ## Thử tính cách (chấm điểm)
 

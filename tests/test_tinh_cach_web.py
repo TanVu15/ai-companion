@@ -6,7 +6,7 @@ from tests.test_api import make_client
 
 
 def test_sua_va_ve_mac_dinh(tmp_path, monkeypatch):
-    custom = tmp_path / "data" / "persona.md"
+    custom = tmp_path / "data" / "persona_tu_sua.md"
     monkeypatch.setattr(config, "PERSONA_CUSTOM_PATH", custom)
     c = make_client(tmp_path, [json.dumps({"noi": "Ok"})])
     goc = config.PERSONA_PATH.read_text(encoding="utf-8")
@@ -19,9 +19,12 @@ def test_sua_va_ve_mac_dinh(tmp_path, monkeypatch):
     c.post("/api/chat", json={"text": "hi"})
     assert main._brain.client.calls[0]["system"].startswith(moi)  # dùng ngay bản mới
     c.put("/api/tinh-cach", json={"noi_dung": moi + " Thêm."})
-    assert (custom.parent / "persona.md.truoc").read_text(encoding="utf-8") == moi + "\n"  # giữ bản trước
+    [bak] = custom.parent.glob("persona_tu_sua.*.md")
+    assert bak.read_text(encoding="utf-8") == moi + "\n"  # giữ bản trước
+    assert not list(custom.parent.glob("*.tmp"))
     assert c.delete("/api/tinh-cach").status_code == 200
     assert c.get("/api/tinh-cach").json()["tu_sua"] is False
+    assert len(list(custom.parent.glob("persona_tu_sua.*.md"))) == 2  # bản trước khi về mặc định cũng giữ
     assert config.PERSONA_PATH.read_text(encoding="utf-8") == goc  # file gốc không bị đụng
 
 
@@ -40,3 +43,15 @@ def test_ban_tu_sua_trong_thi_dung_goc(tmp_path, monkeypatch):
     from app.brain import current_persona
 
     assert current_persona()[1] is False
+
+
+def test_khong_bao_gio_dung_file_goc(tmp_path, monkeypatch):
+    c = make_client(tmp_path, [])
+    monkeypatch.setattr(config, "PERSONA_CUSTOM_PATH", config.PERSONA_PATH)
+    assert c.delete("/api/tinh-cach").status_code == 400
+    assert config.PERSONA_PATH.exists()
+
+
+def test_duong_dan_mac_dinh_khac_file_goc():
+    assert config.PERSONA_CUSTOM_PATH.name == "persona_tu_sua.md"
+    assert config.PERSONA_CUSTOM_PATH.is_absolute()

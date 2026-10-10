@@ -357,3 +357,14 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 ## 2026-10-10 – Giai đoạn 18: tình trạng trong nút "?"
 - Nút "?" có thêm mục **Tình trạng**: API key, tính cách đang dùng (mặc định hay bản tự sửa), dữ liệu, mật khẩu, ngân sách, thời tiết (lấy được chưa, sai tên thành phố thì báo). Kiểm tra không gọi mạng, không tốn tiền.
 - 120 test qua hết.
+
+## 2026-10-10 – Giai đoạn 18 xong (báo cáo): rà soát lần 5
+- Thời tiết, nút "?" có Tình trạng, và sửa lỗi sau rà soát độc lập:
+  - **Quan trọng:** bản tính cách tự sửa đổi tên thành `data/persona_tu_sua.md` và luôn tính theo thư mục dự án → không bao giờ đè/xóa nhầm `persona.md` gốc (trước đây có thể xảy ra nếu đặt `DB_PATH` lạ).
+  - Lưu tính cách "một phát" (không có lúc file trống), giữ 10 bản trước có ngày giờ thay vì 1 bản `.truoc`.
+  - Lấy thời tiết ngoài khóa: mạng chậm không làm kẹt lời nhắc hay máy khác.
+  - Hỏi dịp đặc biệt 10 phút/lần: bỏ qua khi tab đang ẩn hoặc Bơ đang đọc to (không chúc vào phòng trống, không cắt lời).
+  - Dữ liệu thời tiết lạ không làm mất cả bản tin.
+- 124 test qua hết.
+
+**Tân cần thử:** nếu đã lỡ sửa tính cách trên web (bản cũ ở `data/persona.md`), mở nút "Tính cách" dán lại rồi Lưu.

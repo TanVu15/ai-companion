@@ -1,6 +1,7 @@
 """Máy chủ web: phục vụ trang chat và nhận tin nhắn gửi tới bộ não."""
 import base64
 import json
+import os
 import secrets
 
 from fastapi import Body, FastAPI, HTTPException, Request
@@ -90,7 +91,8 @@ def get_brain() -> Brain:
     if _brain is None:
         bat_ghi_file(config.DB_PATH.parent / "loi.log")
         if config.DEMO:
-            _brain = Brain(Memory(config.DB_PATH.with_name("demo.db")), client=_DemoClient(), background=True)
+            _brain = Brain(Memory(config.DB_PATH.with_name("demo.db")), client=_DemoClient(), background=True,
+                           weather=_weather())
             return _brain
         if not config.ANTHROPIC_API_KEY:
             raise HTTPException(500, "Chưa có ANTHROPIC_API_KEY trong file .env")
@@ -217,7 +219,7 @@ def health():
     except OSError:
         persona_ok, custom = False, False
     add("Tính cách", persona_ok,
-        ("Đang dùng bản tự sửa trên web (data/persona.md)" if custom else "Đang dùng persona.md mặc định")
+        (f"Đang dùng bản tự sửa trên web ({config.PERSONA_CUSTOM_PATH.name})" if custom else "Đang dùng persona.md mặc định")
         if persona_ok else "Thiếu hoặc trống file persona.md")
     if config.THANH_PHO:
         w = _brain.weather if _brain is not None else None
@@ -346,19 +348,45 @@ def persona_put(body: PersonaIn):
     if len(text) > 20000:
         raise HTTPException(400, "Tính cách dài quá (tối đa 20.000 ký tự) — dài thì tốn tiền API mỗi câu")
     path = config.PERSONA_CUSTOM_PATH
-    path.parent.mkdir(parents=True, exist_ok=True)
-    if path.exists():  # giữ bản trước, lỡ sửa hỏng còn lấy lại
-        path.replace(path.with_suffix(".md.truoc"))
-    path.write_text(text + "\n", encoding="utf-8")
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        _backup_persona()
+        tmp = path.with_suffix(".tmp")
+        tmp.write_text(text + "\n", encoding="utf-8")
+        os.replace(tmp, path)  # thay một phát: không có lúc nào file trống/thiếu
+    except OSError as e:
+        log.warning("Lưu tính cách lỗi: %s", e)
+        raise HTTPException(500, "Không lưu được file tính cách (thử lại sau giây lát)")
     return {"ok": True}
+
+
+def _backup_persona() -> None:
+    """Chép bản tự sửa hiện tại ra file có giờ (persona_tu_sua.20261010-200501.md), giữ 10 bản gần nhất."""
+    import shutil
+    from datetime import datetime
+
+    path = config.PERSONA_CUSTOM_PATH
+    if not path.exists() or path.resolve() == config.PERSONA_PATH.resolve():
+        return
+    stamp = datetime.now().strftime("%Y%m%d-%H%M%S-%f")
+    shutil.copy2(path, path.with_name(f"{path.stem}.{stamp}.md"))
+    olds = sorted(path.parent.glob(f"{path.stem}.*.md"))
+    for old in olds[:-10]:
+        old.unlink(missing_ok=True)
 
 
 @app.delete("/api/tinh-cach")
 def persona_reset():
     """Về tính cách mặc định (persona.md trong dự án)."""
     path = config.PERSONA_CUSTOM_PATH
-    if path.exists():
-        path.replace(path.with_suffix(".md.truoc"))
+    if path.resolve() == config.PERSONA_PATH.resolve():
+        raise HTTPException(400, "Không xóa file tính cách gốc")
+    try:
+        _backup_persona()
+        path.unlink(missing_ok=True)
+    except OSError as e:
+        log.warning("Về tính cách mặc định lỗi: %s", e)
+        raise HTTPException(500, "Không xóa được bản tự sửa (thử lại sau giây lát)")
     return {"ok": True}
 
 

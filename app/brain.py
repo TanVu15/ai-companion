@@ -263,6 +263,7 @@ class Brain:
     def __init__(self, memory, client=None, sleep=time.sleep, background: bool = False, weather=None):
         self.memory = memory
         self.weather = weather  # đối tượng có .hien_tai() → chữ hoặc None (xem thoi_tiet.py)
+        self._weather_text = None
         if client is None:
             import anthropic
 
@@ -304,12 +305,23 @@ class Brain:
     def persona(self) -> str:
         return current_persona()[0]
 
+    def _refresh_weather(self) -> None:
+        """Lấy thời tiết TRƯỚC khi giữ khóa: mạng chậm thì chỉ người hỏi chờ, lời nhắc/máy khác không bị kẹt."""
+        if self.weather is None:
+            return
+        try:
+            self._weather_text = self.weather.hien_tai()
+        except Exception:
+            self._weather_text = None
+
     def chat(self, user_text: str) -> Reply:
+        self._refresh_weather()
         with self._lock:
             return self._chat(user_text)
 
     def greet(self, only_occasion: bool = False) -> Reply | None:
         """only_occasion=True: chỉ mở lời khi có dịp (ngày đặc biệt, tổng kết tuần) — web hỏi định kỳ lúc đang mở."""
+        self._refresh_weather()
         with self._lock:
             return self._greet(only_occasion)
 
@@ -414,12 +426,7 @@ class Brain:
 
         today = date.today()  # tính một lần: trả lời xong qua nửa đêm thì không đánh dấu nhầm ngày mới
         special = self.memory.special_days_today(today)
-        weather = None
-        if self.weather is not None:
-            try:
-                weather = self.weather.hien_tai()
-            except Exception:
-                weather = None
+        weather = self._weather_text
         system = build_system_prompt(
             self.persona(), self.memory.all_facts(), summary, followups, special=special, weather=weather
         )

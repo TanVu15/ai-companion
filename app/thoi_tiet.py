@@ -1,6 +1,7 @@
 """Thời tiết miễn phí từ Open-Meteo (không cần tài khoản, không cần key).
 Đặt THANH_PHO trong .env (ví dụ "Da Nang") để Bơ biết trời nắng hay mưa. Để trống = tắt.
 Lỗi mạng thì trả None — Bơ vẫn nói chuyện bình thường, chỉ không biết thời tiết."""
+import threading
 import time
 
 from .nhat_ky import log
@@ -32,7 +33,10 @@ def _ngay(daily: dict, i: int) -> str:
     except (KeyError, IndexError, TypeError, ValueError):
         return ""
     out = f"{lo}–{hi}°C"
-    desc = mo_ta((daily.get("weather_code") or [None] * (i + 1))[i])
+    try:
+        desc = mo_ta(daily["weather_code"][i])
+    except (KeyError, IndexError, TypeError):
+        desc = ""
     if desc:
         out += f", {desc}"
     try:
@@ -69,6 +73,7 @@ class ThoiTiet:
         self._clock = clock
         self._toa_do = None  # (tên, vĩ độ, kinh độ)
         self._cache: tuple[float, str | None] | None = None
+        self._lock = threading.Lock()  # hai tin cùng lúc thì chỉ hỏi mạng một lần
         self.loi = ""  # lỗi lần lấy gần nhất (để trang kiểm tra sức khỏe báo)
 
     def da_lay(self) -> str | None:
@@ -93,6 +98,10 @@ class ThoiTiet:
     def hien_tai(self) -> str | None:
         if not self.thanh_pho:
             return None
+        with self._lock:
+            return self._hien_tai()
+
+    def _hien_tai(self) -> str | None:
         now = self._clock()
         if self._cache and now < self._cache[0]:
             return self._cache[1]

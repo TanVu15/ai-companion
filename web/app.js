@@ -294,7 +294,7 @@ setInterval(pollReminders, 30000);
 // Trang để mở lâu (qua nửa đêm, qua 17h Chủ nhật): mỗi 10 phút hỏi xem có dịp gì để Bơ mở lời không
 // (chỉ sinh nhật/kỷ niệm, tổng kết tuần — không có dịp thì không tốn câu API nào)
 setInterval(async () => {
-  if (send.disabled) return;
+  if (send.disabled || speaking || document.hidden) return;  // tab ẩn thì để dành, mở lại mới chúc
   try {
     const r = await fetch('/api/chao?chi_dip=1', { method: 'POST' });
     const data = await r.json();

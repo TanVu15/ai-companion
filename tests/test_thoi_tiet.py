@@ -90,3 +90,21 @@ def test_suc_khoe_bao_thoi_tiet(tmp_path, monkeypatch):
     main._brain.weather = w2
     w2.hien_tai()
     assert row()["ghi_chu"].startswith("Thời tiết ở Đà Nẵng")
+
+
+def test_weather_code_ngan_hon_khong_sap():
+    d = {"daily": {"temperature_2m_min": [20, 21], "temperature_2m_max": [30, 31], "weather_code": [1]}}
+    assert tom_tat("X", d) == "Thời tiết ở X: hôm nay 20–30°C, ít mây; ngày mai 21–31°C."
+
+
+def test_lay_thoi_tiet_ngoai_khoa(tmp_path):
+    seen = []
+
+    class W:
+        def hien_tai(self):
+            seen.append(brain._lock._is_owned())
+            return "Thời tiết ở X: nắng."
+
+    brain = Brain(Memory(tmp_path / "k.db"), client=FakeClient([json.dumps({"noi": "Ok"})]), weather=W())
+    brain.chat("hi")
+    assert seen == [False]
