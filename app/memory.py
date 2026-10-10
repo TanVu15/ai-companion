@@ -17,6 +17,12 @@ class Memory:
                 content TEXT NOT NULL,
                 created_at TEXT DEFAULT (datetime('now', 'localtime'))
             );
+            CREATE TABLE IF NOT EXISTS summaries (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                content TEXT NOT NULL,
+                upto_id INTEGER NOT NULL,    -- đã tóm tắt hết tin nhắn có id <= số này
+                created_at TEXT DEFAULT (datetime('now', 'localtime'))
+            );
             CREATE TABLE IF NOT EXISTS facts (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 content TEXT NOT NULL UNIQUE,
@@ -44,6 +50,26 @@ class Memory:
             (today + "%",),
         ).fetchone()
         return n
+
+    # --- Tóm tắt chuyện cũ ---
+    def latest_summary(self) -> tuple[str, int]:
+        row = self.conn.execute("SELECT content, upto_id FROM summaries ORDER BY id DESC LIMIT 1").fetchone()
+        return (row[0], row[1]) if row else ("", 0)
+
+    def add_summary(self, content: str, upto_id: int) -> None:
+        self.conn.execute("INSERT INTO summaries (content, upto_id) VALUES (?, ?)", (content, upto_id))
+        self.conn.commit()
+
+    def messages_to_summarize(self, keep_recent: int) -> list[dict]:
+        """Tin nhắn cũ chưa được tóm tắt, không tính `keep_recent` tin gần nhất (vẫn gửi nguyên văn)."""
+        _, upto = self.latest_summary()
+        rows = self.conn.execute(
+            """SELECT id, role, content FROM messages
+               WHERE id > ? AND id NOT IN (SELECT id FROM messages ORDER BY id DESC LIMIT ?)
+               ORDER BY id""",
+            (upto, keep_recent),
+        ).fetchall()
+        return [{"id": i, "role": r, "content": c} for i, r, c in rows]
 
     # --- Điều đáng nhớ ---
     def add_facts(self, facts: list[str]) -> None:

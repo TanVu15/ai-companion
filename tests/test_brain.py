@@ -98,3 +98,35 @@ def test_daily_limit_stops_api_calls(memory, monkeypatch):
     reply = brain.chat("hai")
     assert len(client.calls) == 1
     assert "mai" in reply.noi
+
+
+def test_old_messages_get_summarized(memory, monkeypatch):
+    monkeypatch.setattr(config, "HISTORY_LIMIT", 2)
+    monkeypatch.setattr(config, "SUMMARY_BATCH", 2)
+    client = FakeClient([
+        json.dumps({"noi": "a1"}),                       # lượt 1: chưa đủ tin cũ
+        json.dumps({"noi": "a2"}),                       # lượt 2: có 2 tin cũ -> tóm tắt
+        "Tân kể chuyện tập gym.",                        # câu trả lời tóm tắt
+        json.dumps({"noi": "a3"}),
+    ])
+    brain = Brain(memory, client=client)
+    brain.chat("u1")
+    assert memory.latest_summary() == ("", 0)
+    brain.chat("u2")
+    summary, upto = memory.latest_summary()
+    assert summary == "Tân kể chuyện tập gym." and upto == 2
+    assert "u1" in client.calls[2]["messages"][0]["content"]
+
+    brain.chat("u3")
+    assert "Tân kể chuyện tập gym." in client.calls[3]["system"]
+    # tin 1-2 đã tóm tắt; tin 3-4 chờ lần tóm tắt sau; tin 5-6 vẫn gửi nguyên văn
+    assert [m["id"] for m in memory.messages_to_summarize(2)] == [3, 4]
+
+
+def test_summary_failure_does_not_break_chat(memory, monkeypatch):
+    monkeypatch.setattr(config, "HISTORY_LIMIT", 1)
+    monkeypatch.setattr(config, "SUMMARY_BATCH", 1)
+    client = FakeClient([json.dumps({"noi": "ok"})])  # không có câu cho tóm tắt -> lỗi
+    reply = Brain(memory, client=client).chat("hi")
+    assert reply.noi == "ok"
+    assert memory.latest_summary() == ("", 0)

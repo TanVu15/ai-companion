@@ -17,7 +17,7 @@
 - Chờ Tân nghiệm thu: chạy `python -m app.thu_tinh_cach`, bấm "Bơ nhớ gì về mình?" (không chặn việc khác)
 
 ## Giai đoạn 3 – Trí nhớ dài hạn
-- [ ] Tóm tắt các cuộc trò chuyện cũ thay vì chỉ giữ 20 tin gần nhất
+- [x] Tóm tắt các cuộc trò chuyện cũ thay vì chỉ giữ 20 tin gần nhất
 - [ ] Gộp/sửa điều đáng nhớ bị trùng hoặc lỗi thời
 - [ ] Bơ chủ động hỏi thăm chuyện cũ (ví dụ: "hôm qua tập chân sao rồi?")
 

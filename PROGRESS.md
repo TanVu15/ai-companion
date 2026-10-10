@@ -23,4 +23,9 @@
 
 **Tân cần thử:** `git pull`, chạy thử bộ chấm điểm với API key thật và gửi tổng điểm/câu trả lời lạ vào FEEDBACK.md; mở web bấm nút xem trí nhớ.
 
-**Tiếp theo:** Giai đoạn 3, việc "Tóm tắt các cuộc trò chuyện cũ".
+## 2026-10-10 – Giai đoạn 3: tóm tắt chuyện cũ
+- Cứ khi có thêm 20 tin nhắn cũ (ngoài 20 tin gần nhất), Bơ gom lại thành 1 đoạn tóm tắt ≤150 chữ, gộp với bản tóm tắt trước. Đoạn này được gửi kèm mỗi lần hỏi → Bơ nhớ chuyện xa hơn mà chi phí gần như không tăng (thêm 1 câu API mỗi 20 tin).
+- Nếu tóm tắt bị lỗi (mạng...) thì bỏ qua, lần sau thử lại; câu trả lời của Bơ không bị ảnh hưởng.
+- 22 test qua hết.
+
+**Tiếp theo:** Giai đoạn 3, việc "Gộp/sửa điều đáng nhớ bị trùng hoặc lỗi thời".

@@ -18,5 +18,8 @@ HISTORY_LIMIT = int(os.getenv("HISTORY_LIMIT", "20"))
 # Số câu trả lời tối đa mỗi ngày, để không lỡ tiêu quá nhiều tiền API
 DAILY_LIMIT = int(os.getenv("DAILY_LIMIT", "300"))
 
+# Khi có đủ ngần này tin nhắn cũ (ngoài lịch sử gần nhất) thì tóm tắt lại một lần
+SUMMARY_BATCH = int(os.getenv("SUMMARY_BATCH", "20"))
+
 EMOTIONS = ["vui", "hao_hung", "binh_thuong", "suy_nghi", "ngac_nhien", "buon", "thuong"]
 ACTIONS = ["khong", "gat_dau", "lac_dau", "nghieng_dau", "nhay", "vay_tay"]

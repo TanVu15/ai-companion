@@ -31,9 +31,17 @@ class Reply:
         return {"noi": self.noi, "cam_xuc": self.cam_xuc, "hanh_dong": self.hanh_dong}
 
 
-def build_system_prompt(persona: str, facts: list[str]) -> str:
+SUMMARY_PROMPT = """Bạn tóm tắt cuộc trò chuyện giữa người dùng và Bơ (người bạn AI) để Bơ nhớ về sau.
+Viết tiếng Việt, tối đa 150 chữ, chỉ giữ ý chính: chuyện người dùng kể, cảm xúc, kế hoạch, lời hứa.
+Gộp với bản tóm tắt cũ (nếu có) thành MỘT bản mới. Chỉ trả về đoạn tóm tắt, không thêm gì khác."""
+
+
+def build_system_prompt(persona: str, facts: list[str], summary: str = "") -> str:
     known = "\n".join(f"- {f}" for f in facts) if facts else "- (chưa biết gì)"
-    return f"{persona.strip()}\n\n## Điều bạn đã biết về người dùng\n{known}\n{OUTPUT_RULES}"
+    out = f"{persona.strip()}\n\n## Điều bạn đã biết về người dùng\n{known}\n"
+    if summary:
+        out += f"\n## Tóm tắt những lần trò chuyện trước\n{summary.strip()}\n"
+    return out + OUTPUT_RULES
 
 
 def clean_history(history: list[dict]) -> list[dict]:
@@ -89,7 +97,8 @@ class Brain:
 
         self.memory.add_message("user", user_text)
         history = clean_history(self.memory.recent_messages(config.HISTORY_LIMIT))
-        system = build_system_prompt(self.persona(), self.memory.all_facts())
+        summary, _ = self.memory.latest_summary()
+        system = build_system_prompt(self.persona(), self.memory.all_facts(), summary)
 
         resp = self.client.messages.create(
             model=config.MODEL,
@@ -102,4 +111,26 @@ class Brain:
 
         self.memory.add_message("assistant", reply.noi)
         self.memory.add_facts(reply.ghi_nho)
+        self.maybe_summarize()
         return reply
+
+    def maybe_summarize(self) -> None:
+        """Gom tin nhắn cũ thành một đoạn tóm tắt ngắn, để Bơ nhớ chuyện xa mà không tốn nhiều tiền."""
+        old = self.memory.messages_to_summarize(config.HISTORY_LIMIT)
+        if len(old) < config.SUMMARY_BATCH:
+            return
+        previous, _ = self.memory.latest_summary()
+        lines = "\n".join(f"{'Người dùng' if m['role'] == 'user' else 'Bơ'}: {m['content']}" for m in old)
+        prompt = f"Bản tóm tắt cũ:\n{previous or '(chưa có)'}\n\nĐoạn trò chuyện mới:\n{lines}"
+        try:
+            resp = self.client.messages.create(
+                model=config.MODEL,
+                max_tokens=400,
+                system=SUMMARY_PROMPT,
+                messages=[{"role": "user", "content": prompt}],
+            )
+        except Exception:
+            return  # tóm tắt lỗi thì lần sau thử lại, không làm hỏng câu trả lời
+        text = "".join(b.text for b in resp.content if getattr(b, "type", "") == "text").strip()
+        if text:
+            self.memory.add_summary(text, old[-1]["id"])
