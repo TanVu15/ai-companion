@@ -304,9 +304,10 @@ class Brain:
         with self._lock:
             return self._chat(user_text)
 
-    def greet(self) -> Reply | None:
+    def greet(self, only_occasion: bool = False) -> Reply | None:
+        """only_occasion=True: chỉ mở lời khi có dịp (ngày đặc biệt, tổng kết tuần) — web hỏi định kỳ lúc đang mở."""
         with self._lock:
-            return self._greet()
+            return self._greet(only_occasion)
 
     def month_cost(self) -> float:
         from datetime import date
@@ -357,7 +358,7 @@ class Brain:
             self.memory.delete_message(msg_id)
             raise
 
-    def _greet(self) -> Reply | None:
+    def _greet(self, only_occasion: bool = False) -> Reply | None:
         """Bơ chủ động mở lời khi người dùng quay lại sau một thời gian và có chuyện nên hỏi thăm,
         hoặc đã lâu (GREET_MISS_DAYS ngày) không nói chuyện.
         Không có gì để hỏi hoặc vừa mới nói chuyện xong thì trả về None (không tốn câu API nào)."""
@@ -373,6 +374,8 @@ class Brain:
         elif week:
             items = "\n".join(f"- {m['content'][:200]}" for m in self.memory.user_messages_since(datetime.now() - timedelta(days=7)))
             trigger, recap = WEEK_TRIGGER.format(items=items[-4000:]), True
+        elif only_occasion:
+            return None
         elif last and (datetime.now() - last).total_seconds() < config.GREET_AFTER_HOURS * 3600:
             return None
         elif followups:

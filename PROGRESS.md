@@ -323,7 +323,7 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 ## 2026-10-10 – Giai đoạn 16 xong (báo cáo): rà soát lần 4
 - Thêm tình huống chấm điểm (sinh nhật, nhắc mỗi ngày), thống kê "Bơ và bạn" trong nút "?", README cập nhật đủ tính năng mới.
 - Rà soát độc lập phần ghim/tổng kết tuần: không có lỗi nặng. Đã sửa: lời nhắc vừa tới giờ ghim được ngay (trước phải tải lại trang); sao lưu/thống kê/tin đã ghim không đọc dữ liệu dở dang khi đang nạp sao lưu; cổng thiết bị (chào, nhắc) vẫn chỉ trả các mục gọn như cũ.
-- Biết nhưng chưa sửa (nhỏ): tổng kết tuần chỉ kiểm tra lúc mở/tải lại trang; để trang mở từ chiều qua 17h thì phải tải lại mới thấy.
+- (Đã sửa ở giai đoạn 17: tổng kết tuần/sinh nhật giờ được kiểm tra cả khi trang đang mở.)
 - 110 test qua hết.
 
 ## 2026-10-10 – Giai đoạn 17: sửa tính cách trên web
@@ -333,3 +333,7 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - 113 test qua hết.
 
 **Tân cần thử:** bấm "Tính cách", thêm dòng "Gọi mình là đại ca", Lưu, rồi nhắn "hello".
+
+## 2026-10-10 – Giai đoạn 17: dịp đặc biệt khi trang đang mở
+- Để trang Bơ mở lâu (qua nửa đêm sinh nhật, qua 17h Chủ nhật): mỗi 10 phút web hỏi máy chủ "có dịp gì không" (`/api/chao?chi_dip=1`). Có thì Bơ tự chúc/điểm lại tuần; không có thì không tốn câu API nào. Hỏi thăm chuyện thường vẫn chỉ khi mở web.
+- 114 test qua hết.

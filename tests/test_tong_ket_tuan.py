@@ -56,3 +56,19 @@ def test_recap_not_marked_when_special_day_wins(memory, monkeypatch):
     monkeypatch.setattr(brain, "_recap_week", lambda now=None: "2026-W41")
     brain.greet()
     assert memory.get_kv("tong_ket_tuan") == ""  # lần sau mở web mới điểm lại tuần
+
+
+def test_chi_dip_khong_hoi_tham_thuong(memory):
+    from datetime import timedelta
+
+    memory.add_followups(["Đi thi"])
+    old = (datetime.now() - timedelta(hours=20)).strftime("%Y-%m-%d %H:%M:%S")
+    memory.conn.execute("UPDATE followups SET created_at = ?", (old,))
+    memory.conn.commit()
+    client = FakeClient([json.dumps({"noi": "Chúc mừng!"})])
+    brain = Brain(memory, client=client)
+    assert brain.greet(only_occasion=True) is None and client.calls == []  # hỏi thăm thường thì chờ mở web
+    from datetime import date
+
+    memory.add_special_days([{"ngay": date.today().strftime("%d/%m"), "viec": "Sinh nhật"}])
+    assert brain.greet(only_occasion=True).noi == "Chúc mừng!"

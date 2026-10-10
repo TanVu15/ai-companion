@@ -120,10 +120,10 @@ def chat(body: ChatIn):
 
 
 @app.post("/api/chao")
-def greet():
+def greet(chi_dip: int = 0):
     """Gọi khi mở web: Bơ chủ động hỏi thăm chuyện cũ nếu có. Không có thì trả {"noi": null}."""
     try:
-        reply = get_brain().greet()
+        reply = get_brain().greet(only_occasion=bool(chi_dip))
     except HTTPException:
         raise
     except Exception as e:

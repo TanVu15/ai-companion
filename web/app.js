@@ -291,6 +291,16 @@ async function pollReminders() {
   } catch (e) {}
 }
 setInterval(pollReminders, 30000);
+// Trang để mở lâu (qua nửa đêm, qua 17h Chủ nhật): mỗi 10 phút hỏi xem có dịp gì để Bơ mở lời không
+// (chỉ sinh nhật/kỷ niệm, tổng kết tuần — không có dịp thì không tốn câu API nào)
+setInterval(async () => {
+  if (send.disabled) return;
+  try {
+    const r = await fetch('/api/chao?chi_dip=1', { method: 'POST' });
+    const data = await r.json();
+    if (r.ok && data.noi) { express(data.cam_xuc, data.hanh_dong); speak(data.noi); await addBo(data.noi, data.id); }
+  } catch (e) {}
+}, 10 * 60 * 1000);
 // Nút "Nhắc lại sau 10 phút" ngay dưới lời nhắc vừa tới
 function addSnooze(viec) {
   const bubble = log.lastElementChild;

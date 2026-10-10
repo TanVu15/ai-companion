@@ -90,7 +90,7 @@
 
 ## Giai đoạn 17 – Tự tay chỉnh Bơ (chỉ phần mềm, Claude tự thêm)
 - [x] Sửa tính cách Bơ ngay trên web (lưu riêng trong data/, có nút về mặc định)
-- [ ] Dịp đặc biệt (sinh nhật, tổng kết tuần) kiểm tra cả khi trang đang mở
+- [x] Dịp đặc biệt (sinh nhật, tổng kết tuần) kiểm tra cả khi trang đang mở
 - [ ] Kiểm tra giao diện trên màn hình điện thoại nhỏ (chụp ảnh tự động), sửa chỗ vỡ
 
 ## Sau này
