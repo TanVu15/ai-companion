@@ -166,7 +166,7 @@
 - [x] Bơ biết ngày lễ sắp tới và Tết còn mấy ngày ("còn mấy ngày nữa Tết?")
 - [x] Dòng lịch trên web + cổng thiết bị: ngày lễ / ngày đặc biệt sắp tới
 - [x] Tải lịch .ics (ngày đặc biệt + lời nhắc) để thêm vào lịch điện thoại
-- [ ] Rà soát code lần 12, sửa lỗi tìm được
+- [x] Rà soát code lần 12, sửa lỗi tìm được
 
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định

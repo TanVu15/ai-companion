@@ -242,6 +242,8 @@ def calendar_ics():
     brain = get_brain()
     with brain._lock:
         days, rems = brain.memory.special_days(), brain.memory.upcoming_reminders()
+    if not days and not rems:  # lịch rỗng: điện thoại báo "file lỗi", nên nói rõ luôn
+        raise HTTPException(404, "Chưa có ngày đặc biệt hay lời nhắc nào để đưa vào lịch")
     return Response(tao_ics(days, rems), media_type="text/calendar; charset=utf-8",
                     headers={"Content-Disposition": 'attachment; filename="bo-lich.ics"'})
 

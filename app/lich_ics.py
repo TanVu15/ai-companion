@@ -10,7 +10,7 @@ RRULE = {"ngay": "FREQ=DAILY", "tuan": "FREQ=WEEKLY"}
 
 
 def _esc(text: str) -> str:
-    return (text.replace("\\", "\\\\").replace(";", "\;").replace(",", "\\,")
+    return (text.replace("\\", "\\\\").replace(";", "\\;").replace(",", "\\,")
             .replace("\r", "").replace("\n", "\\n"))
 
 

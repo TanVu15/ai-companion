@@ -432,3 +432,13 @@ function saveDraft() {
 }
 input.addEventListener('input', saveDraft);
 form.addEventListener('submit', () => { clearTimeout(draftTimer); try { localStorage.removeItem('bo_nhap'); } catch (e) {} });
+
+// Tải lịch: chưa có gì để đưa vào lịch thì báo, khỏi tải về một file lỗi.
+document.getElementById('lichIcs').addEventListener('click', async (ev) => {
+  ev.preventDefault();
+  try {
+    const r = await fetch('/api/lich.ics');
+    if (!r.ok) { const d = await r.json().catch(() => ({})); alert(d.detail || 'Không tải được lịch'); return; }
+    location.href = '/api/lich.ics';  // mở thẳng: iPhone hiện "Thêm vào Lịch", máy tính thì tải file về
+  } catch (e) { alert('Mất mạng, thử lại nha.'); }
+});

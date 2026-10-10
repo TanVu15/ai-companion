@@ -66,3 +66,9 @@ def test_api_lich(tmp_path):
     r = c.get("/api/lich.ics")
     assert r.status_code == 200 and r.headers["content-type"].startswith("text/calendar")
     assert "Sinh nhật mẹ" in r.text and "bo-lich.ics" in r.headers["content-disposition"]
+
+
+def test_api_lich_rong(tmp_path):
+    c = make_client(tmp_path, [])
+    r = c.get("/api/lich.ics")
+    assert r.status_code == 404 and "Chưa có" in r.json()["detail"]

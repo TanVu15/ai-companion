@@ -587,3 +587,9 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - Mở file trên iPhone (Safari/Tệp) hoặc Google Calendar → thêm vào Lịch. Lưu ý: đây là bản chụp lúc tải; thêm ngày mới thì tải lại.
 - 209 test qua hết.
 
+## 2026-10-10 – Giai đoạn 32 xong: rà soát lần 12
+- Rà soát độc lập: file lịch đúng chuẩn (gập dòng, ký tự đặc biệt, 29/2, giỗ ngày 30 âm), ngày lễ sắp tới không trùng. Sửa 2 lỗi nhỏ: một ký tự thoát viết sai (Python bản mới sẽ báo lỗi); chưa có gì để đưa vào lịch thì web báo rõ thay vì tải về file rỗng (điện thoại sẽ báo "file lỗi").
+- 210 test qua hết.
+
+**Tân cần thử (giai đoạn 32):** hỏi Bơ "còn mấy ngày nữa Tết?"; trên iPhone mở web → "Bơ nhớ gì về mình?" → "Tải lịch cho điện thoại" → Thêm vào Lịch.
+
