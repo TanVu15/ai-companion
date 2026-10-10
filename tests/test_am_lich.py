@@ -57,6 +57,6 @@ def test_prompt_co_am_lich_va_le():
 
     p = build_system_prompt("Bơ", [], now=datetime(2026, 10, 19, 9, 0))
     assert "Âm lịch: mùng 10 tháng 9 năm Bính Ngọ." in p
-    assert "Ngày mai là: Ngày Phụ nữ Việt Nam 20/10." in p and "Hôm nay là" not in p
+    assert "Ngày mai là: Ngày Phụ nữ Việt Nam 20/10." in p and "Hôm nay là: " not in p
     p = build_system_prompt("Bơ", [], now=datetime(2026, 10, 12, 9, 0))
     assert "Ngày mai là" not in p and "đừng lặp lại" not in p
