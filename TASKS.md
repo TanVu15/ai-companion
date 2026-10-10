@@ -143,6 +143,12 @@
 - [x] Sửa giờ / nội dung lời nhắc sắp tới ngay trên web
 - [x] Rà soát code lần 9 (cài đặt, sửa lời nhắc), sửa lỗi tìm được
 
+## Giai đoạn 28 – Âm lịch & ngày lễ (chỉ phần mềm, Claude tự thêm)
+- [ ] Đổi ngày dương → âm lịch (không cần mạng), kiểm tra với ngày Tết nhiều năm
+- [ ] Bơ biết ngày âm hôm nay, hôm nay/ngày mai là lễ gì (Tết, Trung thu, 20/10, 8/3...)
+- [ ] Ngày đặc biệt theo âm lịch ("giỗ ông 15/7 âm lịch")
+- [ ] Rà soát code lần 10 (âm lịch, ngày lễ), sửa lỗi tìm được
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo
