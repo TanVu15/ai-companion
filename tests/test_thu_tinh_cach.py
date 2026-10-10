@@ -1,0 +1,43 @@
+"""Test bộ chấm điểm tính cách bằng bộ não giả."""
+import json
+
+from app import thu_tinh_cach as t
+from tests.test_brain import FakeClient
+
+
+def test_file_tinh_huong_hop_le():
+    ds = json.loads(t.TINH_HUONG_PATH.read_text(encoding="utf-8"))
+    assert len(ds) == 10
+    for th in ds:
+        assert th["ten"] and th["tin_nhan"]
+
+
+def test_dem_cau():
+    assert t.dem_cau("Chào! Khỏe hông? Đi tập nha.") == 3
+    assert t.dem_cau("Một câu thôi") == 1
+
+
+def test_cau_tra_loi_tot_duoc_diem_toi_da():
+    th = {"ten": "Buồn", "tin_nhan": "buồn quá", "cam_xuc_hop_le": ["buon", "thuong"],
+          "phai_co_mot_trong": ["kể"], "khong_duoc_co": ["kkk"]}
+    client = FakeClient([json.dumps({"noi": "Thương ghê. Kể Bơ nghe nha?", "cam_xuc": "thuong"})])
+    [kq] = t.chay(client, [th])
+    assert kq.diem == 1.0
+
+
+def test_cau_tra_loi_te_bi_tru_diem():
+    th = {"ten": "Buồn", "tin_nhan": "buồn quá", "cam_xuc_hop_le": ["buon"],
+          "khong_duoc_co": ["kkk"], "phai_ghi_nho": True}
+    client = FakeClient(["kkk vui lên đi. Câu hai. Câu ba. Câu bốn."])  # không phải JSON, dài, nhây
+    [kq] = t.chay(client, [th])
+    assert [ok for _, ok in kq.kiem_tra] == [False, False, False, False, False]
+    assert kq.diem == 0.0
+
+
+def test_da_biet_duoc_dua_vao_bo_nao():
+    th = {"ten": "Nhớ tên", "da_biet": ["Tên là Tân"], "tin_nhan": "mình tên gì?", "phai_co_mot_trong": ["Tân"]}
+    client = FakeClient([json.dumps({"noi": "Tân chứ ai!", "cam_xuc": "vui"})])
+    [kq] = t.chay(client, [th])
+    assert "Tên là Tân" in client.calls[0]["system"]
+    assert kq.diem == 1.0
+    assert "TỔNG ĐIỂM: 100%" in t.in_bao_cao([kq])

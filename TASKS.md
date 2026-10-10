@@ -12,7 +12,7 @@
 
 ## Giai đoạn 2 – Tính cách
 - [x] persona.md: Bơ, vui tính, năng động (Tân chốt 2026-10-11)
-- [ ] Bộ câu hỏi thử tính cách (10 tình huống) để chấm điểm "giống người"
+- [x] Bộ câu hỏi thử tính cách (10 tình huống) để chấm điểm "giống người"
 - [ ] Trang cài đặt nhỏ: xem/xóa những điều Bơ đã nhớ
 
 ## Giai đoạn 3 – Trí nhớ dài hạn

@@ -18,6 +18,17 @@ Chatbot trò chuyện có tính cách, có trí nhớ và có khuôn mặt biể
 
 Sửa file `persona.md` rồi gửi tin nhắn mới. Không cần khởi động lại.
 
+## Thử tính cách (chấm điểm)
+
+Bơ trả lời 10 tình huống trong `tinh_huong.json` (buồn, mệt, khoe thành tích, hỏi điều không biết...) và được chấm điểm tự động. Tốn khoảng 10 câu API (rất rẻ), không đụng vào trí nhớ thật.
+
+```
+.venv\Scripts\activate
+python -m app.thu_tinh_cach
+```
+
+Muốn thêm tình huống thì sửa `tinh_huong.json`.
+
 ## Cấu trúc
 
 ```
@@ -26,6 +37,7 @@ app/memory.py   Trí nhớ: SQLite lưu tin nhắn và điều đáng nhớ (dat
 app/main.py     Máy chủ web (FastAPI)
 web/index.html  Giao diện chat + khuôn mặt
 persona.md      Tính cách
+app/thu_tinh_cach.py + tinh_huong.json   Bộ câu hỏi thử tính cách
 tests/          Test bằng bộ não giả, không tốn tiền API
 ```
 
