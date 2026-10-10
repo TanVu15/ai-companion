@@ -51,7 +51,7 @@ def test_done_followup_removed(memory):
 def test_prompt_lists_followups_with_day():
     now = datetime(2026, 10, 10, 9, 0)
     p = build_system_prompt("Bơ", [], followups=[{"content": "Tập chân", "created_at": "2026-10-09 17:00:00"}], now=now)
-    assert "## Chuyện nên hỏi thăm" in p and "Tập chân (kể hôm qua)" in p and "09:00 ngày 10/10/2026" in p
+    assert "## Chuyện nên hỏi thăm" in p and "Tập chân (kể hôm qua)" in p and "09:00 (buổi sáng), thứ Bảy ngày 10/10/2026" in p
     assert "## Chuyện nên hỏi thăm" not in build_system_prompt("Bơ", [], now=now)
 
 
