@@ -199,3 +199,26 @@ def test_errors_written_to_log_without_message_text(tmp_path):
             if isinstance(h, logging.FileHandler):
                 log.removeHandler(h)
                 h.close()
+
+
+def test_history_keeps_emotion(tmp_path):
+    c = make_client(tmp_path, [json.dumps({"noi": "Hihi", "cam_xuc": "hao_hung"})])
+    c.post("/api/chat", json={"text": "hi"})
+    h = c.get("/api/history").json()
+    assert h[0]["cam_xuc"] is None and h[1]["cam_xuc"] == "hao_hung"
+
+
+def test_old_database_gets_emotion_column(tmp_path):
+    import sqlite3
+
+    db = tmp_path / "cu.db"
+    con = sqlite3.connect(db)
+    con.execute("CREATE TABLE messages (id INTEGER PRIMARY KEY AUTOINCREMENT, role TEXT NOT NULL,"
+                " content TEXT NOT NULL, created_at TEXT DEFAULT (datetime('now', 'localtime')))")
+    con.execute("INSERT INTO messages (role, content) VALUES ('user', 'tin cũ')")
+    con.commit()
+    con.close()
+    mem = Memory(db)  # mở bằng bản mới: tự thêm cột, tin cũ còn nguyên
+    assert mem.history_page()[0]["content"] == "tin cũ"
+    mem.add_message("assistant", "mới", "vui")
+    assert mem.history_page()[-1]["cam_xuc"] == "vui"

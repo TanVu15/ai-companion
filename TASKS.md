@@ -58,6 +58,10 @@
 - [x] Ghi lỗi ra file `data/loi.log` để Tân gửi khi gặp sự cố
 - [x] Hướng dẫn khắc phục sự cố thường gặp (SU_CO.md)
 
+## Giai đoạn 11 – Khuôn mặt sống động (chỉ phần mềm, Claude tự thêm)
+- [x] Mở lại web: Bơ giữ vẻ mặt của câu nói cuối
+- [x] Ngủ gật khi 3 phút không ai đụng tới, chạm là tỉnh
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo

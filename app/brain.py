@@ -279,7 +279,7 @@ class Brain:
             out = []
             for r in self.memory.pop_due_reminders():
                 reply = Reply(noi=reminder_text(r["viec"], r["luc"]), cam_xuc="hao_hung", hanh_dong="vay_tay")
-                self.memory.add_message("assistant", reply.noi)
+                self.memory.add_message("assistant", reply.noi, reply.cam_xuc)
                 out.append(reply)
             return out
 
@@ -327,7 +327,7 @@ class Brain:
         text = "".join(b.text for b in resp.content if getattr(b, "type", "") == "text")
         reply = parse_reply(text)
 
-        self.memory.add_message("assistant", reply.noi)
+        self.memory.add_message("assistant", reply.noi, reply.cam_xuc)
         self.memory.forget_facts(reply.quen)
         self.memory.add_facts(reply.ghi_nho)
         self.memory.done_followups(reply.da_hoi)

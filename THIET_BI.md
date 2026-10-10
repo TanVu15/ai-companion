@@ -69,6 +69,7 @@ Thường Bơ trả lời trong vài giây. Khi mạng chập chờn, bộ não 
 | `ngac_nhien` | ngạc nhiên | mắt to, miệng tròn |
 | `buon` | buồn | miệng úp xuống |
 | `thuong` | thương, đồng cảm | mắt cong, má hồng |
+| (`ngu`) | ngủ gật – do thiết bị tự bật khi lâu không ai tương tác, AI không gửi | mắt nhắm thành vạch, "z z" |
 
 ## Hành động → servo (gợi ý)
 

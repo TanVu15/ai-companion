@@ -43,6 +43,11 @@
   .face[data-e="ngac_nhien"] .eye { height: 22px; width: 18px; }
   .face[data-e="suy_nghi"] .mouth { height: 0; width: 28px; border-radius: 0; border-width: 0 0 4px 0; margin-left: 8px; }
   .face[data-e="suy_nghi"] .eye { top: 34px; }
+  .face[data-e="ngu"] .eye { height: 4px; top: 46px; border-radius: 4px; animation: none; }
+  .face[data-e="ngu"] .mouth { width: 16px; height: 8px; top: 76px; }
+  .face[data-e="ngu"]::before { content: "z z"; position: absolute; right: -18px; top: -6px; font-weight: 700; color: var(--muted); }
+  @media (prefers-reduced-motion: no-preference) { .face[data-e="ngu"] { animation: breathe 3s infinite; } }
+  @keyframes breathe { 50% { transform: scale(1.03); } }
   .face[data-e="thuong"] .eye { height: 10px; top: 44px; border-radius: 10px 10px 0 0; }
   .face[data-e="thuong"]::after { content: ""; position: absolute; left: 18px; right: 18px; top: 62px; height: 10px;
     background: radial-gradient(circle at 10px 5px, #f39a9a 6px, transparent 7px), radial-gradient(circle at calc(100% - 10px) 5px, #f39a9a 6px, transparent 7px); }

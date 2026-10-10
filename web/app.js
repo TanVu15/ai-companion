@@ -35,6 +35,7 @@ function express(emotion, action) {
   face.className = 'face';
   void face.offsetWidth;
   if (action && action !== 'khong') face.classList.add('a-' + action);
+  if (emotion !== 'ngu' && typeof scheduleSleep === 'function') scheduleSleep();  // đổi mặt = đang thức
 }
 let oldestId = null, noMore = false, loadingOld = false;
 async function loadHistory() {
@@ -43,6 +44,8 @@ async function loadHistory() {
     if (!r.ok) return;
     const list = await r.json();
     list.forEach(m => add(m.role, m.content, m.created_at));
+    const lastBo = list.filter(m => m.role === 'assistant' && m.cam_xuc).pop();
+    if (lastBo) express(lastBo.cam_xuc);  // mở lại web: Bơ giữ vẻ mặt lúc nói câu cuối
     if (list.length) oldestId = list[0].id; else noMore = true;
     if (list.length < 50) noMore = true;
   } catch (e) {}
@@ -313,3 +316,16 @@ document.getElementById('clearMem').onclick = async () => {
   if (!confirm('Xóa hết những điều Bơ đã nhớ?')) return;
   await fetch('/api/facts/all', { method: 'DELETE' }); loadFacts();
 };
+
+// ---- Ngủ gật: 3 phút không ai đụng tới thì Bơ nhắm mắt; chạm/gõ/nói là tỉnh ----
+var SLEEP_AFTER = 3 * 60 * 1000;
+var idleTimer = null;
+function scheduleSleep() {
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(() => { if (!send.disabled && !speaking) express('ngu'); }, SLEEP_AFTER);
+}
+function wake() {
+  if (face.dataset.e === 'ngu') express('binh_thuong'); else scheduleSleep();
+}
+['pointerdown', 'keydown', 'focusin'].forEach(ev => document.addEventListener(ev, wake, { passive: true }));
+scheduleSleep();

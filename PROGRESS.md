@@ -195,3 +195,10 @@
 - `SU_CO.md`: bảng 17 sự cố hay gặp (run.bat tắt ngay, sai key, hết tiền, iPhone không vào được, không thấy micro, lời nhắc không kêu…) và cách sửa; cuối cùng là cách gửi `data/loi.log` vào FEEDBACK.md.
 - Cả giai đoạn: test tự chạy trên GitHub (lần đầu đã ✓ xanh), nhật ký lỗi, hướng dẫn sự cố.
 - **Lưu ý khi `git pull` lần này:** không thêm thư viện mới, chỉ cần tắt và chạy lại `run.bat`.
+
+## 2026-10-10 – Giai đoạn 11: khuôn mặt sống động
+- Cảm xúc được lưu cùng tin nhắn → tải lại web, Bơ vẫn giữ vẻ mặt lúc nói câu cuối (dữ liệu cũ tự nâng cấp, không mất gì).
+- 3 phút không ai chạm/gõ → Bơ nhắm mắt "ngủ gật" (có "z z", thở nhẹ). Chạm, gõ hoặc Bơ nói là tỉnh. Sau này màn hình phần cứng cũng có thể làm vậy.
+- 78 test qua hết.
+
+**Tân cần thử:** để yên trang web 3 phút xem Bơ ngủ gật, rồi chạm vào.

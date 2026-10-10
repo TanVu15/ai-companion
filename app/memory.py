@@ -51,11 +51,17 @@ class Memory:
             );
             """
         )
+        # Bản cũ chưa có cột cảm xúc thì thêm vào (dữ liệu cũ giữ nguyên)
+        cols = {r[1] for r in self.conn.execute("PRAGMA table_info(messages)")}
+        if "cam_xuc" not in cols:
+            self.conn.execute("ALTER TABLE messages ADD COLUMN cam_xuc TEXT")
         self.conn.commit()
 
     # --- Tin nhắn ---
-    def add_message(self, role: str, content: str) -> int:
-        cur = self.conn.execute("INSERT INTO messages (role, content) VALUES (?, ?)", (role, content))
+    def add_message(self, role: str, content: str, cam_xuc: str | None = None) -> int:
+        cur = self.conn.execute(
+            "INSERT INTO messages (role, content, cam_xuc) VALUES (?, ?, ?)", (role, content, cam_xuc)
+        )
         self.conn.commit()
         return cur.lastrowid
 
@@ -72,10 +78,12 @@ class Memory:
     def history_page(self, limit: int = 50, before_id: int | None = None) -> list[dict]:
         """Tin nhắn cho giao diện (có id và giờ), cũ → mới. `before_id` để tải thêm tin cũ hơn."""
         rows = self.conn.execute(
-            "SELECT id, role, content, created_at FROM messages WHERE id < ? ORDER BY id DESC LIMIT ?",
+            "SELECT id, role, content, created_at, cam_xuc FROM messages WHERE id < ? ORDER BY id DESC LIMIT ?",
             (before_id if before_id else 2**62, limit),
         ).fetchall()
-        return [{"id": i, "role": r, "content": c, "created_at": t} for i, r, c, t in reversed(rows)]
+        return [
+            {"id": i, "role": r, "content": c, "created_at": t, "cam_xuc": e} for i, r, c, t, e in reversed(rows)
+        ]
 
     def replies_today(self) -> int:
         today = date.today().isoformat()
@@ -252,7 +260,7 @@ class Memory:
 
     # --- Sao lưu / khôi phục ---
     _BACKUP_TABLES = {
-        "messages": ("role", "content", "created_at"),
+        "messages": ("role", "content", "created_at", "cam_xuc"),
         "summaries": ("content", "upto_id", "created_at"),
         "followups": ("content", "done", "created_at"),
         "facts": ("content", "created_at"),
