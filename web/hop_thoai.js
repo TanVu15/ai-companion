@@ -3,6 +3,22 @@ const mem = document.getElementById('mem'), factsEl = document.getElementById('f
 async function delFact(content) {
   await fetch('/api/facts', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ content }) });
 }
+// Lỡ tay xóa → bấm "Hoàn tác" để Bơ nhớ lại (thêm lại vào cuối danh sách)
+let undoTimer = null;
+function showUndo(f) {
+  const bar = document.getElementById('undoBar');
+  clearTimeout(undoTimer);
+  bar.innerHTML = '';
+  const t = document.createElement('span'), b = document.createElement('button');
+  t.textContent = 'Đã xóa: ' + f + ' ';
+  b.type = 'button'; b.className = 'link'; b.textContent = 'Hoàn tác';
+  b.onclick = async () => {
+    await fetch('/api/facts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ content: f }) });
+    bar.hidden = true; loadFacts();
+  };
+  bar.append(t, b); bar.hidden = false;
+  undoTimer = setTimeout(() => { bar.hidden = true; }, 10000);
+}
 async function loadFacts() {
   factsEl.innerHTML = '';
   let list = [];
@@ -12,7 +28,7 @@ async function loadFacts() {
     const li = document.createElement('li'), span = document.createElement('span'), b = document.createElement('button');
     span.textContent = f; b.textContent = 'Xóa'; b.type = 'button';
     b.setAttribute('aria-label', 'Xóa: ' + f);
-    b.onclick = async () => { await delFact(f); loadFacts(); };
+    b.onclick = async () => { await delFact(f); await loadFacts(); showUndo(f); };
     const e = document.createElement('button');
     e.textContent = 'Sửa'; e.type = 'button'; e.className = 'edit'; e.setAttribute('aria-label', 'Sửa: ' + f);
     e.onclick = async () => {

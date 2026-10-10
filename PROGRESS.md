@@ -405,3 +405,9 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 ## 2026-10-10 – Giai đoạn 21: chi phí chi tiết
 - Nút "Chi phí" có thêm: tháng này tốn bao nhiêu cho **trò chuyện / tóm tắt chuyện cũ / gộp trí nhớ**, và số câu gọi API **từng ngày trong 7 ngày gần nhất**.
 - 127 test qua hết.
+
+## 2026-10-10 – Giai đoạn 21 xong (báo cáo)
+- Rà soát lần 6 + sửa lỗi; chi phí chi tiết; **Hoàn tác**: lỡ xóa một điều Bơ nhớ thì trong 10 giây bấm "Hoàn tác" để Bơ nhớ lại.
+- 127 test qua hết.
+
+**Tân cần thử:** mở "Chi phí" xem bảng 7 ngày; xóa thử một điều rồi bấm "Hoàn tác".
