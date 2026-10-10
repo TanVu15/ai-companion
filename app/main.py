@@ -77,6 +77,14 @@ class _DemoClient:
         return self._ns(content=[self._ns(type="text", text=text)])
 
 
+def _weather():
+    if not config.THANH_PHO:
+        return None
+    from .thoi_tiet import ThoiTiet
+
+    return ThoiTiet(config.THANH_PHO)
+
+
 def get_brain() -> Brain:
     global _brain
     if _brain is None:
@@ -86,7 +94,7 @@ def get_brain() -> Brain:
             return _brain
         if not config.ANTHROPIC_API_KEY:
             raise HTTPException(500, "Chưa có ANTHROPIC_API_KEY trong file .env")
-        _brain = Brain(Memory(config.DB_PATH), background=True)
+        _brain = Brain(Memory(config.DB_PATH), background=True, weather=_weather())
     return _brain
 
 

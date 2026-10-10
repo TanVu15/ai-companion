@@ -124,10 +124,13 @@ def build_system_prompt(
     followups: list[dict] | None = None,
     now: datetime | None = None,
     special: list[dict] | None = None,
+    weather: str | None = None,
 ) -> str:
     now = now or datetime.now()
     known = "\n".join(f"- {f}" for f in facts) if facts else "- (chưa biết gì)"
     out = f"{persona.strip()}\n\nBây giờ là {now.strftime('%H:%M')} ({buoi(now)}), {THU[now.weekday()]} ngày {now.strftime('%d/%m/%Y')}.\n"
+    if weather:
+        out += f"{weather} (Chỉ nhắc tới thời tiết khi hợp chuyện, ví dụ trời mưa mà người dùng sắp ra ngoài.)\n"
     out += f"\n## Điều bạn đã biết về người dùng\n{known}\n"
     if summary:
         out += f"\n## Tóm tắt những lần trò chuyện trước\n{summary.strip()}\n"
@@ -257,8 +260,9 @@ def reminder_text(viec: str, luc: str = "", now: datetime | None = None) -> str:
 
 
 class Brain:
-    def __init__(self, memory, client=None, sleep=time.sleep, background: bool = False):
+    def __init__(self, memory, client=None, sleep=time.sleep, background: bool = False, weather=None):
         self.memory = memory
+        self.weather = weather  # đối tượng có .hien_tai() → chữ hoặc None (xem thoi_tiet.py)
         if client is None:
             import anthropic
 
@@ -410,7 +414,15 @@ class Brain:
 
         today = date.today()  # tính một lần: trả lời xong qua nửa đêm thì không đánh dấu nhầm ngày mới
         special = self.memory.special_days_today(today)
-        system = build_system_prompt(self.persona(), self.memory.all_facts(), summary, followups, special=special)
+        weather = None
+        if self.weather is not None:
+            try:
+                weather = self.weather.hien_tai()
+            except Exception:
+                weather = None
+        system = build_system_prompt(
+            self.persona(), self.memory.all_facts(), summary, followups, special=special, weather=weather
+        )
         resp = self._create(
             model=config.MODEL,
             max_tokens=500,

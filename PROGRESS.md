@@ -344,3 +344,12 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - 114 test qua hết.
 
 **Tân cần thử:** mở Bơ trên iPhone, bấm "Tính cách" xem có thấy nút "Lưu" không.
+
+## 2026-10-10 – Giai đoạn 18: Bơ biết thời tiết
+- Thêm `THANH_PHO=Da Nang` (hoặc thành phố của Tân) vào `.env` rồi chạy lại `run.bat` → mỗi câu Bơ biết "bây giờ 30°C, mưa nhẹ; hôm nay 24–31°C, khả năng mưa 80%; ngày mai...". Bơ chỉ nhắc khi hợp chuyện (ví dụ Tân nói sắp ra ngoài).
+- Dùng Open-Meteo: miễn phí, không cần tài khoản/key. Hỏi tối đa 1 lần/giờ. Mất mạng thì Bơ vẫn nói chuyện bình thường. Để trống `THANH_PHO` = tắt.
+- Thêm ~40 chữ vào mỗi câu hỏi gửi AI (chi phí tăng không đáng kể).
+- Máy làm việc của Claude không vào được Open-Meteo nên chỉ test bằng dữ liệu giả → Tân thử thật giúp.
+- 119 test qua hết.
+
+**Tân cần thử:** thêm `THANH_PHO=...` vào `.env`, chạy lại, nhắn "chiều nay mình đi chơi nè" xem Bơ có nhắc thời tiết không.
