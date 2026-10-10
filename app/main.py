@@ -1,6 +1,7 @@
 """Máy chủ web: phục vụ trang chat và nhận tin nhắn gửi tới bộ não."""
 import base64
 import json
+import threading
 import os
 import secrets
 
@@ -110,6 +111,7 @@ class FactIn(BaseModel):
 
 
 _sao_luu_ngay = None  # ngày đã tự sao lưu (khỏi kiểm tra file mỗi tin nhắn)
+_sao_luu_lock = threading.Lock()  # hai tin nhắn cùng lúc không ghi chồng một file
 
 
 def _tu_sao_luu() -> None:
@@ -122,11 +124,14 @@ def _tu_sao_luu() -> None:
         return
     from .sao_luu import tu_sao_luu
 
-    try:
-        tu_sao_luu(_brain.memory, config.SAO_LUU_DIR, today, config.SAO_LUU_GIU, lock=_brain._lock)
-        _sao_luu_ngay = today
-    except Exception as e:
-        log.warning("Tự sao lưu lỗi: %s", e)
+    with _sao_luu_lock:
+        if _sao_luu_ngay == today:
+            return
+        try:
+            tu_sao_luu(_brain.memory, config.SAO_LUU_DIR, today, config.SAO_LUU_GIU, lock=_brain._lock)
+            _sao_luu_ngay = today
+        except Exception as e:
+            log.warning("Tự sao lưu lỗi: %s", e)
 
 
 @app.get("/")
@@ -284,7 +289,10 @@ def health():
     if not config.DEMO:
         from .sao_luu import ds_ban_sao
 
-        bans = ds_ban_sao(config.SAO_LUU_DIR) if config.TU_SAO_LUU else []
+        try:
+            bans = ds_ban_sao(config.SAO_LUU_DIR) if config.TU_SAO_LUU else []
+        except OSError:
+            bans = []
         add("Tự sao lưu", config.TU_SAO_LUU,
             (f"{len(bans)} bản trong {config.SAO_LUU_DIR.parent.name}/sao_luu/, mới nhất {bans[0].stem[3:]}" if bans
              else "Bật, bản đầu tiên ghi khi bạn nhắn tin") if config.TU_SAO_LUU else "Đang tắt (TU_SAO_LUU=0)",
@@ -511,11 +519,12 @@ def pin(msg_id: int, body: PinIn):
 @app.get("/api/ngay-dac-biet")
 def special_days():
     """Danh sách ngày đặc biệt, gần nhất trước, kèm "con_ngay" (còn mấy ngày, 0 = hôm nay)."""
-    mem = get_brain().memory
-    try:
-        return mem.upcoming_special_days()
-    except Exception:
-        return mem.special_days()
+    brain = get_brain()
+    with brain._lock:
+        try:
+            return brain.memory.upcoming_special_days()
+        except Exception:
+            return brain.memory.special_days()
 
 
 @app.delete("/api/ngay-dac-biet/{day_id}")

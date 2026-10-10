@@ -1,7 +1,7 @@
 """Tự sao lưu trí nhớ mỗi ngày vào data/sao_luu/ (giữ vài bản gần nhất).
 
 Lỡ file trí nhớ bị hỏng hay lỡ tay "Xóa hết" thì vẫn còn bản hôm qua:
-mở web → "?" → Khôi phục → chọn file trong data/sao_luu/.
+mở web → "Bơ nhớ gì về mình?" → "Nạp bản sao lưu" → chọn file trong data/sao_luu/.
 """
 import json
 import os

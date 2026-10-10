@@ -67,3 +67,15 @@ def test_sao_luu_loi_khong_lam_hong_chat(tmp_path, monkeypatch):
     monkeypatch.setattr(config, "SAO_LUU_DIR", tmp_path / "chan" / "sao_luu")  # cha là file → không tạo được
     r = c.post("/api/chat", json={"text": "hi"})
     assert r.status_code == 200 and r.json()["noi"] == "Ừ"
+
+
+def test_hai_tin_cung_luc_chi_ghi_mot_lan(tmp_path, monkeypatch):
+    import threading
+
+    _client(tmp_path, monkeypatch, [])
+    loi = []
+    monkeypatch.setattr(main.log, "warning", lambda *a: loi.append(a))
+    ts = [threading.Thread(target=main._tu_sao_luu) for _ in range(8)]
+    [t.start() for t in ts]
+    [t.join() for t in ts]
+    assert len(ds_ban_sao(config.SAO_LUU_DIR)) == 1 and loi == []
