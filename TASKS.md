@@ -80,7 +80,7 @@
 ## Giai đoạn 15 – Bạn đồng hành (chỉ phần mềm, Claude tự thêm)
 - [x] Nút "?" – Bơ làm được gì: liệt kê mẹo dùng (không tốn API)
 - [x] Ghim tin nhắn đáng nhớ, xem lại danh sách ghim
-- [ ] Tổng kết tuần: tối Chủ nhật mở web, Bơ điểm lại tuần qua (1 câu API/tuần)
+- [x] Tổng kết tuần: tối Chủ nhật mở web, Bơ điểm lại tuần qua (1 câu API/tuần)
 
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định

@@ -58,6 +58,10 @@ class Memory:
                 content TEXT NOT NULL,       -- ví dụ "Sinh nhật Tân"
                 wished_year INTEGER NOT NULL DEFAULT 0  -- năm gần nhất Bơ đã chúc
             );
+            CREATE TABLE IF NOT EXISTS kv (
+                key TEXT PRIMARY KEY,        -- cài đặt nhỏ, ví dụ tuần đã tổng kết
+                value TEXT NOT NULL
+            );
             CREATE TABLE IF NOT EXISTS facts (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 content TEXT NOT NULL UNIQUE,
@@ -147,6 +151,23 @@ class Memory:
             who = "Bạn" if role == "user" else "Bơ"
             lines.append(f"[{t[11:16]}] {who}: {content}")
         return "\n".join(lines) + "\n" if lines else "(Chưa có tin nhắn nào)\n"
+
+    def get_kv(self, key: str, default: str = "") -> str:
+        row = self.conn.execute("SELECT value FROM kv WHERE key = ?", (key,)).fetchone()
+        return row[0] if row else default
+
+    def set_kv(self, key: str, value: str) -> None:
+        self.conn.execute("INSERT INTO kv (key, value) VALUES (?, ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+                          (key, value))
+        self.conn.commit()
+
+    def user_messages_since(self, since: datetime, limit: int = 60) -> list[dict]:
+        """Tin của người dùng từ `since` tới nay (cũ → mới), tối đa `limit` tin gần nhất."""
+        rows = self.conn.execute(
+            "SELECT content, created_at FROM messages WHERE role = 'user' AND created_at >= ? ORDER BY id DESC LIMIT ?",
+            (since.strftime("%Y-%m-%d %H:%M:%S"), limit),
+        ).fetchall()
+        return [{"content": c, "created_at": t} for c, t in reversed(rows)]
 
     def replies_today(self) -> int:
         today = date.today().isoformat()

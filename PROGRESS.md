@@ -302,3 +302,11 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - 104 test qua hết.
 
 **Tân cần thử:** chạm vào một câu hay của Bơ → "Ghim tin này" → bấm "Tìm".
+
+## 2026-10-10 – Giai đoạn 15 xong (báo cáo): bạn đồng hành
+- **Nút "?"**: liệt kê những việc Bơ làm được.
+- **Ghim tin nhắn**: chạm vào tin → "Ghim tin này"; xem lại ở nút "Tìm".
+- **Tổng kết tuần**: tối Chủ nhật (từ 17h) mở web, nếu tuần đó có nói chuyện (≥5 tin), Bơ chủ động điểm lại 2–3 chuyện đáng nhớ và hỏi dự định tuần tới. Mỗi tuần một lần, tốn 1 câu API. Tắt bằng `WEEKLY_RECAP=0` trong `.env`.
+- 107 test qua hết.
+
+**Tân cần thử:** tối Chủ nhật này mở web xem Bơ điểm lại tuần; chạm vào một tin để ghim.

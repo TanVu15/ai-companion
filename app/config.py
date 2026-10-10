@@ -29,6 +29,8 @@ FOLLOWUP_MIN_HOURS = float(os.getenv("FOLLOWUP_MIN_HOURS", "3"))
 GREET_AFTER_HOURS = float(os.getenv("GREET_AFTER_HOURS", "3"))
 # Lâu ngần này ngày không nói chuyện thì Bơ chào "lâu quá không gặp" dù không có chuyện để hỏi. 0 = tắt.
 GREET_MISS_DAYS = int(os.getenv("GREET_MISS_DAYS", "2"))
+# Tối Chủ nhật (từ 17h) mở web thì Bơ điểm lại tuần qua (1 câu API mỗi tuần). 0 = tắt.
+WEEKLY_RECAP = os.getenv("WEEKLY_RECAP", "1") == "1"
 
 # Gặp lỗi mạng/máy chủ bận thì thử lại tối đa ngần này lần; mỗi lần hỏi chờ tối đa API_TIMEOUT giây
 API_RETRIES = int(os.getenv("API_RETRIES", "3"))

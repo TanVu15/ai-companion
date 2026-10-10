@@ -4,7 +4,7 @@ import re
 import threading
 import time
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from . import config
 from .nhat_ky import log
@@ -77,6 +77,11 @@ GREET_TRIGGER = (
 SPECIAL_TRIGGER = (
     "(Tin nhắn hệ thống, không phải người dùng nói: người dùng vừa mở ứng dụng. "
     "Hôm nay là ngày đặc biệt (xem phần 'Hôm nay là ngày đặc biệt'), hãy chủ động chúc mừng thật vui, ngắn gọn.)"
+)
+WEEK_TRIGGER = (
+    "(Tin nhắn hệ thống, không phải người dùng nói: tối Chủ nhật rồi. Hãy chủ động điểm lại tuần qua của người dùng "
+    "thật ấm áp, như bạn thân: nhắc 2-3 chuyện đáng nhớ, khen điều họ làm được, hỏi tuần tới có dự định gì. "
+    "Ngắn gọn, đừng liệt kê khô khan. Những gì người dùng đã kể trong tuần:\n{items})"
 )
 MISS_TRIGGER = (
     "(Tin nhắn hệ thống, không phải người dùng nói: người dùng vừa quay lại sau {days} ngày không nói chuyện. "
@@ -350,8 +355,13 @@ class Brain:
         last = self.memory.last_message_time()
         followups = self.memory.pending_followups(config.FOLLOWUP_MIN_HOURS)
         days = (datetime.now() - last).days if last else 0
+        week = self._recap_week()
+        recap = False
         if self.memory.special_days_today():
             trigger = SPECIAL_TRIGGER  # ngày đặc biệt chưa chúc thì chúc ngay, dù vừa mới nói chuyện
+        elif week:
+            items = "\n".join(f"- {m['content'][:200]}" for m in self.memory.user_messages_since(datetime.now() - timedelta(days=7)))
+            trigger, recap = WEEK_TRIGGER.format(items=items[-4000:]), True
         elif last and (datetime.now() - last).total_seconds() < config.GREET_AFTER_HOURS * 3600:
             return None
         elif followups:
@@ -362,7 +372,23 @@ class Brain:
             return None
         history = clean_history(self.memory.recent_messages(config.HISTORY_LIMIT))
         history.append({"role": "user", "content": trigger})  # chỉ gửi đi, không lưu
-        return self._ask(clean_history(history), followups)
+        reply = self._ask(clean_history(history), followups)
+        if recap:
+            self.memory.set_kv("tong_ket_tuan", week)  # tuần này đã điểm lại rồi
+        return reply
+
+    def _recap_week(self, now: datetime | None = None) -> str:
+        """Tối Chủ nhật, tuần này chưa điểm lại, và trong tuần có nói chuyện (≥5 tin) → trả mã tuần ("2026-W41")."""
+        now = now or datetime.now()
+        if not config.WEEKLY_RECAP or now.weekday() != 6 or now.hour < 17:
+            return ""
+        y, w, _ = now.isocalendar()
+        week = f"{y}-W{w:02d}"
+        if self.memory.get_kv("tong_ket_tuan") == week:
+            return ""
+        if len(self.memory.user_messages_since(now - timedelta(days=7))) < 5:
+            return ""
+        return week
 
     def _ask(self, history: list[dict], followups: list[dict]) -> Reply:
         summary, _ = self.memory.latest_summary()
