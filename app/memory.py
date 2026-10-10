@@ -18,6 +18,8 @@ class Memory:
         db_path = Path(db_path)
         db_path.parent.mkdir(parents=True, exist_ok=True)
         self.conn = sqlite3.connect(db_path, check_same_thread=False)
+        # lower() của SQLite chỉ đổi chữ không dấu ("Đi" ≠ "đi"); vlower() hiểu cả tiếng Việt
+        self.conn.create_function("vlower", 1, lambda t: t.casefold() if isinstance(t, str) else t, deterministic=True)
         self.conn.executescript(
             """
             CREATE TABLE IF NOT EXISTS messages (
@@ -311,18 +313,40 @@ class Memory:
         return [{"day": d, "kind": k, "calls": c, "input_tokens": i, "output_tokens": o} for d, k, c, i, o in rows]
 
     # --- Lời nhắc theo giờ ---
-    _LAP = {"ngay": timedelta(days=1), "tuan": timedelta(weeks=1)}
+    # ngay: mỗi ngày; tuan: mỗi tuần; ngay_thuong: thứ 2–6; thang: mỗi tháng (cùng ngày, tháng thiếu thì ngày cuối tháng)
+    _LAP = {"ngay": timedelta(days=1), "tuan": timedelta(weeks=1), "ngay_thuong": None, "thang": None}
+
+    @staticmethod
+    def _cong_thang(t: datetime, ngay: int) -> datetime:
+        """Tháng sau, cùng ngày `ngay` (tháng thiếu thì lấy ngày cuối tháng)."""
+        y, m = (t.year + 1, 1) if t.month == 12 else (t.year, t.month + 1)
+        cuoi = (date(y + (m == 12), m % 12 + 1, 1) - timedelta(days=1)).day
+        return t.replace(year=y, month=m, day=min(ngay, cuoi))
 
     @classmethod
     def _next_time(cls, luc: datetime, lap: str, now: datetime) -> datetime:
         """Lời nhắc lặp lại: dời tới lần kế tiếp sau `now` (bỏ qua các lần đã lỡ)."""
+        if lap == "ngay_thuong":
+            t = luc
+            if t <= now:  # nhảy tới hôm nay (cùng giờ), qua giờ rồi thì mai
+                t = datetime.combine(now.date(), luc.time())
+                if t <= now:
+                    t += timedelta(days=1)
+            while t.weekday() >= 5:  # thứ 7, Chủ nhật bỏ qua
+                t += timedelta(days=1)
+            return t
+        if lap == "thang":
+            t, ngay = luc, luc.day
+            while t <= now:
+                t = cls._cong_thang(t, ngay)
+            return t
         step = cls._LAP[lap]
         if luc > now:
             return luc
         return luc + step * ((now - luc) // step + 1)
 
     def add_reminders(self, items: list[dict], now: datetime | None = None) -> int:
-        """Thêm lời nhắc dạng {"luc": "YYYY-MM-DD HH:MM", "viec": "...", "lap": "ngay"|"tuan"|""}.
+        """Thêm lời nhắc dạng {"luc": "YYYY-MM-DD HH:MM", "viec": "...", "lap": "ngay"|"tuan"|"ngay_thuong"|"thang"|""}.
         Giờ sai thì bỏ. Nhắc một lần mà giờ đã qua thì bỏ; nhắc lặp lại thì dời tới lần kế tiếp."""
         now = now or datetime.now()
         added = 0
@@ -343,19 +367,21 @@ class Memory:
             elif luc < now - timedelta(minutes=1):
                 continue
             due = luc.strftime("%Y-%m-%d %H:%M")
-            exists = self.conn.execute(
-                "SELECT 1 FROM reminders WHERE done = 0 AND due_at = ? AND lower(content) = lower(?) AND lap = ?",
-                (due, viec, lap),
-            ).fetchone()
+            # so sánh không phân biệt hoa/thường bằng Python (lower() của SQLite không hiểu "Đ", "Ă"...)
+            same = [o for o, c in self.conn.execute(
+                "SELECT due_at, content FROM reminders WHERE done = 0 AND lap = ?", (lap,)
+            ) if c.casefold() == viec.casefold()]
+            exists = due in same
             if lap and not exists:  # lặp lại: cùng việc, cùng giờ (cùng thứ nếu mỗi tuần) là trùng, dù khác ngày
-                for (other,) in self.conn.execute(
-                    "SELECT due_at FROM reminders WHERE done = 0 AND lower(content) = lower(?) AND lap = ?", (viec, lap)
-                ):
+                for other in same:
                     try:
                         o = datetime.strptime(other, "%Y-%m-%d %H:%M")
                     except ValueError:
                         continue
-                    if o.time() == luc.time() and (lap == "ngay" or o.weekday() == luc.weekday()):
+                    if o.time() == luc.time() and (
+                        lap in ("ngay", "ngay_thuong") or (lap == "tuan" and o.weekday() == luc.weekday())
+                        or (lap == "thang" and o.day == luc.day)
+                    ):
                         exists = True
                         break
             if not exists:
@@ -410,7 +436,7 @@ class Memory:
             raise ValueError("Giờ này đã qua rồi, chọn giờ sau nha")
         due = t.strftime("%Y-%m-%d %H:%M")
         if self.conn.execute(
-            "SELECT 1 FROM reminders WHERE done = 0 AND id != ? AND due_at = ? AND lower(content) = lower(?)",
+            "SELECT 1 FROM reminders WHERE done = 0 AND id != ? AND due_at = ? AND vlower(content) = vlower(?)",
             (reminder_id, due, viec),
         ).fetchone():
             raise ValueError("Đã có lời nhắc y hệt vào giờ này rồi")
@@ -450,7 +476,7 @@ class Memory:
                     continue
             day = f"{mo:02d}-{d:02d}"
             exists = self.conn.execute(
-                "SELECT 1 FROM special_days WHERE day = ? AND am = ? AND lower(content) = lower(?)", (day, int(am), viec)
+                "SELECT 1 FROM special_days WHERE day = ? AND am = ? AND vlower(content) = vlower(?)", (day, int(am), viec)
             ).fetchone()
             if not exists:
                 self.conn.execute("INSERT INTO special_days (day, content, am) VALUES (?, ?, ?)", (day, viec, int(am)))

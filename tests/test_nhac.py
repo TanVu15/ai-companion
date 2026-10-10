@@ -249,3 +249,49 @@ def test_sua_loi_nhac_khong_tao_trung(tmp_path):
     with _pt.raises(ValueError):
         mem.update_reminder(second["id"], "a", "2026-10-11 08:00", "", now=now)
     assert mem.update_reminder(second["id"], "A", "2026-10-12 08:00", "", now=now)  # sửa chính nó vẫn được
+
+
+def test_nhac_ngay_thuong(tmp_path):
+    from datetime import datetime
+
+    from app.memory import Memory
+
+    mem = Memory(tmp_path / "n.db")
+    fri = datetime(2026, 10, 9, 10, 0)  # thứ Sáu
+    mem.add_reminders([{"luc": "2026-10-09 08:00", "viec": "Đi làm", "lap": "ngay_thuong"}], now=fri)
+    (r,) = mem.upcoming_reminders()
+    assert r["luc"] == "2026-10-12 08:00" and r["lap"] == "ngay_thuong"  # qua cuối tuần → thứ Hai
+    assert mem.pop_due_reminders(datetime(2026, 10, 12, 8, 0))
+    assert mem.upcoming_reminders()[0]["luc"] == "2026-10-13 08:00"
+    # trùng giờ, khác ngày → không thêm
+    assert mem.add_reminders([{"luc": "2026-10-14 08:00", "viec": "đi làm", "lap": "ngay_thuong"}], now=fri) == 0
+    # đặt vào thứ Bảy (chưa tới) → dời sang thứ Hai
+    mem.add_reminders([{"luc": "2026-10-10 07:00", "viec": "Tập", "lap": "ngay_thuong"}], now=fri)
+    assert [x["luc"] for x in mem.upcoming_reminders() if x["viec"] == "Tập"] == ["2026-10-12 07:00"]
+
+
+def test_nhac_moi_thang(tmp_path):
+    from datetime import datetime
+
+    from app.memory import Memory
+
+    mem = Memory(tmp_path / "m.db")
+    now = datetime(2026, 10, 10, 9, 0)
+    mem.add_reminders([{"luc": "2026-10-05 09:00", "viec": "Đóng tiền nhà", "lap": "thang"}], now=now)
+    assert mem.upcoming_reminders()[0]["luc"] == "2026-11-05 09:00"
+    mem.add_reminders([{"luc": "2027-01-31 20:00", "viec": "Tổng kết", "lap": "thang"}], now=now)
+    assert Memory._next_time(datetime(2027, 1, 31, 20), "thang", datetime(2027, 1, 31, 21)) == datetime(2027, 2, 28, 20)
+    assert Memory._next_time(datetime(2026, 12, 15, 8), "thang", datetime(2026, 12, 20)) == datetime(2027, 1, 15, 8)
+    assert mem.add_reminders([{"luc": "2026-12-05 09:00", "viec": "đóng tiền nhà", "lap": "thang"}], now=now) == 0
+    mem.pop_due_reminders(datetime(2026, 11, 5, 9, 0))
+    assert [x["luc"] for x in mem.upcoming_reminders() if x["viec"] == "Đóng tiền nhà"] == ["2026-12-05 09:00"]
+
+
+def test_ics_lap_moi():
+    from datetime import date
+
+    from app.lich_ics import tao_ics
+
+    ics = tao_ics([], [{"id": 1, "viec": "A", "luc": "2026-10-12 08:00", "lap": "ngay_thuong"},
+                       {"id": 2, "viec": "B", "luc": "2026-11-05 09:00", "lap": "thang"}], today=date(2026, 10, 10))
+    assert "RRULE:FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR" in ics and "RRULE:FREQ=MONTHLY" in ics

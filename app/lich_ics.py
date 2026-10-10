@@ -6,7 +6,8 @@ from datetime import date, datetime, timedelta, timezone
 
 from .am_lich import am_sang_duong, duong_sang_am
 
-RRULE = {"ngay": "FREQ=DAILY", "tuan": "FREQ=WEEKLY"}
+RRULE = {"ngay": "FREQ=DAILY", "tuan": "FREQ=WEEKLY", "ngay_thuong": "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR",
+         "thang": "FREQ=MONTHLY"}
 
 
 def _esc(text: str) -> str:

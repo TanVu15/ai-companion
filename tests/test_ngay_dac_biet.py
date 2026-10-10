@@ -280,3 +280,8 @@ def test_api_dem_nguoc(tmp_path):
     brain.memory.add_special_days([{"ngay": today_ddmm(5), "viec": "A"}, {"ngay": today_ddmm(1), "viec": "B"}])
     data = TestClient(main.app).get("/api/ngay-dac-biet").json()
     assert [(d["viec"], d["con_ngay"]) for d in data] == [("B", 1), ("A", 5)]
+
+
+def test_trung_khong_phan_biet_hoa_thuong_tieng_viet(memory):
+    memory.add_special_days([{"ngay": "5/3", "viec": "Đám cưới anh Ánh"}])
+    assert memory.add_special_days([{"ngay": "5/3", "viec": "đám cưới anh ánh"}]) == 0

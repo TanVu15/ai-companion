@@ -168,6 +168,11 @@
 - [x] Tải lịch .ics (ngày đặc biệt + lời nhắc) để thêm vào lịch điện thoại
 - [x] Rà soát code lần 12, sửa lỗi tìm được
 
+## Giai đoạn 33 – Lời nhắc linh hoạt (chỉ phần mềm, Claude tự thêm)
+- [x] Nhắc thứ 2–6 ("ngày đi làm") và mỗi tháng ("ngày 5 hằng tháng"); sửa được trên web; lịch .ics theo kiểu mới
+- [x] Sửa lỗi: so trùng không phân biệt hoa/thường với chữ có dấu ("Đi làm" = "đi làm")
+- [ ] Rà soát code lần 13, sửa lỗi tìm được
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo

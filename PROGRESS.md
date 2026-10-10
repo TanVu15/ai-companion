@@ -593,3 +593,8 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 
 **Tân cần thử (giai đoạn 32):** hỏi Bơ "còn mấy ngày nữa Tết?"; trên iPhone mở web → "Bơ nhớ gì về mình?" → "Tải lịch cho điện thoại" → Thêm vào Lịch.
 
+## 2026-10-10 – Giai đoạn 33: lời nhắc linh hoạt
+- Thêm 2 kiểu lặp: **thứ 2–6** ("ngày đi làm 7h nhắc mình uống thuốc bổ") và **mỗi tháng** ("ngày 5 hằng tháng nhắc đóng tiền nhà"; ngày 31 thì tháng thiếu nhắc ngày cuối tháng). Sửa được trong ô sửa lời nhắc trên web; file lịch .ics cũng lặp đúng kiểu.
+- Sửa lỗi cũ: Bơ so trùng lời nhắc / ngày đặc biệt bằng chữ thường của SQLite, vốn không hiểu chữ có dấu ("Đi làm" khác "đi làm") → có thể ghi trùng. Giờ so đúng tiếng Việt.
+- 214 test qua hết.
+

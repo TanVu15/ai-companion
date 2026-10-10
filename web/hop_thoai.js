@@ -1,3 +1,4 @@
+const LAP_TEN = { ngay: 'Mỗi ngày', ngay_thuong: 'Thứ 2–6', tuan: 'Mỗi tuần', thang: 'Mỗi tháng' };
 // Các hộp thoại và tiện ích: trí nhớ, ngủ gật, tìm, "?", ghim, tính cách, màu mặt, phím tắt.
 const mem = document.getElementById('mem'), factsEl = document.getElementById('facts');
 async function delFact(content) {
@@ -49,7 +50,7 @@ async function loadReminders() {
   if (!list.length) { const li = document.createElement('li'); li.textContent = 'Chưa có. Thử nhắn: "8h tối nhắc mình gọi mẹ".'; remsEl.appendChild(li); }
   list.forEach(x => {
     const li = document.createElement('li'), b = document.createElement('button');
-    const lap = x.lap === 'ngay' ? ' (mỗi ngày)' : x.lap === 'tuan' ? ' (mỗi tuần)' : '';
+    const lap = LAP_TEN[x.lap] ? ' (' + LAP_TEN[x.lap].toLowerCase() + ')' : '';
     li.textContent = x.luc.slice(11) + ' ' + x.luc.slice(8, 10) + '/' + x.luc.slice(5, 7) + ' — ' + x.viec + lap + ' ';
     b.textContent = 'Xóa'; b.type = 'button'; b.className = 'link'; b.setAttribute('aria-label', 'Xóa lời nhắc: ' + x.viec);
     b.onclick = async () => { await fetch('/api/nhac/' + x.id, { method: 'DELETE' }); loadReminders(); };
@@ -68,7 +69,7 @@ function editReminder(li, x) {
   const luc = document.createElement('input'); luc.type = 'datetime-local'; luc.value = x.luc.replace(' ', 'T');
   luc.setAttribute('aria-label', 'Ngày giờ nhắc');
   const lap = document.createElement('select'); lap.setAttribute('aria-label', 'Lặp lại');
-  [['', 'Một lần'], ['ngay', 'Mỗi ngày'], ['tuan', 'Mỗi tuần']].forEach(([v, t]) => {
+  [['', 'Một lần'], ...Object.entries(LAP_TEN)].forEach(([v, t]) => {
     const o = document.createElement('option'); o.value = v; o.textContent = t; if ((x.lap || '') === v) o.selected = true; lap.appendChild(o);
   });
   const err = document.createElement('span'); err.className = 'err';
