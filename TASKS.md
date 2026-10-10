@@ -85,7 +85,7 @@
 ## Giai đoạn 16 – Chăm chút (chỉ phần mềm, Claude tự thêm)
 - [x] Bộ chấm điểm tính cách: thêm tình huống sinh nhật, nhắc mỗi ngày
 - [x] "Bơ và bạn": đã quen bao nhiêu ngày, bao nhiêu tin nhắn (trong nút "?")
-- [ ] Cập nhật README cho các tính năng mới
+- [x] Cập nhật README cho các tính năng mới
 - [ ] Rà soát code lần 4 (ghim, tổng kết tuần), sửa lỗi tìm được
 
 ## Sau này

@@ -31,7 +31,20 @@ Chatbot trò chuyện có tính cách, có trí nhớ và có khuôn mặt biể
 ## Nhờ Bơ nhắc việc
 
 Nhắn kiểu "8h tối nhắc mình gọi mẹ" hoặc "30 phút nữa nhắc mình tắt bếp". Tới giờ Bơ nhắn (và đọc to nếu bật giọng nói).
+Nhắc lặp lại cũng được: "mỗi ngày 7h sáng nhắc mình uống nước", "tối thứ Hai hằng tuần 8h nhắc mình họp nhóm".
+Dưới lời nhắc có nút "Nhắc lại sau 10 phút".
 Chỉ nhắc được khi **máy tính đang chạy Bơ và trang web đang mở**. Xem/xóa lời nhắc trong "Bơ nhớ gì về mình?".
+
+## Những thứ khác Bơ làm được
+
+- **Nút "?"**: danh sách mẹo dùng + Bơ và bạn đã quen bao nhiêu ngày.
+- **Hỏi thăm chuyện cũ:** kể "tối nay đi đá bóng" → hôm sau mở web Bơ tự hỏi. 2 ngày không chat thì Bơ chào "lâu quá không gặp".
+- **Ngày đặc biệt:** kể "sinh nhật mình 5/3" → đúng ngày Bơ chúc (mỗi năm một lần).
+- **Tổng kết tuần:** tối Chủ nhật (từ 17h) mở web, Bơ điểm lại tuần qua. Tắt bằng `WEEKLY_RECAP=0`.
+- **Tìm chuyện cũ:** nút "Tìm", gõ không dấu cũng được.
+- **Ghim tin nhắn:** chạm vào một tin → "Ghim tin này". Xem lại ở nút "Tìm" (khi chưa gõ gì).
+- **Sao lưu:** trong "Bơ nhớ gì về mình?" → tải bản sao lưu (.json, nạp lại được) hoặc tải trò chuyện (.txt, để đọc).
+- **Chi phí:** nút "Chi phí". Đặt `MONTHLY_USD_LIMIT` trong `.env` để giới hạn tiền mỗi tháng.
 
 ## Nối phần cứng (ESP32)
 
@@ -43,7 +56,7 @@ Sửa file `persona.md` rồi gửi tin nhắn mới. Không cần khởi độn
 
 ## Thử tính cách (chấm điểm)
 
-Bơ trả lời 12 tình huống trong `tinh_huong.json` (buồn, mệt, khoe thành tích, hỏi điều không biết, hỏi thăm chuyện cũ...) và được chấm điểm tự động. Tốn khoảng 12 câu API (rất rẻ), không đụng vào trí nhớ thật.
+Bơ trả lời 15 tình huống trong `tinh_huong.json` (buồn, mệt, khoe thành tích, hỏi điều không biết, hỏi thăm chuyện cũ, sinh nhật, nhắc mỗi ngày...) và được chấm điểm tự động. Tốn khoảng 15 câu API (rất rẻ), không đụng vào trí nhớ thật.
 
 ```
 .venv\Scripts\activate
