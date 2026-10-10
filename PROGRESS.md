@@ -353,3 +353,7 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - 119 test qua hết.
 
 **Tân cần thử:** thêm `THANH_PHO=...` vào `.env`, chạy lại, nhắn "chiều nay mình đi chơi nè" xem Bơ có nhắc thời tiết không.
+
+## 2026-10-10 – Giai đoạn 18: tình trạng trong nút "?"
+- Nút "?" có thêm mục **Tình trạng**: API key, tính cách đang dùng (mặc định hay bản tự sửa), dữ liệu, mật khẩu, ngân sách, thời tiết (lấy được chưa, sai tên thành phố thì báo). Kiểm tra không gọi mạng, không tốn tiền.
+- 120 test qua hết.

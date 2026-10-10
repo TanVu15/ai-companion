@@ -472,6 +472,15 @@ document.getElementById('openHelp').onclick = async () => {
         + ' ngày, ' + s.so_tin.toLocaleString('vi-VN') + ' tin nhắn. Bơ đang nhớ ' + s.so_dieu_nho + ' điều về bạn.'
       : 'Bơ và bạn mới quen thôi. Nhắn gì đó đi!';
   } catch (e) {}
+  const hl = document.getElementById('healthList'); hl.innerHTML = '';
+  try {
+    const d = await (await fetch('/api/suc-khoe')).json();
+    d.kiem_tra.forEach(k => {
+      const li = document.createElement('li');
+      li.textContent = (k.muc === 'ok' ? '✓ ' : k.muc === 'canh_bao' ? '! ' : '✗ ') + k.ten + ': ' + k.ghi_chu;
+      hl.appendChild(li);
+    });
+  } catch (e) {}
 };
 document.getElementById('closeHelp').onclick = () => helpDlg.close();
 

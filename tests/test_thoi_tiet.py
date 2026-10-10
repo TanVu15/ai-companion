@@ -67,3 +67,26 @@ def test_bo_nao_dua_thoi_tiet_vao(tmp_path):
     Brain(Memory(tmp_path / "w.db"), client=client, weather=w).chat("mình sắp ra ngoài")
     assert "Thời tiết ở Đà Nẵng" in client.calls[0]["system"]
     assert "Thời tiết" not in build_system_prompt("Bơ", [])
+
+
+def test_suc_khoe_bao_thoi_tiet(tmp_path, monkeypatch):
+    from fastapi.testclient import TestClient
+
+    from app import config, main
+
+    monkeypatch.setattr(config, "THANH_PHO", "Xyzabc")
+    w = ThoiTiet("Xyzabc", get=lambda url, p: {})
+    main._brain = Brain(Memory(tmp_path / "h.db"), client=FakeClient([]), weather=w)
+    c = TestClient(main.app)
+
+    def row():
+        return [k for k in c.get("/api/suc-khoe").json()["kiem_tra"] if k["ten"] == "Thời tiết"][0]
+
+    assert row()["ok"] is True and "sẽ lấy" in row()["ghi_chu"]
+    w.hien_tai()
+    r = row()
+    assert r["muc"] == "canh_bao" and "Không tìm thấy thành phố" in r["ghi_chu"]
+    w2 = ThoiTiet("Da Nang", get=FakeHttp())
+    main._brain.weather = w2
+    w2.hien_tai()
+    assert row()["ghi_chu"].startswith("Thời tiết ở Đà Nẵng")

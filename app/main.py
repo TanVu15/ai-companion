@@ -212,10 +212,20 @@ def health():
             "Có API key" if key.startswith("sk-") else
             ("Chưa có ANTHROPIC_API_KEY trong .env" if not key else "API key trông không đúng (thường bắt đầu bằng sk-)"))
     try:
-        persona_ok = bool(current_persona()[0].strip())
+        text, custom = current_persona()
+        persona_ok = bool(text.strip())
     except OSError:
-        persona_ok = False
-    add("Tính cách", persona_ok, "Có persona.md" if persona_ok else "Thiếu hoặc trống file persona.md")
+        persona_ok, custom = False, False
+    add("Tính cách", persona_ok,
+        ("Đang dùng bản tự sửa trên web (data/persona.md)" if custom else "Đang dùng persona.md mặc định")
+        if persona_ok else "Thiếu hoặc trống file persona.md")
+    if config.THANH_PHO:
+        w = _brain.weather if _brain is not None else None
+        if w is not None and w.loi:
+            add("Thời tiết", False, f"{config.THANH_PHO}: không lấy được ({w.loi})", "canh_bao")
+        else:
+            add("Thời tiết", True, (w.da_lay() if w is not None else None)
+                or f"{config.THANH_PHO} (sẽ lấy khi bạn nhắn tin)")
     db = config.DB_PATH.with_name("demo.db") if config.DEMO else config.DB_PATH
     try:
         db.parent.mkdir(parents=True, exist_ok=True)

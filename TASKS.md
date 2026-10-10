@@ -95,7 +95,7 @@
 
 ## Giai đoạn 18 – Bơ biết thêm thế giới (chỉ phần mềm, Claude tự thêm)
 - [x] Thời tiết (Open-Meteo miễn phí, không cần tài khoản): đặt THANH_PHO trong .env
-- [ ] Kiểm tra sức khỏe báo thêm: thời tiết lấy được không, tính cách đang dùng bản nào
+- [x] Kiểm tra sức khỏe báo thêm: thời tiết lấy được không, tính cách đang dùng bản nào
 - [ ] Rà soát code lần 5 (tính cách trên web, thời tiết, dịp đặc biệt), sửa lỗi tìm được
 
 ## Sau này

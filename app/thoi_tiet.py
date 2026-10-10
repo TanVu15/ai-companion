@@ -69,6 +69,11 @@ class ThoiTiet:
         self._clock = clock
         self._toa_do = None  # (tên, vĩ độ, kinh độ)
         self._cache: tuple[float, str | None] | None = None
+        self.loi = ""  # lỗi lần lấy gần nhất (để trang kiểm tra sức khỏe báo)
+
+    def da_lay(self) -> str | None:
+        """Kết quả lần lấy gần nhất, KHÔNG gọi mạng (dùng cho kiểm tra sức khỏe)."""
+        return self._cache[1] if self._cache else None
 
     @staticmethod
     def _http_get(url: str, params: dict) -> dict:
@@ -102,8 +107,10 @@ class ThoiTiet:
             })
             text = tom_tat(ten, data)
             self._cache = (now + 3600, text)
+            self.loi = ""
         except Exception as e:
             log.warning("Lấy thời tiết lỗi: %s", e)
+            self.loi = str(e) if isinstance(e, ValueError) else "mất mạng hoặc Open-Meteo không trả lời"
             text = self._cache[1] if self._cache else None  # có bản cũ thì dùng tạm
             self._cache = (now + 600, text)
         return text
