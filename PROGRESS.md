@@ -181,3 +181,7 @@
 - 75 test qua hết.
 
 **Tân cần thử:** nhắn Bơ lúc khuya hoặc cuối tuần xem câu chào có hợp lúc không.
+
+## 2026-10-10 – Giai đoạn 10: test tự động trên GitHub
+- Mỗi lần có code mới trên GitHub, test tự chạy (tab "Actions" trên trang repo). Dấu ✓ xanh = ổn, ✗ đỏ = có lỗi.
+- Ghi chú: có một commit lúc 19:09 lỡ đẩy lên khi 1 test cũ chưa sửa; 20 giây sau đã sửa. Từ giờ Claude chỉ commit khi test xanh (chạy test và commit chung một lệnh).

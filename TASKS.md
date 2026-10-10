@@ -53,6 +53,11 @@
 - [x] Tách JS của web ra file riêng cho dễ sửa (index.html đang dài)
 - [x] Bơ biết thứ trong tuần và buổi (sáng/trưa/tối) để chào hợp lúc
 
+## Giai đoạn 10 – Dễ bảo trì (chỉ phần mềm, Claude tự thêm)
+- [x] Tự chạy test trên GitHub mỗi lần đẩy code (GitHub Actions)
+- [ ] Ghi lỗi ra file `data/loi.log` để Tân gửi khi gặp sự cố
+- [ ] Hướng dẫn khắc phục sự cố thường gặp (SU_CO.md)
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo
