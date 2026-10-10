@@ -18,9 +18,10 @@ function timeLabel(t) {
   const days = Math.round((today - new Date(d).setHours(0, 0, 0, 0)) / 86400000);
   return days <= 0 ? hm : days === 1 ? 'hôm qua ' + hm : d.toLocaleDateString('vi-VN') + ' ' + hm;
 }
-function makeMsg(role, text, t) {
+function makeMsg(role, text, t, id, pinned) {
   const d = document.createElement('div');
-  d.className = 'msg ' + role; d.textContent = text;
+  d.className = 'msg ' + role + (pinned ? ' pinned' : ''); d.textContent = text;
+  if (id) d.dataset.id = id;
   if (role !== 'error') {
     const s = document.createElement('span'); s.className = 'time'; s.textContent = timeLabel(t);
     d.appendChild(s);
@@ -28,28 +29,30 @@ function makeMsg(role, text, t) {
   return d;
 }
 // Tin của Bơ có thể là 2–3 bong bóng; giờ chỉ hiện ở bong bóng cuối
-function makeMsgs(role, text, t) {
-  if (role !== 'assistant') return [makeMsg(role, text, t)];
+function makeMsgs(role, text, t, id, pinned) {
+  if (role !== 'assistant') return [makeMsg(role, text, t, id, pinned)];
   const parts = boTachTin(text);
   return parts.map((p, i) => {
-    const d = makeMsg(role, p, t);
+    const d = makeMsg(role, p, t, id, pinned);
     if (i < parts.length - 1) d.querySelector('.time').remove();
     return d;
   });
 }
-function add(role, text, t) {
-  makeMsgs(role, text, t).forEach(d => log.appendChild(d)); log.scrollTop = log.scrollHeight;
+function add(role, text, t, id, pinned) {
+  const ds = makeMsgs(role, text, t, id, pinned);
+  ds.forEach(d => log.appendChild(d)); log.scrollTop = log.scrollHeight;
+  return ds[ds.length - 1];
 }
 const wait = ms => new Promise(r => setTimeout(r, ms));
 // Bơ "gõ" từng bong bóng một, có dấu ba chấm ở giữa
 // Mọi lời của Bơ xếp hàng: lời nhắc/lời chào/câu trả lời không chen vào giữa các bong bóng của nhau
 let boQueue = Promise.resolve();
-function addBo(text) {
-  boQueue = boQueue.then(() => addBoNow(text)).catch(() => {});
+function addBo(text, id) {
+  boQueue = boQueue.then(() => addBoNow(text, id)).catch(() => {});
   return boQueue;
 }
-async function addBoNow(text) {
-  const bubbles = makeMsgs('assistant', text);
+async function addBoNow(text, id) {
+  const bubbles = makeMsgs('assistant', text, null, id);
   for (let i = 0; i < bubbles.length; i++) {
     if (i > 0) {
       const dots = document.createElement('div');
@@ -75,7 +78,7 @@ async function loadHistory() {
     const r = await fetch('/api/history');
     if (!r.ok) return;
     const list = await r.json();
-    list.forEach(m => add(m.role, m.content, m.created_at));
+    list.forEach(m => add(m.role, m.content, m.created_at, m.id, m.ghim));
     const lastBo = list.filter(m => m.role === 'assistant' && m.cam_xuc).pop();
     if (lastBo) express(lastBo.cam_xuc);  // mở lại web: Bơ giữ vẻ mặt lúc nói câu cuối
     if (list.length) oldestId = list[0].id; else noMore = true;
@@ -92,7 +95,7 @@ async function loadOlder() {
     if (list.length) {
       oldestId = list[0].id;
       const before = log.scrollHeight, frag = document.createDocumentFragment();
-      list.forEach(m => makeMsgs(m.role, m.content, m.created_at).forEach(d => frag.appendChild(d)));
+      list.forEach(m => makeMsgs(m.role, m.content, m.created_at, m.id, m.ghim).forEach(d => frag.appendChild(d)));
       log.prepend(frag);
       log.scrollTop += log.scrollHeight - before;  // giữ nguyên chỗ đang đọc
     }
@@ -108,7 +111,7 @@ function addError(text, retry) {
   b.onclick = () => { b.closest('.msg').remove(); retry(); };
   log.lastChild.appendChild(b);
 }
-async function sendText(text) {
+async function sendText(text, userBubble) {
   send.disabled = true;
   statusEl.textContent = 'Bơ đang nghĩ...'; express('suy_nghi');
   const ctrl = new AbortController(), timer = setTimeout(() => ctrl.abort(), 150000);
@@ -117,11 +120,12 @@ async function sendText(text) {
     let data = {};
     try { data = await r.json(); } catch (e) {}
     if (!r.ok) throw new Error(data.detail || 'Máy chủ trả lỗi ' + r.status);
-    express(data.cam_xuc, data.hanh_dong); speak(data.noi); await addBo(data.noi);
+    if (userBubble && data.id_nguoi_dung) userBubble.dataset.id = data.id_nguoi_dung;
+    express(data.cam_xuc, data.hanh_dong); speak(data.noi); await addBo(data.noi, data.id);
   } catch (e) {
     const msg = e.name === 'AbortError' ? 'Bơ nghĩ lâu quá, thử lại nha.'
       : e instanceof TypeError ? 'Không kết nối được máy chủ. Máy chủ còn chạy không?' : e.message;
-    addError(msg, () => sendText(text)); express('buon');
+    addError(msg, () => sendText(text, userBubble)); express('buon');
   } finally {
     clearTimeout(timer);
     send.disabled = false; statusEl.textContent = ''; input.focus();
@@ -132,9 +136,9 @@ form.addEventListener('submit', (ev) => {
   ev.preventDefault();
   const text = input.value.trim();
   if (!text || send.disabled) return;
-  add('user', text); input.value = '';
+  const bubble = add('user', text); input.value = '';
   if (/nhắc/i.test(text)) askNotify();
-  sendText(text);
+  sendText(text, bubble);
 });
 input.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); }
@@ -271,7 +275,7 @@ async function greet() {
   try {
     const r = await fetch('/api/chao', { method: 'POST' });
     const data = await r.json();
-    if (r.ok && data.noi) { express(data.cam_xuc, data.hanh_dong); speak(data.noi); await addBo(data.noi); }
+    if (r.ok && data.noi) { express(data.cam_xuc, data.hanh_dong); speak(data.noi); await addBo(data.noi, data.id); }
   } catch (e) {}
 }
 // ---- Lời nhắc: hỏi máy chủ mỗi 30 giây (chỉ khi web đang mở) ----
@@ -422,12 +426,20 @@ function highlight(li, text, q) {
 let searchTimer = null, searchSeq = 0;
 async function runSearch() {
   const q = searchInput.value, id = ++searchSeq;
-  if (boKhongDau(q).trim().length < 2) { searchList.innerHTML = ''; return; }
+  // chưa gõ gì → hiện các tin đã ghim
+  const showPinned = boKhongDau(q).trim().length < 2;
   let list = [];
-  try { const r = await fetch('/api/tim?q=' + encodeURIComponent(q)); if (r.ok) list = await r.json(); } catch (e) {}
+  try {
+    const r = await fetch(showPinned ? '/api/ghim' : '/api/tim?q=' + encodeURIComponent(q));
+    if (r.ok) list = await r.json();
+  } catch (e) {}
   if (id !== searchSeq) return;  // đã gõ tiếp, bỏ kết quả cũ
   searchList.innerHTML = '';
-  if (!list.length) { const li = document.createElement('li'); li.textContent = 'Không thấy.'; searchList.appendChild(li); }
+  if (showPinned) {
+    const li = document.createElement('li');
+    li.textContent = list.length ? 'Tin đã ghim:' : 'Chưa ghim tin nào. Chạm vào một tin nhắn để ghim.';
+    searchList.appendChild(li);
+  } else if (!list.length) { const li = document.createElement('li'); li.textContent = 'Không thấy.'; searchList.appendChild(li); }
   list.forEach(m => {
     const li = document.createElement('li'), s = document.createElement('small');
     s.textContent = (m.role === 'user' ? 'Bạn' : 'Bơ') + ' · ' + timeLabel(m.created_at);
@@ -435,10 +447,32 @@ async function runSearch() {
   });
 }
 searchInput.addEventListener('input', () => { clearTimeout(searchTimer); searchTimer = setTimeout(runSearch, 300); });
-document.getElementById('openSearch').onclick = () => { searchDlg.showModal(); searchInput.focus(); };
+document.getElementById('openSearch').onclick = () => { searchDlg.showModal(); searchInput.focus(); runSearch(); };
 document.getElementById('closeSearch').onclick = () => searchDlg.close();
 
 // ---- Bơ làm được gì? ----
 const helpDlg = document.getElementById('help');
 document.getElementById('openHelp').onclick = () => helpDlg.showModal();
 document.getElementById('closeHelp').onclick = () => helpDlg.close();
+
+// ---- Ghim tin nhắn: chạm vào bong bóng → hiện nút "Ghim" / "Bỏ ghim" ----
+log.addEventListener('click', (ev) => {
+  if (ev.target.closest('button')) return;
+  const bubble = ev.target.closest('.msg[data-id]');
+  if (!bubble) return;
+  const old = log.querySelector('.pin-btn');
+  if (old) { const same = old.parentElement === bubble; old.remove(); if (same) return; }
+  const id = bubble.dataset.id, pinned = bubble.classList.contains('pinned');
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'snooze pin-btn'; b.textContent = pinned ? 'Bỏ ghim' : 'Ghim tin này';
+  b.onclick = async () => {
+    b.disabled = true;
+    try {
+      const r = await fetch('/api/ghim/' + id, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ghim: !pinned }) });
+      if (!r.ok) throw new Error();
+      log.querySelectorAll('.msg[data-id="' + id + '"]').forEach(m => m.classList.toggle('pinned', !pinned));
+      b.remove();
+    } catch (e) { b.disabled = false; b.textContent = 'Lỗi, bấm lại'; }
+  };
+  bubble.appendChild(b);
+});

@@ -77,6 +77,9 @@
   .msg.error .retry { margin-left: 8px; border: 1px solid #c0392b; color: #c0392b; background: #fff; border-radius: 12px; padding: 2px 10px; cursor: pointer; }
   .snooze { display: block; margin-top: 6px; border: 1px solid var(--me); color: var(--me); background: var(--panel);
     border-radius: 12px; padding: 2px 10px; font-size: 13px; font-weight: 400; }
+  .msg.pinned { box-shadow: 0 0 0 2px var(--face); }
+  .msg.pinned .time::before { content: "đã ghim · "; }
+  .msg[data-id] { cursor: pointer; }
   form { display: flex; gap: 8px; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); border-top: 1px solid var(--border); background: var(--panel); }
   textarea { flex: 1; resize: none; border: 1px solid var(--border); border-radius: 20px; padding: 10px 14px;
     font: inherit; background: var(--bg); color: var(--text); max-height: 120px; }
@@ -163,6 +166,7 @@
     <li><b>Ngày đặc biệt:</b> "sinh nhật mình 5/3" → đúng ngày Bơ chúc.</li>
     <li><b>Giọng nói:</b> bật "Giọng nói" để Bơ đọc to; bấm micro để nói. "Rảnh tay": gọi "Bơ ơi" rồi nói. Chạm mặt Bơ để Bơ im.</li>
     <li><b>Tìm chuyện cũ:</b> nút "Tìm", gõ không dấu cũng được.</li>
+    <li><b>Ghim:</b> chạm vào một tin nhắn → "Ghim tin này". Xem lại trong nút "Tìm".</li>
     <li><b>Sao lưu:</b> trong "Bơ nhớ gì về mình?" → tải bản sao lưu hoặc tải trò chuyện (.txt).</li>
     <li><b>Chi phí:</b> nút "Chi phí" xem đã tiêu bao nhiêu tiền API.</li>
   </ul>
@@ -171,7 +175,7 @@
 </dialog>
 <dialog id="search">
   <h2>Tìm trong chuyện cũ</h2>
-  <p>Gõ vài chữ, có dấu hay không dấu đều được.</p>
+  <p>Gõ vài chữ, có dấu hay không dấu đều được. Chưa gõ gì thì hiện các tin đã ghim.</p>
   <input id="searchInput" type="search" placeholder="ví dụ: da bong" autocomplete="off" aria-label="Từ cần tìm">
   <ul id="searchList" class="plain"></ul>
   <div class="row"><span></span><button id="closeSearch" type="button">Xong</button></div>

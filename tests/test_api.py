@@ -24,7 +24,7 @@ def test_chat_endpoint(tmp_path):
     c = make_client(tmp_path, [json.dumps({"noi": "Hello!", "cam_xuc": "vui", "hanh_dong": "gat_dau"})])
     r = c.post("/api/chat", json={"text": "hi"})
     assert r.status_code == 200
-    assert r.json() == {"noi": "Hello!", "cam_xuc": "vui", "hanh_dong": "gat_dau"}
+    assert r.json() == {"noi": "Hello!", "cam_xuc": "vui", "hanh_dong": "gat_dau", "id": 2, "id_nguoi_dung": 1}
     assert len(c.get("/api/history").json()) == 2
 
 
@@ -260,3 +260,18 @@ def test_tai_tro_chuyen_txt(tmp_path):
 def test_trang_chu_co_huong_dan(tmp_path):
     html = make_client(tmp_path, []).get("/").text
     assert 'id="openHelp"' in html and "Bơ làm được gì?" in html and "Nhắc việc" in html
+
+
+def test_ghim_tin_nhan(tmp_path):
+    c = make_client(tmp_path, [json.dumps({"noi": "Câu hay quá", "cam_xuc": "vui", "hanh_dong": "khong"})])
+    d = c.post("/api/chat", json={"text": "kể chuyện"}).json()
+    assert c.get("/api/ghim").json() == []
+    assert c.post(f"/api/ghim/{d['id']}", json={"ghim": True}).status_code == 200
+    assert [m["content"] for m in c.get("/api/ghim").json()] == ["Câu hay quá"]
+    assert [m["ghim"] for m in c.get("/api/history").json()] == [False, True]
+    backup = c.get("/api/sao-luu").json()
+    c.post(f"/api/ghim/{d['id']}", json={"ghim": False})
+    assert c.get("/api/ghim").json() == []
+    assert c.post("/api/ghim/999", json={"ghim": True}).status_code == 404
+    c.post("/api/khoi-phuc", json=backup)
+    assert len(c.get("/api/ghim").json()) == 1  # sao lưu giữ cả tin đã ghim

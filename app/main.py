@@ -115,7 +115,8 @@ def chat(body: ChatIn):
     except Exception as e:  # lỗi mạng, hết tiền API... (đã thử lại vài lần trong bộ não)
         log.exception("Trả lời lỗi: %s", friendly_error(e))
         raise HTTPException(502, friendly_error(e))
-    return reply.to_dict()
+    # id: để web ghim được tin vừa nói (giao diện khác bỏ qua cũng không sao)
+    return {**reply.to_dict(), "id": reply.msg_id, "id_nguoi_dung": reply.user_msg_id}
 
 
 @app.post("/api/chao")
@@ -128,7 +129,7 @@ def greet():
     except Exception as e:
         log.warning("Mở lời lỗi: %s", type(e).__name__)
         reply = None  # mở lời không được thì thôi, không báo lỗi làm phiền
-    return reply.to_dict() if reply else {"noi": None}
+    return {**reply.to_dict(), "id": reply.msg_id} if reply else {"noi": None}
 
 
 @app.get("/api/chi-phi")
@@ -261,6 +262,24 @@ def history(before_id: int | None = None, limit: int = 50):
     return get_brain().memory.history_page(min(max(limit, 1), 200), before_id)
 
 
+class PinIn(BaseModel):
+    ghim: bool = True
+
+
+@app.get("/api/ghim")
+def pinned():
+    return get_brain().memory.pinned_messages()
+
+
+@app.post("/api/ghim/{msg_id}")
+def pin(msg_id: int, body: PinIn):
+    brain = get_brain()
+    with brain._lock:
+        if not brain.memory.set_pinned(msg_id, body.ghim):
+            raise HTTPException(404, "Không thấy tin nhắn này")
+    return {"ok": True}
+
+
 @app.get("/api/ngay-dac-biet")
 def special_days():
     return get_brain().memory.special_days()
@@ -332,7 +351,8 @@ def _device_out(data: dict, khong_dau: int) -> dict:
 def device_chat(body: ChatIn, request: Request, khong_dau: int = 0):
     """Thiết bị gửi chữ (đã nghe được), nhận {noi, cam_xuc, hanh_dong}. ?khong_dau=1 để bỏ dấu."""
     _check_device(request)
-    return _device_out(chat(body), khong_dau)
+    data = {k: v for k, v in chat(body).items() if k in ("noi", "cam_xuc", "hanh_dong")}  # thiết bị chỉ cần gọn
+    return _device_out(data, khong_dau)
 
 
 @app.post("/api/thiet-bi/chao")

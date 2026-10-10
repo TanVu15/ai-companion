@@ -72,6 +72,8 @@ class Memory:
         if "lap" not in {r[1] for r in self.conn.execute("PRAGMA table_info(reminders)")}:
             # lời nhắc lặp lại: '' = một lần, 'ngay' = mỗi ngày, 'tuan' = mỗi tuần
             self.conn.execute("ALTER TABLE reminders ADD COLUMN lap TEXT NOT NULL DEFAULT ''")
+        if "ghim" not in cols:  # 1 = tin đã ghim (tin đáng nhớ)
+            self.conn.execute("ALTER TABLE messages ADD COLUMN ghim INTEGER NOT NULL DEFAULT 0")
         if "tu_dong" not in cols:  # 1 = tin Bơ tự gửi theo giờ (lời nhắc), không tính là "đang nói chuyện"
             self.conn.execute("ALTER TABLE messages ADD COLUMN tu_dong INTEGER NOT NULL DEFAULT 0")
         self.conn.commit()
@@ -98,12 +100,25 @@ class Memory:
     def history_page(self, limit: int = 50, before_id: int | None = None) -> list[dict]:
         """Tin nhắn cho giao diện (có id và giờ), cũ → mới. `before_id` để tải thêm tin cũ hơn."""
         rows = self.conn.execute(
-            "SELECT id, role, content, created_at, cam_xuc FROM messages WHERE id < ? ORDER BY id DESC LIMIT ?",
+            "SELECT id, role, content, created_at, cam_xuc, ghim FROM messages WHERE id < ? ORDER BY id DESC LIMIT ?",
             (before_id if before_id else 2**62, limit),
         ).fetchall()
         return [
-            {"id": i, "role": r, "content": c, "created_at": t, "cam_xuc": e} for i, r, c, t, e in reversed(rows)
+            {"id": i, "role": r, "content": c, "created_at": t, "cam_xuc": e, "ghim": bool(g)}
+            for i, r, c, t, e, g in reversed(rows)
         ]
+
+    def set_pinned(self, msg_id: int, pinned: bool) -> bool:
+        """Ghim / bỏ ghim một tin. Trả False nếu không có tin đó."""
+        cur = self.conn.execute("UPDATE messages SET ghim = ? WHERE id = ?", (int(pinned), msg_id))
+        self.conn.commit()
+        return cur.rowcount > 0
+
+    def pinned_messages(self) -> list[dict]:
+        rows = self.conn.execute(
+            "SELECT id, role, content, created_at FROM messages WHERE ghim = 1 ORDER BY id DESC"
+        ).fetchall()
+        return [{"id": i, "role": r, "content": c, "created_at": t} for i, r, c, t in rows]
 
     def search_messages(self, query: str, limit: int = 30) -> list[dict]:
         """Tìm tin nhắn chứa `query`, mới nhất trước. Không phân biệt hoa/thường và có dấu/không dấu:
@@ -406,7 +421,7 @@ class Memory:
 
     # --- Sao lưu / khôi phục ---
     _BACKUP_TABLES = {
-        "messages": ("role", "content", "created_at", "cam_xuc", "tu_dong"),
+        "messages": ("role", "content", "created_at", "cam_xuc", "tu_dong", "ghim"),
         "summaries": ("content", "upto_id", "created_at"),
         "followups": ("content", "done", "created_at"),
         "facts": ("content", "created_at"),

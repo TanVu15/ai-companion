@@ -294,3 +294,11 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 ## 2026-10-10 – Giai đoạn 15: nút "?" – Bơ làm được gì
 - Nút **"?"** dưới khuôn mặt: liệt kê ngắn các việc Bơ làm được (nhớ chuyện, hỏi thăm, nhắc việc, ngày đặc biệt, giọng nói, tìm, sao lưu, chi phí). Không tốn API.
 - 103 test qua hết.
+
+## 2026-10-10 – Giai đoạn 15: ghim tin nhắn
+- Chạm vào một tin nhắn → nút **"Ghim tin này"** (chạm lần nữa để ẩn). Tin đã ghim có viền vàng và chữ "đã ghim".
+- Xem lại: bấm "Tìm" khi chưa gõ gì → danh sách tin đã ghim. Có trong file sao lưu.
+- `/api/chat` trả thêm `id` (để web ghim được tin vừa nói); cổng thiết bị vẫn chỉ trả `{noi, cam_xuc, hanh_dong}`.
+- 104 test qua hết.
+
+**Tân cần thử:** chạm vào một câu hay của Bơ → "Ghim tin này" → bấm "Tìm".

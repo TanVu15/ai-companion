@@ -53,6 +53,8 @@ class Reply:
     nhac: list[dict] = field(default_factory=list)
     ngay_dac_biet: list[dict] = field(default_factory=list)
     viec_nhac: str = ""  # với lời nhắc tới giờ: việc gốc (để bấm "nhắc lại sau")
+    msg_id: int = 0  # số thứ tự tin của Bơ trong lịch sử (để ghim)
+    user_msg_id: int = 0
 
     def to_dict(self) -> dict:
         return {"noi": self.noi, "cam_xuc": self.cam_xuc, "hanh_dong": self.hanh_dong}
@@ -305,7 +307,7 @@ class Brain:
             for r in self.memory.pop_due_reminders():
                 reply = Reply(noi=reminder_text(r["viec"], r["luc"]), cam_xuc="hao_hung", hanh_dong="vay_tay",
                               viec_nhac=r["viec"])
-                self.memory.add_message("assistant", reply.noi, reply.cam_xuc, tu_dong=True)
+                reply.msg_id = self.memory.add_message("assistant", reply.noi, reply.cam_xuc, tu_dong=True)
                 out.append(reply)
             return out
 
@@ -331,7 +333,9 @@ class Brain:
         msg_id = self.memory.add_message("user", user_text)
         history = clean_history(self.memory.recent_messages(config.HISTORY_LIMIT))
         try:
-            return self._ask(history, self.memory.pending_followups(config.FOLLOWUP_MIN_HOURS))
+            reply = self._ask(history, self.memory.pending_followups(config.FOLLOWUP_MIN_HOURS))
+            reply.user_msg_id = msg_id
+            return reply
         except Exception:
             # Lỗi thì bỏ tin vừa gửi, để người dùng bấm gửi lại không bị lặp tin
             self.memory.delete_message(msg_id)
@@ -376,7 +380,7 @@ class Brain:
         text = "".join(b.text for b in resp.content if getattr(b, "type", "") == "text")
         reply = parse_reply(text)
 
-        self.memory.add_message("assistant", reply.noi, reply.cam_xuc)
+        reply.msg_id = self.memory.add_message("assistant", reply.noi, reply.cam_xuc)
         self.memory.forget_facts(reply.quen)
         self.memory.add_facts(reply.ghi_nho)
         self.memory.done_followups(reply.da_hoi)
