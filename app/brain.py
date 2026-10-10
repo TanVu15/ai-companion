@@ -21,7 +21,7 @@ Chỉ trả về MỘT đối tượng JSON, không viết gì ngoài JSON:
   "hoi_tham": ["chuyện sắp diễn ra mà lần sau nên hỏi lại, ví dụ 'Chiều nay đi tập chân'"],
   "da_hoi": ["chuyện trong phần 'Chuyện nên hỏi thăm' mà bạn vừa hỏi hoặc người dùng đã kể, chép y nguyên"],
   "nhac": [{{"luc": "YYYY-MM-DD HH:MM", "viec": "việc cần nhắc", "lap": ""}}],
-  "ngay_dac_biet": [{{"ngay": "DD/MM", "viec": "ví dụ Sinh nhật Tân"}}],
+  "ngay_dac_biet": [{{"ngay": "DD/MM", "viec": "ví dụ Sinh nhật Tân", "am_lich": false}}],
   "viec_can_lam": ["việc người dùng nhờ ghi vào danh sách việc cần làm, ví dụ 'Mua sữa'"],
   "xong_viec": ["việc trong phần 'Việc cần làm' mà người dùng nói đã làm xong, chép y nguyên"],
   "tam_trang": tâm trạng của NGƯỜI DÙNG trong tin vừa rồi, một trong {config.MOODS}
@@ -39,7 +39,7 @@ Chỉ trả về MỘT đối tượng JSON, không viết gì ngoài JSON:
   Tính giờ theo "Bây giờ là..." ở trên, ghi đủ ngày giờ (lần nhắc đầu tiên). Không có thì để []. Đừng tự hứa nhắc nếu không ghi vào đây.
   "lap": "ngay" nếu nhắc mỗi ngày, "tuan" nếu nhắc mỗi tuần, "" nếu chỉ nhắc một lần.
 - "ngay_dac_biet": ngày lặp lại mỗi năm mà người dùng kể (sinh nhật mình/người thân, ngày kỷ niệm...),
-  chỉ khi biết rõ ngày và tháng. Không có thì để [].
+  chỉ khi biết rõ ngày và tháng. Không có thì để []. Ngày theo âm lịch (giỗ, "sinh nhật âm", "15/7 âm") thì "am_lich": true.
 - Nếu có phần "Hôm nay là ngày đặc biệt", hãy chúc mừng thật vui ngay trong câu này.
 - "viec_can_lam": CHỈ khi người dùng nhờ ghi nhớ một việc phải làm mà KHÔNG có giờ cụ thể ("nhớ giúp mình mua sữa",
   "thêm vào danh sách: trả sách thư viện"). Có giờ cụ thể thì dùng "nhac". Mỗi việc ngắn gọn. Không có thì để [].
@@ -475,7 +475,7 @@ class Brain:
         if recap:
             self.memory.set_kv("tong_ket_tuan", week)  # tuần này đã điểm lại rồi
         if eve:  # năm nay đã nhắc trước rồi
-            self.memory.mark_eve_reminded([d["id"] for d in eve], (now.date() + timedelta(days=1)).year)
+            self.memory.mark_eve_reminded([d["id"] for d in eve], now.date() + timedelta(days=1))
         return reply
 
     def _recap_week(self, now: datetime | None = None) -> str:
@@ -523,10 +523,10 @@ class Brain:
         eve_before = {d["id"] for d in self.memory.special_days_tomorrow(today)}
         self.memory.add_special_days(reply.ngay_dac_biet)
         # Đã chúc trong câu này (hoặc người dùng vừa kể "hôm nay sinh nhật mình", Bơ đã biết) → không chúc lại trong năm
-        self.memory.mark_wished([d["id"] for d in self.memory.special_days_today(today)], year=today.year)
+        self.memory.mark_wished([d["id"] for d in self.memory.special_days_today(today)], on=today)
         # Người dùng vừa kể một ngày đặc biệt rơi vào ngày mai → Bơ đã biết, khỏi nhắc trước nữa
         new_eve = [d["id"] for d in self.memory.special_days_tomorrow(today) if d["id"] not in eve_before]
-        self.memory.mark_eve_reminded(new_eve, (today + timedelta(days=1)).year)
+        self.memory.mark_eve_reminded(new_eve, today + timedelta(days=1))
         if self._background:
             threading.Thread(target=self._housekeeping, daemon=True).start()
         else:

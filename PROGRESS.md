@@ -522,3 +522,9 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 
 **Tân cần thử:** hỏi Bơ "hôm nay âm lịch ngày mấy?"; ngày 19/10 thử chào Bơ xem có nhắc mai 20/10 không.
 
+## 2026-10-10 – Giai đoạn 28: ngày đặc biệt theo âm lịch
+- Kể "giỗ ông 15/7 âm lịch" → Bơ ghi là ngày âm; mỗi năm tự tính ra ngày dương tương ứng để nhắc trước 1 ngày và đúng ngày thì nhắc. Giỗ ngày 30 mà tháng đó chỉ có 29 ngày thì tính vào ngày 29.
+- "Bơ nhớ gì về mình?" → Ngày đặc biệt hiện "(âm lịch)". 184 test qua hết.
+
+**Tân cần thử:** kể Bơ một ngày giỗ hoặc sinh nhật âm của người nhà, rồi mở "Bơ nhớ gì về mình?" xem.
+

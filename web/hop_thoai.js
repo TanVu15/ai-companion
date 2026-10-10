@@ -96,7 +96,7 @@ async function loadDays() {
   if (!list.length) { const li = document.createElement('li'); li.textContent = 'Chưa có. Thử kể: "sinh nhật mình 5/3".'; daysEl.appendChild(li); }
   list.forEach(x => {
     const li = document.createElement('li'), b = document.createElement('button');
-    li.textContent = x.ngay + ' — ' + x.viec + ' ';
+    li.textContent = x.ngay + (x.am_lich ? ' (âm lịch)' : '') + ' — ' + x.viec + ' ';
     b.textContent = 'Xóa'; b.type = 'button'; b.className = 'link'; b.setAttribute('aria-label', 'Xóa ngày: ' + x.viec);
     b.onclick = async () => { await fetch('/api/ngay-dac-biet/' + x.id, { method: 'DELETE' }); loadDays(); };
     li.appendChild(b); daysEl.appendChild(li);

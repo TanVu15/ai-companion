@@ -105,7 +105,7 @@ def test_special_days_tomorrow(memory):
     memory.add_special_days([{"ngay": "11/10", "viec": "Sinh nhật mẹ"}, {"ngay": "12/10", "viec": "Kỷ niệm"}])
     t = date(2026, 10, 10)
     assert [d["viec"] for d in memory.special_days_tomorrow(t)] == ["Sinh nhật mẹ"]
-    memory.mark_eve_reminded([d["id"] for d in memory.special_days_tomorrow(t)], 2026)
+    memory.mark_eve_reminded([d["id"] for d in memory.special_days_tomorrow(t)], date(2026, 10, 11))
     assert memory.special_days_tomorrow(t) == []
     assert memory.special_days_tomorrow(date(2027, 10, 10)) != []  # năm sau nhắc lại
     # 31/12 → mai là 1/1 năm sau
@@ -166,3 +166,37 @@ def test_tro_chuyen_binh_thuong_khong_lam_mat_loi_nhac_truoc(memory, monkeypatch
     brain = Brain(memory, client=client)
     brain.chat("chào")
     assert brain.greet(only_occasion=True).noi == "Mai sinh nhật mẹ đó!"
+
+
+def test_ngay_am_lich(memory):
+    assert memory.add_special_days([{"ngay": "15/7", "viec": "Giỗ ông", "am_lich": True},
+                                    {"ngay": "31/7", "viec": "Sai", "am_lich": True}]) == 1
+    assert memory.special_days() == [{"id": 1, "ngay": "15/07", "viec": "Giỗ ông", "am_lich": True}]
+    # 15/7 âm năm 2025 là 6/9/2025, năm 2026 là 27/8/2026
+    assert [d["viec"] for d in memory.special_days_today(date(2025, 9, 6))] == ["Giỗ ông"]
+    assert memory.special_days_today(date(2025, 7, 15)) == []  # 15/7 dương không phải
+    assert [d["viec"] for d in memory.special_days_tomorrow(date(2026, 8, 26))] == ["Giỗ ông"]
+    memory.mark_wished([1], on=date(2025, 9, 6))
+    assert memory.special_days_today(date(2025, 9, 6)) == []
+    assert memory.special_days_today(date(2026, 8, 27)) != []  # năm âm sau vẫn chúc
+
+
+def test_ngay_30_am_thang_thieu_tinh_vao_29(memory):
+    from app.am_lich import am_sang_duong, duong_sang_am
+
+    memory.add_special_days([{"ngay": "30/12", "viec": "Giỗ bà", "am_lich": True}])
+    # tìm một năm tháng Chạp thiếu (29 ngày): ngày 29/12 âm mà hôm sau là mùng 1 Tết
+    for nam in range(2020, 2035):
+        d29 = am_sang_duong(29, 12, nam)
+        if duong_sang_am(date.fromordinal(d29.toordinal() + 1))[:2] == (1, 1):
+            assert [d["viec"] for d in memory.special_days_today(d29)] == ["Giỗ bà"]
+            break
+    else:
+        raise AssertionError("không tìm thấy tháng Chạp thiếu")
+
+
+def test_chat_ghi_ngay_am(memory):
+    client = FakeClient([reply("Bơ nhớ rồi", ngay_dac_biet=[{"ngay": "10/3", "viec": "Giỗ cụ", "am_lich": True}])])
+    Brain(memory, client=client).chat("giỗ cụ mình 10/3 âm lịch")
+    assert memory.special_days()[0]["am_lich"] is True
+    assert '"am_lich": true' in client.calls[0]["system"]

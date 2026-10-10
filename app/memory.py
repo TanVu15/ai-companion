@@ -90,6 +90,9 @@ class Memory:
         if "nhac_truoc_year" not in {r[1] for r in self.conn.execute("PRAGMA table_info(special_days)")}:
             # năm gần nhất Bơ đã nhắc trước một ngày ("mai là sinh nhật mẹ đó")
             self.conn.execute("ALTER TABLE special_days ADD COLUMN nhac_truoc_year INTEGER NOT NULL DEFAULT 0")
+        if "am" not in {r[1] for r in self.conn.execute("PRAGMA table_info(special_days)")}:
+            # 1 = ngày theo âm lịch (giỗ, sinh nhật âm)
+            self.conn.execute("ALTER TABLE special_days ADD COLUMN am INTEGER NOT NULL DEFAULT 0")
         if "tam_trang" not in cols:  # tâm trạng người dùng lúc gửi tin (vui, buon, met...), Bơ đoán
             self.conn.execute("ALTER TABLE messages ADD COLUMN tam_trang TEXT")
         self.conn.commit()
@@ -424,7 +427,8 @@ class Memory:
 
     # --- Ngày đặc biệt (sinh nhật, kỷ niệm...) ---
     def add_special_days(self, items: list[dict]) -> int:
-        """Thêm ngày dạng {"ngay": "DD/MM", "viec": "Sinh nhật Tân"}. Ngày sai hoặc trùng thì bỏ."""
+        """Thêm ngày dạng {"ngay": "DD/MM", "viec": "Sinh nhật Tân", "am_lich": false}. Ngày sai hoặc trùng thì bỏ.
+        am_lich=true: ngày theo âm lịch (giỗ, sinh nhật âm), mỗi năm rơi vào ngày dương khác nhau."""
         added = 0
         for it in items:
             if not isinstance(it, dict):
@@ -434,64 +438,100 @@ class Memory:
             if not viec or not m:
                 continue
             d, mo = int(m.group(1)), int(m.group(2))
-            try:
-                date(2000, mo, d)  # năm nhuận, để 29/02 hợp lệ
-            except ValueError:
-                continue
+            am = it.get("am_lich") is True or str(it.get("am_lich")).lower() in ("1", "true")
+            if am:
+                if not (1 <= mo <= 12 and 1 <= d <= 30):
+                    continue
+            else:
+                try:
+                    date(2000, mo, d)  # năm nhuận, để 29/02 hợp lệ
+                except ValueError:
+                    continue
             day = f"{mo:02d}-{d:02d}"
             exists = self.conn.execute(
-                "SELECT 1 FROM special_days WHERE day = ? AND lower(content) = lower(?)", (day, viec)
+                "SELECT 1 FROM special_days WHERE day = ? AND am = ? AND lower(content) = lower(?)", (day, int(am), viec)
             ).fetchone()
             if not exists:
-                self.conn.execute("INSERT INTO special_days (day, content) VALUES (?, ?)", (day, viec))
+                self.conn.execute("INSERT INTO special_days (day, content, am) VALUES (?, ?, ?)", (day, viec, int(am)))
                 added += 1
         self.conn.commit()
         return added
 
     def special_days(self) -> list[dict]:
-        rows = self.conn.execute("SELECT id, day, content FROM special_days ORDER BY day, id").fetchall()
-        return [{"id": i, "ngay": f"{d[3:]}/{d[:2]}", "viec": c} for i, d, c in rows]
+        rows = self.conn.execute("SELECT id, day, content, am FROM special_days ORDER BY am, day, id").fetchall()
+        return [{"id": i, "ngay": f"{d[3:]}/{d[:2]}", "viec": c, "am_lich": bool(a)} for i, d, c, a in rows]
+
+    @staticmethod
+    def _keys_for(day: date) -> tuple[list[str], list[str], int | None]:
+        """Các khóa "MM-DD" khớp với ngày dương `day`: (dương lịch, âm lịch, năm âm).
+        29/02 năm không nhuận tính vào 28/02; giỗ ngày 30 âm mà tháng đó thiếu thì tính vào ngày 29."""
+        duong = [day.strftime("%m-%d")]
+        if duong[0] == "02-28":
+            try:
+                date(day.year, 2, 29)
+            except ValueError:
+                duong.append("02-29")
+        try:
+            from .am_lich import duong_sang_am
+
+            d, m, y, nhuan = duong_sang_am(day)
+        except Exception:
+            return duong, [], None
+        if nhuan:  # tháng nhuận: ngày giỗ/sinh nhật âm đã tính ở tháng chính rồi
+            return duong, [], y
+        am = [f"{m:02d}-{d:02d}"]
+        if d == 29 and duong_sang_am(date.fromordinal(day.toordinal() + 1))[0] == 1:
+            am.append(f"{m:02d}-30")
+        return duong, am, y
 
     def special_days_today(self, today: date | None = None, only_unwished: bool = True) -> list[dict]:
-        """Ngày đặc biệt rơi vào hôm nay. 29/02 thì năm không nhuận tính vào 28/02."""
+        """Ngày đặc biệt (dương hoặc âm lịch) rơi vào hôm nay; mặc định chỉ những ngày năm nay chưa chúc."""
         today = today or date.today()
-        days = [today.strftime("%m-%d")]
-        if days[0] == "02-28":
-            try:
-                date(today.year, 2, 29)
-            except ValueError:
-                days.append("02-29")
+        duong, am, nam_am = self._keys_for(today)
         rows = self.conn.execute(
-            f"SELECT id, content FROM special_days WHERE day IN ({','.join('?' * len(days))})"
-            + (" AND wished_year < ?" if only_unwished else "") + " ORDER BY id",
-            (*days, today.year) if only_unwished else days,
+            f"SELECT id, content, am, wished_year FROM special_days WHERE (am = 0 AND day IN ({','.join('?' * len(duong))}))"
+            + (f" OR (am = 1 AND day IN ({','.join('?' * len(am))}))" if am else "") + " ORDER BY id",
+            (*duong, *am),
         ).fetchall()
-        return [{"id": i, "viec": c} for i, c in rows]
+        out = []
+        for i, c, a, wished in rows:
+            if only_unwished and wished >= (nam_am if a else today.year):
+                continue
+            out.append({"id": i, "viec": c, "am_lich": bool(a)})
+        return out
+
+    def _year_key(self, day_id: int, on: date) -> int:
+        """Năm dùng để đánh dấu "đã chúc": năm dương với ngày dương, năm âm với ngày âm lịch."""
+        row = self.conn.execute("SELECT am FROM special_days WHERE id = ?", (day_id,)).fetchone()
+        if row and row[0]:
+            try:
+                from .am_lich import duong_sang_am
+
+                return duong_sang_am(on)[2]
+            except Exception:
+                pass
+        return on.year
 
     def special_days_tomorrow(self, today: date | None = None) -> list[dict]:
         """Ngày đặc biệt rơi vào NGÀY MAI mà năm đó Bơ chưa nhắc trước."""
         tomorrow = (today or date.today()) + timedelta(days=1)
-        rows = self.special_days_today(tomorrow, only_unwished=False)
-        if not rows:
-            return []
-        ids = [d["id"] for d in rows]
-        done = {
-            i for (i,) in self.conn.execute(
-                f"SELECT id FROM special_days WHERE id IN ({','.join('?' * len(ids))}) AND nhac_truoc_year >= ?",
-                (*ids, tomorrow.year),
-            )
-        }
-        return [d for d in rows if d["id"] not in done]
+        out = []
+        for d in self.special_days_today(tomorrow, only_unwished=False):
+            (done,) = self.conn.execute("SELECT nhac_truoc_year FROM special_days WHERE id = ?", (d["id"],)).fetchone()
+            if done < self._year_key(d["id"], tomorrow):
+                out.append(d)
+        return out
 
-    def mark_eve_reminded(self, ids: list[int], year: int) -> None:
+    def mark_eve_reminded(self, ids: list[int], on: date) -> None:
+        """Đã nhắc trước cho ngày đặc biệt rơi vào ngày `on` (ngày mai)."""
         for i in ids:
-            self.conn.execute("UPDATE special_days SET nhac_truoc_year = ? WHERE id = ?", (year, i))
+            self.conn.execute("UPDATE special_days SET nhac_truoc_year = ? WHERE id = ?", (self._year_key(i, on), i))
         self.conn.commit()
 
-    def mark_wished(self, ids: list[int], year: int | None = None) -> None:
-        year = year or date.today().year
+    def mark_wished(self, ids: list[int], on: date | None = None) -> None:
+        on = on or date.today()
         for i in ids:
-            self.conn.execute("UPDATE special_days SET wished_year = ? WHERE id = ?", (year, i))
+            self.conn.execute("UPDATE special_days SET wished_year = ? WHERE id = ?", (self._year_key(i, on), i))
         self.conn.commit()
 
     def delete_special_day(self, day_id: int) -> None:
@@ -652,7 +692,7 @@ class Memory:
         "followups": ("content", "done", "created_at"),
         "facts": ("content", "created_at"),
         "reminders": ("content", "due_at", "done", "lap"),
-        "special_days": ("day", "content", "wished_year", "nhac_truoc_year"),
+        "special_days": ("day", "content", "wished_year", "nhac_truoc_year", "am"),
         "todos": ("content", "done", "created_at", "done_at"),
     }
 
