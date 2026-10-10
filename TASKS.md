@@ -67,6 +67,11 @@
 - [x] Lâu không gặp (2 ngày) thì Bơ chủ động chào dù không có chuyện để hỏi
 - [x] Chạm vào mặt Bơ để Bơ ngừng đọc to
 
+## Giai đoạn 13 – Xem lại chuyện cũ (chỉ phần mềm, Claude tự thêm)
+- [x] Tìm trong lịch sử trò chuyện (gõ không dấu vẫn tìm được)
+- [ ] Ngày đặc biệt: Tân kể sinh nhật/kỷ niệm → đúng ngày Bơ chúc
+- [ ] Tải lịch sử trò chuyện về thành file chữ (.txt) để đọc lại
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo

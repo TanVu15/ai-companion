@@ -1,8 +1,16 @@
 """Trí nhớ: lưu tin nhắn và những điều đáng nhớ về người dùng trong SQLite."""
 import re
 import sqlite3
+import unicodedata
 from datetime import date, datetime, timedelta
 from pathlib import Path
+
+
+def khong_dau(text: str) -> str:
+    """Chữ thường, bỏ dấu tiếng Việt, gộp khoảng trắng: "Đá  Bóng" → "da bong" (để tìm kiếm)."""
+    text = text.lower().replace("đ", "d")
+    text = "".join(c for c in unicodedata.normalize("NFD", text) if unicodedata.category(c) != "Mn")
+    return " ".join(text.split())
 
 
 class Memory:
@@ -87,6 +95,21 @@ class Memory:
         return [
             {"id": i, "role": r, "content": c, "created_at": t, "cam_xuc": e} for i, r, c, t, e in reversed(rows)
         ]
+
+    def search_messages(self, query: str, limit: int = 30) -> list[dict]:
+        """Tìm tin nhắn chứa `query`, mới nhất trước. Không phân biệt hoa/thường và có dấu/không dấu:
+        gõ "da bong" vẫn ra "Đá bóng". Từ khóa quá ngắn (dưới 2 chữ) thì trả rỗng."""
+        q = khong_dau(query)
+        if len(q) < 2:
+            return []
+        out = []
+        cur = self.conn.execute("SELECT id, role, content, created_at FROM messages ORDER BY id DESC")
+        for i, r, c, t in cur:
+            if q in khong_dau(c):
+                out.append({"id": i, "role": r, "content": c, "created_at": t})
+                if len(out) >= limit:
+                    break
+        return out
 
     def replies_today(self) -> int:
         today = date.today().isoformat()

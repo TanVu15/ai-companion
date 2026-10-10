@@ -234,6 +234,12 @@ def history(before_id: int | None = None, limit: int = 50):
     return get_brain().memory.history_page(min(max(limit, 1), 200), before_id)
 
 
+@app.get("/api/tim")
+def search(q: str = "", limit: int = 30):
+    """Tìm trong lịch sử trò chuyện (gõ không dấu vẫn được). Mới nhất trước."""
+    return get_brain().memory.search_messages(q[:100], min(max(limit, 1), 100))
+
+
 @app.get("/api/facts")
 def facts():
     return get_brain().memory.all_facts()

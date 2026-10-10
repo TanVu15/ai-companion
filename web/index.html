@@ -98,6 +98,10 @@
   @keyframes pulse { 50% { opacity: .6; } }
   @keyframes talk { to { height: 6px; } }
   ul.plain { list-style: none; padding: 0; margin: 0 0 12px; } ul.plain li { padding: 4px 0; border-bottom: 1px solid var(--border); }
+  #searchInput { width: 100%; border: 1px solid var(--border); border-radius: 12px; padding: 8px 12px; font: inherit;
+    background: var(--bg); color: var(--text); margin-bottom: 8px; }
+  #searchList { max-height: 50vh; overflow-y: auto; } #searchList small { color: var(--muted); display: block; }
+  #searchList mark { background: var(--face); color: var(--ink); border-radius: 3px; }
   .row { display: flex; justify-content: space-between; } .row button { padding: 8px 18px; }
 </style>
 </head>
@@ -111,6 +115,7 @@
     <div class="status" id="status"></div>
     <div>
       <button class="link" id="openMem" type="button">Bơ nhớ gì về mình?</button>
+      <button class="link" id="openSearch" type="button">Tìm</button>
       <button class="link" id="openCost" type="button">Chi phí</button>
       <button class="link" id="voiceBtn" type="button" aria-pressed="false">Giọng nói: tắt</button>
       <button class="link" id="rateBtn" type="button" hidden>Tốc độ đọc: vừa</button>
@@ -141,6 +146,13 @@
     <button class="link" id="clearMem" type="button">Xóa hết</button>
     <button id="closeMem" type="button">Xong</button>
   </div>
+</dialog>
+<dialog id="search">
+  <h2>Tìm trong chuyện cũ</h2>
+  <p>Gõ vài chữ, có dấu hay không dấu đều được.</p>
+  <input id="searchInput" type="search" placeholder="ví dụ: da bong" autocomplete="off" aria-label="Từ cần tìm">
+  <ul id="searchList" class="plain"></ul>
+  <div class="row"><span></span><button id="closeSearch" type="button">Xong</button></div>
 </dialog>
 <dialog id="cost">
   <h2>Chi phí API</h2>

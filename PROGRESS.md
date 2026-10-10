@@ -241,3 +241,11 @@ Gặp lỗi: xem `SU_CO.md`, gửi mấy dòng cuối `data/loi.log` vào `FEEDB
 - 84 test qua hết, test trên GitHub đều xanh.
 
 **Tiếp theo (lần chạy sau):** các việc phần mềm lớn đã xong. Lần sau ưu tiên góp ý trong FEEDBACK.md; nếu chưa có góp ý thì tiếp tục rà soát/đánh bóng nhỏ, không thêm tính năng tốn tiền.
+
+## 2026-10-10 – Giai đoạn 13: tìm trong chuyện cũ
+- Nút **"Tìm"** dưới khuôn mặt: gõ vài chữ, hiện các tin nhắn có chữ đó (mới nhất trước, tối đa 30), chỗ khớp tô vàng.
+- Gõ không dấu vẫn ra: "da bong" tìm được "Đá bóng". Không tốn câu API nào.
+- 85 test qua hết.
+
+**Tân cần thử:** bấm "Tìm", gõ một chữ đã từng nhắn với Bơ.
+

@@ -222,3 +222,18 @@ def test_old_database_gets_emotion_column(tmp_path):
     assert mem.history_page()[0]["content"] == "tin cũ"
     mem.add_message("assistant", "mới", "vui")
     assert mem.history_page()[-1]["cam_xuc"] == "vui"
+
+
+def test_tim_trong_lich_su(tmp_path):
+    c = make_client(tmp_path, [])
+    m = main._brain.memory
+    m.add_message("user", "Tối nay mình đi Đá Bóng")
+    m.add_message("assistant", "Chúc đá vui nha!")
+    m.add_message("user", "Mai đi bơi")
+    r = c.get("/api/tim", params={"q": "da bong"}).json()
+    assert [x["content"] for x in r] == ["Tối nay mình đi Đá Bóng"]
+    r = c.get("/api/tim", params={"q": "đá"}).json()
+    assert [x["content"] for x in r] == ["Chúc đá vui nha!", "Tối nay mình đi Đá Bóng"]  # mới nhất trước
+    assert c.get("/api/tim", params={"q": " a "}).json() == []  # quá ngắn
+    assert c.get("/api/tim", params={"q": "xyz"}).json() == []
+    assert len(c.get("/api/tim", params={"q": "đi", "limit": 1}).json()) == 1

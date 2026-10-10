@@ -368,3 +368,39 @@ face.addEventListener('click', () => {
   speakSeq++; speechSynthesis.cancel();
   speaking = false; face.classList.remove('talking'); resumeListening();
 });
+
+// ---- Tìm trong chuyện cũ ----
+const searchDlg = document.getElementById('search'), searchInput = document.getElementById('searchInput');
+const searchList = document.getElementById('searchList');
+function boKhongDau(s) {
+  return s.toLowerCase().replace(/đ/g, 'd').normalize('NFD').replace(/[̀-ͯ]/g, '');
+}
+// Tô vàng chỗ khớp (so không dấu, nhưng vẫn hiện chữ gốc có dấu)
+function highlight(li, text, q) {
+  // bỏ dấu từng chữ một để vị trí khớp trên chữ gốc không bị lệch
+  const plain = Array.from(text).map(ch => boKhongDau(ch).charAt(0) || ch).join('');
+  const chars = Array.from(text), qq = boKhongDau(q).trim().replace(/\s+/g, ' ');
+  const at = qq ? plain.replace(/\s/g, ' ').indexOf(qq) : -1;
+  if (at < 0) { li.appendChild(document.createTextNode(text)); return; }
+  const m = document.createElement('mark');
+  m.textContent = chars.slice(at, at + qq.length).join('');
+  li.append(chars.slice(0, at).join(''), m, chars.slice(at + qq.length).join(''));
+}
+let searchTimer = null, searchSeq = 0;
+async function runSearch() {
+  const q = searchInput.value, id = ++searchSeq;
+  if (boKhongDau(q).trim().length < 2) { searchList.innerHTML = ''; return; }
+  let list = [];
+  try { const r = await fetch('/api/tim?q=' + encodeURIComponent(q)); if (r.ok) list = await r.json(); } catch (e) {}
+  if (id !== searchSeq) return;  // đã gõ tiếp, bỏ kết quả cũ
+  searchList.innerHTML = '';
+  if (!list.length) { const li = document.createElement('li'); li.textContent = 'Không thấy.'; searchList.appendChild(li); }
+  list.forEach(m => {
+    const li = document.createElement('li'), s = document.createElement('small');
+    s.textContent = (m.role === 'user' ? 'Bạn' : 'Bơ') + ' · ' + timeLabel(m.created_at);
+    li.appendChild(s); highlight(li, m.content, q); searchList.appendChild(li);
+  });
+}
+searchInput.addEventListener('input', () => { clearTimeout(searchTimer); searchTimer = setTimeout(runSearch, 300); });
+document.getElementById('openSearch').onclick = () => { searchDlg.showModal(); searchInput.focus(); };
+document.getElementById('closeSearch').onclick = () => searchDlg.close();
