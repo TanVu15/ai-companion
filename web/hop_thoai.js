@@ -270,6 +270,7 @@ function fillSettings(d) {
   document.getElementById('setCity').value = d.hien_tai.thanh_pho || '';
   document.getElementById('setQuiet').value = d.hien_tai.gio_yen_lang || '';
   document.getElementById('setRecap').checked = !!d.hien_tai.tong_ket_tuan;
+  document.getElementById('setHoliday').checked = !!d.hien_tai.chuc_le;
   quietRange = d.hien_tai.gio_yen_lang || '';  // áp dụng ngay cho giọng đọc
 }
 function settingsNote(text) { settingsMsg.textContent = text; settingsMsg.hidden = !text; }
@@ -291,6 +292,7 @@ document.getElementById('settingsForm').addEventListener('submit', (ev) => {
     thanh_pho: document.getElementById('setCity').value,
     gio_yen_lang: document.getElementById('setQuiet').value,
     tong_ket_tuan: document.getElementById('setRecap').checked,
+    chuc_le: document.getElementById('setHoliday').checked,
   });
 });
 document.getElementById('resetSettings').onclick = () => {

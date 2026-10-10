@@ -554,7 +554,7 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 **Tân cần thử:** `git pull`, chạy lại, nhìn dòng lịch dưới tên Bơ; chạy `python -m app.thu_tinh_cach` gửi điểm vào FEEDBACK.md.
 
 ## 2026-10-10 – Giai đoạn 30 xong (báo cáo): chúc ngày lễ
-- Ngày lễ (Tết, Trung thu, 20/10, Noel...) mở web từ 7h sáng → Bơ chủ động chúc, mỗi ngày lễ 1 lần (1 câu API). Nếu Tân nhắn trước thì Bơ chúc luôn trong câu trả lời, không chúc riêng nữa. Tắt bằng `CHUC_LE=0` trong `.env`.
+- Ngày lễ (Tết, Trung thu, 20/10, Noel...) mở web từ 7h sáng → Bơ chủ động chúc, mỗi ngày lễ 1 lần (1 câu API). Nếu Tân nhắn trước thì Bơ chúc luôn trong câu trả lời, không chúc riêng nữa. Tắt bằng `CHUC_LE=0` trong `.env` hoặc bỏ tick "Chúc ngày lễ" trong "?" → Cài đặt.
 - 189 test qua hết (test không bị lệch khi chạy đúng ngày lễ).
 
 **Tân cần thử:** sáng 20/10 mở web xem Bơ chúc gì.

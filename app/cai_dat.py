@@ -14,8 +14,9 @@ MAC_DINH = {
     "thanh_pho": config.THANH_PHO,
     "gio_yen_lang": config.GIO_YEN_LANG,
     "tong_ket_tuan": config.WEEKLY_RECAP,
+    "chuc_le": config.CHUC_LE,
 }
-_THUOC_TINH = {"thanh_pho": "THANH_PHO", "gio_yen_lang": "GIO_YEN_LANG", "tong_ket_tuan": "WEEKLY_RECAP"}
+_THUOC_TINH = {"thanh_pho": "THANH_PHO", "gio_yen_lang": "GIO_YEN_LANG", "tong_ket_tuan": "WEEKLY_RECAP", "chuc_le": "CHUC_LE"}
 
 
 def kiem_tra(key: str, value):
@@ -37,9 +38,9 @@ def kiem_tra(key: str, value):
         if not m or int(m.group(1)) > 23 or int(m.group(2)) > 23 or m.group(1) == m.group(2):
             raise ValueError("Giờ yên lặng phải dạng 23-6 (từ 23h đến 6h), giờ từ 0 đến 23")
         return f"{int(m.group(1))}-{int(m.group(2))}"
-    if key == "tong_ket_tuan":
+    if key in ("tong_ket_tuan", "chuc_le"):
         if not isinstance(value, bool):
-            raise ValueError("Tổng kết tuần chỉ bật hoặc tắt")
+            raise ValueError("Mục này chỉ bật hoặc tắt")
         return value
     raise ValueError(f"Không có cài đặt '{key}'")
 

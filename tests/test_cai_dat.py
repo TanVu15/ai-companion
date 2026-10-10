@@ -11,8 +11,9 @@ from tests.test_brain import FakeClient
 @pytest.fixture
 def c(tmp_path, monkeypatch):
     monkeypatch.setattr(config, "CAI_DAT_PATH", tmp_path / "cai_dat.json")
-    monkeypatch.setattr(cai_dat, "MAC_DINH", {"thanh_pho": "", "gio_yen_lang": "23-6", "tong_ket_tuan": True})
-    for attr in ("THANH_PHO", "GIO_YEN_LANG", "WEEKLY_RECAP"):
+    monkeypatch.setattr(cai_dat, "MAC_DINH", {"thanh_pho": "", "gio_yen_lang": "23-6", "tong_ket_tuan": True,
+                                                  "chuc_le": True})
+    for attr in ("THANH_PHO", "GIO_YEN_LANG", "WEEKLY_RECAP", "CHUC_LE"):
         monkeypatch.setattr(config, attr, getattr(config, attr))  # trả lại như cũ sau test
     main._brain = Brain(Memory(tmp_path / "a.db"), client=FakeClient([]))
     return TestClient(main.app, headers={"X-Bo": "1"})
@@ -30,7 +31,8 @@ def test_kiem_tra():
 
 def test_mac_dinh_lay_tu_env(c):
     d = c.get("/api/cai-dat").json()
-    assert d == {"hien_tai": {"thanh_pho": "", "gio_yen_lang": "23-6", "tong_ket_tuan": True}, "da_chinh": []}
+    assert d == {"hien_tai": {"thanh_pho": "", "gio_yen_lang": "23-6", "tong_ket_tuan": True, "chuc_le": True},
+                 "da_chinh": []}
 
 
 def test_luu_va_ap_dung(c):
@@ -75,3 +77,8 @@ def test_get_chi_doc(c):
     config.CAI_DAT_PATH.write_text('{"thanh_pho": "Hue"}', encoding="utf-8")
     assert c.get("/api/cai-dat").json()["hien_tai"]["thanh_pho"] == "Hue"
     assert config.THANH_PHO != "Hue"  # chỉ áp dụng khi lưu hoặc khởi động
+
+
+def test_tat_chuc_le(c):
+    d = c.put("/api/cai-dat", json={"chuc_le": False}).json()
+    assert d["da_chinh"] == ["chuc_le"] and config.CHUC_LE is False
