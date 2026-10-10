@@ -59,3 +59,7 @@ class Memory:
     def delete_fact(self, content: str) -> None:
         self.conn.execute("DELETE FROM facts WHERE content = ?", (content,))
         self.conn.commit()
+
+    def clear_facts(self) -> None:
+        self.conn.execute("DELETE FROM facts")
+        self.conn.commit()

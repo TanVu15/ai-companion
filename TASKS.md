@@ -13,7 +13,8 @@
 ## Giai đoạn 2 – Tính cách
 - [x] persona.md: Bơ, vui tính, năng động (Tân chốt 2026-10-11)
 - [x] Bộ câu hỏi thử tính cách (10 tình huống) để chấm điểm "giống người"
-- [ ] Trang cài đặt nhỏ: xem/xóa những điều Bơ đã nhớ
+- [x] Trang cài đặt nhỏ: xem/xóa những điều Bơ đã nhớ
+- Chờ Tân nghiệm thu: chạy `python -m app.thu_tinh_cach`, bấm "Bơ nhớ gì về mình?" (không chặn việc khác)
 
 ## Giai đoạn 3 – Trí nhớ dài hạn
 - [ ] Tóm tắt các cuộc trò chuyện cũ thay vì chỉ giữ 20 tin gần nhất

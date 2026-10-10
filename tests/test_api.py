@@ -37,3 +37,18 @@ def test_brain_error_returns_502(tmp_path):
     c = make_client(tmp_path, [])  # không có câu trả lời nào -> FakeClient báo lỗi
     r = c.post("/api/chat", json={"text": "hi"})
     assert r.status_code == 502
+
+
+def test_xem_va_xoa_dieu_da_nho(tmp_path):
+    c = make_client(tmp_path, [])
+    main._brain.memory.add_facts(["Tên là Tân", "Thích gym", "Sai"])
+    assert c.get("/api/facts").json() == ["Tên là Tân", "Thích gym", "Sai"]
+    assert c.request("DELETE", "/api/facts", json={"content": "Sai"}).status_code == 200
+    assert c.get("/api/facts").json() == ["Tên là Tân", "Thích gym"]
+    assert c.delete("/api/facts/all").status_code == 200
+    assert c.get("/api/facts").json() == []
+
+
+def test_trang_chu_co_nut_xem_tri_nho(tmp_path):
+    c = make_client(tmp_path, [])
+    assert "Bơ nhớ gì về mình?" in c.get("/").text

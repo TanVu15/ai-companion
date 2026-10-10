@@ -16,4 +16,11 @@
 
 - Tân chốt tên **Bơ**, tính cách vui tính, năng động → đã viết lại persona.md.
 
-**Tiếp theo:** Giai đoạn 2, việc "Bộ câu hỏi thử tính cách".
+## 2026-10-10 – Giai đoạn 2 xong
+- **Bộ câu hỏi thử tính cách:** 10 tình huống trong `tinh_huong.json` (chào, nhớ tên, buồn, khoe, mệt, chuyện nghiêm trọng, hỏi điều không biết...). Chạy `python -m app.thu_tinh_cach` → in câu trả lời của Bơ + điểm từng câu + tổng điểm. Tốn ~10 câu API, dùng trí nhớ tạm nên không làm bẩn dữ liệu thật.
+- **Xem/xóa trí nhớ:** dưới khuôn mặt có nút "Bơ nhớ gì về mình?" → hiện danh sách, bấm "Xóa" từng dòng hoặc "Xóa hết".
+- 20 test tự động qua hết.
+
+**Tân cần thử:** `git pull`, chạy thử bộ chấm điểm với API key thật và gửi tổng điểm/câu trả lời lạ vào FEEDBACK.md; mở web bấm nút xem trí nhớ.
+
+**Tiếp theo:** Giai đoạn 3, việc "Tóm tắt các cuộc trò chuyện cũ".

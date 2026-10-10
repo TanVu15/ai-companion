@@ -83,6 +83,12 @@ def facts():
     return get_brain().memory.all_facts()
 
 
+@app.delete("/api/facts/all")
+def clear_facts():
+    get_brain().memory.clear_facts()
+    return {"ok": True}
+
+
 @app.delete("/api/facts")
 def delete_fact(body: FactIn):
     get_brain().memory.delete_fact(body.content)
