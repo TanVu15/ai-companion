@@ -23,7 +23,7 @@
 
 ## Giai đoạn 4 – Hoàn thiện
 - [x] Xử lý lỗi mạng, thử lại
-- [ ] Hướng dẫn đưa lên mạng để dùng ngoài nhà
+- [x] Hướng dẫn đưa lên mạng để dùng ngoài nhà (DUA_LEN_MANG.md + mật khẩu APP_PASSWORD)
 - [ ] Dùng thử 1 tuần, sửa theo góp ý
 
 ## Sau này

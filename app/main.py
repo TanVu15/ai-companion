@@ -1,6 +1,9 @@
 """Máy chủ web: phục vụ trang chat và nhận tin nhắn gửi tới bộ não."""
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import FileResponse
+import base64
+import secrets
+
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import FileResponse, Response
 from pydantic import BaseModel
 
 from . import config
@@ -9,6 +12,29 @@ from .memory import Memory
 
 app = FastAPI(title="AI Companion")
 _brain: Brain | None = None
+
+
+def _password_ok(header: str) -> bool:
+    """Kiểm tra mật khẩu kiểu "Basic" (trình duyệt tự hiện ô nhập). Tên đăng nhập gõ gì cũng được."""
+    if not header.startswith("Basic "):
+        return False
+    try:
+        _, _, pw = base64.b64decode(header[6:]).decode("utf-8").partition(":")
+    except Exception:
+        return False
+    return secrets.compare_digest(pw.encode(), config.APP_PASSWORD.encode())
+
+
+@app.middleware("http")
+async def require_password(request: Request, call_next):
+    if config.APP_PASSWORD and not _password_ok(request.headers.get("authorization", "")):
+        return Response(
+            "Cần mật khẩu để nói chuyện với Bơ.",
+            status_code=401,
+            headers={"WWW-Authenticate": 'Basic realm="Bo", charset="UTF-8"'},
+            media_type="text/plain; charset=utf-8",
+        )
+    return await call_next(request)
 
 
 class _DemoClient:

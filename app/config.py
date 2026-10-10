@@ -32,5 +32,8 @@ GREET_AFTER_HOURS = float(os.getenv("GREET_AFTER_HOURS", "3"))
 API_RETRIES = int(os.getenv("API_RETRIES", "3"))
 API_TIMEOUT = float(os.getenv("API_TIMEOUT", "30"))
 
+# Mật khẩu vào web (bắt buộc nên đặt khi đưa Bơ ra ngoài mạng nhà). Để trống = không hỏi mật khẩu.
+APP_PASSWORD = os.getenv("APP_PASSWORD", "")
+
 EMOTIONS = ["vui", "hao_hung", "binh_thuong", "suy_nghi", "ngac_nhien", "buon", "thuong"]
 ACTIONS = ["khong", "gat_dau", "lac_dau", "nghieng_dau", "nhay", "vay_tay"]

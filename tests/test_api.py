@@ -52,3 +52,23 @@ def test_xem_va_xoa_dieu_da_nho(tmp_path):
 def test_trang_chu_co_nut_xem_tri_nho(tmp_path):
     c = make_client(tmp_path, [])
     assert "Bơ nhớ gì về mình?" in c.get("/").text
+
+
+def test_password_required_when_set(tmp_path, monkeypatch):
+    import base64
+
+    from app import config
+
+    monkeypatch.setattr(config, "APP_PASSWORD", "bo123")
+    c = make_client(tmp_path, [])
+    r = c.get("/")
+    assert r.status_code == 401 and "Basic" in r.headers["www-authenticate"]
+    bad = base64.b64encode(b"tan:sai").decode()
+    assert c.get("/", headers={"Authorization": f"Basic {bad}"}).status_code == 401
+    good = base64.b64encode(b"tan:bo123").decode()
+    assert c.get("/api/facts", headers={"Authorization": f"Basic {good}"}).status_code == 200
+
+
+def test_no_password_by_default(tmp_path):
+    c = make_client(tmp_path, [])
+    assert c.get("/api/facts").status_code == 200

@@ -6,7 +6,7 @@
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
 ## Cần Tân quyết định
-- (chưa có)
+- **Dùng Bơ ngoài nhà bằng cách nào?** Tailscale (riêng tư, cần tạo tài khoản miễn phí, cài app trên iPhone) hay Cloudflare Tunnel (link công khai, không cần cài trên điện thoại). Hướng dẫn cả hai trong `DUA_LEN_MANG.md`. Claude khuyên Tailscale. Cách nào cũng phải đặt `APP_PASSWORD`.
 
 ## 2026-10-11 – Giai đoạn 1 xong
 - Dựng toàn bộ khung: bộ não (Claude Haiku), trí nhớ SQLite, web chat có khuôn mặt biểu cảm.
@@ -56,4 +56,10 @@
 
 **Tân cần thử:** đang chat thì tắt Wi-Fi, gửi 1 tin → thấy báo lỗi + nút "Thử lại"; bật Wi-Fi lại rồi bấm.
 
-**Tiếp theo:** Giai đoạn 4, việc "Hướng dẫn đưa lên mạng để dùng ngoài nhà".
+
+## 2026-10-10 – Giai đoạn 4: dùng Bơ ngoài nhà
+- **Mật khẩu:** đặt `APP_PASSWORD=...` trong `.env` → mở web sẽ hỏi mật khẩu (tên gõ gì cũng được). Để trống thì như cũ.
+- **Hướng dẫn** `DUA_LEN_MANG.md`: 2 cách (Tailscale / Cloudflare Tunnel), không cần mở cổng modem. Cần Tân chọn cách (xem mục "Cần Tân quyết định").
+- 41 test qua hết.
+
+**Tân cần thử:** đặt `APP_PASSWORD` trong `.env`, chạy lại `run.bat`, mở web xem có hỏi mật khẩu không.
