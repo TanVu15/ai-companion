@@ -202,3 +202,8 @@
 - 78 test qua hết.
 
 **Tân cần thử:** để yên trang web 3 phút xem Bơ ngủ gật, rồi chạm vào.
+
+## 2026-10-10 – Giai đoạn 12: nhắn như người thật
+- Câu trả lời dài (từ 60 ký tự, nhiều câu) được tách thành 2–3 bong bóng; giữa các bong bóng có ba chấm nhảy "Bơ đang gõ". Câu siêu ngắn ("Ừa.") gộp với câu sau. Số như "3.5 triệu" không bị tách.
+- Chỉ đổi cách hiện; bộ não và JSON giữ nguyên, Bơ vẫn đọc to cả câu một lần.
+- 79 test qua hết.

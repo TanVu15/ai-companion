@@ -62,6 +62,9 @@
 - [x] Mở lại web: Bơ giữ vẻ mặt của câu nói cuối
 - [x] Ngủ gật khi 3 phút không ai đụng tới, chạm là tỉnh
 
+## Giai đoạn 12 – Trò chuyện tự nhiên (chỉ phần mềm, Claude tự thêm)
+- [x] Câu trả lời dài tách thành 2–3 bong bóng, có "Bơ đang gõ..." ở giữa
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo

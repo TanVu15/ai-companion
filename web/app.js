@@ -27,8 +27,34 @@ function makeMsg(role, text, t) {
   }
   return d;
 }
+// Tin của Bơ có thể là 2–3 bong bóng; giờ chỉ hiện ở bong bóng cuối
+function makeMsgs(role, text, t) {
+  if (role !== 'assistant') return [makeMsg(role, text, t)];
+  const parts = boTachTin(text);
+  return parts.map((p, i) => {
+    const d = makeMsg(role, p, t);
+    if (i < parts.length - 1) d.querySelector('.time').remove();
+    return d;
+  });
+}
 function add(role, text, t) {
-  log.appendChild(makeMsg(role, text, t)); log.scrollTop = log.scrollHeight;
+  makeMsgs(role, text, t).forEach(d => log.appendChild(d)); log.scrollTop = log.scrollHeight;
+}
+const wait = ms => new Promise(r => setTimeout(r, ms));
+// Bơ "gõ" từng bong bóng một, có dấu ba chấm ở giữa
+async function addBo(text) {
+  const bubbles = makeMsgs('assistant', text);
+  for (let i = 0; i < bubbles.length; i++) {
+    if (i > 0) {
+      const dots = document.createElement('div');
+      dots.className = 'msg assistant typing'; dots.setAttribute('aria-label', 'Bơ đang gõ');
+      dots.innerHTML = '<span></span><span></span><span></span>';
+      log.appendChild(dots); log.scrollTop = log.scrollHeight;
+      await wait(Math.min(1400, 400 + bubbles[i].textContent.length * 15));
+      dots.remove();
+    }
+    log.appendChild(bubbles[i]); log.scrollTop = log.scrollHeight;
+  }
 }
 function express(emotion, action) {
   face.dataset.e = emotion || 'binh_thuong';
@@ -60,7 +86,7 @@ async function loadOlder() {
     if (list.length) {
       oldestId = list[0].id;
       const before = log.scrollHeight, frag = document.createDocumentFragment();
-      list.forEach(m => frag.appendChild(makeMsg(m.role, m.content, m.created_at)));
+      list.forEach(m => makeMsgs(m.role, m.content, m.created_at).forEach(d => frag.appendChild(d)));
       log.prepend(frag);
       log.scrollTop += log.scrollHeight - before;  // giữ nguyên chỗ đang đọc
     }
@@ -85,7 +111,7 @@ async function sendText(text) {
     let data = {};
     try { data = await r.json(); } catch (e) {}
     if (!r.ok) throw new Error(data.detail || 'Máy chủ trả lỗi ' + r.status);
-    add('assistant', data.noi); express(data.cam_xuc, data.hanh_dong); speak(data.noi);
+    express(data.cam_xuc, data.hanh_dong); speak(data.noi); addBo(data.noi);
   } catch (e) {
     const msg = e.name === 'AbortError' ? 'Bơ nghĩ lâu quá, thử lại nha.'
       : e instanceof TypeError ? 'Không kết nối được máy chủ. Máy chủ còn chạy không?' : e.message;
@@ -239,7 +265,7 @@ async function greet() {
   try {
     const r = await fetch('/api/chao', { method: 'POST' });
     const data = await r.json();
-    if (r.ok && data.noi) { add('assistant', data.noi); express(data.cam_xuc, data.hanh_dong); speak(data.noi); }
+    if (r.ok && data.noi) { express(data.cam_xuc, data.hanh_dong); speak(data.noi); addBo(data.noi); }
   } catch (e) {}
 }
 // ---- Lời nhắc: hỏi máy chủ mỗi 30 giây (chỉ khi web đang mở) ----

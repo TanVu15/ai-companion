@@ -50,6 +50,28 @@ def test_speech_text_cleaned():
     assert dict(zip(SPEECH_CASES, json.loads(out.stdout))) == SPEECH_CASES
 
 
+SPLIT_CASES = {
+    "Chào nha!": ["Chào nha!"],
+    "Ừa. Hôm nay Bơ thấy vui lắm luôn đó. Còn bạn thì sao, đi tập chưa? Kể Bơ nghe với nha!":
+        ["Ừa. Hôm nay Bơ thấy vui lắm luôn đó.", "Còn bạn thì sao, đi tập chưa?", "Kể Bơ nghe với nha!"],
+    "Giá vàng hôm qua khoảng 3.5 triệu một chỉ đó. Nhưng Bơ không chắc giá hôm nay đâu nha.":
+        ["Giá vàng hôm qua khoảng 3.5 triệu một chỉ đó.", "Nhưng Bơ không chắc giá hôm nay đâu nha."],
+    "Một. Hai đây là câu thứ hai. Ba đây là câu thứ ba. Bốn đây là câu thứ tư. Năm nè.":
+        ["Một. Hai đây là câu thứ hai.", "Ba đây là câu thứ ba.", "Bốn đây là câu thứ tư. Năm nè."],
+}
+
+
+@pytest.mark.skipif(shutil.which("node") is None, reason="cần Node.js")
+def test_split_reply_into_bubbles():
+    js = config.ROOT / "web" / "doc_to.js"
+    code = (
+        f"const {{ boTachTin }} = require({json.dumps(str(js))});"
+        f"console.log(JSON.stringify({json.dumps(list(SPLIT_CASES))}.map(x => boTachTin(x))));"
+    )
+    out = subprocess.run(["node", "-e", code], capture_output=True, text=True, encoding="utf-8", check=True)
+    assert dict(zip(SPLIT_CASES, json.loads(out.stdout))) == SPLIT_CASES
+
+
 def test_wake_script_served(tmp_path):
     from tests.test_api import make_client
 

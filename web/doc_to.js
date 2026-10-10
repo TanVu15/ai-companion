@@ -1,3 +1,4 @@
+// Xử lý chữ trước khi hiện/đọc.
 // Chuẩn bị chữ trước khi đọc to: bỏ emoji, ký hiệu định dạng, đường link (đọc lên nghe rất kỳ).
 function boChuDeDoc(text) {
   return (text || '')
@@ -12,4 +13,20 @@ function boChuDeDoc(text) {
     .trim();
 }
 
-if (typeof module !== 'undefined') module.exports = { boChuDeDoc };
+// Tách câu trả lời dài thành 2–3 tin nhắn nhỏ, như người thật nhắn tin. Câu ngắn thì giữ nguyên.
+function boTachTin(text, toiDa = 3) {
+  const t = (text || '').trim();
+  if (t.length < 60) return t ? [t] : [];
+  const cau = t.split(/(?<=[.!?…])\s+/).map(c => c.trim()).filter(Boolean);  // "3.5 triệu" không bị tách
+  if (cau.length < 2) return [t];
+  // gộp câu quá ngắn ("Ừa.", "Wow!") vào câu kế tiếp cho tự nhiên
+  const gom = [];
+  for (const c of cau) {
+    if (gom.length && gom[gom.length - 1].length < 15) gom[gom.length - 1] += ' ' + c;
+    else gom.push(c);
+  }
+  while (gom.length > toiDa) gom.splice(toiDa - 1, 2, gom[toiDa - 1] + ' ' + gom[toiDa]);
+  return gom;
+}
+
+if (typeof module !== 'undefined') module.exports = { boChuDeDoc, boTachTin };
