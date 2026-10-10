@@ -36,4 +36,14 @@
 
 **Tân cần thử:** kể cho Bơ một chuyện rồi "đổi ý" (ví dụ "mình hết thích cà phê rồi"), bấm "Bơ nhớ gì về mình?" xem điều cũ đã biến mất chưa.
 
-**Tiếp theo:** Giai đoạn 3, việc "Bơ chủ động hỏi thăm chuyện cũ".
+
+## 2026-10-10 – Giai đoạn 3 xong: Bơ chủ động hỏi thăm
+- Khi Tân kể việc sắp làm ("chiều nay tập chân", "mai đi phỏng vấn"), Bơ ghi vào danh sách "chuyện nên hỏi thăm" (mục nội bộ `hoi_tham` trong JSON, giao diện không thấy).
+- Sau ít nhất 3 giờ (`FOLLOWUP_MIN_HOURS`), chuyện đó được gửi kèm cho Bơ, ghi rõ "kể hôm qua / 2 ngày trước". Bơ hỏi tự nhiên một chuyện rồi đánh dấu đã hỏi (`da_hoi`). Quá 7 ngày thì bỏ.
+- **Mở web sau ≥3 giờ không nói chuyện** (`GREET_AFTER_HOURS`) và có chuyện để hỏi → Bơ tự mở lời trước. Không có gì để hỏi thì im, không tốn câu API nào.
+- Bơ giờ cũng biết ngày giờ hiện tại (để hiểu "hôm qua", "tối nay").
+- 35 test qua hết.
+
+**Tân cần thử:** kể "tối nay mình đi đá bóng", hôm sau mở lại web xem Bơ có tự hỏi "đá bóng sao rồi?" không.
+
+**Tiếp theo:** Giai đoạn 4, việc "Xử lý lỗi mạng, thử lại".

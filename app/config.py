@@ -23,5 +23,10 @@ SUMMARY_BATCH = int(os.getenv("SUMMARY_BATCH", "20"))
 # Khi danh sách điều đáng nhớ dài tới ngần này thì nhờ AI gộp/dọn lại (mỗi lần thêm 10 điều mới thử lại)
 FACTS_MERGE_AT = int(os.getenv("FACTS_MERGE_AT", "30"))
 
+# Chuyện cần hỏi thăm chỉ được nhắc sau ngần này giờ (để Bơ không hỏi lại ngay lúc vừa nghe kể)
+FOLLOWUP_MIN_HOURS = float(os.getenv("FOLLOWUP_MIN_HOURS", "3"))
+# Mở web sau ngần này giờ không nói chuyện thì Bơ chủ động chào + hỏi thăm (nếu có chuyện để hỏi)
+GREET_AFTER_HOURS = float(os.getenv("GREET_AFTER_HOURS", "3"))
+
 EMOTIONS = ["vui", "hao_hung", "binh_thuong", "suy_nghi", "ngac_nhien", "buon", "thuong"]
 ACTIONS = ["khong", "gat_dau", "lac_dau", "nghieng_dau", "nhay", "vay_tay"]

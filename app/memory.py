@@ -1,7 +1,7 @@
 """Trí nhớ: lưu tin nhắn và những điều đáng nhớ về người dùng trong SQLite."""
 import re
 import sqlite3
-from datetime import date
+from datetime import date, datetime, timedelta
 from pathlib import Path
 
 
@@ -22,6 +22,12 @@ class Memory:
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 content TEXT NOT NULL,
                 upto_id INTEGER NOT NULL,    -- đã tóm tắt hết tin nhắn có id <= số này
+                created_at TEXT DEFAULT (datetime('now', 'localtime'))
+            );
+            CREATE TABLE IF NOT EXISTS followups (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                content TEXT NOT NULL,       -- chuyện nên hỏi thăm lại, ví dụ "Chiều nay đi tập chân"
+                done INTEGER NOT NULL DEFAULT 0,
                 created_at TEXT DEFAULT (datetime('now', 'localtime'))
             );
             CREATE TABLE IF NOT EXISTS facts (
@@ -71,6 +77,43 @@ class Memory:
             (upto, keep_recent),
         ).fetchall()
         return [{"id": i, "role": r, "content": c} for i, r, c in rows]
+
+    def last_message_time(self) -> datetime | None:
+        row = self.conn.execute("SELECT created_at FROM messages ORDER BY id DESC LIMIT 1").fetchone()
+        return datetime.fromisoformat(row[0]) if row else None
+
+    # --- Chuyện cần hỏi thăm ---
+    def add_followups(self, items: list[str]) -> None:
+        known = {self._key(f["content"]) for f in self.pending_followups(min_hours=0)}
+        for item in items:
+            item = re.sub(r"\s+", " ", item).strip()
+            key = self._key(item)
+            if key and key not in known:
+                known.add(key)
+                self.conn.execute("INSERT INTO followups (content) VALUES (?)", (item,))
+        self.conn.commit()
+
+    def pending_followups(self, min_hours: float = 3, max_days: float = 7) -> list[dict]:
+        """Chuyện chưa hỏi thăm, đã qua ít nhất `min_hours` giờ (để không hỏi ngay trong lúc đang kể)
+        và chưa quá `max_days` ngày (chuyện quá cũ thì thôi)."""
+        now = datetime.now()
+        newest = (now - timedelta(hours=min_hours)).strftime("%Y-%m-%d %H:%M:%S")
+        oldest = (now - timedelta(days=max_days)).strftime("%Y-%m-%d %H:%M:%S")
+        rows = self.conn.execute(
+            """SELECT id, content, created_at FROM followups
+               WHERE done = 0 AND created_at <= ? AND created_at >= ? ORDER BY id""",
+            (newest, oldest),
+        ).fetchall()
+        return [{"id": i, "content": c, "created_at": t} for i, c, t in rows]
+
+    def done_followups(self, items: list[str]) -> None:
+        """Đánh dấu đã hỏi thăm (so theo dạng rút gọn như điều đáng nhớ)."""
+        keys = {self._key(f) for f in items}
+        rows = self.conn.execute("SELECT id, content FROM followups WHERE done = 0").fetchall()
+        for i, c in rows:
+            if self._key(c) in keys:
+                self.conn.execute("UPDATE followups SET done = 1 WHERE id = ?", (i,))
+        self.conn.commit()
 
     # --- Điều đáng nhớ ---
     @staticmethod

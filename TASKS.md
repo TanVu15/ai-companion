@@ -19,7 +19,7 @@
 ## Giai đoạn 3 – Trí nhớ dài hạn
 - [x] Tóm tắt các cuộc trò chuyện cũ thay vì chỉ giữ 20 tin gần nhất
 - [x] Gộp/sửa điều đáng nhớ bị trùng hoặc lỗi thời
-- [ ] Bơ chủ động hỏi thăm chuyện cũ (ví dụ: "hôm qua tập chân sao rồi?")
+- [x] Bơ chủ động hỏi thăm chuyện cũ (ví dụ: "hôm qua tập chân sao rồi?")
 
 ## Giai đoạn 4 – Hoàn thiện
 - [ ] Xử lý lỗi mạng, thử lại

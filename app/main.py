@@ -73,6 +73,18 @@ def chat(body: ChatIn):
     return reply.to_dict()
 
 
+@app.post("/api/chao")
+def greet():
+    """Gọi khi mở web: Bơ chủ động hỏi thăm chuyện cũ nếu có. Không có thì trả {"noi": null}."""
+    try:
+        reply = get_brain().greet()
+    except HTTPException:
+        raise
+    except Exception:
+        reply = None  # mở lời không được thì thôi, không báo lỗi làm phiền
+    return reply.to_dict() if reply else {"noi": None}
+
+
 @app.get("/api/history")
 def history():
     return get_brain().memory.recent_messages(50)

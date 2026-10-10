@@ -2,6 +2,7 @@
 import json
 import re
 from dataclasses import dataclass, field
+from datetime import datetime
 
 from . import config
 
@@ -13,13 +14,19 @@ Chỉ trả về MỘT đối tượng JSON, không viết gì ngoài JSON:
   "cam_xuc": một trong {config.EMOTIONS},
   "hanh_dong": một trong {config.ACTIONS},
   "ghi_nho": ["điều MỚI đáng nhớ về người dùng trong tin nhắn vừa rồi, nếu có"],
-  "quen": ["điều trong phần 'Điều bạn đã biết' nay đã sai/lỗi thời, chép y nguyên"]
+  "quen": ["điều trong phần 'Điều bạn đã biết' nay đã sai/lỗi thời, chép y nguyên"],
+  "hoi_tham": ["chuyện sắp diễn ra mà lần sau nên hỏi lại, ví dụ 'Chiều nay đi tập chân'"],
+  "da_hoi": ["chuyện trong phần 'Chuyện nên hỏi thăm' mà bạn vừa hỏi hoặc người dùng đã kể, chép y nguyên"]
 }}
 - "noi" ngắn gọn như nhắn tin với bạn bè, thường 1-3 câu.
 - "ghi_nho" chỉ ghi điều người dùng tự kể (tên, sở thích, kế hoạch, chuyện đáng nhớ). Không có thì để [].
 - Không ghi lại những gì đã có trong phần "Điều bạn đã biết".
 - Nếu người dùng kể điều làm một điều cũ không còn đúng (ví dụ chuyển nhà, đổi việc, bỏ sở thích),
   chép điều cũ vào "quen" và ghi điều mới vào "ghi_nho". Không có thì để [].
+- "hoi_tham": việc người dùng sắp làm/đang chờ (đi thi, đi khám, tập luyện, hẹn hò, phỏng vấn...),
+  ghi ngắn kèm thời điểm nếu có. Không có thì để [].
+- Nếu có phần "Chuyện nên hỏi thăm", hãy hỏi thăm TỰ NHIÊN một chuyện khi hợp lúc (không hỏi dồn),
+  rồi chép chuyện đó vào "da_hoi". Không có thì để [].
 """
 
 
@@ -30,6 +37,8 @@ class Reply:
     hanh_dong: str = "khong"
     ghi_nho: list[str] = field(default_factory=list)
     quen: list[str] = field(default_factory=list)
+    hoi_tham: list[str] = field(default_factory=list)
+    da_hoi: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         return {"noi": self.noi, "cam_xuc": self.cam_xuc, "hanh_dong": self.hanh_dong}
@@ -45,11 +54,37 @@ không bịa thêm gì. Mỗi điều ngắn gọn, tiếng Việt.
 Chỉ trả về một mảng JSON các chuỗi, ví dụ: ["Tên là Tân", "Thích tập gym"]."""
 
 
-def build_system_prompt(persona: str, facts: list[str], summary: str = "") -> str:
+GREET_TRIGGER = (
+    "(Tin nhắn hệ thống, không phải người dùng nói: người dùng vừa mở ứng dụng sau một thời gian. "
+    "Hãy chủ động chào và hỏi thăm một chuyện trong phần 'Chuyện nên hỏi thăm'.)"
+)
+
+
+def _when(created_at: str, now: datetime) -> str:
+    """Đổi thời điểm kể chuyện thành chữ dễ hiểu: hôm nay, hôm qua, 3 ngày trước."""
+    try:
+        days = (now.date() - datetime.fromisoformat(created_at).date()).days
+    except ValueError:
+        return ""
+    return "hôm nay" if days <= 0 else "hôm qua" if days == 1 else f"{days} ngày trước"
+
+
+def build_system_prompt(
+    persona: str,
+    facts: list[str],
+    summary: str = "",
+    followups: list[dict] | None = None,
+    now: datetime | None = None,
+) -> str:
+    now = now or datetime.now()
     known = "\n".join(f"- {f}" for f in facts) if facts else "- (chưa biết gì)"
-    out = f"{persona.strip()}\n\n## Điều bạn đã biết về người dùng\n{known}\n"
+    out = f"{persona.strip()}\n\nBây giờ là {now.strftime('%H:%M')} ngày {now.strftime('%d/%m/%Y')}.\n"
+    out += f"\n## Điều bạn đã biết về người dùng\n{known}\n"
     if summary:
         out += f"\n## Tóm tắt những lần trò chuyện trước\n{summary.strip()}\n"
+    if followups:
+        items = "\n".join(f"- {f['content']} (kể {_when(f['created_at'], now)})" for f in followups)
+        out += f"\n## Chuyện nên hỏi thăm\n{items}\n"
     return out + OUTPUT_RULES
 
 
@@ -90,6 +125,8 @@ def parse_reply(text: str) -> Reply:
                     hanh_dong=hanh_dong if hanh_dong in config.ACTIONS else "khong",
                     ghi_nho=_str_list(ghi_nho),
                     quen=_str_list(quen),
+                    hoi_tham=_str_list(data.get("hoi_tham") or []),
+                    da_hoi=_str_list(data.get("da_hoi") or []),
                 )
         except json.JSONDecodeError:
             pass
@@ -112,12 +149,28 @@ class Brain:
     def chat(self, user_text: str) -> Reply:
         if self.memory.replies_today() >= config.DAILY_LIMIT:
             return Reply(noi="Hôm nay mình nói nhiều quá rồi, mai nói tiếp nha!", cam_xuc="thuong")
-
         self.memory.add_message("user", user_text)
         history = clean_history(self.memory.recent_messages(config.HISTORY_LIMIT))
-        summary, _ = self.memory.latest_summary()
-        system = build_system_prompt(self.persona(), self.memory.all_facts(), summary)
+        return self._ask(history, self.memory.pending_followups(config.FOLLOWUP_MIN_HOURS))
 
+    def greet(self) -> Reply | None:
+        """Bơ chủ động mở lời khi người dùng quay lại sau một thời gian và có chuyện nên hỏi thăm.
+        Không có gì để hỏi hoặc vừa mới nói chuyện xong thì trả về None (không tốn câu API nào)."""
+        if self.memory.replies_today() >= config.DAILY_LIMIT:
+            return None
+        last = self.memory.last_message_time()
+        if last and (datetime.now() - last).total_seconds() < config.GREET_AFTER_HOURS * 3600:
+            return None
+        followups = self.memory.pending_followups(config.FOLLOWUP_MIN_HOURS)
+        if not followups:
+            return None
+        history = clean_history(self.memory.recent_messages(config.HISTORY_LIMIT))
+        history.append({"role": "user", "content": GREET_TRIGGER})  # chỉ gửi đi, không lưu
+        return self._ask(clean_history(history), followups)
+
+    def _ask(self, history: list[dict], followups: list[dict]) -> Reply:
+        summary, _ = self.memory.latest_summary()
+        system = build_system_prompt(self.persona(), self.memory.all_facts(), summary, followups)
         resp = self.client.messages.create(
             model=config.MODEL,
             max_tokens=500,
@@ -130,6 +183,8 @@ class Brain:
         self.memory.add_message("assistant", reply.noi)
         self.memory.forget_facts(reply.quen)
         self.memory.add_facts(reply.ghi_nho)
+        self.memory.done_followups(reply.da_hoi)
+        self.memory.add_followups(reply.hoi_tham)
         self.maybe_merge_facts()
         self.maybe_summarize()
         return reply

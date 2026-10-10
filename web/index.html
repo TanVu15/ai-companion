@@ -136,7 +136,14 @@ form.addEventListener('submit', async (ev) => {
 input.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); }
 });
-loadHistory();
+async function greet() {
+  try {
+    const r = await fetch('/api/chao', { method: 'POST' });
+    const data = await r.json();
+    if (r.ok && data.noi) { add('assistant', data.noi); express(data.cam_xuc, data.hanh_dong); }
+  } catch (e) {}
+}
+loadHistory().then(greet);
 
 const mem = document.getElementById('mem'), factsEl = document.getElementById('facts');
 async function delFact(content) {
