@@ -84,3 +84,11 @@
 - 44 test qua hết (test từ đánh thức cần Node.js, máy không có thì tự bỏ qua).
 
 **Tân cần thử:** Chrome/Edge trên máy tính → bật "Giọng nói" và "Rảnh tay", nói "Bơ ơi, kể chuyện vui đi".
+
+## 2026-10-10 – Giai đoạn 5 xong (báo cáo): giọng nói
+- Khi đọc to, Bơ bỏ emoji, ký hiệu (`**`, `#`), đường link, ":)" → không còn đọc "mặt cười" hay "sao sao". Chữ trên màn hình vẫn giữ nguyên.
+- Nút **"Tốc độ đọc: vừa / nhanh / chậm"** (hiện khi bật Giọng nói), máy nhớ lựa chọn.
+- Cả giai đoạn: micro, đọc to, rảnh tay "Bơ ơi", dọn chữ, chỉnh tốc độ. Tất cả miễn phí, chạy trong trình duyệt.
+- 45 test qua hết.
+
+**Tân cần thử:** bật Giọng nói, bấm "Tốc độ đọc" vài lần nghe thử; chat câu nào Bơ trả lời có emoji xem đọc có mượt không.

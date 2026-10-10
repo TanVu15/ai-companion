@@ -90,6 +90,7 @@
     <div>
       <button class="link" id="openMem" type="button">Bơ nhớ gì về mình?</button>
       <button class="link" id="voiceBtn" type="button" aria-pressed="false">Giọng nói: tắt</button>
+      <button class="link" id="rateBtn" type="button" hidden>Tốc độ đọc: vừa</button>
       <button class="link" id="handsBtn" type="button" aria-pressed="false" hidden>Rảnh tay: tắt</button>
     </div>
   </header>
@@ -112,6 +113,7 @@
   </div>
 </dialog>
 <script src="/web/danh_thuc.js"></script>
+<script src="/web/doc_to.js"></script>
 <script>
 const log = document.getElementById('log'), form = document.getElementById('form');
 const input = document.getElementById('input'), send = document.getElementById('send');
@@ -176,7 +178,19 @@ input.addEventListener('keydown', (e) => {
 let voiceOn = false, speaking = false;
 try { voiceOn = localStorage.getItem('bo_voice') === '1'; } catch (e) {}
 const voiceBtn = document.getElementById('voiceBtn'), micBtn = document.getElementById('mic');
-function showVoice() { voiceBtn.textContent = 'Giọng nói: ' + (voiceOn ? 'bật' : 'tắt'); voiceBtn.setAttribute('aria-pressed', voiceOn); }
+const RATES = [['vừa', 1], ['nhanh', 1.25], ['chậm', 0.8]];
+let rateIdx = 0;
+try { rateIdx = Math.max(0, RATES.findIndex(r => r[0] === localStorage.getItem('bo_rate'))); } catch (e) {}
+const rateBtn = document.getElementById('rateBtn');
+function showVoice() {
+  voiceBtn.textContent = 'Giọng nói: ' + (voiceOn ? 'bật' : 'tắt'); voiceBtn.setAttribute('aria-pressed', voiceOn);
+  rateBtn.hidden = !voiceOn; rateBtn.textContent = 'Tốc độ đọc: ' + RATES[rateIdx][0];
+}
+rateBtn.onclick = () => {
+  rateIdx = (rateIdx + 1) % RATES.length; showVoice();
+  try { localStorage.setItem('bo_rate', RATES[rateIdx][0]); } catch (e) {}
+  speak('Bơ đọc ' + RATES[rateIdx][0] + ' như này nha');
+};
 showVoice();
 voiceBtn.onclick = () => {
   voiceOn = !voiceOn; showVoice();
@@ -188,10 +202,11 @@ function viVoice() {
   return all.find(v => v.lang && v.lang.toLowerCase().startsWith('vi')) || null;
 }
 function speak(text) {
+  text = boChuDeDoc(text);
   if (!voiceOn || !window.speechSynthesis || !text) return;
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
-  u.lang = 'vi-VN'; const v = viVoice(); if (v) u.voice = v;
+  u.lang = 'vi-VN'; u.rate = RATES[rateIdx][1]; const v = viVoice(); if (v) u.voice = v;
   u.onstart = () => face.classList.add('talking');
   u.onend = u.onerror = () => { speaking = false; face.classList.remove('talking'); resumeListening(); };
   speaking = true; speechSynthesis.speak(u);
