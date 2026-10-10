@@ -33,7 +33,7 @@ Sửa file `persona.md` rồi gửi tin nhắn mới. Không cần khởi độn
 
 ## Thử tính cách (chấm điểm)
 
-Bơ trả lời 10 tình huống trong `tinh_huong.json` (buồn, mệt, khoe thành tích, hỏi điều không biết...) và được chấm điểm tự động. Tốn khoảng 10 câu API (rất rẻ), không đụng vào trí nhớ thật.
+Bơ trả lời 12 tình huống trong `tinh_huong.json` (buồn, mệt, khoe thành tích, hỏi điều không biết, hỏi thăm chuyện cũ...) và được chấm điểm tự động. Tốn khoảng 12 câu API (rất rẻ), không đụng vào trí nhớ thật.
 
 ```
 .venv\Scripts\activate

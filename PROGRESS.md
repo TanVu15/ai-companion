@@ -122,3 +122,10 @@
 - Mỗi tin nhắn có giờ nhỏ bên dưới ("14:05", "hôm qua 21:30", "08/10/2026 09:00").
 - Mở web hiện 50 tin gần nhất; kéo lên đầu thì tự tải thêm 50 tin cũ hơn, không bị nhảy chỗ đang đọc.
 - 55 test qua hết.
+
+## 2026-10-10 – Giai đoạn 7 xong (báo cáo): tiện ích
+- Bộ chấm điểm tính cách thêm 2 tình huống (tổng 12): Bơ có ghi lại "chiều nay đi phỏng vấn" để hỏi sau không; Bơ có tự hỏi "hôm qua tập chân sao rồi?" khi được chào không.
+- Cả giai đoạn: nút Chi phí, sao lưu/khôi phục trí nhớ, giờ tin nhắn + tải tin cũ, thêm tình huống chấm điểm.
+- 57 test qua hết.
+
+**Tân cần thử:** `python -m app.thu_tinh_cach` (12 câu API) và gửi tổng điểm vào FEEDBACK.md.

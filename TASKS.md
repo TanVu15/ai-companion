@@ -39,7 +39,7 @@
 - [x] Theo dõi chi phí: đếm token mỗi ngày, ước tính tiền, xem trên web
 - [x] Sao lưu / khôi phục trí nhớ (tải file về, nạp lại)
 - [x] Hiện giờ gửi tin nhắn, tải thêm tin cũ khi kéo lên
-- [ ] Thêm tình huống "hỏi thăm chuyện cũ" vào bộ chấm điểm tính cách
+- [x] Thêm tình huống "hỏi thăm chuyện cũ" vào bộ chấm điểm tính cách
 
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định

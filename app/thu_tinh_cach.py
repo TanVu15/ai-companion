@@ -1,6 +1,6 @@
-"""Bộ câu hỏi thử tính cách: cho Bơ trả lời 10 tình huống trong tinh_huong.json và chấm điểm.
+"""Bộ câu hỏi thử tính cách: cho Bơ trả lời các tình huống trong tinh_huong.json và chấm điểm.
 
-Chạy (tốn khoảng 10 câu API, rất rẻ với Haiku):
+Chạy (tốn khoảng 12 câu API, rất rẻ với Haiku):
     python -m app.thu_tinh_cach
 
 Mỗi tình huống dùng một trí nhớ tạm riêng, không đụng vào dữ liệu thật trong data/.
@@ -80,6 +80,10 @@ def cham(th: dict, chu_goc: str, reply) -> KetQua:
         kq.kiem_tra.append(("Không nói điều không hợp", not any(t.lower() in thuong for t in th["khong_duoc_co"])))
     if th.get("phai_ghi_nho"):
         kq.kiem_tra.append(("Có ghi nhớ điều mới", bool(reply.ghi_nho)))
+    if th.get("phai_ghi_hoi_tham"):
+        kq.kiem_tra.append(("Ghi lại để hỏi thăm sau", bool(reply.hoi_tham)))
+    if th.get("phai_da_hoi"):
+        kq.kiem_tra.append(("Đánh dấu đã hỏi thăm", bool(reply.da_hoi)))
     return kq
 
 
@@ -91,6 +95,12 @@ def chay(client, tinh_huong: list[dict] | None = None) -> list[KetQua]:
         for i, th in enumerate(tinh_huong):
             memory = Memory(Path(tmp) / f"th{i}.db")
             memory.add_facts(th.get("da_biet", []))
+            if th.get("can_hoi_tham"):
+                memory.add_followups(th["can_hoi_tham"])
+                memory.conn.execute(  # giả vờ chuyện này được kể từ hôm qua
+                    "UPDATE followups SET created_at = datetime('now', 'localtime', '-1 day')"
+                )
+                memory.conn.commit()
             ghi = _GhiLaiClient(client)
             try:
                 reply = Brain(memory, client=ghi).chat(th["tin_nhan"])

@@ -7,7 +7,7 @@ from tests.test_brain import FakeClient
 
 def test_file_tinh_huong_hop_le():
     ds = json.loads(t.TINH_HUONG_PATH.read_text(encoding="utf-8"))
-    assert len(ds) == 10
+    assert len(ds) == 12
     for th in ds:
         assert th["ten"] and th["tin_nhan"]
 
@@ -41,3 +41,19 @@ def test_da_biet_duoc_dua_vao_bo_nao():
     assert "Tên là Tân" in client.calls[0]["system"]
     assert kq.diem == 1.0
     assert "TỔNG ĐIỂM: 100%" in t.in_bao_cao([kq])
+
+
+def test_hoi_tham_duoc_dua_vao_va_cham():
+    th = {"ten": "Hỏi thăm", "can_hoi_tham": ["Chiều nay đi tập chân"], "tin_nhan": "Chào Bơ",
+          "phai_co_mot_trong": ["chân"], "phai_da_hoi": True}
+    client = FakeClient([json.dumps({"noi": "Hôm qua tập chân sao rồi?", "cam_xuc": "vui",
+                                     "da_hoi": ["Chiều nay đi tập chân"]})])
+    [kq] = t.chay(client, [th])
+    assert "Chiều nay đi tập chân (kể hôm qua)" in client.calls[0]["system"]
+    assert kq.diem == 1.0
+
+
+def test_phai_ghi_hoi_tham():
+    th = {"ten": "Sắp phỏng vấn", "tin_nhan": "chiều nay phỏng vấn", "phai_ghi_hoi_tham": True}
+    [kq] = t.chay(FakeClient([json.dumps({"noi": "Cố lên!"})]), [th])
+    assert ("Ghi lại để hỏi thăm sau", False) in kq.kiem_tra
