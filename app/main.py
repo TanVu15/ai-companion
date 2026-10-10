@@ -155,6 +155,44 @@ async def restore(request: Request):
     return {"ok": True}
 
 
+@app.get("/api/suc-khoe")
+def health():
+    """Kiểm tra cấu hình: thiếu gì thì báo bằng câu dễ hiểu. Không gọi API, không tốn tiền."""
+    checks = []
+
+    def add(ten: str, ok: bool, ghi_chu: str, muc: str = "loi"):
+        checks.append({"ten": ten, "ok": ok, "muc": "ok" if ok else muc, "ghi_chu": ghi_chu})
+
+    if config.DEMO:
+        add("Bộ não", True, "Đang chạy DEMO (không cần API key, Bơ chỉ nhắc lại lời bạn)")
+    else:
+        key = config.ANTHROPIC_API_KEY
+        add("API key", key.startswith("sk-"),
+            "Có API key" if key.startswith("sk-") else
+            ("Chưa có ANTHROPIC_API_KEY trong .env" if not key else "API key trông không đúng (thường bắt đầu bằng sk-)"))
+    try:
+        persona_ok = bool(config.PERSONA_PATH.read_text(encoding="utf-8").strip())
+    except OSError:
+        persona_ok = False
+    add("Tính cách", persona_ok, "Có persona.md" if persona_ok else "Thiếu hoặc trống file persona.md")
+    db = config.DB_PATH.with_name("demo.db") if config.DEMO else config.DB_PATH
+    try:
+        db.parent.mkdir(parents=True, exist_ok=True)
+        probe = db.parent / ".thu_ghi"
+        probe.write_text("ok")
+        probe.unlink()
+        size = db.stat().st_size / 1e6 if db.exists() else 0
+        add("Dữ liệu", True, f"Ghi được vào {db.parent.name}/, trí nhớ nặng {size:.1f} MB")
+    except OSError as e:
+        add("Dữ liệu", False, f"Không ghi được thư mục dữ liệu: {e}")
+    add("Mật khẩu web", bool(config.APP_PASSWORD),
+        "Đã đặt APP_PASSWORD" if config.APP_PASSWORD else "Chưa đặt APP_PASSWORD (ổn nếu chỉ dùng trong nhà)", "canh_bao")
+    add("Ngân sách tháng", config.MONTHLY_USD_LIMIT > 0,
+        f"{config.MONTHLY_USD_LIMIT:g} đô/tháng" if config.MONTHLY_USD_LIMIT > 0 else "Không giới hạn (đặt MONTHLY_USD_LIMIT)",
+        "canh_bao")
+    return {"ok": all(c["muc"] != "loi" for c in checks), "model": config.MODEL, "kiem_tra": checks}
+
+
 @app.get("/api/history")
 def history(before_id: int | None = None, limit: int = 50):
     """Tin nhắn gần nhất (kèm giờ). Gửi before_id để lấy thêm tin cũ hơn."""

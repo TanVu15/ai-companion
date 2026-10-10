@@ -354,7 +354,15 @@ async function greet() {
     if (r.ok && data.noi) { add('assistant', data.noi); express(data.cam_xuc, data.hanh_dong); speak(data.noi); }
   } catch (e) {}
 }
-loadHistory().then(greet);
+async function checkHealth() {
+  try {
+    const d = await (await fetch('/api/suc-khoe')).json();
+    if (d.ok) return true;
+    d.kiem_tra.filter(c => c.muc === 'loi').forEach(c => add('error', c.ten + ': ' + c.ghi_chu));
+    express('buon'); return false;
+  } catch (e) { return true; }
+}
+loadHistory().then(checkHealth).then(ok => { if (ok) greet(); });
 
 const mem = document.getElementById('mem'), factsEl = document.getElementById('facts');
 async function delFact(content) {

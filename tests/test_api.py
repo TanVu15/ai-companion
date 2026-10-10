@@ -122,3 +122,27 @@ def test_history_paging(tmp_path):
     assert [m["content"] for m in page] == ["tin 4", "tin 5", "tin 6"] and "created_at" in page[0]
     older = c.get(f"/api/history?limit=3&before_id={page[0]['id']}").json()
     assert [m["content"] for m in older] == ["tin 1", "tin 2", "tin 3"]
+
+
+def test_health_reports_missing_key(tmp_path, monkeypatch):
+    from app import config
+
+    monkeypatch.setattr(config, "DEMO", False)
+    monkeypatch.setattr(config, "ANTHROPIC_API_KEY", "")
+    monkeypatch.setattr(config, "DB_PATH", tmp_path / "data" / "x.db")
+    c = make_client(tmp_path, [])
+    d = c.get("/api/suc-khoe").json()
+    assert d["ok"] is False
+    [key] = [k for k in d["kiem_tra"] if k["ten"] == "API key"]
+    assert key["muc"] == "loi" and "ANTHROPIC_API_KEY" in key["ghi_chu"]
+
+
+def test_health_ok_with_key(tmp_path, monkeypatch):
+    from app import config
+
+    monkeypatch.setattr(config, "DEMO", False)
+    monkeypatch.setattr(config, "ANTHROPIC_API_KEY", "sk-ant-test")
+    monkeypatch.setattr(config, "DB_PATH", tmp_path / "data" / "x.db")
+    d = make_client(tmp_path, []).get("/api/suc-khoe").json()
+    assert d["ok"] is True  # thiếu mật khẩu/ngân sách chỉ là cảnh báo
+    assert {k["ten"] for k in d["kiem_tra"]} >= {"API key", "Tính cách", "Dữ liệu"}

@@ -141,3 +141,8 @@
 - 59 test qua hết.
 
 **Tân cần thử:** thêm dòng `MONTHLY_USD_LIMIT=5` (hoặc mức Tân muốn) vào `.env`.
+
+## 2026-10-10 – Giai đoạn 8: tự kiểm tra cấu hình
+- Mở web mà thiếu API key / thiếu persona.md / không ghi được dữ liệu → hiện ngay dòng đỏ giải thích, ví dụ "API key: Chưa có ANTHROPIC_API_KEY trong .env".
+- Xem chi tiết ở http://localhost:8000/api/suc-khoe (có cả cảnh báo nhẹ: chưa đặt mật khẩu, chưa đặt ngân sách). Không tốn tiền API.
+- 61 test qua hết.
