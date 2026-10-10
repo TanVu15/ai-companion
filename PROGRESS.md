@@ -315,3 +315,7 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - `tinh_huong.json` có 15 tình huống (thêm: kể ngày sinh nhật → phải ghi ngày; đúng ngày sinh nhật → phải chúc; "mỗi ngày 7h nhắc uống nước" → phải ghi nhắc lặp `ngay`).
 - Chạy `python -m app.thu_tinh_cach` (tốn ~15 câu API) để xem Bơ thật có làm đúng không.
 - 108 test qua hết.
+
+## 2026-10-10 – Giai đoạn 16: Bơ và bạn
+- Mở nút **"?"**: dòng đầu cho biết đã quen bao nhiêu ngày (từ ngày nào), trò chuyện bao nhiêu ngày, bao nhiêu tin nhắn, Bơ đang nhớ bao nhiêu điều. Không tốn API.
+- 109 test qua hết.

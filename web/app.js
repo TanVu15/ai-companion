@@ -452,7 +452,17 @@ document.getElementById('closeSearch').onclick = () => searchDlg.close();
 
 // ---- Bơ làm được gì? ----
 const helpDlg = document.getElementById('help');
-document.getElementById('openHelp').onclick = () => helpDlg.showModal();
+const statsEl = document.getElementById('stats');
+document.getElementById('openHelp').onclick = async () => {
+  helpDlg.showModal(); statsEl.textContent = '';
+  try {
+    const s = await (await fetch('/api/thong-ke')).json();
+    statsEl.textContent = s.quen_tu
+      ? 'Bơ và bạn quen nhau ' + s.so_ngay_quen + ' ngày (từ ' + s.quen_tu + '), trò chuyện ' + s.so_ngay_tro_chuyen
+        + ' ngày, ' + s.so_tin.toLocaleString('vi-VN') + ' tin nhắn. Bơ đang nhớ ' + s.so_dieu_nho + ' điều về bạn.'
+      : 'Bơ và bạn mới quen thôi. Nhắn gì đó đi!';
+  } catch (e) {}
+};
 document.getElementById('closeHelp').onclick = () => helpDlg.close();
 
 // ---- Ghim tin nhắn: chạm vào bong bóng → hiện nút "Ghim" / "Bỏ ghim" ----

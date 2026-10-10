@@ -152,6 +152,24 @@ class Memory:
             lines.append(f"[{t[11:16]}] {who}: {content}")
         return "\n".join(lines) + "\n" if lines else "(Chưa có tin nhắn nào)\n"
 
+    def stats(self, today: date | None = None) -> dict:
+        """Bơ và bạn: quen từ ngày nào, bao nhiêu ngày, bao nhiêu tin, bao nhiêu ngày có nói chuyện."""
+        today = today or date.today()
+        first, total, days = self.conn.execute(
+            "SELECT MIN(created_at), COUNT(*), COUNT(DISTINCT substr(created_at, 1, 10)) FROM messages WHERE tu_dong = 0"
+        ).fetchone()
+        try:
+            first_day = date.fromisoformat(first[:10]) if first else None
+        except ValueError:
+            first_day = None
+        return {
+            "quen_tu": first_day.strftime("%d/%m/%Y") if first_day else None,
+            "so_ngay_quen": (today - first_day).days + 1 if first_day else 0,
+            "so_tin": total,
+            "so_ngay_tro_chuyen": days,
+            "so_dieu_nho": len(self.all_facts()),
+        }
+
     def get_kv(self, key: str, default: str = "") -> str:
         row = self.conn.execute("SELECT value FROM kv WHERE key = ?", (key,)).fetchone()
         return row[0] if row else default

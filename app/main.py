@@ -266,6 +266,11 @@ class PinIn(BaseModel):
     ghim: bool = True
 
 
+@app.get("/api/thong-ke")
+def stats():
+    return get_brain().memory.stats()
+
+
 @app.get("/api/ghim")
 def pinned():
     return get_brain().memory.pinned_messages()

@@ -275,3 +275,20 @@ def test_ghim_tin_nhan(tmp_path):
     assert c.post("/api/ghim/999", json={"ghim": True}).status_code == 404
     c.post("/api/khoi-phuc", json=backup)
     assert len(c.get("/api/ghim").json()) == 1  # sao lưu giữ cả tin đã ghim
+
+
+def test_thong_ke_quen_nhau(tmp_path):
+    c = make_client(tmp_path, [])
+    m = main._brain.memory
+    assert c.get("/api/thong-ke").json()["quen_tu"] is None
+    for i in range(3):
+        m.add_message("user", f"tin {i}")
+    m.add_message("assistant", "nhắc", tu_dong=True)  # lời nhắc tự động không tính
+    m.conn.execute("UPDATE messages SET created_at = '2026-10-01 09:00:00' WHERE id = 1")
+    m.conn.commit()
+    m.add_facts(["Tên là Tân"])
+    from datetime import date
+
+    s = m.stats(today=date(2026, 10, 10))
+    assert s == {"quen_tu": "01/10/2026", "so_ngay_quen": 10, "so_tin": 3,
+                 "so_ngay_tro_chuyen": 2, "so_dieu_nho": 1}
