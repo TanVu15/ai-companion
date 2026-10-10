@@ -28,5 +28,9 @@ FOLLOWUP_MIN_HOURS = float(os.getenv("FOLLOWUP_MIN_HOURS", "3"))
 # Mở web sau ngần này giờ không nói chuyện thì Bơ chủ động chào + hỏi thăm (nếu có chuyện để hỏi)
 GREET_AFTER_HOURS = float(os.getenv("GREET_AFTER_HOURS", "3"))
 
+# Gặp lỗi mạng/máy chủ bận thì thử lại tối đa ngần này lần; mỗi lần hỏi chờ tối đa API_TIMEOUT giây
+API_RETRIES = int(os.getenv("API_RETRIES", "3"))
+API_TIMEOUT = float(os.getenv("API_TIMEOUT", "30"))
+
 EMOTIONS = ["vui", "hao_hung", "binh_thuong", "suy_nghi", "ngac_nhien", "buon", "thuong"]
 ACTIONS = ["khong", "gat_dau", "lac_dau", "nghieng_dau", "nhay", "vay_tay"]

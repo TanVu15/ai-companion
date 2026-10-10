@@ -176,3 +176,56 @@ def test_bad_merge_keeps_facts_and_waits(memory, monkeypatch):
     brain.chat("2")
     assert memory.all_facts() == ["A", "B", "C"]
     assert len(client.calls) == 3
+
+
+class FlakyClient(FakeClient):
+    """Báo lỗi `fails` lần đầu rồi mới trả lời."""
+
+    def __init__(self, replies, error, fails):
+        super().__init__(replies)
+        self.error, self.fails = error, fails
+
+    def _create(self, **kwargs):
+        if self.fails > 0:
+            self.fails -= 1
+            self.calls.append(kwargs)
+            raise self.error
+        return super()._create(**kwargs)
+
+
+class _StatusError(Exception):
+    def __init__(self, status_code, msg="lỗi"):
+        super().__init__(msg)
+        self.status_code = status_code
+
+
+def test_retry_on_network_error(memory):
+    waits = []
+    client = FlakyClient([json.dumps({"noi": "Ok"})], ConnectionError("mất mạng"), fails=2)
+    r = Brain(memory, client=client, sleep=waits.append).chat("hi")
+    assert r.noi == "Ok" and waits == [1, 2]
+
+
+def test_no_retry_on_bad_key_and_message_rolled_back(memory):
+    client = FlakyClient([], _StatusError(401), fails=5)
+    with pytest.raises(_StatusError):
+        Brain(memory, client=client, sleep=lambda s: None).chat("hi")
+    assert len(client.calls) == 1  # sai key thì thử lại cũng vô ích
+    assert memory.recent_messages(10) == []  # tin lỗi không nằm lại trong lịch sử
+
+
+def test_gives_up_after_max_retries(memory, monkeypatch):
+    monkeypatch.setattr(config, "API_RETRIES", 2)
+    client = FlakyClient([], _StatusError(529), fails=10)
+    with pytest.raises(_StatusError):
+        Brain(memory, client=client, sleep=lambda s: None).chat("hi")
+    assert len(client.calls) == 3
+
+
+def test_friendly_errors():
+    from app.brain import friendly_error
+
+    assert "API key" in friendly_error(_StatusError(401))
+    assert "hết tiền" in friendly_error(_StatusError(400, "Your credit balance is too low"))
+    assert "quá tải" in friendly_error(_StatusError(529))
+    assert "Mất mạng" in friendly_error(ConnectionError())

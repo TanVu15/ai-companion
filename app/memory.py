@@ -40,8 +40,13 @@ class Memory:
         self.conn.commit()
 
     # --- Tin nhắn ---
-    def add_message(self, role: str, content: str) -> None:
-        self.conn.execute("INSERT INTO messages (role, content) VALUES (?, ?)", (role, content))
+    def add_message(self, role: str, content: str) -> int:
+        cur = self.conn.execute("INSERT INTO messages (role, content) VALUES (?, ?)", (role, content))
+        self.conn.commit()
+        return cur.lastrowid
+
+    def delete_message(self, msg_id: int) -> None:
+        self.conn.execute("DELETE FROM messages WHERE id = ?", (msg_id,))
         self.conn.commit()
 
     def recent_messages(self, limit: int) -> list[dict]:

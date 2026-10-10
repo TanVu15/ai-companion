@@ -1,6 +1,7 @@
 """Bộ não: ghép tính cách + trí nhớ + lịch sử chat, hỏi Claude, rồi đọc kết quả JSON."""
 import json
 import re
+import time
 from dataclasses import dataclass, field
 from datetime import datetime
 
@@ -133,15 +134,58 @@ def parse_reply(text: str) -> Reply:
     return Reply(noi=text.strip() or "...")
 
 
+_TRANSIENT_NAMES = {"APIConnectionError", "APITimeoutError", "RateLimitError", "InternalServerError", "OverloadedError"}
+
+
+def is_transient(e: Exception) -> bool:
+    """Lỗi tạm thời (mất mạng, máy chủ bận) thì đáng thử lại; lỗi sai key, hết tiền thì không."""
+    if type(e).__name__ in _TRANSIENT_NAMES or isinstance(e, (ConnectionError, TimeoutError)):
+        return True
+    status = getattr(e, "status_code", None)
+    return isinstance(status, int) and (status == 429 or status >= 500)
+
+
+def friendly_error(e: Exception) -> str:
+    """Đổi lỗi kỹ thuật thành câu dễ hiểu cho người dùng."""
+    status = getattr(e, "status_code", None)
+    text = str(e).lower()
+    if status in (401, 403) or type(e).__name__ in {"AuthenticationError", "PermissionDeniedError"}:
+        return "API key sai hoặc hết hạn. Kiểm tra ANTHROPIC_API_KEY trong file .env nha."
+    if "credit" in text or "billing" in text:
+        return "Tài khoản API hết tiền rồi. Nạp thêm ở console.anthropic.com nha."
+    if status == 429 or type(e).__name__ == "RateLimitError":
+        return "Bơ nói nhanh quá bị chặn tạm. Chờ một phút rồi nhắn lại nha."
+    if status in (500, 502, 503, 529) or type(e).__name__ in {"InternalServerError", "OverloadedError"}:
+        return "Máy chủ AI đang quá tải. Thử lại sau chút nha."
+    if is_transient(e):
+        return "Mất mạng rồi, Bơ không nghe được. Kiểm tra Wi-Fi rồi thử lại nha."
+    return f"Bơ gặp lỗi lạ: {type(e).__name__}. Thử lại xem sao."
+
+
 class Brain:
-    def __init__(self, memory, client=None):
+    def __init__(self, memory, client=None, sleep=time.sleep):
         self.memory = memory
         if client is None:
             import anthropic
 
-            client = anthropic.Anthropic(api_key=config.ANTHROPIC_API_KEY)
+            # Tự thử lại ở _create bên dưới, nên tắt thử lại có sẵn của thư viện
+            client = anthropic.Anthropic(
+                api_key=config.ANTHROPIC_API_KEY, max_retries=0, timeout=config.API_TIMEOUT
+            )
         self.client = client
+        self._sleep = sleep
         self._merged_at = 0  # số điều đáng nhớ còn lại sau lần gộp gần nhất
+
+    def _create(self, retries: int | None = None, **kwargs):
+        """Gọi API, gặp lỗi tạm thời thì chờ 1s, 2s, 4s... rồi thử lại (mặc định API_RETRIES lần)."""
+        retries = config.API_RETRIES if retries is None else retries
+        for attempt in range(retries + 1):
+            try:
+                return self.client.messages.create(**kwargs)
+            except Exception as e:
+                if attempt >= retries or not is_transient(e):
+                    raise
+                self._sleep(2**attempt)
 
     def persona(self) -> str:
         return config.PERSONA_PATH.read_text(encoding="utf-8")
@@ -149,9 +193,14 @@ class Brain:
     def chat(self, user_text: str) -> Reply:
         if self.memory.replies_today() >= config.DAILY_LIMIT:
             return Reply(noi="Hôm nay mình nói nhiều quá rồi, mai nói tiếp nha!", cam_xuc="thuong")
-        self.memory.add_message("user", user_text)
+        msg_id = self.memory.add_message("user", user_text)
         history = clean_history(self.memory.recent_messages(config.HISTORY_LIMIT))
-        return self._ask(history, self.memory.pending_followups(config.FOLLOWUP_MIN_HOURS))
+        try:
+            return self._ask(history, self.memory.pending_followups(config.FOLLOWUP_MIN_HOURS))
+        except Exception:
+            # Lỗi thì bỏ tin vừa gửi, để người dùng bấm gửi lại không bị lặp tin
+            self.memory.delete_message(msg_id)
+            raise
 
     def greet(self) -> Reply | None:
         """Bơ chủ động mở lời khi người dùng quay lại sau một thời gian và có chuyện nên hỏi thăm.
@@ -171,7 +220,7 @@ class Brain:
     def _ask(self, history: list[dict], followups: list[dict]) -> Reply:
         summary, _ = self.memory.latest_summary()
         system = build_system_prompt(self.persona(), self.memory.all_facts(), summary, followups)
-        resp = self.client.messages.create(
+        resp = self._create(
             model=config.MODEL,
             max_tokens=500,
             system=system,
@@ -198,7 +247,8 @@ class Brain:
         lines = "\n".join(f"{'Người dùng' if m['role'] == 'user' else 'Bơ'}: {m['content']}" for m in old)
         prompt = f"Bản tóm tắt cũ:\n{previous or '(chưa có)'}\n\nĐoạn trò chuyện mới:\n{lines}"
         try:
-            resp = self.client.messages.create(
+            resp = self._create(
+                retries=0,  # việc phụ: lỗi thì lần sau làm, không bắt người dùng chờ
                 model=config.MODEL,
                 max_tokens=400,
                 system=SUMMARY_PROMPT,
@@ -217,7 +267,8 @@ class Brain:
             return
         listing = "\n".join(f"- {f}" for f in facts)
         try:
-            resp = self.client.messages.create(
+            resp = self._create(
+                retries=0,
                 model=config.MODEL,
                 max_tokens=800,
                 system=MERGE_PROMPT,

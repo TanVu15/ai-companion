@@ -53,6 +53,7 @@
   .msg.user { align-self: flex-end; background: var(--me); color: var(--me-text); border-bottom-right-radius: 4px; }
   .msg.assistant { align-self: flex-start; background: var(--bot); border-bottom-left-radius: 4px; }
   .msg.error { align-self: center; color: #c0392b; font-size: 14px; background: none; }
+  .msg.error .retry { margin-left: 8px; border: 1px solid #c0392b; color: #c0392b; background: #fff; border-radius: 12px; padding: 2px 10px; cursor: pointer; }
   form { display: flex; gap: 8px; padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); border-top: 1px solid var(--border); background: var(--panel); }
   textarea { flex: 1; resize: none; border: 1px solid var(--border); border-radius: 20px; padding: 10px 14px;
     font: inherit; background: var(--bg); color: var(--text); max-height: 120px; }
@@ -116,22 +117,39 @@ async function loadHistory() {
     if (r.ok) (await r.json()).forEach(m => add(m.role, m.content));
   } catch (e) {}
 }
-form.addEventListener('submit', async (ev) => {
-  ev.preventDefault();
-  const text = input.value.trim();
-  if (!text) return;
-  add('user', text); input.value = ''; send.disabled = true;
+function addError(text, retry) {
+  add('error', text);
+  if (!retry) return;
+  const b = document.createElement('button');
+  b.type = 'button'; b.className = 'retry'; b.textContent = 'Thử lại';
+  b.onclick = () => { b.closest('.msg').remove(); retry(); };
+  log.lastChild.appendChild(b);
+}
+async function sendText(text) {
+  send.disabled = true;
   statusEl.textContent = 'Bơ đang nghĩ...'; express('suy_nghi');
+  const ctrl = new AbortController(), timer = setTimeout(() => ctrl.abort(), 150000);
   try {
-    const r = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text }) });
-    const data = await r.json();
-    if (!r.ok) throw new Error(data.detail || 'Lỗi không rõ');
+    const r = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text }), signal: ctrl.signal });
+    let data = {};
+    try { data = await r.json(); } catch (e) {}
+    if (!r.ok) throw new Error(data.detail || 'Máy chủ trả lỗi ' + r.status);
     add('assistant', data.noi); express(data.cam_xuc, data.hanh_dong);
   } catch (e) {
-    add('error', e.message); express('buon');
+    const msg = e.name === 'AbortError' ? 'Bơ nghĩ lâu quá, thử lại nha.'
+      : e instanceof TypeError ? 'Không kết nối được máy chủ. Máy chủ còn chạy không?' : e.message;
+    addError(msg, () => sendText(text)); express('buon');
   } finally {
+    clearTimeout(timer);
     send.disabled = false; statusEl.textContent = ''; input.focus();
   }
+}
+form.addEventListener('submit', (ev) => {
+  ev.preventDefault();
+  const text = input.value.trim();
+  if (!text || send.disabled) return;
+  add('user', text); input.value = '';
+  sendText(text);
 });
 input.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); }

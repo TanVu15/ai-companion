@@ -4,7 +4,7 @@ from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 from . import config
-from .brain import Brain
+from .brain import Brain, friendly_error
 from .memory import Memory
 
 app = FastAPI(title="AI Companion")
@@ -68,8 +68,8 @@ def chat(body: ChatIn):
         reply = get_brain().chat(text[:2000])
     except HTTPException:
         raise
-    except Exception as e:  # lỗi mạng, hết tiền API...
-        raise HTTPException(502, f"Bộ não gặp lỗi: {type(e).__name__}: {e}")
+    except Exception as e:  # lỗi mạng, hết tiền API... (đã thử lại vài lần trong bộ não)
+        raise HTTPException(502, friendly_error(e))
     return reply.to_dict()
 
 

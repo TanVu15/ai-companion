@@ -22,7 +22,7 @@
 - [x] Bơ chủ động hỏi thăm chuyện cũ (ví dụ: "hôm qua tập chân sao rồi?")
 
 ## Giai đoạn 4 – Hoàn thiện
-- [ ] Xử lý lỗi mạng, thử lại
+- [x] Xử lý lỗi mạng, thử lại
 - [ ] Hướng dẫn đưa lên mạng để dùng ngoài nhà
 - [ ] Dùng thử 1 tuần, sửa theo góp ý
 

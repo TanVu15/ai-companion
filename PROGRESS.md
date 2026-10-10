@@ -46,4 +46,14 @@
 
 **Tân cần thử:** kể "tối nay mình đi đá bóng", hôm sau mở lại web xem Bơ có tự hỏi "đá bóng sao rồi?" không.
 
-**Tiếp theo:** Giai đoạn 4, việc "Xử lý lỗi mạng, thử lại".
+
+## 2026-10-10 – Giai đoạn 4: xử lý lỗi mạng
+- Mất mạng / máy chủ AI bận → Bơ tự thử lại tối đa 3 lần (chờ 1s, 2s, 4s). Đổi bằng `API_RETRIES`, `API_TIMEOUT` trong .env.
+- Lỗi không đáng thử lại (sai API key, hết tiền) → báo ngay bằng câu dễ hiểu, ví dụ "API key sai hoặc hết hạn. Kiểm tra .env nha."
+- Tin nhắn bị lỗi không nằm lại trong lịch sử; trên web có nút **"Thử lại"** cạnh dòng báo lỗi.
+- Việc phụ (tóm tắt, gộp trí nhớ) lỗi thì bỏ qua, không bắt chờ.
+- 39 test qua hết.
+
+**Tân cần thử:** đang chat thì tắt Wi-Fi, gửi 1 tin → thấy báo lỗi + nút "Thử lại"; bật Wi-Fi lại rồi bấm.
+
+**Tiếp theo:** Giai đoạn 4, việc "Hướng dẫn đưa lên mạng để dùng ngoài nhà".
