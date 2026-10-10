@@ -107,6 +107,12 @@
     background: var(--bg); color: var(--text); margin-bottom: 8px; }
   #searchList { max-height: 50vh; overflow-y: auto; } #searchList small { color: var(--muted); display: block; }
   #searchList mark { background: var(--face); color: var(--ink); border-radius: 3px; }
+  #personaText { display: block; width: 100%; height: 45vh; max-height: none; border-radius: 12px; font-size: 14px; }
+  /* Màn hình thấp (điện thoại nhỏ, xoay ngang): mặt Bơ nhỏ lại để còn chỗ cho tin nhắn */
+  @media (max-height: 640px) {
+    header { padding-top: 8px; } .face { zoom: .65; } .name { margin-top: 2px; }
+    #personaText { height: 35vh; }
+  }
   .row { display: flex; justify-content: space-between; } .row button { padding: 8px 18px; }
 </style>
 </head>
@@ -180,7 +186,7 @@
 <dialog id="persona">
   <h2>Tính cách của Bơ</h2>
   <p id="personaNote">Viết Bơ là ai, nói chuyện ra sao, gọi bạn là gì. Lưu xong là áp dụng từ tin nhắn sau.</p>
-  <textarea id="personaText" rows="14" aria-label="Tính cách của Bơ" style="width:100%;border-radius:12px;max-height:55vh"></textarea>
+  <textarea id="personaText" aria-label="Tính cách của Bơ"></textarea>
   <div class="row" style="margin-top:8px">
     <button class="link" id="resetPersona" type="button">Về mặc định</button>
     <span><button class="link" id="closePersona" type="button">Hủy</button> <button id="savePersona" type="button">Lưu</button></span>

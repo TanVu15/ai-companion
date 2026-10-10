@@ -337,3 +337,10 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 ## 2026-10-10 – Giai đoạn 17: dịp đặc biệt khi trang đang mở
 - Để trang Bơ mở lâu (qua nửa đêm sinh nhật, qua 17h Chủ nhật): mỗi 10 phút web hỏi máy chủ "có dịp gì không" (`/api/chao?chi_dip=1`). Có thì Bơ tự chúc/điểm lại tuần; không có thì không tốn câu API nào. Hỏi thăm chuyện thường vẫn chỉ khi mở web.
 - 114 test qua hết.
+
+## 2026-10-10 – Giai đoạn 17 xong (báo cáo): tự tay chỉnh Bơ
+- **Sửa tính cách trên web** (nút "Tính cách"), **dịp đặc biệt khi trang đang mở** (mỗi 10 phút, không tốn API nếu không có dịp).
+- **Màn hình điện thoại nhỏ** (chụp tự động ở cỡ iPhone SE 320×568): không bị tràn ngang. Đã sửa: mặt Bơ thu nhỏ trên màn hình thấp để còn chỗ cho tin nhắn; hộp "Tính cách" trước bị che mất nút Lưu, giờ hiện đủ.
+- 114 test qua hết.
+
+**Tân cần thử:** mở Bơ trên iPhone, bấm "Tính cách" xem có thấy nút "Lưu" không.
