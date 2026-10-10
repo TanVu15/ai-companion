@@ -5,15 +5,19 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
-## Tóm tắt nhanh lần chạy 2026-10-10 (18:44–19:21 UTC)
-Xong giai đoạn 3 → 12. Đáng thử nhất, theo thứ tự:
-1. `git pull`, nhấp đúp `run.bat` (giờ tự cài thư viện còn thiếu).
-2. Kể "tối nay mình đi đá bóng" → hôm sau mở web, Bơ tự hỏi thăm. 2 ngày không chat thì Bơ chào "lâu quá không gặp".
-3. Nhắn "2 phút nữa nhắc mình uống nước", để trang mở chờ Bơ nhắc.
-4. Bật "Giọng nói" + "Rảnh tay", nói "Bơ ơi, kể chuyện vui đi" (Chrome/Edge trên máy tính).
-5. Nút "Chi phí"; thêm `MONTHLY_USD_LIMIT=5` vào `.env`. Đặt `APP_PASSWORD` nếu dùng ngoài nhà.
-6. iPhone: Safari → Chia sẻ → "Thêm vào MH chính".
+## Tóm tắt nhanh lần chạy 2026-10-10 (19:39–20:20 UTC)
+Xong giai đoạn 13 → 23 (128 test qua hết, 6 lượt rà soát độc lập đã sửa lỗi). Đáng thử nhất:
+1. `git pull`, nhấp đúp `run.bat`. Bấm nút **"?"**: xem tình trạng, đổi màu mặt Bơ, xem mẹo dùng.
+2. **Nhắc lặp lại:** "mỗi ngày 9h tối nhắc mình đánh răng"; lời nhắc tới có nút "Nhắc lại sau 10 phút".
+3. **Sinh nhật:** "sinh nhật mình 5/3" → đúng ngày Bơ chúc. Tối Chủ nhật Bơ **tổng kết tuần**.
+4. **Tìm** chuyện cũ (gõ không dấu, Ctrl+K), chạm vào tin để **ghim**.
+5. **Tính cách**: sửa thẳng trên web; "Về mặc định" nếu lỡ hỏng.
+6. **Thời tiết**: thêm `THANH_PHO=Da Nang` (thành phố của Tân) vào `.env` — miễn phí.
+7. "Bơ nhớ gì về mình?": tự thêm/sửa điều Bơ nhớ, có "Hoàn tác"; tải trò chuyện (.txt).
 Gặp lỗi: xem `SU_CO.md`, gửi mấy dòng cuối `data/loi.log` vào `FEEDBACK.md`.
+
+## Tóm tắt lần chạy trước (18:44–19:21 UTC)
+Xong giai đoạn 3 → 12: hỏi thăm chuyện cũ, nhắc việc, giọng nói + rảnh tay, chi phí + ngân sách, iPhone màn hình chính.
 
 ## Cần Tân quyết định
 - **Dùng Bơ ngoài nhà bằng cách nào?** Tailscale (riêng tư, cần tạo tài khoản miễn phí, cài app trên iPhone) hay Cloudflare Tunnel (link công khai, không cần cài trên điện thoại). Hướng dẫn cả hai trong `DUA_LEN_MANG.md`. Claude khuyên Tailscale. Cách nào cũng phải đặt `APP_PASSWORD`.
