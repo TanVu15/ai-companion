@@ -5,7 +5,7 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
-## Tóm tắt nhanh lần chạy 2026-10-10 (18:44–19:20 UTC)
+## Tóm tắt nhanh lần chạy 2026-10-10 (18:44–19:21 UTC)
 Xong giai đoạn 3 → 12. Đáng thử nhất, theo thứ tự:
 1. `git pull`, nhấp đúp `run.bat` (giờ tự cài thư viện còn thiếu).
 2. Kể "tối nay mình đi đá bóng" → hôm sau mở web, Bơ tự hỏi thăm. 2 ngày không chat thì Bơ chào "lâu quá không gặp".
