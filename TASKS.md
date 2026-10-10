@@ -8,10 +8,10 @@
 - [x] Chế độ DEMO không cần API key
 - [x] Giới hạn chi phí (lịch sử 20 tin, 300 câu/ngày)
 - [x] Test tự động (13 test)
-- Chờ Tân nghiệm thu: chạy thử, chọn tên + tính cách thật (không chặn việc khác)
+- Chờ Tân chạy thử trên máy (không chặn việc khác)
 
 ## Giai đoạn 2 – Tính cách
-- [ ] Hoàn thiện persona.md (giữ tạm "Bơ"; khi Tân chọn tính cách thì viết lại)
+- [x] persona.md: Bơ, vui tính, năng động (Tân chốt 2026-10-11)
 - [ ] Bộ câu hỏi thử tính cách (10 tình huống) để chấm điểm "giống người"
 - [ ] Trang cài đặt nhỏ: xem/xóa những điều Bơ đã nhớ
 

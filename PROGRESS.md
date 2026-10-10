@@ -6,7 +6,7 @@
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
 ## Cần Tân quyết định
-- Tên + tính cách thật cho "người bạn" (đang dùng tạm "Bơ" trong persona.md).
+- (chưa có)
 
 ## 2026-10-11 – Giai đoạn 1 xong
 - Dựng toàn bộ khung: bộ não (Claude Haiku), trí nhớ SQLite, web chat có khuôn mặt biểu cảm.
@@ -14,4 +14,6 @@
 - Chưa test với API thật (máy làm việc của Claude không gọi được API ra ngoài) → Tân chạy thử trên máy.
 - Tân chọn chế độ "làm liền, báo sau": Claude tự chạy mỗi giờ, làm tiếp giai đoạn 2 mà không chờ duyệt.
 
-**Tiếp theo:** Giai đoạn 2 (dùng tính cách tạm "Bơ" cho đến khi Tân chọn).
+- Tân chốt tên **Bơ**, tính cách vui tính, năng động → đã viết lại persona.md.
+
+**Tiếp theo:** Giai đoạn 2, việc "Bộ câu hỏi thử tính cách".
