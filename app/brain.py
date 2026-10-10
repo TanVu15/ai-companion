@@ -65,6 +65,10 @@ GREET_TRIGGER = (
     "(Tin nhắn hệ thống, không phải người dùng nói: người dùng vừa mở ứng dụng sau một thời gian. "
     "Hãy chủ động chào và hỏi thăm một chuyện trong phần 'Chuyện nên hỏi thăm'.)"
 )
+MISS_TRIGGER = (
+    "(Tin nhắn hệ thống, không phải người dùng nói: người dùng vừa quay lại sau {days} ngày không nói chuyện. "
+    "Hãy chủ động chào kiểu bạn thân lâu không gặp, ngắn gọn, có thể nhắc nhẹ chuyện cũ nếu biết.)"
+)
 
 
 THU = ["thứ Hai", "thứ Ba", "thứ Tư", "thứ Năm", "thứ Sáu", "thứ Bảy", "Chủ nhật"]
@@ -279,7 +283,7 @@ class Brain:
             out = []
             for r in self.memory.pop_due_reminders():
                 reply = Reply(noi=reminder_text(r["viec"], r["luc"]), cam_xuc="hao_hung", hanh_dong="vay_tay")
-                self.memory.add_message("assistant", reply.noi, reply.cam_xuc)
+                self.memory.add_message("assistant", reply.noi, reply.cam_xuc, tu_dong=True)
                 out.append(reply)
             return out
 
@@ -301,7 +305,8 @@ class Brain:
             raise
 
     def _greet(self) -> Reply | None:
-        """Bơ chủ động mở lời khi người dùng quay lại sau một thời gian và có chuyện nên hỏi thăm.
+        """Bơ chủ động mở lời khi người dùng quay lại sau một thời gian và có chuyện nên hỏi thăm,
+        hoặc đã lâu (GREET_MISS_DAYS ngày) không nói chuyện.
         Không có gì để hỏi hoặc vừa mới nói chuyện xong thì trả về None (không tốn câu API nào)."""
         if self.memory.replies_today() >= config.DAILY_LIMIT or self.over_budget():
             return None
@@ -309,10 +314,15 @@ class Brain:
         if last and (datetime.now() - last).total_seconds() < config.GREET_AFTER_HOURS * 3600:
             return None
         followups = self.memory.pending_followups(config.FOLLOWUP_MIN_HOURS)
-        if not followups:
+        days = (datetime.now() - last).days if last else 0
+        if followups:
+            trigger = GREET_TRIGGER
+        elif last and config.GREET_MISS_DAYS > 0 and days >= config.GREET_MISS_DAYS:
+            trigger = MISS_TRIGGER.format(days=days)  # lâu không gặp thì chào dù không có gì để hỏi
+        else:
             return None
         history = clean_history(self.memory.recent_messages(config.HISTORY_LIMIT))
-        history.append({"role": "user", "content": GREET_TRIGGER})  # chỉ gửi đi, không lưu
+        history.append({"role": "user", "content": trigger})  # chỉ gửi đi, không lưu
         return self._ask(clean_history(history), followups)
 
     def _ask(self, history: list[dict], followups: list[dict]) -> Reply:

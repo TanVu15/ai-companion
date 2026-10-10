@@ -55,12 +55,15 @@ class Memory:
         cols = {r[1] for r in self.conn.execute("PRAGMA table_info(messages)")}
         if "cam_xuc" not in cols:
             self.conn.execute("ALTER TABLE messages ADD COLUMN cam_xuc TEXT")
+        if "tu_dong" not in cols:  # 1 = tin Bơ tự gửi theo giờ (lời nhắc), không tính là "đang nói chuyện"
+            self.conn.execute("ALTER TABLE messages ADD COLUMN tu_dong INTEGER NOT NULL DEFAULT 0")
         self.conn.commit()
 
     # --- Tin nhắn ---
-    def add_message(self, role: str, content: str, cam_xuc: str | None = None) -> int:
+    def add_message(self, role: str, content: str, cam_xuc: str | None = None, tu_dong: bool = False) -> int:
         cur = self.conn.execute(
-            "INSERT INTO messages (role, content, cam_xuc) VALUES (?, ?, ?)", (role, content, cam_xuc)
+            "INSERT INTO messages (role, content, cam_xuc, tu_dong) VALUES (?, ?, ?, ?)",
+            (role, content, cam_xuc, int(tu_dong)),
         )
         self.conn.commit()
         return cur.lastrowid
@@ -114,9 +117,9 @@ class Memory:
         return [{"id": i, "role": r, "content": c} for i, r, c in rows]
 
     def last_message_time(self) -> datetime | None:
-        """Lúc người dùng nhắn gần nhất (lời nhắc tự động của Bơ không tính)."""
+        """Lúc hai bên trò chuyện gần nhất (kể cả lời chào của Bơ; lời nhắc tự động thì không tính)."""
         row = self.conn.execute(
-            "SELECT created_at FROM messages WHERE role = 'user' AND created_at IS NOT NULL ORDER BY id DESC LIMIT 1"
+            "SELECT created_at FROM messages WHERE tu_dong = 0 AND created_at IS NOT NULL ORDER BY id DESC LIMIT 1"
         ).fetchone()
         try:
             return datetime.fromisoformat(row[0]) if row else None
@@ -260,7 +263,7 @@ class Memory:
 
     # --- Sao lưu / khôi phục ---
     _BACKUP_TABLES = {
-        "messages": ("role", "content", "created_at", "cam_xuc"),
+        "messages": ("role", "content", "created_at", "cam_xuc", "tu_dong"),
         "summaries": ("content", "upto_id", "created_at"),
         "followups": ("content", "done", "created_at"),
         "facts": ("content", "created_at"),

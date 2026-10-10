@@ -27,6 +27,8 @@ FACTS_MERGE_AT = int(os.getenv("FACTS_MERGE_AT", "30"))
 FOLLOWUP_MIN_HOURS = float(os.getenv("FOLLOWUP_MIN_HOURS", "3"))
 # Mở web sau ngần này giờ không nói chuyện thì Bơ chủ động chào + hỏi thăm (nếu có chuyện để hỏi)
 GREET_AFTER_HOURS = float(os.getenv("GREET_AFTER_HOURS", "3"))
+# Lâu ngần này ngày không nói chuyện thì Bơ chào "lâu quá không gặp" dù không có chuyện để hỏi. 0 = tắt.
+GREET_MISS_DAYS = int(os.getenv("GREET_MISS_DAYS", "2"))
 
 # Gặp lỗi mạng/máy chủ bận thì thử lại tối đa ngần này lần; mỗi lần hỏi chờ tối đa API_TIMEOUT giây
 API_RETRIES = int(os.getenv("API_RETRIES", "3"))

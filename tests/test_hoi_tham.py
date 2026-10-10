@@ -107,3 +107,29 @@ def test_prompt_has_weekday_and_time_of_day():
     assert "23:30 (khuya), thứ Bảy ngày 10/10/2026" in p
     p = build_system_prompt("Bơ", [], now=datetime(2026, 10, 11, 7, 5))
     assert "(buổi sáng), Chủ nhật" in p
+
+
+def test_greet_after_days_away_without_followups(memory):
+    memory.add_message("user", "bye")
+    set_age(memory, "messages", 24 * 3)
+    client = FakeClient([reply("Ơ 3 ngày rồi không thấy, khỏe không?")])
+    brain = Brain(memory, client=client)
+    assert brain.greet().noi.startswith("Ơ 3 ngày")
+    assert "3 ngày không nói chuyện" in client.calls[0]["messages"][-1]["content"]
+    assert brain.greet() is None  # vừa chào xong, mở lại web không chào lặp (không tốn thêm API)
+
+
+def test_no_miss_greeting_for_new_user_or_short_gap(memory):
+    brain = Brain(memory, client=FakeClient([]))
+    assert brain.greet() is None  # chưa nói chuyện bao giờ
+    memory.add_message("user", "hi")
+    set_age(memory, "messages", 20)  # 20 giờ < 2 ngày
+    assert brain.greet() is None
+
+
+def test_reminder_message_not_counted_as_conversation(memory):
+    memory.add_message("user", "hi")
+    set_age(memory, "messages", 24 * 3)
+    memory.add_message("assistant", "Tới giờ rồi nè: uống nước!", tu_dong=True)
+    brain = Brain(memory, client=FakeClient([reply("Lâu quá ta!")]))
+    assert brain.greet().noi == "Lâu quá ta!"

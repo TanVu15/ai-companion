@@ -207,3 +207,8 @@
 - Câu trả lời dài (từ 60 ký tự, nhiều câu) được tách thành 2–3 bong bóng; giữa các bong bóng có ba chấm nhảy "Bơ đang gõ". Câu siêu ngắn ("Ừa.") gộp với câu sau. Số như "3.5 triệu" không bị tách.
 - Chỉ đổi cách hiện; bộ não và JSON giữ nguyên, Bơ vẫn đọc to cả câu một lần.
 - 79 test qua hết.
+
+## 2026-10-10 – Giai đoạn 12: "lâu quá không gặp"
+- 2 ngày trở lên không nói chuyện, mở web là Bơ tự chào kiểu bạn thân lâu không gặp (tốn 1 câu API). Đổi số ngày bằng `GREET_MISS_DAYS` trong .env, 0 = tắt.
+- Sửa lỗi nhỏ do lượt trước gây ra: nếu Tân không trả lời lời chào, mở lại web Bơ có thể chào lặp lại. Giờ lời chào cũng tính là "vừa nói chuyện"; chỉ lời nhắc tự động là không tính.
+- 82 test qua hết.
