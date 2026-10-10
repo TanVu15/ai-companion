@@ -234,6 +234,19 @@ def history(before_id: int | None = None, limit: int = 50):
     return get_brain().memory.history_page(min(max(limit, 1), 200), before_id)
 
 
+@app.get("/api/ngay-dac-biet")
+def special_days():
+    return get_brain().memory.special_days()
+
+
+@app.delete("/api/ngay-dac-biet/{day_id}")
+def special_day_delete(day_id: int):
+    brain = get_brain()
+    with brain._lock:
+        brain.memory.delete_special_day(day_id)
+    return {"ok": True}
+
+
 @app.get("/api/tim")
 def search(q: str = "", limit: int = 30):
     """Tìm trong lịch sử trò chuyện (gõ không dấu vẫn được). Mới nhất trước."""

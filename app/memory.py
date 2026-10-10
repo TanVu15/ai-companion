@@ -52,6 +52,12 @@ class Memory:
                 due_at TEXT NOT NULL,        -- "YYYY-MM-DD HH:MM" giờ máy tính
                 done INTEGER NOT NULL DEFAULT 0
             );
+            CREATE TABLE IF NOT EXISTS special_days (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                day TEXT NOT NULL,           -- "MM-DD", lặp lại mỗi năm
+                content TEXT NOT NULL,       -- ví dụ "Sinh nhật Tân"
+                wished_year INTEGER NOT NULL DEFAULT 0  -- năm gần nhất Bơ đã chúc
+            );
             CREATE TABLE IF NOT EXISTS facts (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 content TEXT NOT NULL UNIQUE,
@@ -211,6 +217,62 @@ class Memory:
         self.conn.execute("DELETE FROM reminders WHERE id = ?", (reminder_id,))
         self.conn.commit()
 
+    # --- Ngày đặc biệt (sinh nhật, kỷ niệm...) ---
+    def add_special_days(self, items: list[dict]) -> int:
+        """Thêm ngày dạng {"ngay": "DD/MM", "viec": "Sinh nhật Tân"}. Ngày sai hoặc trùng thì bỏ."""
+        added = 0
+        for it in items:
+            if not isinstance(it, dict):
+                continue
+            viec = re.sub(r"\s+", " ", str(it.get("viec", ""))).strip()
+            m = re.match(r"\s*(\d{1,2})\s*[/-]\s*(\d{1,2})", str(it.get("ngay", "")))
+            if not viec or not m:
+                continue
+            d, mo = int(m.group(1)), int(m.group(2))
+            try:
+                date(2000, mo, d)  # năm nhuận, để 29/02 hợp lệ
+            except ValueError:
+                continue
+            day = f"{mo:02d}-{d:02d}"
+            exists = self.conn.execute(
+                "SELECT 1 FROM special_days WHERE day = ? AND lower(content) = lower(?)", (day, viec)
+            ).fetchone()
+            if not exists:
+                self.conn.execute("INSERT INTO special_days (day, content) VALUES (?, ?)", (day, viec))
+                added += 1
+        self.conn.commit()
+        return added
+
+    def special_days(self) -> list[dict]:
+        rows = self.conn.execute("SELECT id, day, content FROM special_days ORDER BY day, id").fetchall()
+        return [{"id": i, "ngay": f"{d[3:]}/{d[:2]}", "viec": c} for i, d, c in rows]
+
+    def special_days_today(self, today: date | None = None, only_unwished: bool = True) -> list[dict]:
+        """Ngày đặc biệt rơi vào hôm nay. 29/02 thì năm không nhuận tính vào 28/02."""
+        today = today or date.today()
+        days = [today.strftime("%m-%d")]
+        if days[0] == "02-28":
+            try:
+                date(today.year, 2, 29)
+            except ValueError:
+                days.append("02-29")
+        rows = self.conn.execute(
+            f"SELECT id, content FROM special_days WHERE day IN ({','.join('?' * len(days))})"
+            + (" AND wished_year < ?" if only_unwished else "") + " ORDER BY id",
+            (*days, today.year) if only_unwished else days,
+        ).fetchall()
+        return [{"id": i, "viec": c} for i, c in rows]
+
+    def mark_wished(self, ids: list[int], year: int | None = None) -> None:
+        year = year or date.today().year
+        for i in ids:
+            self.conn.execute("UPDATE special_days SET wished_year = ? WHERE id = ?", (year, i))
+        self.conn.commit()
+
+    def delete_special_day(self, day_id: int) -> None:
+        self.conn.execute("DELETE FROM special_days WHERE id = ?", (day_id,))
+        self.conn.commit()
+
     # --- Chuyện cần hỏi thăm ---
     def add_followups(self, items: list[str]) -> None:
         known = {self._key(f["content"]) for f in self.pending_followups(min_hours=0)}
@@ -291,6 +353,7 @@ class Memory:
         "followups": ("content", "done", "created_at"),
         "facts": ("content", "created_at"),
         "reminders": ("content", "due_at", "done"),
+        "special_days": ("day", "content", "wished_year"),
     }
 
     def export_all(self) -> dict:

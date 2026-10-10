@@ -20,7 +20,8 @@ Chỉ trả về MỘT đối tượng JSON, không viết gì ngoài JSON:
   "quen": ["điều trong phần 'Điều bạn đã biết' nay đã sai/lỗi thời, chép y nguyên"],
   "hoi_tham": ["chuyện sắp diễn ra mà lần sau nên hỏi lại, ví dụ 'Chiều nay đi tập chân'"],
   "da_hoi": ["chuyện trong phần 'Chuyện nên hỏi thăm' mà bạn vừa hỏi hoặc người dùng đã kể, chép y nguyên"],
-  "nhac": [{{"luc": "YYYY-MM-DD HH:MM", "viec": "việc cần nhắc"}}]
+  "nhac": [{{"luc": "YYYY-MM-DD HH:MM", "viec": "việc cần nhắc"}}],
+  "ngay_dac_biet": [{{"ngay": "DD/MM", "viec": "ví dụ Sinh nhật Tân"}}]
 }}
 - "noi" ngắn gọn như nhắn tin với bạn bè, thường 1-3 câu.
 - "ghi_nho" chỉ ghi điều người dùng tự kể (tên, sở thích, kế hoạch, chuyện đáng nhớ). Không có thì để [].
@@ -33,6 +34,9 @@ Chỉ trả về MỘT đối tượng JSON, không viết gì ngoài JSON:
   rồi chép chuyện đó vào "da_hoi". Không có thì để [].
 - "nhac": CHỈ khi người dùng nhờ nhắc việc vào một giờ cụ thể ("8h tối nhắc mình gọi mẹ").
   Tính giờ theo "Bây giờ là..." ở trên, ghi đủ ngày giờ. Không có thì để []. Đừng tự hứa nhắc nếu không ghi vào đây.
+- "ngay_dac_biet": ngày lặp lại mỗi năm mà người dùng kể (sinh nhật mình/người thân, ngày kỷ niệm...),
+  chỉ khi biết rõ ngày và tháng. Không có thì để [].
+- Nếu có phần "Hôm nay là ngày đặc biệt", hãy chúc mừng thật vui ngay trong câu này.
 """
 
 
@@ -46,6 +50,7 @@ class Reply:
     hoi_tham: list[str] = field(default_factory=list)
     da_hoi: list[str] = field(default_factory=list)
     nhac: list[dict] = field(default_factory=list)
+    ngay_dac_biet: list[dict] = field(default_factory=list)
 
     def to_dict(self) -> dict:
         return {"noi": self.noi, "cam_xuc": self.cam_xuc, "hanh_dong": self.hanh_dong}
@@ -64,6 +69,10 @@ Chỉ trả về một mảng JSON các chuỗi, ví dụ: ["Tên là Tân", "Th
 GREET_TRIGGER = (
     "(Tin nhắn hệ thống, không phải người dùng nói: người dùng vừa mở ứng dụng sau một thời gian. "
     "Hãy chủ động chào và hỏi thăm một chuyện trong phần 'Chuyện nên hỏi thăm'.)"
+)
+SPECIAL_TRIGGER = (
+    "(Tin nhắn hệ thống, không phải người dùng nói: người dùng vừa mở ứng dụng. "
+    "Hôm nay là ngày đặc biệt (xem phần 'Hôm nay là ngày đặc biệt'), hãy chủ động chúc mừng thật vui, ngắn gọn.)"
 )
 MISS_TRIGGER = (
     "(Tin nhắn hệ thống, không phải người dùng nói: người dùng vừa quay lại sau {days} ngày không nói chuyện. "
@@ -105,6 +114,7 @@ def build_system_prompt(
     summary: str = "",
     followups: list[dict] | None = None,
     now: datetime | None = None,
+    special: list[dict] | None = None,
 ) -> str:
     now = now or datetime.now()
     known = "\n".join(f"- {f}" for f in facts) if facts else "- (chưa biết gì)"
@@ -115,6 +125,9 @@ def build_system_prompt(
     if followups:
         items = "\n".join(f"- {f['content']} (kể {_when(f['created_at'], now)})" for f in followups)
         out += f"\n## Chuyện nên hỏi thăm\n{items}\n"
+    if special:
+        items = "\n".join(f"- {d['viec']}" for d in special)
+        out += f"\n## Hôm nay là ngày đặc biệt\n{items}\n"
     return out + OUTPUT_RULES
 
 
@@ -135,6 +148,10 @@ def _str_list(value) -> list[str]:
     if not isinstance(value, list):
         return []
     return [str(x) for x in value if isinstance(x, (str, int, float))]
+
+
+def _dict_list(value) -> list[dict]:
+    return [x for x in value if isinstance(x, dict)] if isinstance(value, list) else []
 
 
 def parse_reply(text: str) -> Reply:
@@ -159,8 +176,8 @@ def parse_reply(text: str) -> Reply:
                     quen=_str_list(quen),
                     hoi_tham=_str_list(data.get("hoi_tham") or []),
                     da_hoi=_str_list(data.get("da_hoi") or []),
-                    nhac=[x for x in (data.get("nhac") or []) if isinstance(x, dict)]
-                    if isinstance(data.get("nhac"), list) else [],
+                    nhac=_dict_list(data.get("nhac")),
+                    ngay_dac_biet=_dict_list(data.get("ngay_dac_biet")),
                 )
         except json.JSONDecodeError:
             pass
@@ -313,11 +330,13 @@ class Brain:
         if self.memory.replies_today() >= config.DAILY_LIMIT or self.over_budget():
             return None
         last = self.memory.last_message_time()
-        if last and (datetime.now() - last).total_seconds() < config.GREET_AFTER_HOURS * 3600:
-            return None
         followups = self.memory.pending_followups(config.FOLLOWUP_MIN_HOURS)
         days = (datetime.now() - last).days if last else 0
-        if followups:
+        if self.memory.special_days_today():
+            trigger = SPECIAL_TRIGGER  # ngày đặc biệt chưa chúc thì chúc ngay, dù vừa mới nói chuyện
+        elif last and (datetime.now() - last).total_seconds() < config.GREET_AFTER_HOURS * 3600:
+            return None
+        elif followups:
             trigger = GREET_TRIGGER
         elif last and config.GREET_MISS_DAYS > 0 and days >= config.GREET_MISS_DAYS:
             trigger = MISS_TRIGGER.format(days=days)  # lâu không gặp thì chào dù không có gì để hỏi
@@ -329,7 +348,8 @@ class Brain:
 
     def _ask(self, history: list[dict], followups: list[dict]) -> Reply:
         summary, _ = self.memory.latest_summary()
-        system = build_system_prompt(self.persona(), self.memory.all_facts(), summary, followups)
+        special = self.memory.special_days_today()
+        system = build_system_prompt(self.persona(), self.memory.all_facts(), summary, followups, special=special)
         resp = self._create(
             model=config.MODEL,
             max_tokens=500,
@@ -345,6 +365,8 @@ class Brain:
         self.memory.done_followups(reply.da_hoi)
         self.memory.add_followups(reply.hoi_tham)
         self.memory.add_reminders(reply.nhac)
+        self.memory.add_special_days(reply.ngay_dac_biet)
+        self.memory.mark_wished([d["id"] for d in special])  # đã đưa vào câu này → không chúc lại trong năm
         if self._background:
             threading.Thread(target=self._housekeeping, daemon=True).start()
         else:

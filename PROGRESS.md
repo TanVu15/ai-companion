@@ -249,3 +249,11 @@ Gặp lỗi: xem `SU_CO.md`, gửi mấy dòng cuối `data/loi.log` vào `FEEDB
 
 **Tân cần thử:** bấm "Tìm", gõ một chữ đã từng nhắn với Bơ.
 
+
+## 2026-10-10 – Giai đoạn 13: ngày đặc biệt
+- Kể "sinh nhật mình 5/3" hay "kỷ niệm ngày cưới 1/12" → Bơ ghi lại (mục nội bộ `ngay_dac_biet`, giao diện không thấy). Lặp lại mỗi năm; 29/02 thì năm không nhuận chúc vào 28/02.
+- Đúng ngày: mở web là Bơ chủ động chúc (dù vừa nói chuyện), hoặc chúc ngay trong câu trả lời đầu tiên của ngày. Mỗi năm chúc một lần.
+- Xem/xóa trong "Bơ nhớ gì về mình?" → mục "Ngày đặc biệt". Có trong file sao lưu.
+- 92 test qua hết.
+
+**Tân cần thử:** nhắn "sinh nhật mình là ngày <hôm nay>", bấm "Bơ nhớ gì về mình?" xem đã có chưa. (Đã chúc trong năm rồi thì muốn thử lại phải xóa đi kể lại.)

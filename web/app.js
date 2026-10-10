@@ -332,7 +332,21 @@ async function loadReminders() {
     li.appendChild(b); remsEl.appendChild(li);
   });
 }
-document.getElementById('openMem').onclick = () => { loadFacts(); loadReminders(); mem.showModal(); };
+const daysEl = document.getElementById('days');
+async function loadDays() {
+  daysEl.innerHTML = '';
+  let list = [];
+  try { const r = await fetch('/api/ngay-dac-biet'); if (r.ok) list = await r.json(); } catch (e) {}
+  if (!list.length) { const li = document.createElement('li'); li.textContent = 'Chưa có. Thử kể: "sinh nhật mình 5/3".'; daysEl.appendChild(li); }
+  list.forEach(x => {
+    const li = document.createElement('li'), b = document.createElement('button');
+    li.textContent = x.ngay + ' — ' + x.viec + ' ';
+    b.textContent = 'Xóa'; b.type = 'button'; b.className = 'link'; b.setAttribute('aria-label', 'Xóa ngày: ' + x.viec);
+    b.onclick = async () => { await fetch('/api/ngay-dac-biet/' + x.id, { method: 'DELETE' }); loadDays(); };
+    li.appendChild(b); daysEl.appendChild(li);
+  });
+}
+document.getElementById('openMem').onclick = () => { loadFacts(); loadDays(); loadReminders(); mem.showModal(); };
 document.getElementById('closeMem').onclick = () => mem.close();
 document.getElementById('restoreFile').onchange = async (ev) => {
   const file = ev.target.files[0]; ev.target.value = '';
