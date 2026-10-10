@@ -100,3 +100,10 @@ def test_greet_endpoint(tmp_path):
     mem.add_followups(["Đi thi"])
     set_age(mem, "followups", 20)
     assert c.post("/api/chao").json()["noi"] == "Thi sao rồi?"
+
+
+def test_prompt_has_weekday_and_time_of_day():
+    p = build_system_prompt("Bơ", [], now=datetime(2026, 10, 10, 23, 30))  # thứ Bảy
+    assert "23:30 (khuya), thứ Bảy ngày 10/10/2026" in p
+    p = build_system_prompt("Bơ", [], now=datetime(2026, 10, 11, 7, 5))
+    assert "(buổi sáng), Chủ nhật" in p

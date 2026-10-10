@@ -66,6 +66,25 @@ GREET_TRIGGER = (
 )
 
 
+THU = ["thứ Hai", "thứ Ba", "thứ Tư", "thứ Năm", "thứ Sáu", "thứ Bảy", "Chủ nhật"]
+
+
+def buoi(now: datetime) -> str:
+    """Buổi trong ngày, để Bơ chào cho hợp ("khuya rồi sao chưa ngủ?")."""
+    h = now.hour
+    if h < 4:
+        return "khuya"
+    if h < 11:
+        return "buổi sáng"
+    if h < 14:
+        return "buổi trưa"
+    if h < 18:
+        return "buổi chiều"
+    if h < 23:
+        return "buổi tối"
+    return "khuya"
+
+
 def _when(created_at: str, now: datetime) -> str:
     """Đổi thời điểm kể chuyện thành chữ dễ hiểu: hôm nay, hôm qua, 3 ngày trước."""
     try:
@@ -84,7 +103,7 @@ def build_system_prompt(
 ) -> str:
     now = now or datetime.now()
     known = "\n".join(f"- {f}" for f in facts) if facts else "- (chưa biết gì)"
-    out = f"{persona.strip()}\n\nBây giờ là {now.strftime('%H:%M')} ngày {now.strftime('%d/%m/%Y')}.\n"
+    out = f"{persona.strip()}\n\nBây giờ là {now.strftime('%H:%M')} ({buoi(now)}), {THU[now.weekday()]} ngày {now.strftime('%d/%m/%Y')}.\n"
     out += f"\n## Điều bạn đã biết về người dùng\n{known}\n"
     if summary:
         out += f"\n## Tóm tắt những lần trò chuyện trước\n{summary.strip()}\n"

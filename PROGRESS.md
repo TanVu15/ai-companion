@@ -174,3 +174,10 @@
 ## 2026-10-10 – Giai đoạn 9: tách code giao diện
 - Phần chạy của web chuyển từ `web/index.html` sang `web/app.js` (index.html chỉ còn khung + màu sắc). Trình duyệt luôn lấy bản mới sau khi `git pull`.
 - 74 test qua hết.
+
+## 2026-10-10 – Giai đoạn 9 xong (báo cáo)
+- Bơ biết thứ trong tuần và buổi: "23:30 (khuya), thứ Bảy" → có thể hỏi "khuya rồi sao chưa ngủ?", "cuối tuần đi chơi đâu?".
+- Cả giai đoạn: review độc lập tìm ra 10 lỗi, đã sửa hết các lỗi quan trọng; tách code giao diện; Bơ biết thứ/buổi.
+- 75 test qua hết.
+
+**Tân cần thử:** nhắn Bơ lúc khuya hoặc cuối tuần xem câu chào có hợp lúc không.
