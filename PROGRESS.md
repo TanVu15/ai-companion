@@ -6,10 +6,10 @@
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
 ## Tóm tắt nhanh lần chạy 2026-10-10 (22:31–23:10 UTC)
-Xong giai đoạn 24 → 29 (187 test qua hết, 4 lượt rà soát độc lập đã sửa lỗi). Đáng thử nhất:
+Xong giai đoạn 24 → 30 (189 test qua hết, 4 lượt rà soát độc lập đã sửa lỗi). Đáng thử nhất:
 1. **Tâm trạng:** nút "?" có dải tâm trạng 7 ngày; mấy hôm buồn/mệt Bơ nhẹ nhàng hơn.
 2. **Việc cần làm:** "nhớ giúp mình mua sữa" → nút "Việc cần làm"; "mua sữa rồi" → Bơ gạch.
-3. **Âm lịch:** dòng lịch dưới tên Bơ; Bơ biết ngày lễ (20/10 sắp tới!); kể "giỗ ông 15/7 âm lịch" → hôm trước Bơ nhắc.
+3. **Âm lịch:** dòng lịch dưới tên Bơ; Bơ biết và chủ động chúc ngày lễ (20/10 sắp tới!); kể "giỗ ông 15/7 âm lịch" → hôm trước Bơ nhắc.
 4. **Cài đặt trên web:** "?" → Cài đặt (thành phố, giờ yên lặng, tổng kết tuần) — không cần sửa `.env`.
 5. **Sửa lời nhắc** ngay trong "Bơ nhớ gì về mình?".
 6. `python -m app.thu_tinh_cach` (22 tình huống) → gửi điểm vào `FEEDBACK.md`.
@@ -552,4 +552,10 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - 187 test qua hết.
 
 **Tân cần thử:** `git pull`, chạy lại, nhìn dòng lịch dưới tên Bơ; chạy `python -m app.thu_tinh_cach` gửi điểm vào FEEDBACK.md.
+
+## 2026-10-10 – Giai đoạn 30 xong (báo cáo): chúc ngày lễ
+- Ngày lễ (Tết, Trung thu, 20/10, Noel...) mở web từ 7h sáng → Bơ chủ động chúc, mỗi ngày lễ 1 lần (1 câu API). Nếu Tân nhắn trước thì Bơ chúc luôn trong câu trả lời, không chúc riêng nữa. Tắt bằng `CHUC_LE=0` trong `.env`.
+- 189 test qua hết (test không bị lệch khi chạy đúng ngày lễ).
+
+**Tân cần thử:** sáng 20/10 mở web xem Bơ chúc gì.
 

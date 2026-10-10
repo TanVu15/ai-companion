@@ -154,6 +154,9 @@
 - [x] Cổng thiết bị /api/thiet-bi/hom-nay cho màn hình đồng hồ sau này
 - [x] Chấm điểm thêm tình huống âm lịch, giỗ âm
 
+## Giai đoạn 30 – Chúc ngày lễ (chỉ phần mềm, Claude tự thêm)
+- [x] Ngày lễ (Tết, Trung thu, 20/10...) mở web là Bơ chủ động chúc (mỗi ngày lễ 1 lần, 1 câu API)
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo

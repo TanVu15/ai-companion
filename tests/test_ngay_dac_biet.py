@@ -5,7 +5,7 @@ from datetime import date, datetime, timedelta
 import pytest
 from fastapi.testclient import TestClient
 
-from app import main
+from app import config, main
 from app.brain import Brain, build_system_prompt, parse_reply
 from app.memory import Memory
 from tests.test_brain import FakeClient
@@ -200,3 +200,32 @@ def test_chat_ghi_ngay_am(memory):
     Brain(memory, client=client).chat("giỗ cụ mình 10/3 âm lịch")
     assert memory.special_days()[0]["am_lich"] is True
     assert '"am_lich": true' in client.calls[0]["system"]
+
+
+def _fixed_day(monkeypatch, day: datetime):
+    import app.brain as b
+
+    class Fixed(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return day
+
+    monkeypatch.setattr(b, "datetime", Fixed)
+
+
+def test_chuc_ngay_le_mot_lan(memory, monkeypatch):
+    monkeypatch.setattr(config, "CHUC_LE", True)
+    _fixed_day(monkeypatch, datetime(2026, 10, 20, 9, 0))
+    client = FakeClient([reply("Chúc mừng 20/10 nha!")])
+    brain = Brain(memory, client=client)
+    assert brain.greet(only_occasion=True).noi == "Chúc mừng 20/10 nha!"
+    assert "Phụ nữ Việt Nam" in client.calls[0]["messages"][-1]["content"]
+    assert brain.greet(only_occasion=True) is None
+
+
+def test_khong_chuc_le_ngay_thuong_hoac_qua_som(memory, monkeypatch):
+    monkeypatch.setattr(config, "CHUC_LE", True)
+    _fixed_day(monkeypatch, datetime(2026, 10, 20, 5, 0))
+    assert Brain(memory, client=FakeClient([])).greet(only_occasion=True) is None
+    _fixed_day(monkeypatch, datetime(2026, 10, 21, 9, 0))
+    assert Brain(memory, client=FakeClient([])).greet(only_occasion=True) is None

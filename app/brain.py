@@ -4,7 +4,7 @@ import re
 import threading
 import time
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 
 from . import config
 from .nhat_ky import log
@@ -93,6 +93,10 @@ EVE_TRIGGER = (
     "(Tin nhắn hệ thống, không phải người dùng nói: NGÀY MAI là ngày đặc biệt: {items}. "
     "Hãy chủ động nhắc khéo, ngắn gọn, vui vẻ để người dùng kịp chuẩn bị (quà, lời chúc, gọi điện...). "
     "Nếu là sinh nhật chính người dùng thì chỉ cần hào hứng báo mai là ngày của họ.)"
+)
+HOLIDAY_TRIGGER = (
+    "(Tin nhắn hệ thống, không phải người dùng nói: hôm nay là {items}. "
+    "Hãy chủ động chúc mừng/nhắc ngày lễ thật tự nhiên, vui, ngắn gọn như bạn thân.)"
 )
 WEEK_TRIGGER = (
     "(Tin nhắn hệ thống, không phải người dùng nói: tối Chủ nhật rồi. Hãy chủ động điểm lại tuần qua của người dùng "
@@ -430,6 +434,8 @@ class Brain:
         try:
             reply = self._ask(history, self.memory.pending_followups(config.FOLLOWUP_MIN_HOURS))
             reply.user_msg_id = msg_id
+            if self._holiday_today(datetime.now()):  # đang trò chuyện thì Bơ đã biết lễ (trong lời dặn), khỏi chúc riêng
+                self.memory.set_kv("le_da_chuc", date.today().isoformat())
             if reply.tam_trang:
                 self.memory.set_mood(msg_id, reply.tam_trang)
             return reply
@@ -448,14 +454,17 @@ class Brain:
         followups = self.memory.pending_followups(config.FOLLOWUP_MIN_HOURS)
         days = (datetime.now() - last).days if last else 0
         week = self._recap_week()
-        recap = False
+        recap = wish_holiday = False
         now = datetime.now()
         eve = self.memory.special_days_tomorrow(now.date()) if now.hour >= 8 else []
+        holiday = self._holiday_today(now)
         if self.memory.special_days_today():
             trigger = SPECIAL_TRIGGER  # ngày đặc biệt chưa chúc thì chúc ngay, dù vừa mới nói chuyện
             eve = []
         elif eve:
             trigger = EVE_TRIGGER.format(items="; ".join(d["viec"] for d in eve))
+        elif holiday:
+            trigger, wish_holiday = HOLIDAY_TRIGGER.format(items=", ".join(holiday)), True
         elif week:
             items = "\n".join(f"- {m['content'][:200]}" for m in self.memory.user_messages_since(datetime.now() - timedelta(days=7)))
             trigger, recap = WEEK_TRIGGER.format(items=items[-4000:]), True
@@ -474,9 +483,22 @@ class Brain:
         reply = self._ask(clean_history(history), followups)
         if recap:
             self.memory.set_kv("tong_ket_tuan", week)  # tuần này đã điểm lại rồi
+        if wish_holiday:
+            self.memory.set_kv("le_da_chuc", now.date().isoformat())  # hôm nay đã chúc lễ rồi
         if eve:  # năm nay đã nhắc trước rồi
             self.memory.mark_eve_reminded([d["id"] for d in eve], now.date() + timedelta(days=1))
         return reply
+
+    def _holiday_today(self, now: datetime) -> list[str]:
+        """Ngày lễ hôm nay mà Bơ chưa chúc (từ 7h sáng; mỗi ngày lễ chúc một lần)."""
+        if not config.CHUC_LE or now.hour < 7 or self.memory.get_kv("le_da_chuc") == now.date().isoformat():
+            return []
+        try:
+            from .am_lich import ngay_le
+
+            return ngay_le(now.date())
+        except Exception:
+            return []
 
     def _recap_week(self, now: datetime | None = None) -> str:
         """Tối Chủ nhật, tuần này chưa điểm lại, và trong tuần có nói chuyện (≥5 tin) → trả mã tuần ("2026-W41")."""
