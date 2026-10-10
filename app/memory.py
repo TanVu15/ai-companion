@@ -117,6 +117,19 @@ class Memory:
                     break
         return out
 
+    def chat_as_text(self) -> str:
+        """Toàn bộ trò chuyện thành chữ dễ đọc, chia theo ngày (để tải về đọc lại)."""
+        lines, day = [], None
+        for role, content, t in self.conn.execute("SELECT role, content, created_at FROM messages ORDER BY id"):
+            t = t or ""
+            if t[:10] != day:
+                day = t[:10]
+                d = f"{day[8:10]}/{day[5:7]}/{day[:4]}" if len(day) == 10 else "Không rõ ngày"
+                lines += ["", f"===== {d} ====="] if lines else [f"===== {d} ====="]
+            who = "Bạn" if role == "user" else "Bơ"
+            lines.append(f"[{t[11:16]}] {who}: {content}")
+        return "\n".join(lines) + "\n" if lines else "(Chưa có tin nhắn nào)\n"
+
     def replies_today(self) -> int:
         today = date.today().isoformat()
         (n,) = self.conn.execute(

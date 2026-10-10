@@ -237,3 +237,21 @@ def test_tim_trong_lich_su(tmp_path):
     assert c.get("/api/tim", params={"q": " a "}).json() == []  # quá ngắn
     assert c.get("/api/tim", params={"q": "xyz"}).json() == []
     assert len(c.get("/api/tim", params={"q": "đi", "limit": 1}).json()) == 1
+
+
+def test_tai_tro_chuyen_txt(tmp_path):
+    c = make_client(tmp_path, [])
+    m = main._brain.memory
+    assert "Chưa có tin nhắn" in c.get("/api/tai-chat").text
+    m.add_message("user", "Chào Bơ")
+    m.add_message("assistant", "Chào Tân!")
+    m.add_message("user", "Mai gặp")
+    m.conn.execute("UPDATE messages SET created_at = '2026-10-09 20:05:00' WHERE id <= 2")
+    m.conn.execute("UPDATE messages SET created_at = '2026-10-10 08:30:00' WHERE id = 3")
+    m.conn.commit()
+    r = c.get("/api/tai-chat")
+    assert r.status_code == 200 and "attachment" in r.headers["content-disposition"]
+    assert r.text.lstrip("﻿") == (
+        "===== 09/10/2026 =====\n[20:05] Bạn: Chào Bơ\n[20:05] Bơ: Chào Tân!\n\n"
+        "===== 10/10/2026 =====\n[08:30] Bạn: Mai gặp\n"
+    )

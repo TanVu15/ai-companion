@@ -257,3 +257,11 @@ Gặp lỗi: xem `SU_CO.md`, gửi mấy dòng cuối `data/loi.log` vào `FEEDB
 - 92 test qua hết.
 
 **Tân cần thử:** nhắn "sinh nhật mình là ngày <ngày mai>", bấm "Bơ nhớ gì về mình?" xem đã có chưa; mai mở web xem Bơ có chúc không.
+
+## 2026-10-10 – Giai đoạn 13 xong (báo cáo): xem lại chuyện cũ
+- **Tìm:** nút "Tìm" dưới khuôn mặt, gõ không dấu vẫn ra, chỗ khớp tô vàng.
+- **Ngày đặc biệt:** kể sinh nhật/kỷ niệm → đúng ngày Bơ chúc (mỗi năm một lần). Xem/xóa trong "Bơ nhớ gì về mình?".
+- **Tải trò chuyện (.txt):** trong "Bơ nhớ gì về mình?" → "Tải trò chuyện (.txt)", chia theo ngày, mở bằng Notepad đọc được tiếng Việt.
+- Cả ba không tốn thêm câu API nào. 94 test qua hết.
+
+**Tân cần thử:** bấm "Tìm"; kể "sinh nhật mình <ngày mai>" rồi mai mở web; tải file .txt mở bằng Notepad.

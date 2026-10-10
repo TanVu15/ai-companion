@@ -159,6 +159,17 @@ def backup():
                     headers={"Content-Disposition": f'attachment; filename="{name}"'})
 
 
+@app.get("/api/tai-chat")
+def download_chat():
+    """Tải toàn bộ trò chuyện về thành file chữ (.txt) để đọc lại."""
+    from datetime import date
+
+    name = f"bo-tro-chuyen-{date.today().isoformat()}.txt"
+    body = "\ufeff" + get_brain().memory.chat_as_text()  # BOM để Notepad cũ hiện đúng tiếng Việt
+    return Response(body, media_type="text/plain; charset=utf-8",
+                    headers={"Content-Disposition": f'attachment; filename="{name}"'})
+
+
 @app.post("/api/khoi-phuc")
 def restore(data: dict = Body(...)):
     """Nạp lại file sao lưu (thay toàn bộ trí nhớ hiện tại). Chỉ nhận Content-Type: application/json."""

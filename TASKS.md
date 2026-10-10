@@ -70,7 +70,7 @@
 ## Giai đoạn 13 – Xem lại chuyện cũ (chỉ phần mềm, Claude tự thêm)
 - [x] Tìm trong lịch sử trò chuyện (gõ không dấu vẫn tìm được)
 - [x] Ngày đặc biệt: Tân kể sinh nhật/kỷ niệm → đúng ngày Bơ chúc
-- [ ] Tải lịch sử trò chuyện về thành file chữ (.txt) để đọc lại
+- [x] Tải lịch sử trò chuyện về thành file chữ (.txt) để đọc lại
 
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
