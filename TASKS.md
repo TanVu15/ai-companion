@@ -121,6 +121,12 @@
 - [x] Giữ bản nháp tin nhắn đang gõ dở khi tải lại trang / tắt trình duyệt
 - [x] Tin gửi lỗi (mất mạng) vẫn giữ trong ô nhập để gửi lại khi tải lại trang
 
+## Giai đoạn 24 – Hiểu tâm trạng (chỉ phần mềm, Claude tự thêm)
+- [x] Bơ ghi tâm trạng của Tân mỗi tin; xem "Tâm trạng 7 ngày" trong nút "?"
+- [x] Mấy ngày liền Tân buồn/mệt → Bơ quan tâm nhẹ nhàng hơn
+- [ ] Nhắc trước ngày đặc biệt 1 ngày ("mai là sinh nhật mẹ đó")
+- [ ] Rà soát code lần 7 (phần mới), sửa lỗi tìm được
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo

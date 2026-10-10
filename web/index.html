@@ -118,6 +118,10 @@
     background: var(--bg); color: var(--text); }
   .addfact button { padding: 6px 14px; }
   #facts li button.edit { color: var(--muted); }
+  .moods { display: flex; gap: 4px; margin: 4px 0 10px; flex-wrap: wrap; align-items: flex-end; }
+  .moods .day { display: flex; flex-direction: column; align-items: center; min-width: 34px; font-size: 12px; opacity: .85; }
+  .moods .day b { font-size: 22px; font-weight: normal; line-height: 1.3; }
+  .moods .title { width: 100%; font-size: 14px; }
   .colors { display: flex; gap: 10px; margin: 6px 0 12px; flex-wrap: wrap; }
   .colors button { width: 36px; height: 36px; padding: 0; border-radius: 50%; border: 3px solid transparent; }
   .colors button[aria-checked="true"] { border-color: var(--text); }
@@ -181,6 +185,7 @@
 </dialog>
 <dialog id="help">
   <p id="stats"></p>
+  <div id="moods" class="moods" hidden></div>
   <h2>Bơ làm được gì?</h2>
   <p>Cứ nhắn tự nhiên như với bạn bè. Vài mẹo:</p>
   <ul class="plain">
@@ -188,6 +193,7 @@
     <li><b>Hỏi thăm:</b> kể "tối nay đi đá bóng" → hôm sau Bơ hỏi "đá bóng sao rồi?".</li>
     <li><b>Nhắc việc:</b> "8h tối nhắc mình gọi mẹ", "mỗi ngày 7h sáng nhắc uống nước". Để trang mở thì Bơ mới nhắc được.</li>
     <li><b>Tổng kết tuần:</b> tối Chủ nhật mở web, Bơ điểm lại tuần qua của bạn.</li>
+    <li><b>Tâm trạng:</b> Bơ đoán bạn vui hay buồn qua tin nhắn (xem dải 7 ngày ở trên). Mấy hôm liền buồn/mệt thì Bơ nhẹ nhàng hơn.</li>
     <li><b>Ngày đặc biệt:</b> "sinh nhật mình 5/3" → đúng ngày Bơ chúc.</li>
     <li><b>Giọng nói:</b> bật "Giọng nói" để Bơ đọc to; bấm micro để nói. "Rảnh tay": gọi "Bơ ơi" rồi nói. Chạm mặt Bơ để Bơ im.</li>
     <li><b>Tìm chuyện cũ:</b> nút "Tìm" (hoặc Ctrl+K), gõ không dấu cũng được.</li>

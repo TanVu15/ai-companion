@@ -432,3 +432,12 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - Đang gõ dở mà lỡ tải lại trang / tắt trình duyệt → mở lại chữ vẫn còn trong ô nhập (lưu trên máy này).
 - Gửi tin bị lỗi (mất mạng) → tin được giữ lại; lỡ tải lại trang thì tin nằm sẵn trong ô nhập, bấm Gửi là xong.
 - Đã thử tự động trên trình duyệt (giả lập mất mạng). 128 test qua hết.
+
+## 2026-10-10 – Giai đoạn 24: tâm trạng
+- Mỗi tin Tân gửi, Bơ đoán tâm trạng (vui / bình thường / buồn / mệt / lo / bực) — mục nội bộ `tam_trang` trong JSON, giao diện không bị ảnh hưởng, không tốn thêm câu API.
+- Nút **"?"** có dải **"Tâm trạng của bạn 7 ngày qua"**: mỗi ngày một biểu tượng (😊 🙂 😢 😩 😟 😠), ngày không nói chuyện là dấu chấm.
+- Trong 3 ngày gần đây có ít nhất 2 ngày buồn/mệt/lo/bực → Bơ được dặn quan tâm nhẹ nhàng hơn, không gặng hỏi.
+- Dữ liệu nằm trong máy (data/), có trong bản sao lưu. 136 test qua hết.
+
+**Tân cần thử:** nhắn "hôm nay mệt quá", rồi bấm "?" xem dải tâm trạng.
+

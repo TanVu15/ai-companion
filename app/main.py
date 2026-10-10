@@ -65,16 +65,16 @@ class _DemoClient:
 
         self._ns = SimpleNamespace
         self._cycle = itertools.cycle([
-            ("vui", "vay_tay"), ("hao_hung", "nhay"), ("suy_nghi", "nghieng_dau"),
-            ("ngac_nhien", "khong"), ("thuong", "gat_dau"), ("buon", "lac_dau"),
+            ("vui", "vay_tay", "vui"), ("hao_hung", "nhay", "vui"), ("suy_nghi", "nghieng_dau", "binh_thuong"),
+            ("ngac_nhien", "khong", "binh_thuong"), ("thuong", "gat_dau", "met"), ("buon", "lac_dau", "buon"),
         ])
         self._json = json
         self.messages = SimpleNamespace(create=self._create)
 
     def _create(self, messages, **_):
-        emo, act = next(self._cycle)
+        emo, act, mood = next(self._cycle)
         last = messages[-1]["content"]
-        text = self._json.dumps({"noi": f"(demo) Bạn vừa nói: {last}", "cam_xuc": emo, "hanh_dong": act})
+        text = self._json.dumps({"noi": f"(demo) Bạn vừa nói: {last}", "cam_xuc": emo, "hanh_dong": act, "tam_trang": mood})
         return self._ns(content=[self._ns(type="text", text=text)])
 
 
@@ -316,6 +316,14 @@ def stats():
     brain = get_brain()
     with brain._lock:
         return brain.memory.stats()
+
+
+@app.get("/api/tam-trang")
+def moods(days: int = 7):
+    """Tâm trạng nổi bật của người dùng từng ngày (cũ → mới), để vẽ dải "Tâm trạng 7 ngày"."""
+    brain = get_brain()
+    with brain._lock:
+        return brain.memory.moods_by_day(min(max(days, 1), 31))
 
 
 @app.get("/api/ghim")

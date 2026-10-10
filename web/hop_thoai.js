@@ -174,6 +174,7 @@ document.getElementById('openHelp').onclick = async () => {
         + ' ngày, ' + s.so_tin.toLocaleString('vi-VN') + ' tin nhắn. Bơ đang nhớ ' + s.so_dieu_nho + ' điều về bạn.'
       : 'Bơ và bạn mới quen thôi. Nhắn gì đó đi!';
   } catch (e) {}
+  showMoods();
   const hl = document.getElementById('healthList'); hl.innerHTML = '';
   try {
     const d = await (await fetch('/api/suc-khoe')).json();
@@ -184,6 +185,34 @@ document.getElementById('openHelp').onclick = async () => {
     });
   } catch (e) {}
 };
+// Tâm trạng 7 ngày: mỗi ngày một biểu tượng (Bơ đoán từ tin nhắn). Chưa có ngày nào thì ẩn.
+const MOOD_ICON = { vui: '😊', binh_thuong: '🙂', buon: '😢', met: '😩', lo: '😟', gian: '😠' };
+const MOOD_NAME = { vui: 'vui', binh_thuong: 'bình thường', buon: 'buồn', met: 'mệt', lo: 'lo lắng', gian: 'bực bội' };
+const THU_NGAN = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
+async function showMoods() {
+  const box = document.getElementById('moods');
+  box.hidden = true; box.innerHTML = '';
+  try {
+    const days = await (await fetch('/api/tam-trang')).json();
+    if (!Array.isArray(days) || !days.some(d => d.tam_trang)) return;
+    const title = document.createElement('span'); title.className = 'title';
+    title.textContent = 'Tâm trạng của bạn 7 ngày qua (Bơ đoán):';
+    box.appendChild(title);
+    days.forEach(d => {
+      const el = document.createElement('span'); el.className = 'day';
+      const [y, m, dd] = d.ngay.split('-').map(Number);
+      const thu = THU_NGAN[new Date(y, m - 1, dd).getDay()];
+      const icon = document.createElement('b');
+      icon.textContent = MOOD_ICON[d.tam_trang] || '·';
+      const label = d.tam_trang ? (MOOD_NAME[d.tam_trang] || d.tam_trang) : 'không nói chuyện';
+      el.title = thu + ' ' + dd + '/' + m + ': ' + label;
+      el.setAttribute('aria-label', el.title);
+      el.appendChild(icon); el.appendChild(document.createTextNode(thu));
+      box.appendChild(el);
+    });
+    box.hidden = false;
+  } catch (e) {}
+}
 document.getElementById('closeHelp').onclick = () => helpDlg.close();
 
 // ---- Ghim tin nhắn: chạm vào bong bóng → hiện nút "Ghim" / "Bỏ ghim" ----

@@ -60,3 +60,5 @@ MONTHLY_USD_LIMIT = float(os.getenv("MONTHLY_USD_LIMIT", "0"))
 
 EMOTIONS = ["vui", "hao_hung", "binh_thuong", "suy_nghi", "ngac_nhien", "buon", "thuong"]
 ACTIONS = ["khong", "gat_dau", "lac_dau", "nghieng_dau", "nhay", "vay_tay"]
+# Tâm trạng của NGƯỜI DÙNG mà Bơ đoán từ tin nhắn (khác cảm xúc khuôn mặt của Bơ)
+MOODS = ["vui", "binh_thuong", "buon", "met", "lo", "gian"]

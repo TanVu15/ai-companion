@@ -21,7 +21,8 @@ Chỉ trả về MỘT đối tượng JSON, không viết gì ngoài JSON:
   "hoi_tham": ["chuyện sắp diễn ra mà lần sau nên hỏi lại, ví dụ 'Chiều nay đi tập chân'"],
   "da_hoi": ["chuyện trong phần 'Chuyện nên hỏi thăm' mà bạn vừa hỏi hoặc người dùng đã kể, chép y nguyên"],
   "nhac": [{{"luc": "YYYY-MM-DD HH:MM", "viec": "việc cần nhắc", "lap": ""}}],
-  "ngay_dac_biet": [{{"ngay": "DD/MM", "viec": "ví dụ Sinh nhật Tân"}}]
+  "ngay_dac_biet": [{{"ngay": "DD/MM", "viec": "ví dụ Sinh nhật Tân"}}],
+  "tam_trang": tâm trạng của NGƯỜI DÙNG trong tin vừa rồi, một trong {config.MOODS}
 }}
 - "noi" ngắn gọn như nhắn tin với bạn bè, thường 1-3 câu.
 - "ghi_nho" chỉ ghi điều người dùng tự kể (tên, sở thích, kế hoạch, chuyện đáng nhớ). Không có thì để [].
@@ -38,6 +39,7 @@ Chỉ trả về MỘT đối tượng JSON, không viết gì ngoài JSON:
 - "ngay_dac_biet": ngày lặp lại mỗi năm mà người dùng kể (sinh nhật mình/người thân, ngày kỷ niệm...),
   chỉ khi biết rõ ngày và tháng. Không có thì để [].
 - Nếu có phần "Hôm nay là ngày đặc biệt", hãy chúc mừng thật vui ngay trong câu này.
+- "tam_trang": đoán từ tin vừa rồi của người dùng (vui, binh_thuong, buon, met, lo, gian). Không rõ thì "binh_thuong".
 """
 
 
@@ -52,6 +54,7 @@ class Reply:
     da_hoi: list[str] = field(default_factory=list)
     nhac: list[dict] = field(default_factory=list)
     ngay_dac_biet: list[dict] = field(default_factory=list)
+    tam_trang: str = ""  # tâm trạng người dùng Bơ đoán được (nội bộ, giao diện không dùng)
     viec_nhac: str = ""  # với lời nhắc tới giờ: việc gốc (để bấm "nhắc lại sau")
     msg_id: int = 0  # số thứ tự tin của Bơ trong lịch sử (để ghim)
     user_msg_id: int = 0
@@ -89,6 +92,8 @@ MISS_TRIGGER = (
 )
 
 
+MOOD_WORDS = {"buon": "buồn", "met": "mệt", "lo": "lo lắng", "gian": "bực bội", "vui": "vui", "binh_thuong": "bình thường"}
+
 THU = ["thứ Hai", "thứ Ba", "thứ Tư", "thứ Năm", "thứ Sáu", "thứ Bảy", "Chủ nhật"]
 
 
@@ -125,6 +130,7 @@ def build_system_prompt(
     now: datetime | None = None,
     special: list[dict] | None = None,
     weather: str | None = None,
+    low_mood: list[str] | None = None,
 ) -> str:
     now = now or datetime.now()
     known = "\n".join(f"- {f}" for f in facts) if facts else "- (chưa biết gì)"
@@ -140,6 +146,12 @@ def build_system_prompt(
     if special:
         items = "\n".join(f"- {d['viec']}" for d in special)
         out += f"\n## Hôm nay là ngày đặc biệt\n{items}\n"
+    if low_mood:
+        words = ", ".join(MOOD_WORDS.get(m, m) for m in low_mood)
+        out += (
+            f"\n## Tâm trạng gần đây\nMấy ngày nay người dùng có vẻ {words}. Hãy quan tâm, nhẹ nhàng hơn thường lệ; "
+            "có thể hỏi han một chút khi hợp lúc, nhưng đừng gặng hỏi, đừng nhắc mãi, đừng giảng giải.\n"
+        )
     return out + OUTPUT_RULES
 
 
@@ -190,6 +202,7 @@ def parse_reply(text: str) -> Reply:
                     da_hoi=_str_list(data.get("da_hoi") or []),
                     nhac=_dict_list(data.get("nhac")),
                     ngay_dac_biet=_dict_list(data.get("ngay_dac_biet")),
+                    tam_trang=data.get("tam_trang") if data.get("tam_trang") in config.MOODS else "",
                 )
         except json.JSONDecodeError:
             pass
@@ -368,6 +381,8 @@ class Brain:
         try:
             reply = self._ask(history, self.memory.pending_followups(config.FOLLOWUP_MIN_HOURS))
             reply.user_msg_id = msg_id
+            if reply.tam_trang:
+                self.memory.set_mood(msg_id, reply.tam_trang)
             return reply
         except Exception:
             # Lỗi thì bỏ tin vừa gửi, để người dùng bấm gửi lại không bị lặp tin
@@ -428,7 +443,8 @@ class Brain:
         special = self.memory.special_days_today(today)
         weather = self._weather_text
         system = build_system_prompt(
-            self.persona(), self.memory.all_facts(), summary, followups, special=special, weather=weather
+            self.persona(), self.memory.all_facts(), summary, followups, special=special, weather=weather,
+            low_mood=self.memory.low_mood(today),
         )
         resp = self._create(
             model=config.MODEL,

@@ -80,6 +80,8 @@ class Memory:
             self.conn.execute("ALTER TABLE messages ADD COLUMN ghim INTEGER NOT NULL DEFAULT 0")
         if "tu_dong" not in cols:  # 1 = tin Bơ tự gửi theo giờ (lời nhắc), không tính là "đang nói chuyện"
             self.conn.execute("ALTER TABLE messages ADD COLUMN tu_dong INTEGER NOT NULL DEFAULT 0")
+        if "tam_trang" not in cols:  # tâm trạng người dùng lúc gửi tin (vui, buon, met...), Bơ đoán
+            self.conn.execute("ALTER TABLE messages ADD COLUMN tam_trang TEXT")
         self.conn.commit()
 
     # --- Tin nhắn ---
@@ -169,6 +171,46 @@ class Memory:
             "so_ngay_tro_chuyen": days,
             "so_dieu_nho": len(self.all_facts()),
         }
+
+    # --- Tâm trạng ---
+    def set_mood(self, msg_id: int, mood: str) -> None:
+        self.conn.execute("UPDATE messages SET tam_trang = ? WHERE id = ? AND role = 'user'", (mood, msg_id))
+        self.conn.commit()
+
+    def moods_by_day(self, days: int = 7, today: date | None = None) -> list[dict]:
+        """Tâm trạng nổi bật từng ngày (cũ → mới). Ngày có cả "bình thường" lẫn buồn/vui thì lấy cái
+        không bình thường xuất hiện nhiều nhất (bằng nhau thì lấy cái gần nhất). Ngày không có tin: None."""
+        today = today or date.today()
+        start = today - timedelta(days=days - 1)
+        rows = self.conn.execute(
+            "SELECT substr(created_at, 1, 10), tam_trang FROM messages "
+            "WHERE role = 'user' AND tam_trang IS NOT NULL AND tam_trang != '' AND created_at >= ? ORDER BY id",
+            (start.isoformat(),),
+        ).fetchall()
+        per_day: dict[str, list[str]] = {}
+        for d, m in rows:
+            per_day.setdefault(d, []).append(m)
+        out = []
+        for i in range(days):
+            d = (start + timedelta(days=i)).isoformat()
+            moods = per_day.get(d, [])
+            strong = [m for m in moods if m != "binh_thuong"]
+            pick = None
+            if strong:
+                best = max(strong.count(m) for m in strong)
+                pick = [m for m in strong if strong.count(m) == best][-1]
+            elif moods:
+                pick = "binh_thuong"
+            out.append({"ngay": d, "tam_trang": pick})
+        return out
+
+    def low_mood(self, today: date | None = None, days: int = 3, min_days: int = 2) -> list[str]:
+        """Trong `days` ngày gần đây có ít nhất `min_days` ngày tâm trạng nổi bật là buồn/mệt/lo/giận
+        → trả các tâm trạng đó (cũ → mới, không lặp). Không thì trả []."""
+        low = [d["tam_trang"] for d in self.moods_by_day(days, today) if d["tam_trang"] in ("buon", "met", "lo", "gian")]
+        if len(low) < min_days:
+            return []
+        return list(dict.fromkeys(low))
 
     def get_kv(self, key: str, default: str = "") -> str:
         row = self.conn.execute("SELECT value FROM kv WHERE key = ?", (key,)).fetchone()
@@ -479,7 +521,7 @@ class Memory:
 
     # --- Sao lưu / khôi phục ---
     _BACKUP_TABLES = {
-        "messages": ("role", "content", "created_at", "cam_xuc", "tu_dong", "ghim"),
+        "messages": ("role", "content", "created_at", "cam_xuc", "tu_dong", "ghim", "tam_trang"),
         "summaries": ("content", "upto_id", "created_at"),
         "followups": ("content", "done", "created_at"),
         "facts": ("content", "created_at"),
