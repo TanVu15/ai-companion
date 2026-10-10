@@ -90,6 +90,7 @@
     <div>
       <button class="link" id="openMem" type="button">Bơ nhớ gì về mình?</button>
       <button class="link" id="voiceBtn" type="button" aria-pressed="false">Giọng nói: tắt</button>
+      <button class="link" id="handsBtn" type="button" aria-pressed="false" hidden>Rảnh tay: tắt</button>
     </div>
   </header>
   <main id="log" aria-live="polite"></main>
@@ -110,6 +111,7 @@
     <button id="closeMem" type="button">Xong</button>
   </div>
 </dialog>
+<script src="/web/danh_thuc.js"></script>
 <script>
 const log = document.getElementById('log'), form = document.getElementById('form');
 const input = document.getElementById('input'), send = document.getElementById('send');
@@ -157,6 +159,7 @@ async function sendText(text) {
   } finally {
     clearTimeout(timer);
     send.disabled = false; statusEl.textContent = ''; input.focus();
+    if (handsFree) resumeListening();
   }
 }
 form.addEventListener('submit', (ev) => {
@@ -170,7 +173,7 @@ input.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); }
 });
 // ---- Giọng nói: dùng sẵn của trình duyệt (miễn phí, không cần tài khoản) ----
-let voiceOn = false;
+let voiceOn = false, speaking = false;
 try { voiceOn = localStorage.getItem('bo_voice') === '1'; } catch (e) {}
 const voiceBtn = document.getElementById('voiceBtn'), micBtn = document.getElementById('mic');
 function showVoice() { voiceBtn.textContent = 'Giọng nói: ' + (voiceOn ? 'bật' : 'tắt'); voiceBtn.setAttribute('aria-pressed', voiceOn); }
@@ -178,7 +181,7 @@ showVoice();
 voiceBtn.onclick = () => {
   voiceOn = !voiceOn; showVoice();
   try { localStorage.setItem('bo_voice', voiceOn ? '1' : '0'); } catch (e) {}
-  if (!voiceOn && window.speechSynthesis) speechSynthesis.cancel();
+  if (!voiceOn && window.speechSynthesis) { speechSynthesis.cancel(); speaking = false; face.classList.remove('talking'); }
 };
 function viVoice() {
   const all = window.speechSynthesis ? speechSynthesis.getVoices() : [];
@@ -190,30 +193,69 @@ function speak(text) {
   const u = new SpeechSynthesisUtterance(text);
   u.lang = 'vi-VN'; const v = viVoice(); if (v) u.voice = v;
   u.onstart = () => face.classList.add('talking');
-  u.onend = u.onerror = () => face.classList.remove('talking');
-  speechSynthesis.speak(u);
+  u.onend = u.onerror = () => { speaking = false; face.classList.remove('talking'); resumeListening(); };
+  speaking = true; speechSynthesis.speak(u);
+  // Phòng khi trình duyệt quên báo "đọc xong" → rảnh tay không bị kẹt
+  setTimeout(() => { if (speaking) u.onend(); }, 3000 + text.length * 150);
 }
 const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
-let rec = null, listening = false;
+const handsBtn = document.getElementById('handsBtn');
+let rec = null, listening = false, handsFree = false, paused = false, awaitUntil = 0;
+function startRec() {
+  if (!rec || listening) return;
+  rec.continuous = handsFree; rec.interimResults = !handsFree;
+  try { rec.start(); listening = true; } catch (e) {}
+}
+function showHands() {
+  handsBtn.textContent = 'Rảnh tay: ' + (handsFree ? 'bật' : 'tắt'); handsBtn.setAttribute('aria-pressed', handsFree);
+  statusEl.textContent = handsFree ? 'Gọi "Bơ ơi" để nói chuyện' : '';
+}
+// Đang gửi tin hoặc Bơ đang nói thì tạm ngừng nghe (để Bơ không tự nghe giọng mình)
+function pauseListening() { paused = true; if (rec && listening) rec.abort(); }
+function resumeListening() {
+  if (!handsFree || !paused || speaking || send.disabled) return;
+  paused = false; statusEl.textContent = 'Gọi "Bơ ơi" để nói chuyện'; startRec();
+}
+function handsHeard(text) {
+  let cmd = Date.now() < awaitUntil ? text.trim() : boDanhThuc(text);
+  if (cmd === null || send.disabled) return;
+  if (cmd === '') { awaitUntil = Date.now() + 8000; express('ngac_nhien'); statusEl.textContent = 'Bơ nghe nè...'; return; }
+  awaitUntil = 0; input.value = cmd; pauseListening(); form.requestSubmit();
+}
 if (Rec && window.isSecureContext) {
-  micBtn.hidden = false;
-  rec = new Rec(); rec.lang = 'vi-VN'; rec.interimResults = true; rec.continuous = false;
+  micBtn.hidden = false; handsBtn.hidden = false;
+  rec = new Rec(); rec.lang = 'vi-VN';
   rec.onresult = (ev) => {
-    input.value = Array.from(ev.results).map(r => r[0].transcript).join('');
+    if (handsFree) {
+      for (let i = ev.resultIndex; i < ev.results.length; i++)
+        if (ev.results[i].isFinal) handsHeard(ev.results[i][0].transcript);
+    } else {
+      input.value = Array.from(ev.results).map(r => r[0].transcript).join('');
+    }
   };
   rec.onend = () => {
-    listening = false; micBtn.classList.remove('on'); statusEl.textContent = '';
+    listening = false; micBtn.classList.remove('on');
+    if (handsFree) { if (!paused) setTimeout(startRec, 300); return; }  // máy tự ngắt sau một lúc → nghe lại
+    statusEl.textContent = '';
     if (input.value.trim() && !send.disabled) form.requestSubmit();
   };
   rec.onerror = (ev) => {
-    if (ev.error === 'not-allowed') addError('Trình duyệt chưa cho dùng micro. Bấm vào biểu tượng ổ khóa trên thanh địa chỉ để cho phép.');
-    else if (ev.error !== 'no-speech' && ev.error !== 'aborted') addError('Không nghe được: ' + ev.error);
+    if (ev.error === 'not-allowed') {
+      handsFree = false; showHands();
+      addError('Trình duyệt chưa cho dùng micro. Bấm vào biểu tượng ổ khóa trên thanh địa chỉ để cho phép.');
+    } else if (!['no-speech', 'aborted', 'network'].includes(ev.error)) addError('Không nghe được: ' + ev.error);
   };
   micBtn.onclick = () => {
+    if (handsFree) return;
     if (listening) { rec.stop(); return; }
     if (window.speechSynthesis) speechSynthesis.cancel();
-    input.value = ''; listening = true; micBtn.classList.add('on'); statusEl.textContent = 'Bơ đang nghe...';
-    try { rec.start(); } catch (e) { listening = false; micBtn.classList.remove('on'); }
+    input.value = ''; micBtn.classList.add('on'); statusEl.textContent = 'Bơ đang nghe...';
+    startRec();
+  };
+  handsBtn.onclick = () => {
+    handsFree = !handsFree; paused = false; awaitUntil = 0; showHands();
+    micBtn.disabled = handsFree;
+    if (listening) rec.abort(); else if (handsFree) startRec();
   };
 }
 

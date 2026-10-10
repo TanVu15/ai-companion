@@ -76,3 +76,11 @@
 - 42 test qua hết.
 
 **Tân cần thử:** mở http://localhost:8000 trên Chrome/Edge, bật "Giọng nói", bấm micro và nói "chào Bơ".
+
+## 2026-10-10 – Giai đoạn 5: chế độ rảnh tay
+- Nút **"Rảnh tay"**: Bơ nghe liên tục, chỉ trả lời khi nghe "Bơ ơi" / "Ê Bơ" (máy nghe nhầm "bờ ới" vẫn nhận). Gọi "Bơ ơi" rồi ngừng → mặt Bơ ngạc nhiên, chờ 8 giây cho câu tiếp theo. Nói "quả bơ" thì không bị đánh thức.
+- Lúc Bơ đang đọc câu trả lời thì tạm ngừng nghe để không tự nghe giọng mình.
+- Hiện chỉ hoạt động khi tab web đang mở (trình duyệt không cho nghe ngầm). Phần cứng sau này sẽ làm thật.
+- 44 test qua hết (test từ đánh thức cần Node.js, máy không có thì tự bỏ qua).
+
+**Tân cần thử:** Chrome/Edge trên máy tính → bật "Giọng nói" và "Rảnh tay", nói "Bơ ơi, kể chuyện vui đi".

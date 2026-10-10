@@ -4,6 +4,7 @@ import secrets
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, Response
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from . import config
@@ -11,6 +12,7 @@ from .brain import Brain, friendly_error
 from .memory import Memory
 
 app = FastAPI(title="AI Companion")
+app.mount("/web", StaticFiles(directory=config.ROOT / "web"), name="web")
 _brain: Brain | None = None
 
 

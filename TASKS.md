@@ -28,7 +28,7 @@
 
 ## Giai đoạn 5 – Giọng nói (chỉ phần mềm, dùng sẵn của trình duyệt, miễn phí)
 - [x] Bấm micro để nói, Bơ đọc to câu trả lời (bật/tắt, nhớ lựa chọn)
-- [ ] Chế độ rảnh tay: nghe liên tục, gọi "Bơ ơi" mới trả lời
+- [x] Chế độ rảnh tay: nghe liên tục, gọi "Bơ ơi" mới trả lời
 - [ ] Câu trả lời dễ đọc to: bỏ ký hiệu/emoji khi đọc, đọc nhanh/chậm chỉnh được
 
 ## Giai đoạn 6 – Chuẩn bị cho phần cứng (chỉ phần mềm)
