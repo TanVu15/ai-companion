@@ -582,3 +582,8 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - Cổng thiết bị `/api/thiet-bi/hom-nay` có thêm `sap_toi` (xem THIET_BI.md).
 - 204 test qua hết.
 
+## 2026-10-10 – Giai đoạn 32: tải lịch cho điện thoại
+- "Bơ nhớ gì về mình?" → **"Tải lịch cho điện thoại (.ics)"**: file lịch gồm ngày đặc biệt (lặp mỗi năm; ngày âm lịch ghi sẵn 10 năm tới vì lịch điện thoại không hiểu âm lịch) và lời nhắc sắp tới (cả nhắc mỗi ngày/mỗi tuần). Mỗi ngày đặc biệt báo lúc 20h hôm trước.
+- Mở file trên iPhone (Safari/Tệp) hoặc Google Calendar → thêm vào Lịch. Lưu ý: đây là bản chụp lúc tải; thêm ngày mới thì tải lại.
+- 209 test qua hết.
+

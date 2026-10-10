@@ -165,7 +165,7 @@
 ## Giai đoạn 32 – Ngày lễ sắp tới & lịch điện thoại (chỉ phần mềm, Claude tự thêm)
 - [x] Bơ biết ngày lễ sắp tới và Tết còn mấy ngày ("còn mấy ngày nữa Tết?")
 - [x] Dòng lịch trên web + cổng thiết bị: ngày lễ / ngày đặc biệt sắp tới
-- [ ] Tải lịch .ics (ngày đặc biệt + lời nhắc) để thêm vào lịch điện thoại
+- [x] Tải lịch .ics (ngày đặc biệt + lời nhắc) để thêm vào lịch điện thoại
 - [ ] Rà soát code lần 12, sửa lỗi tìm được
 
 ## Sau này

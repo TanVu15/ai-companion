@@ -234,6 +234,18 @@ def download_chat():
                     headers={"Content-Disposition": f'attachment; filename="{name}"'})
 
 
+@app.get("/api/lich.ics")
+def calendar_ics():
+    """Ngày đặc biệt + lời nhắc thành file lịch .ics (mở trên điện thoại để thêm vào Lịch)."""
+    from .lich_ics import tao_ics
+
+    brain = get_brain()
+    with brain._lock:
+        days, rems = brain.memory.special_days(), brain.memory.upcoming_reminders()
+    return Response(tao_ics(days, rems), media_type="text/calendar; charset=utf-8",
+                    headers={"Content-Disposition": 'attachment; filename="bo-lich.ics"'})
+
+
 @app.post("/api/khoi-phuc")
 def restore(data: dict = Body(...)):
     """Nạp lại file sao lưu (thay toàn bộ trí nhớ hiện tại). Chỉ nhận Content-Type: application/json."""
