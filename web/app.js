@@ -362,7 +362,16 @@ async function loadFacts() {
     span.textContent = f; b.textContent = 'Xóa'; b.type = 'button';
     b.setAttribute('aria-label', 'Xóa: ' + f);
     b.onclick = async () => { await delFact(f); loadFacts(); };
-    li.append(span, b); factsEl.appendChild(li);
+    const e = document.createElement('button');
+    e.textContent = 'Sửa'; e.type = 'button'; e.className = 'edit'; e.setAttribute('aria-label', 'Sửa: ' + f);
+    e.onclick = async () => {
+      const moi = prompt('Sửa điều Bơ nhớ:', f);
+      if (moi === null || moi.trim() === f) return;
+      const r = await fetch('/api/facts', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ cu: f, moi }) });
+      if (!r.ok) { try { alert((await r.json()).detail); } catch (x) { alert('Không sửa được'); } }
+      loadFacts();
+    };
+    li.append(span, e, b); factsEl.appendChild(li);
   });
 }
 const remsEl = document.getElementById('rems');
@@ -394,6 +403,14 @@ async function loadDays() {
     li.appendChild(b); daysEl.appendChild(li);
   });
 }
+document.getElementById('addFactForm').addEventListener('submit', async (ev) => {
+  ev.preventDefault();
+  const inp = document.getElementById('newFact'), text = inp.value.trim();
+  if (!text) return;
+  const r = await fetch('/api/facts', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ content: text }) });
+  if (r.ok) inp.value = '';
+  loadFacts();
+});
 document.getElementById('openMem').onclick = () => { loadFacts(); loadDays(); loadReminders(); mem.showModal(); };
 document.getElementById('closeMem').onclick = () => mem.close();
 document.getElementById('restoreFile').onchange = async (ev) => {

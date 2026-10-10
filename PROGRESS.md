@@ -383,3 +383,9 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - 125 test qua hết.
 
 **Tân cần thử:** nút "?" → đổi màu mặt; trên máy tính bấm Ctrl+K.
+
+## 2026-10-10 – Giai đoạn 20: tự thêm / sửa điều Bơ nhớ
+- "Bơ nhớ gì về mình?" có ô **Thêm** (gõ điều muốn Bơ nhớ) và nút **Sửa** cạnh mỗi điều (sửa chữ, giữ nguyên vị trí). Trùng điều khác thì báo, không lưu.
+- 126 test qua hết.
+
+**Tân cần thử:** thêm "Mình thích ăn phở", rồi hỏi Bơ "mình thích ăn gì?".

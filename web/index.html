@@ -113,6 +113,11 @@
     header { padding-top: 8px; } .face { zoom: .65; } .name { margin-top: 2px; }
     #personaText { height: 35vh; }
   }
+  .addfact { display: flex; gap: 8px; padding: 0; border: none; background: none; margin-bottom: 10px; }
+  .addfact input { flex: 1; min-width: 0; border: 1px solid var(--border); border-radius: 12px; padding: 8px 12px; font: inherit;
+    background: var(--bg); color: var(--text); }
+  .addfact button { padding: 6px 14px; }
+  #facts li button.edit { color: var(--muted); }
   .colors { display: flex; gap: 10px; margin: 6px 0 12px; flex-wrap: wrap; }
   .colors button { width: 36px; height: 36px; padding: 0; border-radius: 50%; border: 3px solid transparent; }
   .colors button[aria-checked="true"] { border-color: var(--text); }
@@ -150,7 +155,11 @@
 </div>
 <dialog id="mem">
   <h2>Bơ nhớ gì về bạn</h2>
-  <p>Xóa những điều sai hoặc bạn không muốn Bơ nhớ nữa.</p>
+  <p>Sửa/xóa những điều sai, hoặc tự thêm điều bạn muốn Bơ nhớ.</p>
+  <form id="addFactForm" class="addfact">
+    <input id="newFact" type="text" maxlength="300" placeholder="ví dụ: Mình thích ăn phở" aria-label="Điều mới cho Bơ nhớ">
+    <button type="submit">Thêm</button>
+  </form>
   <ul id="facts"></ul>
   <h2 style="margin-top:8px">Ngày đặc biệt</h2>
   <ul id="days" class="plain"></ul>

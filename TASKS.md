@@ -103,6 +103,10 @@
 - [x] Chọn màu khuôn mặt Bơ (lưu trên máy)
 - [x] Phím tắt: Esc để Bơ ngừng đọc / đóng hộp, Ctrl+K để tìm
 
+## Giai đoạn 20 – Quản lý trí nhớ tốt hơn (chỉ phần mềm, Claude tự thêm)
+- [x] Tự thêm điều cho Bơ nhớ và sửa điều Bơ nhớ sai (trong "Bơ nhớ gì về mình?")
+- [ ] Tách app.js thành vài file nhỏ theo chức năng (dễ sửa hơn)
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo

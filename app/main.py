@@ -403,6 +403,32 @@ def facts():
     return get_brain().memory.all_facts()
 
 
+class FactEditIn(BaseModel):
+    cu: str
+    moi: str
+
+
+@app.post("/api/facts")
+def add_fact(body: FactIn):
+    """Tân tự thêm một điều cho Bơ nhớ."""
+    text = body.content.strip()[:300]
+    if not text:
+        raise HTTPException(400, "Điều cần nhớ đang trống")
+    brain = get_brain()
+    with brain._lock:
+        brain.memory.add_facts([text])
+    return {"ok": True}
+
+
+@app.put("/api/facts")
+def edit_fact(body: FactEditIn):
+    brain = get_brain()
+    with brain._lock:
+        if not brain.memory.update_fact(body.cu, body.moi[:300]):
+            raise HTTPException(400, "Không sửa được (trống, trùng điều khác, hoặc điều cũ đã bị xóa)")
+    return {"ok": True}
+
+
 @app.delete("/api/facts/all")
 def clear_facts():
     brain = get_brain()

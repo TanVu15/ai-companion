@@ -450,6 +450,18 @@ class Memory:
     def all_facts(self) -> list[str]:
         return [r[0] for r in self.conn.execute("SELECT content FROM facts ORDER BY id")]
 
+    def update_fact(self, old: str, new: str) -> bool:
+        """Sửa một điều (giữ nguyên vị trí). Điều mới trống hoặc trùng điều khác thì trả False, không đổi gì."""
+        new = re.sub(r"\s+", " ", new).strip()
+        if not new:
+            return False
+        others = {self._key(f) for f in self.all_facts() if f != old}
+        if self._key(new) in others:
+            return False
+        cur = self.conn.execute("UPDATE facts SET content = ? WHERE content = ?", (new, old))
+        self.conn.commit()
+        return cur.rowcount > 0
+
     def delete_fact(self, content: str) -> None:
         self.conn.execute("DELETE FROM facts WHERE content = ?", (content,))
         self.conn.commit()

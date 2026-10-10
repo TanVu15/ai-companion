@@ -292,3 +292,17 @@ def test_thong_ke_quen_nhau(tmp_path):
     s = m.stats(today=date(2026, 10, 10))
     assert s == {"quen_tu": "01/10/2026", "so_ngay_quen": 10, "so_tin": 3,
                  "so_ngay_tro_chuyen": 2, "so_dieu_nho": 1}
+
+
+def test_them_va_sua_dieu_nho(tmp_path):
+    c = make_client(tmp_path, [])
+    assert c.post("/api/facts", json={"content": " Thích ăn phở "}).status_code == 200
+    assert c.post("/api/facts", json={"content": "   "}).status_code == 400
+    c.post("/api/facts", json={"content": "Sống ở Huế"})
+    assert c.put("/api/facts", json={"cu": "Sống ở Huế", "moi": "Sống ở Đà Nẵng"}).status_code == 200
+    assert c.get("/api/facts").json() == ["Thích ăn phở", "Sống ở Đà Nẵng"]  # giữ thứ tự
+    assert c.put("/api/facts", json={"cu": "Sống ở Đà Nẵng", "moi": "thích ăn phở."}).status_code == 400  # trùng
+    assert c.put("/api/facts", json={"cu": "Không có", "moi": "X"}).status_code == 400
+    assert c.put("/api/facts", json={"cu": "Thích ăn phở", "moi": " "}).status_code == 400
+    assert c.put("/api/facts", json={"cu": "Thích ăn phở", "moi": "Thích ăn phở bò"}).status_code == 200
+    assert c.get("/api/facts").json() == ["Thích ăn phở bò", "Sống ở Đà Nẵng"]
