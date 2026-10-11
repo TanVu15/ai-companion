@@ -4,7 +4,8 @@
 
 | Hiện tượng | Nguyên nhân hay gặp | Cách sửa |
 |---|---|---|
-| Nhấp `run.bat` thì cửa sổ tắt ngay | Chưa cài Python, hoặc lúc cài không tick "Add Python to PATH" | Cài lại Python và tick ô đó. Mở cmd gõ `python --version` để kiểm tra |
+| Nhấp `run.bat` mà không thấy gì / cửa sổ tắt ngay | Chưa cài Python, lúc cài không tick "Add Python to PATH", hoặc gõ `python` lại mở Microsoft Store | `run.bat` mới không tự tắt nữa mà ghi rõ lỗi `[LOI] ...`. Cài Python từ python.org, tick "Add Python to PATH", chạy lại. Chụp cửa sổ gửi vào `FEEDBACK.md` nếu vẫn lỗi |
+| Cửa sổ `run.bat` chạy nhưng trình duyệt không tự mở | Trình duyệt mặc định bị chặn | Tự mở trình duyệt, gõ `http://localhost:8000`. Để nguyên cửa sổ đen khi dùng Bơ |
 | Web hiện dòng đỏ "API key: Chưa có…" | `.env` chưa có key | Mở `.env`, dán key vào `ANTHROPIC_API_KEY=`, chạy lại `run.bat` |
 | "API key sai hoặc hết hạn" | Key gõ thiếu hoặc đã bị xóa trên console | Tạo key mới ở console.anthropic.com |
 | "Tài khoản API hết tiền rồi" | Hết tín dụng | Nạp thêm ở console.anthropic.com |
