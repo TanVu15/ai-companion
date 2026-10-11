@@ -207,6 +207,12 @@
 - [x] Mục "Bơ làm được gì?" và SU_CO.md nhắc tới trả lời nhanh; nút "?" → Tình trạng đếm số câu trả lời nhanh tháng này
 - [x] Rà soát code lần 19, sửa lỗi tìm được
 
+## Giai đoạn 40 – Thói quen rõ hơn (chỉ phần mềm, Claude tự thêm)
+- [x] Nút "Thói quen": 30 ô vuông cho 30 ngày qua, bấm ô để tích bù ngày quên; "N/30 ngày · chuỗi dài nhất"
+- [ ] Kể "hôm qua mình có đọc sách" → Bơ tích bù hôm qua (thoi_quen_hom_qua)
+- [ ] Hỏi nhanh "thói quen hôm nay?" → Bơ trả lời đã/chưa làm gì (miễn phí)
+- [ ] Rà soát code lần 20, sửa lỗi tìm được
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo

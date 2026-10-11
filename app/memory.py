@@ -905,9 +905,25 @@ class Memory:
             days = {d for (d,) in self.conn.execute(
                 "SELECT day FROM habit_log WHERE habit_id = ? AND day >= ?", (i, (today - timedelta(days=400)).isoformat()))}
             week = sum((today - timedelta(days=k)).isoformat() in days for k in range(7))
+            ngay_30 = [(today - timedelta(days=k)).isoformat() in days for k in range(29, -1, -1)]  # cũ → hôm nay
             out.append({"id": i, "ten": c, "hom_nay": today.isoformat() in days,
-                        "chuoi": self._habit_streak(days, today), "tuan": week})
+                        "chuoi": self._habit_streak(days, today), "tuan": week,
+                        "ngay_30": ngay_30, "tu_ngay": (today - timedelta(days=29)).isoformat(), "thang": sum(ngay_30), "dai_nhat": self._habit_best(days)})
         return out
+
+    @staticmethod
+    def _habit_best(days: set[str]) -> int:
+        """Chuỗi ngày liền dài nhất từng có (trong dữ liệu đã đọc)."""
+        best = 0
+        for d in days:
+            day = date.fromisoformat(d)
+            if (day - timedelta(days=1)).isoformat() in days:
+                continue  # không phải ngày đầu chuỗi
+            n = 0
+            while (day + timedelta(days=n)).isoformat() in days:
+                n += 1
+            best = max(best, n)
+        return best
 
     def set_habit_done(self, habit_id: int, done: bool, day: date | None = None) -> bool:
         if not self.conn.execute("SELECT 1 FROM habits WHERE id = ?", (habit_id,)).fetchone():

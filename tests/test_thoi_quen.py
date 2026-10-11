@@ -152,3 +152,30 @@ def test_loai_va_suc_khoe(tmp_path, monkeypatch):
     monkeypatch.setattr(config, "NHAC_THOI_QUEN", "25h")
     checks = {k["ten"]: k for k in c.get("/api/suc-khoe").json()["kiem_tra"]}
     assert not checks["Nhắc thói quen"]["ok"] and checks["Nhắc thói quen"]["muc"] == "canh_bao"
+
+
+def test_30_ngay_va_tich_bu(tmp_path):
+    from datetime import date as _d
+
+    m = Memory(tmp_path / "o.db")
+    m.add_habits(["Chạy bộ"])
+    (h,) = m.habits()
+    today = date(2026, 10, 10)
+    for k in (0, 1, 5, 6, 7, 8, 40, 41, 42, 43, 44):
+        m.set_habit_done(h["id"], True, today - timedelta(days=k))
+    (h,) = m.habits(today)
+    assert len(h["ngay_30"]) == 30 and h["ngay_30"][-1] and h["ngay_30"][-2] and not h["ngay_30"][-3]
+    assert h["thang"] == 6 and h["dai_nhat"] == 5 and h["tu_ngay"] == "2026-09-11"
+    c = make_client(tmp_path, [])
+    c.post("/api/thoi-quen", json={"ten": "Đọc sách"})
+    hid = c.get("/api/thoi-quen").json()[0]["id"]
+    hom_qua = (_d.today() - timedelta(days=1)).isoformat()
+    assert c.put(f"/api/thoi-quen/{hid}", json={"xong": True, "ngay": hom_qua}).status_code == 200
+    x = c.get("/api/thoi-quen").json()[0]
+    assert x["ngay_30"][-2] and not x["hom_nay"] and x["chuoi"] == 1
+    assert c.put(f"/api/thoi-quen/{hid}", json={"xong": False, "ngay": hom_qua}).status_code == 200
+    assert not c.get("/api/thoi-quen").json()[0]["ngay_30"][-2]
+    xa = (_d.today() - timedelta(days=30)).isoformat()
+    mai = (_d.today() + timedelta(days=1)).isoformat()
+    for bad in (xa, mai, "hôm qua"):
+        assert c.put(f"/api/thoi-quen/{hid}", json={"xong": True, "ngay": bad}).status_code == 400

@@ -699,3 +699,7 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 
 **Tân cần thử (giai đoạn 39):** hỏi Bơ "mấy giờ rồi?", "hôm nay ngày mấy âm?", "còn mấy ngày nữa Tết?" — trả lời ngay lập tức; bấm "?" → Tình trạng xem dòng "Trả lời nhanh".
 
+## 2026-10-11 – Giai đoạn 40: thói quen 30 ngày
+- Nút **"Thói quen"**: mỗi thói quen có **30 ô vuông** (30 ngày qua, ô viền vàng là hôm nay, ô xanh là đã làm). Quên tích hôm nào thì **bấm ô ngày đó** để tích bù / bỏ tích. Dưới ô ghi "12/30 ngày · chuỗi dài nhất 9 ngày".
+- 293 test qua hết; đã chụp màn hình kiểm tra trên khổ điện thoại.
+

@@ -543,7 +543,33 @@ async function loadHabits() {
       try { await fetch('/api/thoi-quen/' + x.id, { method: 'DELETE' }); } catch (e) { habitError('Mất mạng, thử lại nha.'); }
       loadHabits();
     };
-    lab.append(cb, span); li.append(lab, b); habitsEl.appendChild(li);
+    lab.append(cb, span); li.append(lab, b);
+    if (Array.isArray(x.ngay_30)) {  // 30 ô: cũ → hôm nay; bấm để tích bù / bỏ tích ngày đó
+      const grid = document.createElement('div'), note = document.createElement('div');
+      grid.className = 'o30'; note.className = 'o30-ghi';
+      const [y0, m0, d0] = (x.tu_ngay || '').split('-').map(Number);  // ngày theo máy chủ, không theo đồng hồ điện thoại
+      const start = y0 ? new Date(y0, m0 - 1, d0) : new Date(new Date().setDate(new Date().getDate() - 29));
+      x.ngay_30.forEach((co, i) => {
+        const d = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
+        const iso = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        const nhan = d.getDate() + '/' + (d.getMonth() + 1) + (co ? ': đã làm' : ': chưa làm');
+        const o = document.createElement('button');
+        o.type = 'button'; o.className = (co ? 'co' : '') + (i === 29 ? ' nay' : '');
+        o.title = nhan; o.setAttribute('aria-label', x.ten + ', ngày ' + nhan);
+        o.onclick = async () => {
+          habitErr.hidden = true;
+          try {
+            const r = await fetch('/api/thoi-quen/' + x.id, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ xong: !co, ngay: iso }) });
+            if (!r.ok) habitError('Không đổi được');
+          } catch (e) { habitError('Mất mạng, thử lại nha.'); }
+          loadHabits();
+        };
+        grid.appendChild(o);
+      });
+      note.textContent = x.thang + '/30 ngày' + (x.dai_nhat >= 2 ? ' · chuỗi dài nhất ' + x.dai_nhat + ' ngày' : '');
+      li.append(grid, note);
+    }
+    habitsEl.appendChild(li);
   });
 }
 document.getElementById('openHabit').onclick = () => { habitErr.hidden = true; habitDlg.showModal(); loadHabits(); };

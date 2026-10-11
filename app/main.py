@@ -623,6 +623,7 @@ class HabitIn(BaseModel):
 
 class HabitDone(BaseModel):
     xong: bool
+    ngay: str = ""  # "YYYY-MM-DD" trong 30 ngày gần đây (tích bù ngày quên); trống = hôm nay
 
 
 @app.get("/api/thoi-quen")
@@ -645,10 +646,20 @@ def habit_add(body: HabitIn):
 
 @app.put("/api/thoi-quen/{habit_id}")
 def habit_done(habit_id: int, body: HabitDone):
-    """Đánh dấu hôm nay đã làm / chưa làm."""
+    """Đánh dấu hôm nay (hoặc một ngày trong 30 ngày qua) đã làm / chưa làm."""
+    from datetime import date
+
+    day = date.today()
+    if body.ngay:
+        try:
+            day = date.fromisoformat(body.ngay)
+        except ValueError:
+            raise HTTPException(400, "Ngày không đúng dạng")
+        if not 0 <= (date.today() - day).days < 30:
+            raise HTTPException(400, "Chỉ sửa được trong 30 ngày gần đây")
     brain = get_brain()
     with brain._lock:
-        if not brain.memory.set_habit_done(habit_id, body.xong):
+        if not brain.memory.set_habit_done(habit_id, body.xong, day):
             raise HTTPException(404, "Không thấy thói quen này")
     return {"ok": True}
 
