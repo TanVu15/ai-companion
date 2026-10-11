@@ -26,6 +26,8 @@ const BO_CAU_CHOI = {
   doi: ['Hứ! Bơ dỗi rồi.', 'Không chơi với bạn nữa... một xíu thôi.'],
   lanh: ['Thôi, làm lành nha~', 'Bơ hết giận rồi đó.'],
   an: ['Ngon quá trời~', 'Cá! Cá của Bơ!', 'Măm măm, cảm ơn nha!'],
+  an_sua: ['Lép lép... sữa mát ghê~', 'Râu Bơ dính sữa rồi nè, hí hí', 'Sữa! Bơ liếm sạch bát luôn!'],
+  an_pate: ['Pate! Bơ mê pate nhất trần đời~', 'Măm măm, béo ngậy ghê!', 'Pate ngon quá, Bơ béo thêm nữa rồi nè'],
   no: ['Bơ no căng rồi, để dành mai nha~', 'Béo quá rồi, thôi thôi.'],
   len: ['Cuộn len! Của Bơ!', 'Bép! Bơ đập trúng rồi', 'Ném nữa đi, ném nữa đi!', 'Hí hí, lăn đi đâu đó?'],
   laser: ['Cái chấm đỏ kìa!!', 'Bắt được rồi... ủa đâu?', 'Lần này Bơ bắt được cho coi!'],
@@ -46,7 +48,7 @@ const BO_CAU_CHOI = {
   vuon: ['Ưm... chào buổi sáng~', 'Sáng rồi hả? Bơ vươn vai cái đã.', 'Ngáp... chào bạn buổi sáng nha!'],
 };
 // Những loại câu chơi được đọc to khi bật "Giọng nói" (câu vuốt/chọc lặp nhiều quá nên chỉ hiện chữ)
-const BO_DOC_TO = ['mung', 'vuon', 'an', 'no', 'doi', 'lanh', 'thuc', 'dep', 'chong_mat', 'ngui'];  // (đập tay: chỉ lần đầu trong ngày)  // ('len' chỉ hiện chữ: vồ liên tục)
+const BO_DOC_TO = ['mung', 'vuon', 'an', 'an_sua', 'an_pate', 'no', 'doi', 'lanh', 'thuc', 'dep', 'chong_mat', 'ngui'];  // (đập tay: chỉ lần đầu trong ngày)  // ('len' chỉ hiện chữ: vồ liên tục)
 function boCauNgau(loai, rnd = Math.random) {
   const ds = BO_CAU_CHOI[loai] || [];
   return ds.length ? ds[Math.floor(rnd() * ds.length) % ds.length] : '';
@@ -105,12 +107,21 @@ const BO_GOI_Y = {
   len: 'Bơ thèm chơi cuộn len quá, bấm nút cuộn len đi~',
   long_vu: 'Có cần câu lông vũ đó, đưa lên đầu Bơ thử!',
   chong_mat: 'Lắc điện thoại thử coi, Bơ chóng mặt cho xem!',
+  an_pate: 'Nhấn giữ nút con cá đi, Bơ thèm pate quá~',
 };
 function boGoiY(daThu, ngayCuoi, homNay, coLac, rnd = Math.random) {
   if (ngayCuoi === homNay) return null;
   const con = Object.keys(BO_GOI_Y).filter(k => !(daThu || []).includes(k) && (coLac || k !== 'chong_mat'));
   return con.length ? con[Math.floor(rnd() * con.length) % con.length] : null;
 }
+// Món ăn (nhấn giữ nút cá để chọn). Không có thanh đói; chỉ khác hình và câu Bơ nói.
+const BO_MON_AN = {
+  ca: { ten: 'Cá', cau: 'an', svg: '<svg viewBox="0 0 32 20" aria-hidden="true"><path d="M2,10 C8,1 20,1 25,10 C20,19 8,19 2,10 Z" fill="#7fb7e6" stroke="#3d6f99" stroke-width="1.5"/><path d="M24,10 L31,4 L31,16 Z" fill="#7fb7e6" stroke="#3d6f99" stroke-width="1.5" stroke-linejoin="round"/><circle cx="8" cy="9" r="1.6" fill="#1f2a33"/></svg>' },
+  sua: { ten: 'Sữa', cau: 'an_sua', svg: '<svg viewBox="0 0 32 20" aria-hidden="true"><path d="M3,8 L29,8 Q28,18 16,18 Q4,18 3,8 Z" fill="#9fc8e8" stroke="#3d6f99" stroke-width="1.5" stroke-linejoin="round"/><ellipse cx="16" cy="8" rx="13" ry="3" fill="#fffdf7" stroke="#3d6f99" stroke-width="1.5"/><path d="M8,12 Q16,15 24,12" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="1.2" stroke-linecap="round"/></svg>' },
+  pate: { ten: 'Pate', cau: 'an_pate', svg: '<svg viewBox="0 0 32 20" aria-hidden="true"><rect x="5" y="7" width="22" height="11" rx="3" fill="#e9b949" stroke="#9a6b12" stroke-width="1.5"/><ellipse cx="16" cy="7" rx="11" ry="3" fill="#c97a54" stroke="#9a6b12" stroke-width="1.5"/><path d="M10,12 L22,12" stroke="#9a6b12" stroke-width="1.2" stroke-linecap="round"/><circle cx="16" cy="14.5" r="1.3" fill="#9a6b12"/></svg>' },
+};
+// Món hợp lệ (món lạ hay chưa chọn → cá)
+function boMonAn(id) { return Object.prototype.hasOwnProperty.call(BO_MON_AN, id) ? id : 'ca'; }
 // Tin nhắn Tân vừa gửi có nhắc tới cá (không tính "cá nhân", "cá tính"...) → 'ca' (Bơ liếm mép); có tim / thương / yêu → 'tim' (tim bay); không thì null
 function boPhanUngTin(text) {
   const s = String(text || '');
@@ -133,7 +144,7 @@ function boLucMo(lanTruoc, bayGio, gio) {
   return null;
 }
 
-if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boChamChan, boThongSoMeo, boGanMui, boDoToRuRu, boDoGiat, boLac, boGoiY, BO_GOI_Y, boPhanUngTin, boLucMo, BO_CAU_CHOI, BO_DOC_TO };
+if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boChamChan, boThongSoMeo, boGanMui, boDoToRuRu, boDoGiat, boLac, boGoiY, BO_GOI_Y, boPhanUngTin, boLucMo, boMonAn, BO_MON_AN, BO_CAU_CHOI, BO_DOC_TO };
 
 // ---- Phần giao diện ----
 (function () {
@@ -435,19 +446,82 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
   face.addEventListener('pointerleave', () => { if (!bam) { viTriTruoc = null; } });
 
   // ---- Cho ăn: không có thanh "đói", cho bao nhiêu cũng được; ăn nhiều quá thì Bơ bảo no ----
+  // Bấm nút = cho món đang chọn. Nhấn giữ (hoặc chuột phải, phím mũi tên lên) = mở menu chọn cá / sữa / pate.
   const nutCa = document.getElementById('choAn');
-  let dangAn = false;
-  nutCa.addEventListener('click', () => {
+  const menuAn = document.getElementById('menuAn');
+  let dangAn = false, monAn = 'ca';
+  try { monAn = boMonAn(localStorage.getItem('bo_mon_an')); } catch (e) {}
+  function veNutAn() {
+    const m = BO_MON_AN[monAn];
+    nutCa.innerHTML = m.svg;
+    const nhan = 'Cho Bơ ăn ' + m.ten.toLowerCase() + ' (nhấn giữ để chọn món)';
+    nutCa.setAttribute('aria-label', nhan); nutCa.title = nhan;
+    if (menuAn) menuAn.querySelectorAll('button').forEach(b => b.setAttribute('aria-checked', b.dataset.mon === monAn ? 'true' : 'false'));
+  }
+  function choAn(mon) {
     if (dangAn || dangDoi()) return;
     dangAn = true;
     const d = dem('cho_an');
     if (d.cho_an > 5) { noi('no', true); giu('liem-mep', 1200); setTimeout(() => { dangAn = false; }, 1200); return; }
+    const m = BO_MON_AN[boMonAn(mon)];
     const ca = document.createElement('span');
-    ca.className = 'ca-an'; ca.innerHTML = nutCa.innerHTML;
+    ca.className = 'ca-an'; ca.innerHTML = m.svg;
     khung.appendChild(ca);
     giu('an', 2600);
-    setTimeout(() => { ca.remove(); giu('liem-mep', 1300); noi('an', true); }, 2600);
+    setTimeout(() => {
+      ca.remove(); giu('liem-mep', 1300); noi(m.cau, true);
+      if (mon === 'sua') giu('dinh-sua', 3200);  // râu dính sữa một lúc
+      if (mon === 'pate') { const r = face.getBoundingClientRect(), k = khung.getBoundingClientRect();  // món khoái nhất: tim bay
+        [0.3, 0.7, 0.5].forEach((fx, i) => setTimeout(() => { timCuoi = 0; tim(r.left - k.left + r.width * fx, r.top - k.top + r.height * 0.25); }, i * 250)); }
+    }, 2600);
     setTimeout(() => { dangAn = false; }, 3900);
+  }
+  function moMenuAn(banPhim) {
+    if (!menuAn) return;
+    menuAn.hidden = false; nutCa.setAttribute('aria-expanded', 'true');
+    if (banPhim) (menuAn.querySelector('[aria-checked="true"]') || menuAn.querySelector('button')).focus();
+  }
+  function dongMenuAn(veNut) {
+    if (!menuAn || menuAn.hidden) return;
+    menuAn.hidden = true; nutCa.setAttribute('aria-expanded', 'false');
+    if (veNut) nutCa.focus();
+  }
+  if (menuAn) {
+    for (const [id, m] of Object.entries(BO_MON_AN)) {
+      const b = document.createElement('button');
+      b.type = 'button'; b.dataset.mon = id; b.setAttribute('role', 'menuitemradio');
+      b.innerHTML = m.svg + '<span>' + m.ten + '</span>';
+      b.addEventListener('click', () => {
+        monAn = id; try { localStorage.setItem('bo_mon_an', id); } catch (e) {}
+        veNutAn(); dongMenuAn(false); choAn(id);
+      });
+      menuAn.appendChild(b);
+    }
+    menuAn.addEventListener('keydown', ev => {
+      const ds = [...menuAn.querySelectorAll('button')], i = ds.indexOf(document.activeElement);
+      if (ev.key === 'Escape') { ev.preventDefault(); ev.stopPropagation(); dongMenuAn(true); }
+      else if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') {
+        ev.preventDefault(); ds[(i + (ev.key === 'ArrowDown' ? 1 : ds.length - 1)) % ds.length].focus();
+      } else if (ev.key === 'Tab') dongMenuAn(false);
+    });
+    document.addEventListener('pointerdown', ev => { if (!menuAn.hidden && !menuAn.contains(ev.target) && ev.target !== nutCa && !nutCa.contains(ev.target)) dongMenuAn(false); });
+  }
+  veNutAn();
+  // Nhấn giữ nút ~0,5 giây = mở menu; thả sớm = cho ăn như thường
+  let giuAnTimer = null, vuaMoMenu = false, lanBamNut = 0;
+  nutCa.addEventListener('pointerdown', ev => {
+    lanBamNut = Date.now();
+    if (ev.button !== 0) return;
+    vuaMoMenu = false; clearTimeout(giuAnTimer);
+    giuAnTimer = setTimeout(() => { vuaMoMenu = true; moMenuAn(false); }, 500);
+  });
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach(t => nutCa.addEventListener(t, () => clearTimeout(giuAnTimer)));
+  nutCa.addEventListener('contextmenu', ev => { ev.preventDefault(); clearTimeout(giuAnTimer); vuaMoMenu = true; moMenuAn(Date.now() - lanBamNut > 1000); });  /* phím menu trên bàn phím → đưa focus vào menu */
+  nutCa.addEventListener('keydown', ev => { if (ev.key === 'ArrowUp' || ev.key === 'ArrowDown') { ev.preventDefault(); moMenuAn(true); } });
+  nutCa.addEventListener('click', () => {
+    if (vuaMoMenu) { vuaMoMenu = false; return; }  // vừa nhấn giữ mở menu: không cho ăn
+    if (menuAn && !menuAn.hidden) { dongMenuAn(false); return; }
+    choAn(monAn);
   });
 
 

@@ -6,6 +6,7 @@
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
 ## 2026-10-11 – Giai đoạn 65 (đang làm): lông vũ & bữa ăn
+- **Chọn món**: nhấn giữ nút con cá nửa giây → hiện menu **Cá / Sữa / Pate** (máy tính: chuột phải; bàn phím: mũi tên lên). Bấm thường thì cho món vừa chọn (nhớ trên máy này). Sữa: Bơ dính râu sữa trắng "Râu Bơ dính sữa rồi nè". Pate: tim bay, "Pate! Bơ mê pate nhất trần đời~". Vẫn không có thanh đói. Ảnh `docs/anh/meo-chon-mon.png`.
 - **Hắt xì**: đưa cần câu lông vũ quét ngang mũi Bơ → Bơ nhắm tịt mắt, há miệng "Hắt xì!" (tối đa 6 giây một lần). Ảnh `docs/anh/meo-hat-xi.png`.
 
 ## 2026-10-11 – Giai đoạn 64 xong: Bơ để ý tin nhắn

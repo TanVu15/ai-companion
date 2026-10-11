@@ -224,3 +224,20 @@ def test_bo_de_y_tin_nhan():
     v = node("""console.log(JSON.stringify(['Tối nay ăn cá kho', 'các bạn ơi', 'cám ơn Bơ', 'cả ngày mệt', '🐟🐟',
       'thương Bơ ghê', 'dễ thương quá', 'yêu cầu gửi báo cáo', 'mình yêu Bơ', 'hihi ❤️', 'hôm nay đi làm', '', null, 'việc cá nhân', 'cá tính mạnh', 'mua cá'].map(C.boPhanUngTin)))""")
     assert v == ["ca", None, None, None, "ca", "tim", "tim", None, "tim", "tim", None, None, None, None, None, "ca"]
+
+
+def test_chon_mon_an():
+    v = node("""console.log(JSON.stringify([
+      Object.keys(C.BO_MON_AN), ['ca', 'sua', 'pate', 'banh', '', null, undefined, 'toString'].map(C.boMonAn),
+      Object.values(C.BO_MON_AN).map(m => [m.ten, C.BO_CAU_CHOI[m.cau].length > 0, C.BO_DOC_TO.includes(m.cau), m.svg.startsWith('<svg')])]))""")
+    assert v[0] == ["ca", "sua", "pate"]
+    assert v[1] == ["ca", "sua", "pate", "ca", "ca", "ca", "ca", "ca"]  # món lạ → cá
+    assert v[2] == [["Cá", True, True, True], ["Sữa", True, True, True], ["Pate", True, True, True]]
+
+
+def test_trang_co_menu_chon_mon(tmp_path):
+    html = make_client(tmp_path, []).get("/").text
+    assert 'id="menuAn"' in html and 'role="menu"' in html and 'aria-controls="menuAn"' in html
+    choi = (config.ROOT / "web" / "choi.js").read_text(encoding="utf-8")
+    assert "localStorage.setItem('bo_mon_an'" in choi  # nhớ món vừa chọn trên máy này
+    assert "cho_an > 5" in choi  # vẫn không có thanh đói: ăn nhiều chỉ bảo no

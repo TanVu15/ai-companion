@@ -45,6 +45,7 @@ const MEO_SVG = `
     <path class="mieng mieng-w net" d="M100,91 L100,93 M90,93 Q95,99 100,93 Q105,99 110,93"/>
     <path class="mieng mieng-buon net" d="M91,100 Q100,92 109,100"/>
     <g class="mieng mieng-mo"><ellipse class="trong-mieng" cx="100" cy="98" rx="8" ry="7"/><ellipse class="luoi" cx="100" cy="102" rx="5" ry="3"/></g>
+    <path class="rau-sua" d="M83,94 Q91,89 100,93 Q109,89 117,94 Q118,99 113,98 Q112,103 108.5,98.5 Q100,101 91.5,98.5 Q88,103 87,98 Q82,99 83,94 Z"/>
     <path class="luoi-liem" d="M96,94 Q100,104 104,94 Z"/>
     <path class="ria" d="M62,88 L28,82 M62,94 L26,96 M138,88 L172,82 M138,94 L174,96"/>
   </g>

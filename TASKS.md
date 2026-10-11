@@ -358,7 +358,7 @@
 
 ## Giai đoạn 65 – Lông vũ & bữa ăn (Claude tự thêm, trong hướng mèo/chạm)
 - [x] Lông vũ quét ngang mũi Bơ → Bơ hắt xì "Hắt xì!" (lâu lâu, không lặp liền)
-- [ ] Cho ăn đa dạng: nhấn giữ nút cá để chọn cá / sữa / pate; mỗi món có hình và câu riêng (vẫn không có thanh đói)
+- [x] Cho ăn đa dạng: nhấn giữ nút cá để chọn cá / sữa / pate; mỗi món có hình và câu riêng (vẫn không có thanh đói)
 - [ ] Rà soát giai đoạn 65, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)

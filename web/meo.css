@@ -18,6 +18,8 @@
 .meo .ria { stroke: var(--vien); stroke-width: 2; stroke-linecap: round; opacity: .7; }
 .meo .trong-mieng { fill: #8c3a3e; stroke: var(--muc); stroke-width: 2.5; } .meo .luoi { fill: var(--hong); }
 .meo .luoi-liem { fill: var(--hong); stroke: var(--muc); stroke-width: 1.5; display: none; }
+.meo .rau-sua { fill: #fffdf7; stroke: #cfc6b4; stroke-width: 1; display: none; }
+.meo.dinh-sua:not(.doi) .rau-sua { display: inline; }
 .meo .zzz { display: none; fill: var(--muted); font: 700 16px system-ui, sans-serif; }
 
 /* Gốc xoay của từng bộ phận (tọa độ trong khung 200×192) */
@@ -164,6 +166,16 @@ header.dang-laser { touch-action: none; cursor: crosshair; position: relative; }
 .tim { position: absolute; color: #f06a86; font-size: 18px; pointer-events: none; z-index: 2; transform: translate(-50%, -50%); }
 .ca-an { position: absolute; left: 50%; bottom: 0; width: 40px; height: 26px; margin-left: -20px; pointer-events: none; z-index: 2; }
 .ca-an svg { width: 100%; height: 100%; }
+/* Chọn món: nhấn giữ nút cá */
+#choAn { -webkit-touch-callout: none; user-select: none; -webkit-user-select: none; touch-action: manipulation; }
+.menu-an { position: absolute; left: 0; bottom: 58px; z-index: 4; display: flex; flex-direction: column; gap: 4px; padding: 6px;
+  background: var(--panel); border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 4px 14px rgba(0,0,0,.15); }
+.menu-an[hidden] { display: none; }
+.menu-an button { display: flex; align-items: center; gap: 8px; min-height: 40px; padding: 4px 12px 4px 6px; border-radius: 10px;
+  background: transparent; color: var(--text); border: 1px solid transparent; font-size: 14px; font-weight: 500; cursor: pointer; text-align: left; }
+.menu-an button svg { width: 32px; height: 20px; flex: none; }
+.menu-an button:hover, .menu-an button:focus-visible { background: var(--bot); outline: none; }
+.menu-an button[aria-checked="true"] { border-color: var(--border); background: var(--bot); }
 .laser { position: absolute; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; background: #ff3b3b;
   box-shadow: 0 0 8px 3px rgba(255,59,59,.55); pointer-events: none; z-index: 3; }
 
