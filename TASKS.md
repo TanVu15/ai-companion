@@ -295,7 +295,12 @@
 - [x] Khuya (22h–5h) vuốt Bơ → câu riêng nhẹ nhàng ("khuya rồi, bạn ngủ sớm nha~"), không ép
 - [x] Cài đặt giọng: nút mẫu nhanh "Mèo con" / "Mèo béo lười" / "Mặc định" (đặt sẵn tốc độ + cao độ)
 - [x] README: cập nhật ảnh và mô tả chạm & chơi mới (lăn nũng, cuộn len, mừng rỡ)
-- [ ] Rà soát giai đoạn 53, sửa lỗi tìm được
+- [x] Rà soát giai đoạn 53, sửa lỗi tìm được
+
+## Giai đoạn 54 – Tư thế & bộ lông (Claude tự thêm, trong hướng mèo)
+- [x] Rảnh 1 phút: Bơ nằm bẹp kiểu "ổ bánh mì" (giấu chân, đuôi quấn); 3 phút mới ngủ gật; có gì là ngồi dậy
+- [ ] Kiểu lông: mướp vằn, tam thể, mèo đen mắt vàng… chọn cạnh bảng màu lông (lưu trên máy)
+- [ ] Rà soát giai đoạn 54, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):

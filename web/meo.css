@@ -264,3 +264,12 @@ header.dang-laser { touch-action: none; cursor: crosshair; position: relative; }
 .meo.hong .nhin { transform: translate(0, 3.5px); }
 .meo.hong .ear-l { transform: rotate(8deg); } .meo.hong .ear-r { transform: rotate(-8deg); }
 .meo.hong .head { transform: translateY(2px) rotate(3deg); }
+
+/* Rảnh 1 phút: nằm bẹp kiểu "ổ bánh mì" — giấu chân, thân hạ thấp, đuôi quấn quanh người, mắt lim dim */
+.meo .paw, .meo .chan-sau { transition: transform .3s, opacity .4s; }
+.meo.bep .paw, .meo.bep .chan-sau { opacity: 0; }
+.meo.bep .body { translate: 0 6px; scale: 1.05 .93; }
+.meo.bep .head { translate: 0 10px; }
+.meo.bep .tail { display: none; } .meo.bep .tail-ngu { display: inline; }
+.meo.bep .mat-mo { transform: scaleY(.7); } .meo.bep.chop .mat-mo { transform: scaleY(.1); }
+@media (prefers-reduced-motion: no-preference) { .meo .body, .meo .head { transition: translate .6s ease, scale .6s ease, transform .35s ease; } }

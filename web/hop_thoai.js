@@ -144,10 +144,17 @@ menuDlg.addEventListener('click', ev => {
 
 // ---- Ngủ gật: 3 phút không ai đụng tới thì Bơ nhắm mắt; chạm/gõ/nói là tỉnh ----
 var SLEEP_AFTER = 3 * 60 * 1000;
-var idleTimer = null;
+var idleTimer = null, bepTimer = null;
+// 1 phút không ai đụng: Bơ nằm bẹp kiểu "ổ bánh mì" (giấu chân); 3 phút: ngủ gật. Có gì xảy ra là ngồi dậy.
 function scheduleSleep() {
-  clearTimeout(idleTimer);
-  idleTimer = setTimeout(() => { if (!send.disabled && !speaking) express('ngu'); }, SLEEP_AFTER);
+  clearTimeout(idleTimer); clearTimeout(bepTimer);
+  if (window.meo) meo.dat('bep', false);
+  bepTimer = setTimeout(() => { if (!send.disabled && !speaking && face.dataset.e !== 'ngu' && window.meo) meo.dat('bep', true); }, 60 * 1000);
+  idleTimer = setTimeout(() => {
+    if (send.disabled || speaking) return;
+    if (window.meo) meo.dat('bep', false);
+    express('ngu');
+  }, SLEEP_AFTER);
 }
 function wake() {
   if (face.dataset.e === 'ngu') express('binh_thuong'); else scheduleSleep();
