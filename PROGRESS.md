@@ -5,10 +5,13 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
-## 2026-10-11 – Giai đoạn 55 (đang làm): thêm chút sống động
+## 2026-10-11 – Giai đoạn 55 xong: thêm chút sống động
 - Ngủ say: Bơ thỉnh thoảng giật tai trong mơ hoặc trở mình. Đang đọc to: đuôi vẫy nhanh hơn, tai động nhẹ.
 - **Cần câu lông vũ** (nút xanh, trên nút laser): lông vũ treo dây, lắc lư theo ngón tay/chuột; đưa lên trên đầu Bơ là Bơ giơ hai chân trước vồ. Ảnh `docs/anh/long-vu.png`. Mỗi lúc chỉ một đồ chơi (bật cái này thì cất cái kia).
 - Sửa: mỗi câu giọng AI trước đây để lại một "nút âm thanh" trong trình duyệt → nói chuyện bằng giọng rất lâu sẽ nặng dần; giờ ngắt sau mỗi câu.
+- Rà soát: đang chơi lông vũ mà nhấn giữ lên Bơ thì không bị nhầm thành "lăn nũng"/chọc bụng. README cập nhật bảng chạm & chơi, ảnh kiểu lông. 400 test qua hết.
+**Tân cần thử (giai đoạn 51–55, đều miễn phí):** nhấn giữ bụng Bơ 1 giây; bấm nút cuộn len rồi kéo ném; bấm nút lông vũ rồi rê lên trên đầu Bơ;
+chọn kiểu lông "Tam thể" trong Cài đặt; bật "Giọng nói" rồi cho Bơ ăn cá; thử 3 giọng mẫu. Thấy chỗ nào xấu/khó dùng thì ghi `FEEDBACK.md`.
 
 ## 2026-10-11 – Giai đoạn 54: tư thế & bộ lông
 Ảnh: `docs/anh/kieu-long.png` (thường · mướp vằn · tam thể · mèo đen), `docs/anh/meo-o-banh-mi.png`, `docs/anh/meo-den-toi.png`.

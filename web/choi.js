@@ -238,7 +238,7 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
     try { face.setPointerCapture(ev.pointerId); } catch (e) {}
     clearTimeout(henLan);
     const p = toaDo(ev), vung = p && boVungCham(p.x, p.y);
-    if (!b.ngu && !laserBat && (vung === 'bung' || vung === 'lung')) {
+    if (!b.ngu && !laserBat && !lv && (vung === 'bung' || vung === 'lung')) {
       henLan = setTimeout(() => {
         if (bam !== b || b.di >= 10 || dangDoi() || (typeof speaking !== 'undefined' && speaking)) return;
         giu('lan', 3200); noi('lan', true);

@@ -308,7 +308,13 @@
 - [x] Ngủ say thì thỉnh thoảng Bơ giật tai trong mơ hoặc trở mình
 - [x] Bơ đang đọc to thì đuôi vẫy nhanh hơn, tai động nhẹ
 - [x] Đồ chơi cần câu lông vũ: lông vũ lơ lửng trên đầu Bơ theo ngón tay, Bơ đứng lên vồ bằng hai chân trước
-- [ ] Rà soát giai đoạn 55, sửa lỗi tìm được
+- [x] Rà soát giai đoạn 55, sửa lỗi tìm được
+
+## Giai đoạn 56 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
+- [ ] Rà soát toàn bộ choi.js (đã dài ~500 dòng): tách đồ chơi (laser, cuộn len, lông vũ) ra file riêng web/do_choi.js cho dễ sửa, giữ nguyên hành vi, có test
+- [ ] Đồ chơi dùng được bằng bàn phím: phím mũi tên di chuyển laser/lông vũ, Enter ném cuộn len
+- [ ] Bơ phản ứng khi Tân nói "Bơ ơi" bằng rảnh tay: quay đầu, tai dựng trước khi trả lời
+- [ ] Rà soát giai đoạn 56, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):

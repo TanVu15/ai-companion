@@ -14,10 +14,14 @@ Mèo vẽ bằng SVG (`web/meo.js`, `web/meo.css`), đọc JSON cảm xúc từ 
 | **Vuốt** đầu/lưng → nhắm mắt, kêu rừ rừ, tim bay | **Gãi cằm** → ngửa cổ sướng · **Chạm tai** → tai giật |
 | **Chọc bụng** → giật mình; chọc 5 lần liền → dỗi quay lưng | **Nhấn giữ bụng/lưng ~1 giây** → lăn qua lăn lại nũng nịu |
 | **Nút cá** → Bơ ăn, liếm mép | **Nút cuộn len** → kéo ném, len lăn, nảy, Bơ vồ |
-| **Nút chấm đỏ** → tia laser theo ngón tay, Bơ nhìn theo và vồ | Mắt Bơ **nhìn theo** chuột/ngón tay; đang gõ tin thì Bơ **hóng chuyện** |
+| **Nút chấm đỏ** → tia laser theo ngón tay, Bơ nhìn theo và vồ | **Nút lông vũ** → cần câu lông vũ, đưa lên đầu Bơ là Bơ giơ chân vồ |
+| Mắt Bơ **nhìn theo** chuột/ngón tay | Đang gõ tin thì Bơ **hóng chuyện**; rảnh 1 phút Bơ nằm bẹp "ổ bánh mì" |
 
 Lâu rồi mới mở web thì Bơ mừng rỡ "Bạn về rồi!"; sáng sớm Bơ vươn vai; khuya Bơ lim dim. Không có thanh "đói", không bị phạt khi bỏ đi lâu.
 Bàn phím: Tab tới Bơ, Enter = xoa đầu, phím cách = gãi cằm.
+Đổi màu lông và **kiểu lông** (thường, mướp vằn, tam thể, mèo đen) trong "Bơ làm được gì? · Cài đặt".
+
+<img src="docs/anh/kieu-long.png" width="520" alt="Các kiểu lông của Bơ">
 
 <img src="docs/anh/meo-lan.png" width="240" alt="Bơ lăn nũng"> <img src="docs/anh/cuon-len.png" width="240" alt="Bơ chơi cuộn len"> <img src="docs/anh/meo-mung.png" width="240" alt="Bơ mừng rỡ">
 
