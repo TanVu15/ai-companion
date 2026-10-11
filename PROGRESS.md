@@ -655,3 +655,9 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 
 **Tân cần thử (giai đoạn 37):** "theo dõi giúp mình thói quen uống 2 lít nước" → "uống đủ nước rồi nè" → bấm "Thói quen" xem đã tích chưa.
 
+## 2026-10-11 – Giai đoạn 38: tài liệu & cổng thiết bị
+- Cổng thiết bị `/api/thiet-bi/thoi-quen` (thói quen cho màn hình nhỏ), ghi trong THIET_BI.md.
+- Nút "?" → "Bơ làm được gì?" thêm: nhắc thứ 2–6 / hằng tháng, đếm ngược Tết, nhật ký, thói quen, lịch điện thoại, tự sao lưu.
+- SU_CO.md thêm 5 sự cố (khôi phục bản tự sao lưu, lịch điện thoại, nhật ký sai, thói quen không tích).
+- 238 test qua hết.
+

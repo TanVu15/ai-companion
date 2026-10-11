@@ -30,6 +30,11 @@
 | Dòng lịch / ngày âm lệch một ngày | Giờ hoặc múi giờ máy tính sai | Chỉnh đồng hồ Windows về múi giờ (UTC+07:00) Bangkok, Hà Nội |
 | Đã sửa `.env` (thành phố, giờ yên lặng) mà không đổi | Mục đó đã chỉnh trên web, web được ưu tiên | Nút "?" → Cài đặt → "Về như file .env", hoặc sửa luôn trên web |
 | Kể ngày giỗ âm mà Bơ ghi thành ngày dương | AI hiểu nhầm | "Bơ nhớ gì về mình?" → Xóa ngày đó, kể lại rõ "… theo âm lịch" (ngày âm có chữ "(âm lịch)") |
+| Lỡ "Xóa hết" trí nhớ / file trí nhớ hỏng | — | "Bơ nhớ gì về mình?" → "Nạp bản sao lưu" → chọn file mới nhất trong `data/sao_luu/` |
+| "Tải lịch cho điện thoại" báo "Chưa có ngày đặc biệt..." | Chưa có gì để đưa vào lịch | Kể Bơ một ngày đặc biệt hoặc nhờ nhắc việc trước |
+| Thêm ngày mới mà lịch điện thoại không có | File lịch là bản chụp lúc tải | Tải lại và mở lại file (điện thoại cập nhật, không nhân đôi) |
+| Bơ ghi nhật ký sai / thừa | AI tóm nhầm | Nút "Nhật ký" → "Sửa" hoặc "Xóa" dòng đó |
+| Kể "đọc sách rồi" mà thói quen không được tích | Tên kể khác xa tên thói quen | Nút "Thói quen" → tự tích ô hôm nay; hoặc đặt tên thói quen ngắn, dễ nhắc |
 | Lỡ đổi màu mặt Bơ | — | Nút "?" → Màu mặt Bơ → chọn "Vàng (mặc định)" |
 | Mới `git pull` mà web vẫn cũ | Cửa sổ `run.bat` cũ còn chạy | Tắt cửa sổ đó, chạy lại `run.bat` (nó tự cài thêm thư viện mới nếu có). Vẫn lỗi thư viện thì xóa thư mục `.venv` rồi chạy lại |
 | Hỏi mật khẩu mãi | Gõ sai `APP_PASSWORD` | Mật khẩu phân biệt hoa/thường, tên đăng nhập gõ gì cũng được |

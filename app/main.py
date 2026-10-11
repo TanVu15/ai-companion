@@ -860,6 +860,17 @@ def device_todos(request: Request, khong_dau: int = 0):
     return [_device_out({"viec": t["viec"]}, khong_dau) for t in items]
 
 
+@app.get("/api/thiet-bi/thoi-quen")
+def device_habits(request: Request, khong_dau: int = 0):
+    """Thói quen hằng ngày cho màn hình nhỏ: [{"ten", "hom_nay": true/false, "chuoi": số ngày liền}]."""
+    _check_device(request)
+    brain = get_brain()
+    with brain._lock:
+        items = brain.memory.habits()
+    return [{"ten": bo_dau(h["ten"]) if khong_dau else h["ten"], "hom_nay": h["hom_nay"], "chuoi": h["chuoi"]}
+            for h in items]
+
+
 @app.get("/api/thiet-bi/hom-nay")
 def device_today(request: Request, khong_dau: int = 0):
     """Cho màn hình đồng hồ: {"thu", "duong", "am", "nam_am", "le": [...], "sap_toi": [{"ten", "con_ngay", "ngay"}]}.

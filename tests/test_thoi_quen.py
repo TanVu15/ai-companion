@@ -78,3 +78,14 @@ def test_ten_co_ngoac(memory):
     memory.add_habits(["Đọc sách"])
     memory.done_habits(["Uống nước"])  # tên khác thì không đánh nhầm
     assert {h["ten"]: h["hom_nay"] for h in memory.habits()}["Đọc sách"] is False
+
+
+def test_cong_thiet_bi(tmp_path, monkeypatch):
+    from app import config, main
+
+    c = make_client(tmp_path, [])
+    main._brain.memory.add_habits(["Đọc sách"])
+    monkeypatch.setattr(config, "DEVICE_KEY", "k")
+    r = c.get("/api/thiet-bi/thoi-quen?khong_dau=1", headers={"X-Device-Key": "k"}).json()
+    assert r == [{"ten": "Doc sach", "hom_nay": False, "chuoi": 0}]
+    assert c.get("/api/thiet-bi/thoi-quen", headers={"X-Device-Key": "sai"}).status_code == 401

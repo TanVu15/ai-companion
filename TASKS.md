@@ -195,6 +195,9 @@
 - [x] Nút "Thói quen" trên web: đánh dấu hôm nay, chuỗi ngày liền, số ngày/tuần; có trong sao lưu
 - [x] Rà soát code lần 17, sửa lỗi tìm được
 
+## Giai đoạn 38 – Tài liệu & cổng thiết bị (chỉ phần mềm, Claude tự thêm)
+- [x] Cổng thiết bị /api/thiet-bi/thoi-quen; mục "Bơ làm được gì?" và SU_CO.md cập nhật tính năng mới
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo

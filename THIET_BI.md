@@ -59,6 +59,11 @@ Màn hình nhỏ có thể hiện khi Tân hỏi "còn việc gì?" hoặc lúc 
 `sap_toi`: tối đa 3 ngày lễ / ngày đặc biệt của bạn trong 30 ngày tới, gần nhất trước
 (ngày âm tính sẵn trên máy chủ, thiết bị không cần tự tính). `?khong_dau=1` để bỏ dấu. Không tốn tiền API.
 
+### 6. Thói quen: `GET /api/thiet-bi/thoi-quen`
+
+`[{"ten": "Đọc sách", "hom_nay": false, "chuoi": 3}]` — thói quen Tân nhờ Bơ theo dõi: hôm nay làm chưa, chuỗi mấy
+ngày liền. `?khong_dau=1` để bỏ dấu. Không tốn tiền API.
+
 ## Lỗi thường gặp
 
 | Mã | Nghĩa | Thiết bị nên làm |
