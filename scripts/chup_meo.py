@@ -23,7 +23,7 @@ from app import config  # noqa: E402
 TRANG_THAI = config.EMOTIONS + ["ngu"]
 # (Ảnh chụp cả trang cho PROGRESS.md đừng đặt tên meo-<tư thế>.png: script này sẽ ghi đè.)
 TRANG_THAI_NHO = ["ngap", "liem", "cho", "lan", "mung", "bep", "hong", "nghe", "nguoc-long", "dap-tay", "rua-mat", "chong-mat",
-                  "hat-xi", "boop", "nung-ma-trai", "be", "dinh-sua", "rinh", "vo-rinh", "nhoi"]
+                  "hat-xi", "boop", "nung-ma-trai", "be", "dinh-sua", "rinh", "vo-rinh", "nhoi", "chop-cham"]
 
 
 def cong_trong():

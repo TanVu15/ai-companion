@@ -332,3 +332,10 @@ def test_chop_mat_cham():
     assert v == [False, True, False, True]
     css = (config.ROOT / "web" / "meo.css").read_text(encoding="utf-8")
     assert "meo-chop-cham" in css
+
+
+def test_chop_cham_khong_chen_khi_vuot_lai():
+    """Đang chớp mắt chậm mà vuốt lại thì thôi chớp; đang bế/đang vuốt thì không chớp chen vào."""
+    choi = (config.ROOT / "web" / "choi.js").read_text(encoding="utf-8")
+    assert "svg.classList.remove('chop-cham');" in choi
+    assert "if (!vuotDangChay && !svg.classList.contains('be')" in choi

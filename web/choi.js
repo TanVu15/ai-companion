@@ -386,6 +386,7 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boChiTietDau, 
     const loai = vung === 'cam' ? 'gai_cam' : 'vuot';
     if (!vuotDangChay) {
       vuotDangChay = loai; dem(loai); vuotBatDau = Date.now(); daNoiNhoi = false;
+      svg.classList.remove('chop-cham');  // vuốt lại thì Bơ nhắm mắt lim dim như thường
       const h = new Date().getHours();
       noi(loai === 'vuot' && (h >= 22 || h < 5) && Math.random() < 0.5 ? 'khuya' : loai);
     }
@@ -402,7 +403,8 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boChiTietDau, 
       // vuốt xong một lượt dài: Bơ mở mắt nhìn mình, chớp thật chậm một cái
       if (vuotDangChay === 'vuot' && face.dataset.e !== 'ngu' && !dangDoi() && !svg.classList.contains('be')
           && boChopCham((Date.now() - vuotBatDau - 700) / 1000, Date.now() - lanChopCham)) {
-        lanChopCham = Date.now(); setTimeout(() => giu('chop-cham', 1700), 250);
+        lanChopCham = Date.now();
+        setTimeout(() => { if (!vuotDangChay && !svg.classList.contains('be') && face.dataset.e !== 'ngu') giu('chop-cham', 1700); }, 250);
       }
       vuotDangChay = false; quangVuot = 0; viTriTruoc = null; grgr(false);
     }, 700);

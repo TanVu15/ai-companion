@@ -388,7 +388,7 @@
 
 ## Giai đoạn 71 – Bơ thương mình (Claude tự thêm, trong hướng mèo/chạm)
 - [x] Chớp mắt chậm (kiểu mèo nói "thương bạn"): vuốt xong một lượt dài (từ 3 giây) thì Bơ nhìn mình chớp mắt thật chậm một cái (nghỉ 20 giây giữa hai lần)
-- [ ] Rà soát giai đoạn 71, sửa lỗi tìm được
+- [x] Rà soát giai đoạn 71, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):

@@ -5,8 +5,10 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
-## 2026-10-11 – Giai đoạn 71 (đang làm): Bơ thương mình
+## 2026-10-11 – Giai đoạn 71 xong: Bơ thương mình
 - **Chớp mắt chậm**: vuốt Bơ một lượt dài (từ 3 giây) rồi buông tay → Bơ mở mắt nhìn mình, khép mắt thật chậm rồi mở ra (mèo thật làm vậy để nói "thương bạn"). Tối đa 20 giây một lần. Ảnh `docs/anh/meo-chop-cham.png`.
+- Rà soát, sửa: đang chớp chậm mà vuốt lại thì Bơ lim dim như thường (trước đây mắt bị kẹt nửa mở); vừa buông tay đã bế thì không chớp chen vào. 4 kiểu lông, nền sáng/tối đều rõ (ảnh `docs/anh/chop-cham-kieu-long.png`). 429 test qua hết, `scripts/thu_cham.py` đạt hết.
+**Tân cần thử:** vuốt lưng Bơ vài giây rồi buông tay, nhìn mắt Bơ.
 
 ## 2026-10-11 – Giai đoạn 70 xong: Bơ sướng & săn giỏi
 - **Nhồi bột**: vuốt lưng hay đầu Bơ liền một mạch khoảng 6 giây → Bơ sướng quá, hai chân trước dẫm luân phiên lên xuống (kiểu mèo con "nhồi bột"), mắt lim dim, má hồng, "Nhồi nhồi... Bơ nhồi bột nè~". Ảnh `docs/anh/meo-nhoi-bot.png`. `scripts/thu_cham.py` thử thêm — đạt hết.
