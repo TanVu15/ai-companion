@@ -314,7 +314,13 @@
 - [x] Rà soát toàn bộ choi.js (đã dài ~500 dòng): tách đồ chơi (laser, cuộn len, lông vũ) ra file riêng web/do_choi.js cho dễ sửa, giữ nguyên hành vi, có test
 - [x] Đồ chơi dùng được bằng bàn phím: phím mũi tên di chuyển laser/lông vũ, mũi tên hất cuộn len
 - [x] Bơ phản ứng khi Tân nói "Bơ ơi" bằng rảnh tay: nghiêng đầu, bong bóng "Dạ? Bơ nghe nè!" (chỉ chữ, không đọc to để micro khỏi nghe nhầm)
-- [ ] Rà soát giai đoạn 56, sửa lỗi tìm được
+- [x] Rà soát giai đoạn 56, sửa lỗi tìm được
+
+## Giai đoạn 57 – Chạm tinh tế hơn (Claude tự thêm, trong hướng mèo/chạm)
+- [ ] Vuốt ngược lông (từ đuôi lên đầu, hướng ngược) → Bơ nhăn mặt, lông dựng nhẹ, "Ngược lông rồi á!"; vuốt xuôi mới rừ rừ (hàm tính hướng vuốt có test)
+- [ ] Chạm nhanh hai lần lên chân trước → Bơ giơ chân "đập tay" (high five), bong bóng "Đập tay nè!"
+- [ ] Rảnh lâu (trước khi nằm bẹp), thỉnh thoảng Bơ tự rửa mặt bằng chân hoặc ngó quanh (không gọi API, tôn trọng giảm chuyển động)
+- [ ] Rà soát giai đoạn 57, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):

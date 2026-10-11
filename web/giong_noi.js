@@ -179,7 +179,7 @@ function speakTrinhDuyet(text, id) {
 }
 const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
 const handsBtn = document.getElementById('handsBtn');
-let rec = null, listening = false, handsFree = false, paused = false, awaitUntil = 0, micSession = false;
+let rec = null, listening = false, handsFree = false, paused = false, awaitUntil = 0, micSession = false, henChoGoi = null;
 function startRec() {
   if (!rec || listening) return;
   rec.continuous = handsFree; rec.interimResults = !handsFree;
@@ -201,6 +201,11 @@ function handsHeard(text) {
   if (cmd === '') {  // chỉ gọi "Bơ ơi": Bơ quay sang, tai dựng, "Dạ?" rồi chờ 8 giây
     awaitUntil = Date.now() + 8000; express('ngac_nhien', 'nghieng_dau'); statusEl.textContent = 'Bơ nghe nè...';
     if (window.boChoi) boChoi.noi('goi', true);
+    // hết 8 giây mà chưa nói gì: dòng trạng thái quay về lời nhắc cũ (trước đây cứ kẹt "Bơ nghe nè...")
+    clearTimeout(henChoGoi);
+    henChoGoi = setTimeout(() => {
+      if (handsFree && Date.now() >= awaitUntil && statusEl.textContent === 'Bơ nghe nè...') statusEl.textContent = 'Gọi "Bơ ơi" để nói chuyện';
+    }, 8100);
     return;
   }
   awaitUntil = 0; input.value = cmd; pauseListening(); lanGuiTuGiong = true; form.requestSubmit();
