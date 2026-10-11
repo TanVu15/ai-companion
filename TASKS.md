@@ -294,7 +294,7 @@
 - [x] Bơ hóng chuyện: đang gõ tin → Bơ nhìn xuống khung chat, tai vểnh; ngừng gõ 2 giây thì thôi
 - [x] Khuya (22h–5h) vuốt Bơ → câu riêng nhẹ nhàng ("khuya rồi, bạn ngủ sớm nha~"), không ép
 - [x] Cài đặt giọng: nút mẫu nhanh "Mèo con" / "Mèo béo lười" / "Mặc định" (đặt sẵn tốc độ + cao độ)
-- [ ] README: cập nhật ảnh và mô tả chạm & chơi mới (lăn nũng, cuộn len, mừng rỡ)
+- [x] README: cập nhật ảnh và mô tả chạm & chơi mới (lăn nũng, cuộn len, mừng rỡ)
 - [ ] Rà soát giai đoạn 53, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)

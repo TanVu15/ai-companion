@@ -7,6 +7,20 @@ Mèo vẽ bằng SVG (`web/meo.js`, `web/meo.css`), đọc JSON cảm xúc từ 
 
 ![Các cảm xúc của Bơ](docs/anh/meo-tat-ca.png)
 
+## Chạm & chơi với Bơ (miễn phí, không tốn API)
+
+| | |
+|---|---|
+| **Vuốt** đầu/lưng → nhắm mắt, kêu rừ rừ, tim bay | **Gãi cằm** → ngửa cổ sướng · **Chạm tai** → tai giật |
+| **Chọc bụng** → giật mình; chọc 5 lần liền → dỗi quay lưng | **Nhấn giữ bụng/lưng ~1 giây** → lăn qua lăn lại nũng nịu |
+| **Nút cá** → Bơ ăn, liếm mép | **Nút cuộn len** → kéo ném, len lăn, nảy, Bơ vồ |
+| **Nút chấm đỏ** → tia laser theo ngón tay, Bơ nhìn theo và vồ | Mắt Bơ **nhìn theo** chuột/ngón tay; đang gõ tin thì Bơ **hóng chuyện** |
+
+Lâu rồi mới mở web thì Bơ mừng rỡ "Bạn về rồi!"; sáng sớm Bơ vươn vai; khuya Bơ lim dim. Không có thanh "đói", không bị phạt khi bỏ đi lâu.
+Bàn phím: Tab tới Bơ, Enter = xoa đầu, phím cách = gãi cằm.
+
+<img src="docs/anh/meo-lan.png" width="240" alt="Bơ lăn nũng"> <img src="docs/anh/cuon-len.png" width="240" alt="Bơ chơi cuộn len"> <img src="docs/anh/meo-mung.png" width="240" alt="Bơ mừng rỡ">
+
 Chụp lại ảnh sau khi sửa giao diện: `python scripts/chup_meo.py` (cần `pip install playwright`).
 
 ## Chạy trên Windows
@@ -29,8 +43,10 @@ Chụp lại ảnh sau khi sửa giao diện: `python scripts/chup_meo.py` (cầ
 
 ## Nói chuyện bằng giọng
 
-- **Bơ đọc to câu trả lời:** bấm "Giọng nói: tắt" dưới khuôn mặt để bật. Dùng giọng có sẵn của máy (iPhone và Windows thường có giọng tiếng Việt; không có thì máy đọc giọng khác).
-- **Bắt Bơ im:** chạm vào khuôn mặt khi Bơ đang đọc.
+- **Bơ đọc to câu trả lời:** bấm "Giọng nói: tắt" dưới mèo để bật. Bơ dùng **giọng AI miễn phí** (edge-tts, giọng tiếng Việt của Microsoft, cần mạng, không cần tài khoản); giọng vui/buồn nhẹ theo cảm xúc của câu. Không có mạng thì tự dùng giọng có sẵn của máy.
+- **Chỉnh giọng:** "Bơ làm được gì? · Cài đặt" → chọn giọng, tốc độ, cao độ, hoặc giọng mẫu "Mèo con" / "Mèo béo lười". Mục **Tình trạng** báo giọng AI có dùng được không.
+- **Giữ để nói:** giữ nút to dưới mèo, nói, thả tay là gửi; Bơ trả lời ngắn và đọc to.
+- **Bắt Bơ im:** chạm vào Bơ khi Bơ đang đọc (hoặc bấm Esc).
 - **Nói thay vì gõ:** bấm nút micro cạnh nút Gửi, nói xong ngừng một chút là tự gửi. Chạy tốt nhất trên Chrome, Edge, Safari.
 - **Rảnh tay:** bấm "Rảnh tay: tắt" để bật. Bơ nghe liên tục nhưng chỉ trả lời khi được gọi: "Bơ ơi, hôm nay trời đẹp ghê" hoặc gọi "Bơ ơi" trước rồi nói trong 8 giây. Lúc Bơ đang nói thì tạm ngừng nghe.
 - Nút micro chỉ hiện khi mở bằng `http://localhost:8000` hoặc link `https://...` (trình duyệt chặn micro trên địa chỉ `http://192.168...`). Trên iPhone muốn dùng micro thì dùng link https ở [DUA_LEN_MANG.md](DUA_LEN_MANG.md) (Cách 2), hoặc dùng nút micro trên bàn phím iPhone để đọc chính tả.
