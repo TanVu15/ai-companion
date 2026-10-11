@@ -351,7 +351,7 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
         (typeof speaking !== 'undefined' && speaking) || svg.classList.contains('lan')) return;
     nguiCuoi = Date.now(); conChoi();
     giu('ngui', 1300);
-    setTimeout(() => { if (!dangDoi()) { giu('co-ma', 1600); grgr(true); setTimeout(() => grgr(false), 1500); noi('ngui', true); } }, 1200);
+    setTimeout(() => { if (!dangDoi()) { giu('co-ma', 1600); grgr(true); setTimeout(() => { if (!vuotDangChay) grgr(false); }, 1500);  /* đang được vuốt thì cứ rừ rừ tiếp */ noi('ngui', true); } }, 1200);
   }
   face.addEventListener('pointerdown', theoMui);
   face.addEventListener('pointermove', ev => { if (bam || ev.pointerType === 'mouse') theoMui(ev); });

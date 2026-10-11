@@ -90,3 +90,10 @@ def test_viec_vat_luc_ranh():
     assert all(1000 < ms < 4000 for ms in ra.values())
     for cls in ("rua-mat", "ngo"):
         assert f".meo.{cls}" in CSS, cls
+
+
+def test_moi_file_js_khong_loi_cu_phap():
+    # Lỗi cú pháp ở một file làm hỏng cả phần web của file đó (mèo đứng im, nút không chạy) — bắt sớm ở đây
+    for f in sorted((ROOT / "web").glob("*.js")):
+        r = subprocess.run(["node", "--check", str(f)], capture_output=True, text=True, timeout=30)
+        assert r.returncode == 0, f"{f.name}: {r.stderr}"
