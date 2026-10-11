@@ -282,7 +282,7 @@
 - [x] Mở web sau lâu (từ 1 ngày) → Bơ mừng rỡ: nhảy cẫng, bong bóng "Bạn về rồi!" (không trách, không gọi API)
 - [x] Nhấn giữ lên lưng/bụng khoảng 1 giây → Bơ lăn qua lăn lại nũng nịu, co chân trước lên ngực
 - [x] Theo giờ: khuya (sau 22h) Bơ lim dim, hay ngáp hơn; sáng sớm mở web thì Bơ vươn vai
-- [ ] Rà soát giai đoạn 51, sửa lỗi tìm được
+- [x] Rà soát giai đoạn 51, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):

@@ -12,6 +12,7 @@
   Sáng sớm (5–10h) lần đầu mở sau ít nhất 4 tiếng → Bơ vươn vai "chào buổi sáng".
 - **Nhấn giữ lưng/bụng ~1 giây** → Bơ lăn qua lăn lại nũng nịu, co hai chân trước lên ngực ("Gãi bụng Bơ đi mà~").
 - **Khuya (22h–5h)**: mắt Bơ lim dim, hay ngáp hơn.
+- Rà soát: đang lăn mà bị chọc 5 lần thì Bơ dỗi quay lưng đúng (trước bị kẹt tư thế lăn); giữ lâu trên iPhone không hiện menu "Sao chép".
 - 394 test qua hết.
 **Tân cần thử:** trên điện thoại, đặt ngón tay lên bụng Bơ và giữ yên 1 giây.
 

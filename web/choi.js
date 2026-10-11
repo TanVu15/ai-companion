@@ -186,7 +186,7 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
       dem('choc');
       if (mocChoc.length >= 5) {
         mocChoc = [];
-        giu('doi', 4500); noi('doi', true);
+        svg.classList.remove('lan'); giu('doi', 4500); noi('doi', true);
         setTimeout(() => { noi('lanh', true); giu('lanh', 1200); }, 4600);
       } else { giu('giat', 500); noi('choc'); }
     } else if (vung === 'cam') {
