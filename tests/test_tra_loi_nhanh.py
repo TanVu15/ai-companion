@@ -25,6 +25,8 @@ def memory(tmp_path):
     ("mấy h rồi", "gio"), ("mấy giờ r", "gio"), ("mấy giờ rồi ta", "gio"), ("thứ mấy rồi", "thu"),
     ("hôm nay thứ mấy ngày mấy", "ngay"), ("hôm nay mùng mấy âm", "am"), ("còn bao lâu nữa tết", "tet"),
     ("có việc gì cần làm không", "viec"), ("việc cần làm hôm nay", "viec"),
+    ("thói quen hôm nay", "thoi_quen"), ("Bơ ơi thói quen của mình sao rồi?", "thoi_quen"),
+    ("hôm nay mình còn thói quen nào chưa làm", "thoi_quen"),
 ])
 def test_nhan_dien(text, loai):
     assert nhan_dien(text) == loai
@@ -36,7 +38,7 @@ def test_nhan_dien(text, loai):
     "mấy giờ thì mình nên đi ngủ", "còn mấy ngày nữa sinh nhật mình",
     "mấy giờ?", "mấy giờ đi?", "mấy giờ vậy bạn", "mấy giờ nhé", "mấy giờ ạ",  # hỏi giờ hẹn, không phải giờ hiện tại
     "tui việc gì phải làm vậy", "việc gì phải làm thế", "em việc gì phải làm", "mình gì phải làm", "mình nào chưa xong",
-    "hôm nay ngày gì vậy",
+    "hôm nay ngày gì vậy", "thói quen xấu của mình là thức khuya", "theo dõi giúp mình thói quen đọc sách",
 ])
 def test_khong_nhan_nham(text):
     assert nhan_dien(text) == ""
@@ -98,3 +100,19 @@ def test_api_va_tinh_trang(tmp_path, monkeypatch):
     monkeypatch.setattr(config, "TRA_LOI_NHANH", False)
     checks = {k["ten"]: k for k in c.get("/api/suc-khoe").json()["kiem_tra"]}
     assert checks["Trả lời nhanh"]["muc"] == "canh_bao"
+
+
+def test_thoi_quen(memory):
+    from datetime import date
+
+    now = datetime(2026, 10, 11, 21, 0)
+    assert "chưa nhờ Bơ theo dõi" in tra_loi("thoi_quen", now, memory)[0]
+    memory.add_habits(["Đọc sách", "Chạy bộ"])
+    a, b = memory.habits()
+    for k in (1, 2):
+        memory.set_habit_done(b["id"], True, date(2026, 10, 11 - k))
+    memory.set_habit_done(a["id"], True, date(2026, 10, 11))
+    noi = tra_loi("thoi_quen", now, memory)[0]
+    assert noi.startswith("Hôm nay xong Đọc sách rồi. Còn chưa làm: Chạy bộ (đang chuỗi 2 ngày).")
+    memory.set_habit_done(b["id"], True, date(2026, 10, 11))
+    assert "làm đủ hết 2 thói quen" in tra_loi("thoi_quen", now, memory)[0]

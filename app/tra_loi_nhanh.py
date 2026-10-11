@@ -52,6 +52,10 @@ _MAU = {
         r"(?:(?:minh|to|tui|toi|em)\s+)?(?:con|co)\s+(?:con\s+)?(?:nhung\s+)?viec\s+(?:gi|nao)\s+(?:can|phai|chua)\s+(?:lam|xong)(?:\s+(?:khong|ko|k|nua|chua|hom nay|nua khong))?",
         r"(?:danh sach\s+)?viec can lam(?:\s+(?:hom nay|cua\s+(?:minh|to|tui|toi|em)|(?:minh|to|tui|toi|em)))?(?:\s+(?:co gi|la gi|gom gi|con gi))?",
     ],
+    "thoi_quen": [
+        r"(?:(?:danh sach|cac)\s+)?thoi quen(?:\s+(?:hom nay|cua\s+(?:minh|to|tui|toi|em)|(?:minh|to|tui|toi|em)))?(?:\s+(?:sao roi|the nao|co gi|la gi|toi dau roi))?",
+        r"(?:hom nay\s+)?(?:(?:minh|to|tui|toi|em)\s+)?(?:con|co)\s+thoi quen\s+(?:nao|gi)\s+(?:chua lam|chua)(?:\s+(?:khong|ko|k|hom nay))?",
+    ],
 }
 _RE = {k: [re.compile(_DAU + m + _CUOI) for m in v] for k, v in _MAU.items()}
 
@@ -140,4 +144,17 @@ def tra_loi(loai: str, now: datetime, memory=None) -> tuple[str, str]:
         ten = [x["viec"] for x in todos]
         ds = "; ".join(ten[:5]) + (f"; và {len(ten) - 5} việc nữa" if len(ten) > 5 else "")
         return f"Bạn còn {len(ten)} việc: {ds}. Xong việc nào thì kể Bơ để Bơ gạch nha!", "binh_thuong"
+    if loai == "thoi_quen":
+        if memory is None:
+            return "", ""
+        hs = memory.habits(now.date())
+        if not hs:
+            return 'Bạn chưa nhờ Bơ theo dõi thói quen nào. Nhắn "theo dõi giúp mình thói quen đọc sách" là được nè!', "vui"
+        xong = [h["ten"] for h in hs if h["hom_nay"]]
+        chua = [h for h in hs if not h["hom_nay"]]
+        if not chua:
+            return f"Hôm nay bạn làm đủ hết {len(hs)} thói quen rồi ({', '.join(xong)}). Giỏi quá trời!", "hao_hung"
+        ds = "; ".join(h["ten"] + (f" (đang chuỗi {h['chuoi']} ngày)" if h["chuoi"] >= 2 else "") for h in chua)
+        dau = f"Hôm nay xong {', '.join(xong)} rồi. " if xong else ""
+        return f"{dau}Còn chưa làm: {ds}. Làm xong nhắn Bơ tích cho nha!", "vui"
     return "", ""
