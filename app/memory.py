@@ -749,14 +749,21 @@ class Memory:
         ).fetchall()
         return [{"id": i, "content": c, "created_at": t} for i, c, t in rows]
 
+    @classmethod
+    def followup_keys(cls, items: list[str]) -> set[str]:
+        """Dạng rút gọn để so chuyện hỏi thăm. Bơ hay chép cả gạch đầu dòng và ghi chú "(kể hôm qua)" trong lời dặn
+        → trả cả bản nguyên lẫn bản đã bỏ hai thứ đó."""
+        keys = set()
+        for f in items:
+            f = re.sub(r"^\s*[-•]\s*", "", str(f))
+            keys.add(cls._key(f))
+            keys.add(cls._key(re.sub(r"\s*\(kể [^()]*\)\s*$", "", f)))
+        keys.discard("")
+        return keys
+
     def done_followups(self, items: list[str]) -> None:
         """Đánh dấu đã hỏi thăm (so theo dạng rút gọn như điều đáng nhớ)."""
-        keys = set()
-        for f in items:  # Bơ hay chép cả ghi chú "(kể hôm qua)" trong lời dặn → so cả bản bỏ gạch đầu dòng và ghi chú cuối
-            f = re.sub(r"^\s*[-•]\s*", "", str(f))
-            keys.add(self._key(f))
-            keys.add(self._key(re.sub(r"\s*\(kể [^()]*\)\s*$", "", f)))
-        keys.discard("")
+        keys = self.followup_keys(items)
         rows = self.conn.execute("SELECT id, content FROM followups WHERE done = 0").fetchall()
         for i, c in rows:
             if self._key(c) in keys:

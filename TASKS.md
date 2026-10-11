@@ -237,7 +237,13 @@
 - [x] Dưới câu trả lời hiện dòng nhỏ "✓ Bơ đã ghi: nhắc 20:00 12/10: Gọi mẹ · việc cần làm: Mua sữa..." để Tân biết Bơ ghi thật (model đôi khi hứa nhắc mà không ghi); mở lại web vẫn thấy, có trong sao lưu
 - [x] Chạy thử bằng API thật các lời Bơ tự mở đầu (hỏi thăm, lâu không gặp, tổng kết tuần, chúc lễ 20/10, sinh nhật, mốc 100 ngày); sửa: Bơ tự mở lời thì không ghi gì mới, hỏi thăm xong không ghi lại chuyện đó, tin cũ được ghi chú ngày gửi
 - [x] Gộp trí nhớ: khi dọn "điều Bơ nhớ" thì bỏ luôn việc vặt / chuyện đã qua lỡ ghi vào; AI xóa quá tay thì giữ nguyên bản cũ
-- [ ] Rà soát code lần 24, sửa lỗi tìm được
+- [x] Rà soát code lần 24, sửa lỗi tìm được
+
+## Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ phần mềm, Claude tự thêm)
+- [ ] Xem / xóa "chuyện Bơ định hỏi thăm" trên web (trong "Bơ nhớ gì về mình?"), và báo trong dòng "✓ Bơ đã ghi: sẽ hỏi thăm ..."
+- [ ] Người dùng bảo bỏ một lời nhắc mà model chép lại chính lời nhắc đó vào "nhac" trong cùng câu → không tạo lại (chặn bằng code, có test)
+- [ ] Mấy ngày liền buồn mà Bơ vẫn chào với vẻ mặt "vui": thử lại bằng API thật 10 lần, siết lời dặn hoặc ép bằng code
+- [ ] Rà soát code lần 25, sửa lỗi tìm được
 
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định

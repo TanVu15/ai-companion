@@ -93,6 +93,13 @@ số tiền (giờ nhỏ hơn 10 lần); bấm "?" → Tình trạng xem dòng "
   lâu dài. Thử thật trên 32 điều lẫn lộn → còn 19, không mất điều nào quan trọng. Nếu AI xóa quá tay (còn dưới 1/3) thì
   giữ nguyên bản cũ.
 - Bộ 29 tình huống sau các thay đổi: 100%. 368 test qua hết.
+- **Rà soát lần 24** (xong giai đoạn 44): gom cách so chuyện hỏi thăm về một chỗ (`Memory.followup_keys`), nên model chép kèm
+  gạch đầu dòng hay ghi chú "(kể hôm qua)" đều khớp ở cả hai nơi dùng. Chạy lại 3 câu thật qua máy chủ: dòng "✓ Bơ đã ghi"
+  hiện đúng "xong việc", "nhật ký", "bỏ nhắc". Không tìm thấy lỗi khác. Việc tiếp theo: giai đoạn 45 trong TASKS.md.
+
+**Tân cần thử (giai đoạn 44):** tắt rồi mở lại `run.bat`; nhắn "8h tối mai nhắc mình gọi mẹ, với nhớ giúp mình mua sữa" và xem
+dòng nhỏ "✓ Bơ đã ghi: ..." dưới câu trả lời; tải lại trang xem dòng đó còn không. Hôm sau mở web xem Bơ hỏi thăm chuyện cũ
+có đúng ngày không.
 
 ## Cần Tân quyết định
 - **Dùng Bơ ngoài nhà bằng cách nào?** Tailscale (riêng tư, cần tạo tài khoản miễn phí, cài app trên iPhone) hay Cloudflare Tunnel (link công khai, không cần cài trên điện thoại). Hướng dẫn cả hai trong `DUA_LEN_MANG.md`. Claude khuyên Tailscale. Cách nào cũng phải đặt `APP_PASSWORD`.

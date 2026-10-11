@@ -973,8 +973,8 @@ class Brain:
             for ten in ("quen", "ghi_nho", "hoi_tham", "nhac", "huy_nhac", "xong_viec", "viec_can_lam", "ngay_dac_biet"):
                 setattr(reply, ten, [])
         # Chuyện vừa hỏi thăm xong mà AI lại chép vào "hoi_tham" thì bỏ, kẻo lần sau Bơ hỏi lại đúng chuyện đó
-        vua_hoi = {self.memory._key(re.sub(r"\s*\(kể [^()]*\)\s*$", "", x)) for x in reply.da_hoi}
-        reply.hoi_tham = [x for x in reply.hoi_tham if self.memory._key(x) not in vua_hoi]
+        vua_hoi = self.memory.followup_keys(reply.da_hoi)
+        reply.hoi_tham = [x for x in reply.hoi_tham if not self.memory.followup_keys([x]) & vua_hoi]
         self.memory.forget_facts(reply.quen)
         self.memory.add_facts(reply.ghi_nho)
         self.memory.done_followups(reply.da_hoi)
