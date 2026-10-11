@@ -216,7 +216,7 @@
 ## Giai đoạn 41 – Hỏi nhanh thêm & tổng kết thói quen (chỉ phần mềm, Claude tự thêm)
 - [x] Hỏi nhanh thời tiết ("hôm nay trời thế nào?", "mai có mưa không?") dùng dữ liệu đã lấy sẵn, miễn phí
 - [x] Tổng kết tuần tối Chủ nhật nhắc tới thói quen (khen/động viên theo số ngày đã làm)
-- [ ] Nút "?" → mục "Tình trạng" hoặc "Thói quen": tóm tắt tháng (số ngày làm từng thói quen trong tháng này)
+- [x] Nút "Thói quen": số ngày làm trong tháng này của từng thói quen
 - [ ] Rà soát code lần 21, sửa lỗi tìm được
 
 ## Sau này

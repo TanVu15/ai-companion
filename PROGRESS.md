@@ -719,4 +719,5 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - Hỏi **"hôm nay trời thế nào?", "mai có mưa không?", "bây giờ bao nhiêu độ?"** → Bơ đọc ngay dự báo đã lấy sẵn, không tốn API. Chưa đặt thành phố thì Bơ chỉ cách đặt trong Cài đặt.
 - Tối Chủ nhật Bơ tổng kết tuần giờ khen/động viên thêm về thói quen.
 - 313 test qua hết.
+- Nút "Thói quen" ghi thêm **"tháng 10: 9 ngày"** cho từng thói quen. 315 test qua hết.
 

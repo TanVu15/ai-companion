@@ -166,6 +166,10 @@ def test_30_ngay_va_tich_bu(tmp_path):
     (h,) = m.habits(today)
     assert len(h["ngay_30"]) == 30 and h["ngay_30"][-1] and h["ngay_30"][-2] and not h["ngay_30"][-3]
     assert h["thang"] == 6 and h["dai_nhat"] == 5 and h["tu_ngay"] == "2026-09-11"
+    assert h["thang_nay"] == 6  # 1/10–10/10: ngày 10, 9, 5, 4, 3, 2
+    m.set_habit_done(h["id"], True, date(2026, 9, 30))
+    m.set_habit_done(h["id"], True, date(2026, 10, 20))  # ngày tương lai (lỡ ghi) không tính
+    assert m.habits(today)[0]["thang_nay"] == 6
     c = make_client(tmp_path, [])
     c.post("/api/thoi-quen", json={"ten": "Đọc sách"})
     hid = c.get("/api/thoi-quen").json()[0]["id"]

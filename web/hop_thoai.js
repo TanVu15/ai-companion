@@ -574,7 +574,9 @@ async function loadHabits() {
         };
         grid.appendChild(o);
       });
-      note.textContent = x.thang + '/30 ngày' + (x.dai_nhat >= 2 ? ' · chuỗi dài nhất ' + x.dai_nhat + ' ngày' : '');
+      const thang = y0 ? (new Date(start.getFullYear(), start.getMonth(), start.getDate() + 29).getMonth() + 1) : 0;
+      note.textContent = x.thang + '/30 ngày' + (thang && x.thang_nay != null ? ' · tháng ' + thang + ': ' + x.thang_nay + ' ngày' : '')
+        + (x.dai_nhat >= 2 ? ' · chuỗi dài nhất ' + x.dai_nhat + ' ngày' : '');
       li.append(grid, note);
     }
     habitsEl.appendChild(li);

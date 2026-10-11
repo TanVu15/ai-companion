@@ -909,7 +909,8 @@ class Memory:
             out.append({"id": i, "ten": c, "hom_nay": today.isoformat() in days,
                         "chuoi": self._habit_streak(days, today), "tuan": week,
                         "ngay_30": ngay_30, "tu_ngay": (today - timedelta(days=29)).isoformat(), "thang": sum(ngay_30), "dai_nhat": self._habit_best(days),
-                        "tao_ngay": str(tao or "")[:10]})
+                        "tao_ngay": str(tao or "")[:10],
+                        "thang_nay": sum(d.startswith(today.strftime("%Y-%m-")) and d <= today.isoformat() for d in days)})
         return out
 
     @staticmethod
