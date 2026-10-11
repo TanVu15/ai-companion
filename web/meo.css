@@ -128,3 +128,82 @@
 /* Màn hình thấp (điện thoại nhỏ, xoay ngang): mèo nhỏ lại để còn chỗ cho tin nhắn */
 @media (max-height: 640px) { .face { width: 150px; height: 144px; } }
 @media (min-width: 700px) and (min-height: 760px) { .face { width: 240px; height: 230px; } }
+
+/* ======== Chạm & chơi (choi.js) ======== */
+.meo-khung { position: relative; display: flex; justify-content: center; padding: 0 44px; }
+.face { touch-action: none; user-select: none; -webkit-user-select: none; }
+header.dang-laser { touch-action: none; cursor: crosshair; position: relative; }
+.nut-meo { position: absolute; bottom: 10px; width: 42px; height: 42px; padding: 0; border-radius: 50%;
+  background: var(--panel); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+.nut-meo svg { width: 26px; height: 26px; }
+.nut-meo.trai { left: 0; } .nut-meo.phai { right: 0; }
+.nut-meo[aria-pressed="true"] { border-color: #ff3b3b; box-shadow: 0 0 0 2px rgba(255,59,59,.3); }
+.bong { position: absolute; top: 0; left: calc(50% + 48px); max-width: min(170px, calc(50% - 48px)); z-index: 2;
+  background: var(--panel); color: var(--text); border: 1px solid var(--border); border-radius: 14px 14px 14px 4px;
+  padding: 4px 10px; font-size: 13px; line-height: 1.35; box-shadow: 0 2px 6px rgba(0,0,0,.08); pointer-events: none; }
+.tim { position: absolute; color: #f06a86; font-size: 18px; pointer-events: none; z-index: 2; transform: translate(-50%, -50%); }
+.ca-an { position: absolute; left: 50%; bottom: 0; width: 40px; height: 26px; margin-left: -20px; pointer-events: none; z-index: 2; }
+.ca-an svg { width: 100%; height: 100%; }
+.laser { position: absolute; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; background: #ff3b3b;
+  box-shadow: 0 0 8px 3px rgba(255,59,59,.55); pointer-events: none; z-index: 3; }
+
+/* Vuốt ve: nhắm mắt sướng, má hồng, tai hơi cụp */
+.meo.vuot .mat-mo, .meo.gai-cam .mat-mo { display: none; }
+.meo.vuot .mat-nham { display: inline; } .meo.gai-cam .mat-cuoi { display: inline; }
+.meo.vuot .ma, .meo.gai-cam .ma { opacity: .7; }
+.meo.vuot .ear-l { transform: rotate(-14deg); } .meo.vuot .ear-r { transform: rotate(14deg); }
+.meo.vuot .head { transform: rotate(4deg); }
+/* Gãi cằm: ngửa cổ */
+.meo.gai-cam .head { transform: translateY(-6px) rotate(-6deg); }
+/* Chạm tai: tai giật */
+.meo.giat-tai-trai .ear-l { transform: rotate(-28deg) scaleY(.85); }
+.meo.giat-tai-phai .ear-r { transform: rotate(28deg) scaleY(.85); }
+/* Chọc: giật mình, mắt to */
+.meo.giat .mat-mo { transform: scale(1.3); display: inline; } .meo.giat .mat-cuoi, .meo.giat .mat-nham { display: none; }
+.meo.giat .mieng-w { display: none; } .meo.giat .mieng-mo { display: inline; transform: scale(.7); }
+/* Dỗi: quay lưng (lật ngang, giấu mặt và bụng) */
+.meo.doi { transform: scaleX(-1); }
+.meo.doi .mat, .meo.doi .mui, .meo.doi .mieng, .meo.doi .ria, .meo.doi .ma, .meo.doi .bung, .meo.doi .luoi-liem { display: none !important; }
+.meo.doi .ear-l { transform: rotate(-10deg); } .meo.doi .ear-r { transform: rotate(10deg); }
+/* Ăn: cúi đầu, nhai */
+.meo.an .head { transform: translateY(12px); }
+.meo.an .mat-mo { display: none; } .meo.an .mat-cuoi { display: inline; }
+.meo.an .mieng-w { display: none; } .meo.an .mieng-mo { display: inline; }
+/* Liếm mép */
+.meo.liem-mep .luoi-liem { display: inline; } .meo.liem-mep .mieng-w { display: none; }
+.meo.liem-mep .mat-mo { display: none; } .meo.liem-mep .mat-cuoi { display: inline; }
+/* Vồ chấm laser */
+.meo.vo .ear-l { transform: rotate(8deg); } .meo.vo .ear-r { transform: rotate(-8deg); }
+.meo.vo .mat-mo { transform: scale(1.25); }
+.meo .nhin { transition: transform .12s; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .meo.doi { transition: transform .3s; }
+  .meo.giat { animation: meo-giat .45s ease-out; }
+  .meo.vo { animation: meo-vo .6s ease-out; }
+  .meo.lanh { animation: meo-nhay .55s 1; }
+  .meo.an .mieng-mo { animation: meo-noi .3s ease-in-out infinite alternate; }
+  .meo.vuot .body { animation-duration: 1.6s; }
+  .meo.vuot .tail { animation: meo-duoi 1.4s ease-in-out infinite; }
+  .tim { animation: meo-tim 1.2s ease-out forwards; }
+  .ca-an { animation: meo-ca 2.6s ease-in forwards; }
+  .bong.hien { animation: meo-bong .25s ease-out; }
+}
+@media (prefers-reduced-motion: reduce) { .tim { opacity: .8; } }
+@keyframes meo-giat { 30% { transform: translateY(-10px) scale(1.04); } }
+@keyframes meo-vo { 0% { transform: none; } 35% { transform: translateY(6px) scale(1.06, .92); } 65% { transform: translateY(-18px) scale(.96, 1.06); } }
+@keyframes meo-tim { to { transform: translate(-50%, -60px) scale(1.4); opacity: 0; } }
+@keyframes meo-ca { 0% { transform: translateY(-80px); opacity: 0; } 15% { transform: none; opacity: 1; } 70% { transform: scale(.7); opacity: 1; } 100% { transform: scale(0); opacity: 0; } }
+@keyframes meo-bong { from { transform: scale(.7); opacity: 0; } }
+
+/* Trạng thái tạm (ngáp, vuốt, ăn...) thắng mắt/miệng của cảm xúc đang có — chỉ hiện đúng một kiểu mắt, một kiểu miệng */
+.meo:is(.ngap, .liem, .vuot) :is(.mat-mo, .mat-cuoi) { display: none !important; }
+.meo:is(.ngap, .liem, .vuot) .mat-nham { display: inline !important; }
+.meo:is(.gai-cam, .an, .liem-mep) :is(.mat-mo, .mat-nham) { display: none !important; }
+.meo:is(.gai-cam, .an, .liem-mep) .mat-cuoi { display: inline !important; }
+.meo.giat :is(.mat-cuoi, .mat-nham) { display: none !important; } .meo.giat .mat-mo { display: inline !important; }
+.meo:is(.ngap, .an, .giat) :is(.mieng-w, .mieng-buon) { display: none !important; }
+.meo:is(.ngap, .an, .giat) .mieng-mo { display: inline !important; }
+.meo:is(.liem, .liem-mep) :is(.mieng-w, .mieng-buon, .mieng-mo) { display: none !important; }
+.meo:is(.liem, .liem-mep) .luoi-liem { display: inline !important; }

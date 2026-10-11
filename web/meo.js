@@ -21,10 +21,10 @@ const MEO_SVG = `
     <path class="soc" d="M100,29 L100,40 M87,31 L90,41 M113,31 L110,41"/>
     <ellipse class="ma" cx="64" cy="90" rx="9" ry="5"/><ellipse class="ma" cx="136" cy="90" rx="9" ry="5"/>
     <g class="mat">
-      <g class="mat-mo">
+      <g class="mat-mo"><g class="nhin">
         <ellipse class="den" cx="78" cy="74" rx="8" ry="10"/><ellipse class="den" cx="122" cy="74" rx="8" ry="10"/>
         <g class="con-nguoi"><circle class="sang" cx="81" cy="70" r="3"/><circle class="sang" cx="125" cy="70" r="3"/></g>
-      </g>
+      </g></g>
       <path class="mat-cuoi net" d="M70,77 Q78,66 86,77 M114,77 Q122,66 130,77"/>
       <path class="mat-nham net" d="M70,74 Q78,81 86,74 M114,74 Q122,81 130,74"/>
     </g>

@@ -123,7 +123,16 @@
 <body>
 <div class="app">
   <header>
-    <div class="face" id="face" data-e="binh_thuong" aria-label="Mèo Bơ (chạm để Bơ ngừng đọc)" role="img" title="Chạm để Bơ ngừng đọc"></div>
+    <div class="meo-khung" id="meoKhung">
+      <div class="face" id="face" data-e="binh_thuong" aria-label="Mèo Bơ: vuốt đầu, gãi cằm, chọc bụng thử xem (đang đọc to thì chạm để Bơ im)" role="img"></div>
+      <div class="bong" id="meoBong" aria-live="polite" hidden></div>
+      <button class="nut-meo trai" id="choAn" type="button" aria-label="Cho Bơ ăn cá" title="Cho Bơ ăn cá">
+        <svg viewBox="0 0 32 20" aria-hidden="true"><path d="M2,10 C8,1 20,1 25,10 C20,19 8,19 2,10 Z" fill="#7fb7e6" stroke="#3d6f99" stroke-width="1.5"/><path d="M24,10 L31,4 L31,16 Z" fill="#7fb7e6" stroke="#3d6f99" stroke-width="1.5" stroke-linejoin="round"/><circle cx="8" cy="9" r="1.6" fill="#1f2a33"/></svg>
+      </button>
+      <button class="nut-meo phai" id="doChoi" type="button" aria-pressed="false" aria-label="Chơi tia laser với Bơ" title="Chơi tia laser: rê/kéo ngón tay quanh Bơ">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="5" fill="#ff3b3b"/><circle cx="12" cy="12" r="9" fill="none" stroke="#ff3b3b" stroke-opacity=".35" stroke-width="3"/></svg>
+      </button>
+    </div>
     <div class="name">Bơ</div>
     <div class="lich" id="lich"></div>
     <div class="status" id="status"></div>
@@ -216,6 +225,7 @@
   <h2>Bơ làm được gì?</h2>
   <p>Cứ nhắn tự nhiên như với bạn bè. Vài mẹo:</p>
   <ul class="plain">
+    <li><b>Chơi với Bơ (miễn phí):</b> vuốt đầu/lưng để Bơ rừ rừ, gãi cằm, chạm tai, chọc bụng (chọc nhiều quá là Bơ dỗi đó). Nút con cá: cho Bơ ăn. Nút chấm đỏ: tia laser, rê/kéo ngón tay quanh Bơ.</li>
     <li><b>Nhớ chuyện:</b> kể tên, sở thích, kế hoạch → Bơ tự nhớ. Xem/xóa ở "Bơ nhớ gì về mình?".</li>
     <li><b>Hỏi thăm:</b> kể "tối nay đi đá bóng" → hôm sau Bơ hỏi "đá bóng sao rồi?".</li>
     <li><b>Nhắc việc:</b> "8h tối nhắc mình gọi mẹ", "mỗi ngày 7h sáng nhắc uống nước", "ngày đi làm 7h nhắc...", "ngày 5 hằng tháng nhắc đóng tiền nhà", "cứ 2 tiếng nhắc mình uống nước" (đêm khuya tự nghỉ). Không cần nữa: "thôi khỏi nhắc uống nước nữa". Để trang mở thì Bơ mới nhắc được.</li>
@@ -280,6 +290,7 @@
 <script src="/web/doc_to.js"></script>
 <script src="/web/meo.js"></script>
 <script src="/web/app.js"></script>
+<script src="/web/choi.js"></script>
 <script src="/web/giong_noi.js"></script>
 <script src="/web/khoi_dong.js"></script>
 <script src="/web/hop_thoai.js"></script>

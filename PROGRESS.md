@@ -5,6 +5,15 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-11 17:25 UTC – Giai đoạn 47 (gần xong): Chạm & chơi với Bơ, không tốn API
+Ảnh: `docs/anh/choi-voi-bo.png` (vuốt đầu · gãi cằm · dỗi quay lưng · ăn cá). 379 test qua hết.
+- **Vuốt** đầu/lưng (kéo ngón tay, hoặc rê chuột trên máy tính): Bơ nhắm mắt, tim bay, kêu **rừ rừ** (tạo bằng Web Audio, không cần file).
+- **Gãi cằm**: ngửa cổ sướng. **Chạm tai**: tai giật. **Chọc bụng**: giật mình; chọc 5 lần trong 4 giây → **dỗi quay lưng** 4 giây rồi làm lành.
+- **Nút con cá**: cá rơi xuống, Bơ cúi xuống nhai rồi liếm mép. Không có thanh "đói"; cho quá 5 lần/ngày Bơ chỉ bảo "no rồi".
+- **Nút chấm đỏ (laser)**: rê/kéo ngón tay quanh Bơ, mắt Bơ nhìn theo, chấm chạy vào người là Bơ vồ. 15 giây không đụng thì tự tắt (Esc cũng tắt).
+- Câu nói nhỏ hiện bong bóng cạnh Bơ, không lưu vào lịch sử chat. Chạm Bơ không làm cuộn trang trên điện thoại.
+**Tân cần thử:** trên điện thoại, vuốt đầu Bơ và nghe tiếng rừ rừ (bật tiếng máy). Thấy tiếng to/nhỏ/khó nghe thì ghi `FEEDBACK.md`.
+
 ## 2026-10-11 17:00 UTC – Giai đoạn 46 xong: Mèo Bơ ra đời 🐱
 Khuôn mặt tròn đã thành **mèo béo màu cam** (vẽ bằng SVG, không dùng ảnh ngoài). 374 test qua hết.
 - **Xem ngay trên GitHub (không cần chạy):** `docs/anh/meo-tat-ca.png` (mọi cảm xúc), `docs/anh/trang-dien-thoai.png`,

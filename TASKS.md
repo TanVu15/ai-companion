@@ -250,14 +250,14 @@
 - [x] Chụp ảnh từng cảm xúc (điện thoại + máy tính), tự xem, lưu vào docs/anh/; cập nhật README (ảnh mèo ở đầu)
 
 ## Giai đoạn 47 – Chạm & chơi với Bơ (không tốn API)
-- [ ] Vuốt ve: rê chuột / kéo ngón tay trên lưng-đầu → mèo nhắm mắt, kêu "rừ rừ" (âm thanh tạo bằng Web Audio, không cần file), tim bay lên
-- [ ] Chọc bụng → giật mình; chọc liên tục 5 lần → giận dỗi quay lưng vài giây rồi làm lành
-- [ ] Gãi cằm → ngửa cổ sướng; chạm tai → tai giật
-- [ ] Nút "Cho ăn" (con cá): mèo chạy tới ăn, liếm mép. Không có thanh "đói", không bắt buộc cho ăn
-- [ ] Đồ chơi: cuộn len / chấm laser đi theo ngón tay, mèo đuổi theo vồ
-- [ ] Mỗi tương tác thỉnh thoảng có câu ngắn có sẵn ("meo~ thêm chút nữa đi") hiện bong bóng nhỏ, không lưu vào lịch sử chat
+- [x] Vuốt ve: rê chuột / kéo ngón tay trên lưng-đầu → mèo nhắm mắt, kêu "rừ rừ" (âm thanh tạo bằng Web Audio, không cần file), tim bay lên
+- [x] Chọc bụng → giật mình; chọc liên tục 5 lần → giận dỗi quay lưng vài giây rồi làm lành
+- [x] Gãi cằm → ngửa cổ sướng; chạm tai → tai giật
+- [x] Nút "Cho ăn" (con cá): mèo chạy tới ăn, liếm mép. Không có thanh "đói", không bắt buộc cho ăn
+- [x] Đồ chơi: cuộn len / chấm laser đi theo ngón tay, mèo đuổi theo vồ
+- [x] Mỗi tương tác thỉnh thoảng có câu ngắn có sẵn ("meo~ thêm chút nữa đi") hiện bong bóng nhỏ, không lưu vào lịch sử chat
 - [ ] Bơ "nhớ" nhẹ: hôm nay được vuốt mấy lần, cho ăn chưa → gửi kèm 1 dòng ngắn cho bộ não để Bơ nhắc tới khi hợp ("hôm nay bạn gãi cằm Bơ 5 lần đó nha")
-- [ ] Chụp ảnh/kiểm tra trên màn hình điện thoại: chạm không bị nhầm với cuộn trang
+- [x] Chụp ảnh/kiểm tra trên màn hình điện thoại: chạm không bị nhầm với cuộn trang
 
 ## Giai đoạn 48 – Bơ nói bằng giọng AI miễn phí (edge-tts)
 - [ ] Thêm `edge-tts` vào requirements. Endpoint `/api/giong` nhận chữ → trả mp3; lưu đệm theo nội dung trong data/am_thanh/ (xóa bớt khi quá 200 file)
