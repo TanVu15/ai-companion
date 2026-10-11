@@ -10,6 +10,7 @@
 - Bật "Giọng nói": lần bế đầu tiên trong ngày Bơ đọc to "Ơ ơ, bế Bơ đi đâu đó?", các lần sau chỉ kêu "mrr?"; câu bế yên cũng được đọc to.
 - Rà soát, sửa: đang bế mà chuyển tab / có cuộc gọi đến / trình duyệt mất cú chạm thì trước đây Bơ có thể kẹt lơ lửng → giờ tự thả Bơ xuống. Đang dỗi, đang ngủ, đang chơi đồ chơi thì không bế được. 420 test qua hết, `scripts/thu_cham.py` đạt hết.
 **Tân cần thử:** bế Bơ lên rồi giữ yên vài giây.
+- Bộ ảnh `docs/anh/meo-tat-ca.png` chụp lại, có thêm hắt xì, boop, nựng má, bế, râu sữa.
 
 ## 2026-10-11 – Giai đoạn 67 xong: boop mũi & nựng má
 - **Boop mũi**: chạm nhanh đúng chóp mũi hồng → Bơ nhắm tịt mắt, mũi chun lại, ria vểnh, chữ "Boop!" bật ra, "Hí, nhột mũi!".
@@ -19,13 +20,13 @@
 
 ## 2026-10-11 – Giai đoạn 66 xong: tiếng ăn & bế Bơ
 - **Tiếng ăn**: đang bật "Giọng nói" thì lúc Bơ ăn có tiếng: cá nhai **rộp rộp**, pate **chép chép** (trầm, mềm), sữa liếm **lép lép** nhanh. Tạo ngay trong trình duyệt, không file, không mạng; độ to đã đo bằng máy, cỡ tiếng meo. Giờ yên lặng, lúc Bơ đang đọc hay bật rảnh tay thì im.
-- **Bế Bơ**: nhấn giữ đầu Bơ nửa giây rồi kéo lên → Bơ bị nhấc lên, người dài ra, hai chân sau lủng lẳng, đuôi thõng, mắt tròn xoe "Ơ ơ, bế Bơ đi đâu đó?". Thả tay → Bơ rơi "bịch", bẹp xuống một chút "Hú hồn, đất đây rồi!". Vuốt đầu bình thường (không giữ trước) vẫn là vuốt. Bàn phím: giữ phím **B**. Ảnh `docs/anh/meo-be.png`.
+- **Bế Bơ**: nhấn giữ đầu Bơ nửa giây rồi kéo lên → Bơ bị nhấc lên, người dài ra, hai chân sau lủng lẳng, đuôi thõng, mắt tròn xoe "Ơ ơ, bế Bơ đi đâu đó?". Thả tay → Bơ rơi "bịch", bẹp xuống một chút "Hú hồn, đất đây rồi!". Vuốt đầu bình thường (không giữ trước) vẫn là vuốt. Bàn phím: giữ phím **B**. Ảnh `docs/anh/meo-be-len.png`.
 - Rà soát, sửa: trên điện thoại màn hình thấp (cao dưới 640px) menu chọn món bị đẩy lên khỏi màn hình → giờ xếp ngang ba món (mũi tên trái/phải cũng đi được). `scripts/thu_cham.py` thử thêm bế Bơ — đạt hết. 419 test qua hết.
 **Tân cần thử:** bật "Giọng nói" (có loa), cho Bơ ăn từng món nghe tiếng nhai; nhấn giữ đầu Bơ rồi kéo lên.
 
 ## 2026-10-11 – Giai đoạn 65 xong: lông vũ & bữa ăn
 - **Chọn món**: nhấn giữ nút con cá nửa giây → hiện menu **Cá / Sữa / Pate** (máy tính: chuột phải; bàn phím: mũi tên lên). Bấm thường thì cho món vừa chọn (nhớ trên máy này). Sữa: Bơ dính râu sữa trắng "Râu Bơ dính sữa rồi nè". Pate: tim bay, "Pate! Bơ mê pate nhất trần đời~". Vẫn không có thanh đói. Ảnh `docs/anh/meo-chon-mon.png`.
-- **Hắt xì**: đưa cần câu lông vũ quét ngang mũi Bơ → Bơ nhắm tịt mắt, há miệng "Hắt xì!" (tối đa 6 giây một lần). Ảnh `docs/anh/meo-hat-xi.png`.
+- **Hắt xì**: đưa cần câu lông vũ quét ngang mũi Bơ → Bơ nhắm tịt mắt, há miệng "Hắt xì!" (tối đa 6 giây một lần). Ảnh `docs/anh/meo-hat-xi-long-vu.png`.
 - Rà soát: menu chọn món dùng được bằng bàn phím (mũi tên lên mở, mũi tên đi, Enter chọn, Esc đóng), đẹp ở nền tối và mèo đen (ảnh `docs/anh/meo-chon-mon-toi.png`); bấm ra ngoài là đóng. Gợi ý trò chưa thử có thêm "nhấn giữ nút cá". `scripts/thu_cham.py` thử thêm chọn món — đạt hết. 417 test qua hết.
 **Tân cần thử:** nhấn giữ nút con cá, chọn Sữa xem râu Bơ dính sữa; chọn Pate xem tim bay.
 
