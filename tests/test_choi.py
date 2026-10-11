@@ -348,3 +348,10 @@ def test_long_vu_ben_hong():
     assert v == ["trai", "phai", None, None, None, None]
     css = (config.ROOT / "web" / "meo.css").read_text(encoding="utf-8")
     assert ".meo.quo-trai .paw-l" in css and ".meo.quo-phai .paw-r" in css
+
+
+def test_quo_chan_khong_chong_tu_the():
+    """Quơ chân không chen vào lúc đang rình hay đang đứng vồ lông trên đầu; đổi bên thì bỏ bên cũ."""
+    do_choi = (config.ROOT / "web" / "do_choi.js").read_text(encoding="utf-8")
+    assert "!svg.classList.contains('rinh') && !svg.classList.contains('voi')" in do_choi
+    assert "svg.classList.remove(hong === 'trai' ? 'quo-phai' : 'quo-trai')" in do_choi
