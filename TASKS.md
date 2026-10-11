@@ -301,6 +301,8 @@
 - [x] Rảnh 1 phút: Bơ nằm bẹp kiểu "ổ bánh mì" (giấu chân, đuôi quấn); 3 phút mới ngủ gật; có gì là ngồi dậy
 - [x] Kiểu lông: mướp vằn, tam thể, mèo đen mắt vàng… chọn cạnh bảng màu lông (lưu trên máy)
 - [x] Rà soát giai đoạn 54, sửa lỗi tìm được
+- [x] Đổi màu/kiểu lông xong, đóng hộp → Bơ nhảy lên khoe "Bộ lông mới nè, Bơ đẹp hông?"
+- [x] Bộ ảnh mèo (scripts/chup_meo.py) có thêm lăn, mừng, ổ bánh mì, hóng chuyện, lắng nghe
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):

@@ -157,7 +157,6 @@ function scheduleSleep() {
   }, SLEEP_AFTER);
 }
 function wake() {
-  if (face.dataset.e === 'ngu') express('binh_thuong'); else scheduleSleep();
 }
 ['pointerdown', 'keydown', 'focusin'].forEach(ev => document.addEventListener(ev, wake, { passive: true }));
 scheduleSleep();
@@ -451,7 +450,7 @@ function renderColors() {
     b.setAttribute('aria-label', name); b.title = name;
     b.style.background = c || '#f7a95c';
     b.onclick = () => {
-      faceColor = c; applyFaceColor(c); renderColors();
+      faceColor = c; applyFaceColor(c); renderColors(); doiLong = true;
       try { localStorage.setItem('bo_mau', c); } catch (e) {}
     };
     colorsEl.appendChild(b);
@@ -465,11 +464,19 @@ function renderKieuLong() {
     b.onclick = () => {
       if (b.dataset.long) face.dataset.long = b.dataset.long; else delete face.dataset.long;
       try { localStorage.setItem('bo_long', b.dataset.long); } catch (e) {}
-      renderKieuLong();
+      renderKieuLong(); doiLong = true;
     };
   });
 }
 renderKieuLong();
+// Đổi màu/kiểu lông xong, đóng hộp lại → Bơ khoe bộ lông mới
+var doiLong = false;
+helpDlg.addEventListener('close', () => {
+  if (!doiLong) return;
+  doiLong = false;
+  express('vui', 'nhay');
+  if (window.boChoi) boChoi.noi('dep', true);
+});
 
 // ---- Phím tắt: Esc = Bơ ngừng đọc (hộp đang mở thì trình duyệt tự đóng), Ctrl/Cmd+K = tìm ----
 document.addEventListener('keydown', (e) => {
