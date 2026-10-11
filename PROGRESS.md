@@ -5,10 +5,12 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
-## 2026-10-11 – Giai đoạn 64 (đang làm): Bơ để ý tin nhắn
+## 2026-10-11 – Giai đoạn 64 xong: Bơ để ý tin nhắn
 - Gửi tin có **"cá"** hoặc 🐟 → Bơ liếm mép ngay; có **"thương"/"yêu"**/❤ → tim bay quanh Bơ, Bơ nhắm mắt sướng (trước cả khi Bơ trả lời, không tốn API). "các", "cám ơn", "yêu cầu" không bị nhận nhầm.
 - Rà soát chạm & chơi, sửa: đang chơi đồ chơi thì Bơ không tự ngáp/ngó quanh (trước đây mắt bị kéo khỏi đồ chơi); việc vặt gọi chồng nhau không còn tắt sớm.
 - Thêm `scripts/thu_cham.py`: bấm thử 15 trò chạm & chơi trên trình duyệt thật (điện thoại + máy tính), in ĐẠT/LỖI — hiện đạt hết.
+- Rà soát: "cá nhân", "cá tính", "cá cược" không làm Bơ liếm mép nữa. 415 test qua hết.
+**Tân cần thử:** nhắn "tối nay ăn cá" và "thương Bơ ghê" xem Bơ phản ứng.
 
 ## 2026-10-11 – Giai đoạn 63 xong: dễ khám phá
 - Hộp "Bơ làm được gì?" ghi đủ các trò chạm & đồ chơi mới, phím tắt. Ảnh `docs/anh/hop-choi-voi-bo.png`.

@@ -222,5 +222,5 @@ def test_goi_y_tro_chua_thu():
 
 def test_bo_de_y_tin_nhan():
     v = node("""console.log(JSON.stringify(['Tối nay ăn cá kho', 'các bạn ơi', 'cám ơn Bơ', 'cả ngày mệt', '🐟🐟',
-      'thương Bơ ghê', 'dễ thương quá', 'yêu cầu gửi báo cáo', 'mình yêu Bơ', 'hihi ❤️', 'hôm nay đi làm', '', null].map(C.boPhanUngTin)))""")
-    assert v == ["ca", None, None, None, "ca", "tim", "tim", None, "tim", "tim", None, None, None]
+      'thương Bơ ghê', 'dễ thương quá', 'yêu cầu gửi báo cáo', 'mình yêu Bơ', 'hihi ❤️', 'hôm nay đi làm', '', null, 'việc cá nhân', 'cá tính mạnh', 'mua cá'].map(C.boPhanUngTin)))""")
+    assert v == ["ca", None, None, None, "ca", "tim", "tim", None, "tim", "tim", None, None, None, None, None, "ca"]

@@ -110,10 +110,10 @@ function boGoiY(daThu, ngayCuoi, homNay, coLac, rnd = Math.random) {
   const con = Object.keys(BO_GOI_Y).filter(k => !(daThu || []).includes(k) && (coLac || k !== 'chong_mat'));
   return con.length ? con[Math.floor(rnd() * con.length) % con.length] : null;
 }
-// Tin nhắn Tân vừa gửi có nhắc tới cá → 'ca' (Bơ liếm mép); có tim / thương / yêu → 'tim' (tim bay); không thì null
+// Tin nhắn Tân vừa gửi có nhắc tới cá (không tính "cá nhân", "cá tính"...) → 'ca' (Bơ liếm mép); có tim / thương / yêu → 'tim' (tim bay); không thì null
 function boPhanUngTin(text) {
   const s = String(text || '');
-  if (/[🐟🐠🐡🍣]/u.test(s) || /(^|[^\p{L}])cá($|[^\p{L}])/iu.test(s)) return 'ca';
+  if (/[🐟🐠🐡🍣]/u.test(s) || /(^|[^\p{L}])cá(?!\s*(nhân|tính|cược|thể|biệt))($|[^\p{L}])/iu.test(s)) return 'ca';
   if (/[❤♥💕💖💗😍🥰😘]/u.test(s) || /(^|[^\p{L}])(thương|yêu)(?!\s*cầu)($|[^\p{L}])/iu.test(s)) return 'tim';
   return null;
 }
