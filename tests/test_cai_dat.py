@@ -12,8 +12,8 @@ from tests.test_brain import FakeClient
 def c(tmp_path, monkeypatch):
     monkeypatch.setattr(config, "CAI_DAT_PATH", tmp_path / "cai_dat.json")
     monkeypatch.setattr(cai_dat, "MAC_DINH", {"thanh_pho": "", "gio_yen_lang": "23-6", "tong_ket_tuan": True,
-                                                  "chuc_le": True})
-    for attr in ("THANH_PHO", "GIO_YEN_LANG", "WEEKLY_RECAP", "CHUC_LE"):
+                                                  "chuc_le": True, "nhac_thoi_quen": "20:30"})
+    for attr in ("THANH_PHO", "GIO_YEN_LANG", "WEEKLY_RECAP", "CHUC_LE", "NHAC_THOI_QUEN"):
         monkeypatch.setattr(config, attr, getattr(config, attr))  # trả lại như cũ sau test
     main._brain = Brain(Memory(tmp_path / "a.db"), client=FakeClient([]))
     return TestClient(main.app, headers={"X-Bo": "1"})
@@ -31,7 +31,8 @@ def test_kiem_tra():
 
 def test_mac_dinh_lay_tu_env(c):
     d = c.get("/api/cai-dat").json()
-    assert d == {"hien_tai": {"thanh_pho": "", "gio_yen_lang": "23-6", "tong_ket_tuan": True, "chuc_le": True},
+    assert d == {"hien_tai": {"thanh_pho": "", "gio_yen_lang": "23-6", "tong_ket_tuan": True, "chuc_le": True,
+                              "nhac_thoi_quen": "20:30"},
                  "da_chinh": []}
 
 
@@ -82,3 +83,13 @@ def test_get_chi_doc(c):
 def test_tat_chuc_le(c):
     d = c.put("/api/cai-dat", json={"chuc_le": False}).json()
     assert d["da_chinh"] == ["chuc_le"] and config.CHUC_LE is False
+
+
+def test_gio_nhac_thoi_quen(c):
+    assert cai_dat.kiem_tra("nhac_thoi_quen", " 21h ") == "21:00"
+    assert cai_dat.kiem_tra("nhac_thoi_quen", "") == ""
+    assert c.put("/api/cai-dat", json={"nhac_thoi_quen": "25:00"}).status_code == 400
+    d = c.put("/api/cai-dat", json={"nhac_thoi_quen": "21h15"}).json()
+    assert d["hien_tai"]["nhac_thoi_quen"] == "21:15" and config.NHAC_THOI_QUEN == "21:15"
+    c.put("/api/cai-dat", json={"nhac_thoi_quen": ""})
+    assert config.NHAC_THOI_QUEN == ""

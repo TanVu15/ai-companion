@@ -200,6 +200,7 @@
 - [x] Tối (20:30) còn thói quen chưa làm → Bơ nhắc nhẹ một lần (miễn phí, không gọi API)
 - [x] Rà soát code lần 18, sửa lỗi tìm được
 - [x] Bộ chấm điểm thêm tình huống "nhờ theo dõi thói quen" (26 tình huống)
+- [x] Chỉnh giờ nhắc thói quen trong "?" → Cài đặt (không cần sửa .env)
 
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định

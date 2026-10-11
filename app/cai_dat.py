@@ -15,8 +15,10 @@ MAC_DINH = {
     "gio_yen_lang": config.GIO_YEN_LANG,
     "tong_ket_tuan": config.WEEKLY_RECAP,
     "chuc_le": config.CHUC_LE,
+    "nhac_thoi_quen": config.NHAC_THOI_QUEN,
 }
-_THUOC_TINH = {"thanh_pho": "THANH_PHO", "gio_yen_lang": "GIO_YEN_LANG", "tong_ket_tuan": "WEEKLY_RECAP", "chuc_le": "CHUC_LE"}
+_THUOC_TINH = {"thanh_pho": "THANH_PHO", "gio_yen_lang": "GIO_YEN_LANG", "tong_ket_tuan": "WEEKLY_RECAP", "chuc_le": "CHUC_LE",
+               "nhac_thoi_quen": "NHAC_THOI_QUEN"}
 
 
 def kiem_tra(key: str, value):
@@ -38,6 +40,17 @@ def kiem_tra(key: str, value):
         if not m or int(m.group(1)) > 23 or int(m.group(2)) > 23 or m.group(1) == m.group(2):
             raise ValueError("Giờ yên lặng phải dạng 23-6 (từ 23h đến 6h), giờ từ 0 đến 23")
         return f"{int(m.group(1))}-{int(m.group(2))}"
+    if key == "nhac_thoi_quen":
+        if not isinstance(value, str):
+            raise ValueError("Giờ nhắc thói quen phải dạng 20:30")
+        if not value.strip():
+            return ""
+        from .brain import gio_phut
+
+        hm = gio_phut(value)
+        if hm is None:
+            raise ValueError("Giờ nhắc thói quen phải dạng 20:30 hoặc 20h30 (để trống = tắt)")
+        return f"{hm[0]:02d}:{hm[1]:02d}"
     if key in ("tong_ket_tuan", "chuc_le"):
         if not isinstance(value, bool):
             raise ValueError("Mục này chỉ bật hoặc tắt")

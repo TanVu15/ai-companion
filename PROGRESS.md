@@ -6,7 +6,7 @@
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
 ## Tóm tắt nhanh lần chạy 2026-10-10 23:31 → 2026-10-11 00:10 UTC
-Xong giai đoạn 31 → 38 (242 test qua hết, 8 lượt rà soát độc lập đã sửa lỗi). Đáng thử nhất:
+Xong giai đoạn 31 → 38 (244 test qua hết, 8 lượt rà soát độc lập đã sửa lỗi). Đáng thử nhất:
 1. **Nhật ký:** kể chuyện trong ngày → nút "Nhật ký"; hỏi "hôm qua mình làm gì nhỉ?". Tự ghi/sửa/tải .txt được.
 2. **Thói quen:** "theo dõi giúp mình thói quen đọc sách" → kể "đọc sách rồi" → nút "Thói quen" xem chuỗi ngày. Tối 20:30 chưa làm thì Bơ nhắc nhẹ (miễn phí).
 3. **Nhắc linh hoạt:** "ngày đi làm 7h nhắc mình...", "ngày 5 hằng tháng nhắc đóng tiền nhà".
@@ -682,4 +682,5 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - Bộ chấm điểm `python -m app.thu_tinh_cach` thêm tình huống "nhờ theo dõi thói quen" (26 tình huống). 243 test qua hết.
 
 **Tân cần thử (giai đoạn 38):** chạy `python -m app.thu_tinh_cach` với API key thật, gửi điểm + câu trả lời lạ vào `FEEDBACK.md`.
+- Giờ nhắc thói quen chỉnh được trong nút "?" → **Cài đặt** (gõ "21h" hay "21:00" đều được, để trống = tắt). 244 test qua hết.
 
