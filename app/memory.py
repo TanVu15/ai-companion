@@ -133,11 +133,13 @@ class Memory:
         self.conn.execute("DELETE FROM messages WHERE id = ?", (msg_id,))
         self.conn.commit()
 
-    def recent_messages(self, limit: int) -> list[dict]:
+    def recent_messages(self, limit: int, with_time: bool = False) -> list[dict]:
         rows = self.conn.execute(
-            "SELECT role, content FROM messages ORDER BY id DESC LIMIT ?", (limit,)
+            "SELECT role, content, created_at FROM messages ORDER BY id DESC LIMIT ?", (limit,)
         ).fetchall()
-        return [{"role": r, "content": c} for r, c in reversed(rows)]
+        if with_time:  # kèm giờ gửi, để bộ não ghi chú tin nào là của hôm trước
+            return [{"role": r, "content": c, "created_at": t} for r, c, t in reversed(rows)]
+        return [{"role": r, "content": c} for r, c, _ in reversed(rows)]
 
     def history_page(self, limit: int = 50, before_id: int | None = None) -> list[dict]:
         """Tin nhắn cho giao diện (có id và giờ), cũ → mới. `before_id` để tải thêm tin cũ hơn."""

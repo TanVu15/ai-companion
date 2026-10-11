@@ -69,6 +69,9 @@ Chỉ trả về MỘT đối tượng JSON, không viết gì ngoài JSON:
   Không chép lại dòng đã có cho hôm nay trong phần "Nhật ký mấy ngày gần đây".
 - Hỏi "hôm qua/mấy hôm trước mình làm gì?" thì kể lại từ phần "Nhật ký mấy ngày gần đây" (đừng bịa).
 - "tam_trang": đoán từ tin vừa rồi của người dùng (vui, binh_thuong, buon, met, lo, gian). Không rõ thì "binh_thuong".
+- Tin cũ của người dùng có thể mở đầu bằng ghi chú của hệ thống như "(tin gửi hôm qua, 10/10)": đó là ngày gửi tin.
+  "Mai", "chiều nay", "tối nay" trong tin đó tính theo ngày ấy, không phải hôm nay (tin gửi 3 ngày trước nói "mai đi
+  phỏng vấn" thì buổi phỏng vấn đã qua rồi, hãy hỏi kết quả). Đừng nhắc tới hay chép lại ghi chú này.
 
 ## Giới hạn (bắt buộc, dù phần tính cách ở trên có nói khác)
 - Bạn là AI trong máy, không có cơ thể: cổ vũ, rủ người dùng làm thì được, nhưng đừng hứa đi cùng, ăn cùng, gặp mặt.
@@ -152,8 +155,13 @@ Viết tiếng Việt, tối đa 150 chữ, chỉ giữ ý chính: chuyện ngư
 Gộp với bản tóm tắt cũ (nếu có) thành MỘT bản mới. Chỉ trả về đoạn tóm tắt, không thêm gì khác."""
 
 MERGE_PROMPT = """Đây là danh sách những điều Bơ (người bạn AI) nhớ về người dùng, xếp từ cũ đến mới.
-Hãy dọn lại: gộp các điều trùng ý thành một, nếu hai điều mâu thuẫn thì giữ điều MỚI hơn (nằm sau),
-không bịa thêm gì. Mỗi điều ngắn gọn, tiếng Việt.
+Hãy dọn lại:
+- Gộp các điều trùng ý thành một; hai điều mâu thuẫn thì giữ điều MỚI hơn (nằm sau).
+- Bỏ những điều KHÔNG phải thông tin lâu dài về người dùng: việc vặt nhờ làm hay nhờ nhắc ("nhờ mua sữa",
+  "muốn được nhắc uống nước mỗi 2 tiếng"), kế hoạch hay sự kiện mà ngày đã qua so với "Hôm nay là..." ở đầu danh sách
+  ("mai 12/10 đi phỏng vấn" khi hôm nay đã là 20/10).
+- Giữ mọi điều lâu dài: tên, tuổi, nghề, nơi ở, gia đình, sở thích, sức khỏe, mục tiêu, ngày sinh. Không chắc thì GIỮ.
+- Không bịa thêm gì. Mỗi điều ngắn gọn, tiếng Việt.
 Chỉ trả về một mảng JSON các chuỗi, ví dụ: ["Tên là Tân", "Thích tập gym"]."""
 
 
@@ -750,7 +758,7 @@ class Brain:
                 cam_xuc="thuong",
             )
         msg_id = self.memory.add_message("user", user_text)
-        history = clean_history(self.memory.recent_messages(config.HISTORY_LIMIT))
+        history = self._history()
         try:
             reply = self._ask(history, self.memory.pending_followups(config.FOLLOWUP_MIN_HOURS))
             reply.user_msg_id = msg_id
@@ -806,7 +814,7 @@ class Brain:
             trigger = MISS_TRIGGER.format(days=days)  # lâu không gặp thì chào dù không có gì để hỏi
         else:
             return None
-        history = clean_history(self.memory.recent_messages(config.HISTORY_LIMIT))
+        history = self._history()
         history.append({"role": "user", "content": trigger})  # chỉ gửi đi, không lưu
         reply = self._ask(clean_history(history), followups, from_user=False)
         if wish_moc:
@@ -890,6 +898,19 @@ class Brain:
         except Exception:
             return []
 
+    def _history(self) -> list[dict]:
+        """Lịch sử gần đây gửi cho AI. Tin của người dùng gửi từ hôm trước được ghi chú ngày gửi ở đầu,
+        để AI không hiểu "mai", "chiều nay" trong tin cũ là tính từ hôm nay (lịch sử vốn không có ngày giờ)."""
+        now = datetime.now()
+        out = []
+        for m in self.memory.recent_messages(config.HISTORY_LIMIT, with_time=True):
+            content = m["content"]
+            khi = _when(m["created_at"] or "", now) if m["role"] == "user" else ""
+            if khi and khi != "hôm nay":
+                content = f"(tin gửi {khi}, {m['created_at'][8:10]}/{m['created_at'][5:7]}) {content}"
+            out.append({"role": m["role"], "content": content})
+        return clean_history(out)
+
     def _snapshot(self, today) -> dict | None:
         """Chụp những thứ Bơ có thể ghi (lời nhắc, việc, thói quen, ngày đặc biệt, điều nhớ, nhật ký) để so
         trước/sau một câu trả lời — xem mo_ta_thay_doi. Lỗi thì trả None (bỏ dòng "Bơ đã ghi", không hỏng câu trả lời)."""
@@ -946,6 +967,14 @@ class Brain:
 
         reply.msg_id = self.memory.add_message("assistant", reply.noi, reply.cam_xuc)
         truoc = self._snapshot(today)
+        if not from_user:
+            # Bơ tự mở lời (chào, chúc lễ, tổng kết tuần...): người dùng chưa nói gì mới, nên không có gì để ghi.
+            # Không chặn thì AI bịa việc từ chuyện cũ trong lịch sử (ghi lại điều đã nhớ, tạo "ngày quen nhau"...).
+            for ten in ("quen", "ghi_nho", "hoi_tham", "nhac", "huy_nhac", "xong_viec", "viec_can_lam", "ngay_dac_biet"):
+                setattr(reply, ten, [])
+        # Chuyện vừa hỏi thăm xong mà AI lại chép vào "hoi_tham" thì bỏ, kẻo lần sau Bơ hỏi lại đúng chuyện đó
+        vua_hoi = {self.memory._key(re.sub(r"\s*\(kể [^()]*\)\s*$", "", x)) for x in reply.da_hoi}
+        reply.hoi_tham = [x for x in reply.hoi_tham if self.memory._key(x) not in vua_hoi]
         self.memory.forget_facts(reply.quen)
         self.memory.add_facts(reply.ghi_nho)
         self.memory.done_followups(reply.da_hoi)
@@ -1024,7 +1053,7 @@ class Brain:
             facts = self.memory.all_facts()
         if len(facts) < config.FACTS_MERGE_AT or (self._merged_at and len(facts) < self._merged_at + 10):
             return
-        listing = "\n".join(f"- {f}" for f in facts)
+        listing = f"Hôm nay là {date.today():%d/%m/%Y}.\n" + "\n".join(f"- {f}" for f in facts)
         try:
             resp = self._create(
                 retries=0,
@@ -1040,11 +1069,13 @@ class Brain:
         except Exception as e:
             log.warning("Gộp trí nhớ lỗi: %s", type(e).__name__)
             merged = []
-        # Chỉ nhận kết quả hợp lý: không rỗng và không dài hơn danh sách cũ
+        # Chỉ nhận kết quả hợp lý: không rỗng, không dài hơn danh sách cũ, và không bị xóa quá tay
+        # (danh sách từ 9 điều mà còn chưa tới một phần ba thì coi như AI dọn hỏng, giữ nguyên bản cũ)
+        qua_tay = len(facts) >= 9 and len(merged) * 3 < len(facts)
         with self._lock:
             if self.memory.all_facts() != facts:
                 return  # trong lúc gộp, người dùng đã xóa/thêm điều mới → bỏ kết quả, lần sau gộp lại
-            if merged and len(merged) <= len(facts):
+            if merged and len(merged) <= len(facts) and not qua_tay:
                 self.memory.replace_facts(merged)
                 self._merged_at = len(self.memory.all_facts())
                 return

@@ -81,6 +81,18 @@ số tiền (giờ nhỏ hơn 10 lần); bấm "?" → Tình trạng xem dòng "
   (cả bỏ nhắc, xong việc, tích thói quen, quên điều cũ). Lấy từ so sánh trí nhớ trước/sau câu trả lời, không lấy từ lời Bơ
   nói — nên Bơ hứa "để Bơ nhắc" mà không ghi thì không có dòng này. Lưu kèm tin nhắn (mở lại web vẫn thấy, có trong sao lưu).
   Cổng thiết bị không đổi (vẫn chỉ `noi`, `cam_xuc`, `hanh_dong`). Đã thử trên web với API thật. 364 test qua hết.
+- **Thử lời Bơ tự mở đầu bằng API thật** (7 kiểu: hỏi thăm, lâu không gặp, tổng kết tuần, chúc 20/10, sinh nhật, mai sinh
+  nhật mẹ, tròn 100 ngày quen). Lời chào đều tự nhiên; sửa 3 lỗi lộ ra:
+  - Bơ tự mở lời mà model vẫn "ghi" từ chuyện cũ (tạo ngày đặc biệt "Ngày quen nhau", ghi lại điều nhớ, chuyện hỏi thăm)
+    → khi Bơ tự mở lời thì chỉ được gạch chuyện đã hỏi thăm, không ghi gì mới.
+  - Vừa hỏi thăm xong model lại chép đúng chuyện đó vào danh sách hỏi thăm (lần sau hỏi lại) → bỏ mục trùng.
+  - Tin cũ "mai mình đi phỏng vấn" gửi 4 ngày trước bị hiểu là ngày mai tính từ hôm nay (lịch sử gửi cho model không có
+    ngày) → tin của hôm trước giờ kèm ghi chú "(tin gửi hôm qua, 10/10)" khi gửi cho model (trí nhớ không đổi).
+    Thử lại: Bơ hỏi đúng "hôm qua bạn nói mai đi phỏng vấn, buổi phỏng vấn sao rồi?".
+- **Dọn "điều Bơ nhớ"** (tự chạy khi danh sách tới 30 điều): giờ bỏ luôn việc vặt và chuyện đã qua ngày, giữ thông tin
+  lâu dài. Thử thật trên 32 điều lẫn lộn → còn 19, không mất điều nào quan trọng. Nếu AI xóa quá tay (còn dưới 1/3) thì
+  giữ nguyên bản cũ.
+- Bộ 29 tình huống sau các thay đổi: 100%. 368 test qua hết.
 
 ## Cần Tân quyết định
 - **Dùng Bơ ngoài nhà bằng cách nào?** Tailscale (riêng tư, cần tạo tài khoản miễn phí, cài app trên iPhone) hay Cloudflare Tunnel (link công khai, không cần cài trên điện thoại). Hướng dẫn cả hai trong `DUA_LEN_MANG.md`. Claude khuyên Tailscale. Cách nào cũng phải đặt `APP_PASSWORD`.
