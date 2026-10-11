@@ -5,6 +5,10 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-11 – Giai đoạn 55 (đang làm): thêm chút sống động
+- Ngủ say: Bơ thỉnh thoảng giật tai trong mơ hoặc trở mình. Đang đọc to: đuôi vẫy nhanh hơn, tai động nhẹ.
+- Sửa: mỗi câu giọng AI trước đây để lại một "nút âm thanh" trong trình duyệt → nói chuyện bằng giọng rất lâu sẽ nặng dần; giờ ngắt sau mỗi câu.
+
 ## 2026-10-11 – Giai đoạn 54: tư thế & bộ lông
 Ảnh: `docs/anh/kieu-long.png` (thường · mướp vằn · tam thể · mèo đen), `docs/anh/meo-o-banh-mi.png`, `docs/anh/meo-den-toi.png`.
 - **Ổ bánh mì**: 1 phút không ai đụng → Bơ nằm bẹp, giấu chân, đuôi quấn quanh người, mắt lim dim; 3 phút mới ngủ gật. Chạm/gõ là ngồi dậy.

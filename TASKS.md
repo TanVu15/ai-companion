@@ -304,6 +304,12 @@
 - [x] Đổi màu/kiểu lông xong, đóng hộp → Bơ nhảy lên khoe "Bộ lông mới nè, Bơ đẹp hông?"
 - [x] Bộ ảnh mèo (scripts/chup_meo.py) có thêm lăn, mừng, ổ bánh mì, hóng chuyện, lắng nghe
 
+## Giai đoạn 55 – Thêm chút sống động (Claude tự thêm, trong hướng mèo/chạm/giọng)
+- [x] Ngủ say thì thỉnh thoảng Bơ giật tai trong mơ hoặc trở mình
+- [x] Bơ đang đọc to thì đuôi vẫy nhanh hơn, tai động nhẹ
+- [ ] Đồ chơi cần câu lông vũ: lông vũ lơ lửng trên đầu Bơ theo ngón tay, Bơ đứng lên vồ bằng hai chân trước
+- [ ] Rà soát giai đoạn 55, sửa lỗi tìm được
+
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):
 - [ ] Xem / xóa "chuyện Bơ định hỏi thăm" trên web (trong "Bơ nhớ gì về mình?"), và báo trong dòng "✓ Bơ đã ghi: sẽ hỏi thăm ..."

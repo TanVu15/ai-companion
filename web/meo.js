@@ -96,6 +96,15 @@ const MEO_SVG = `
     setTimeout(viecVat, (k ? 15000 : 25000) + Math.random() * (k ? 15000 : 30000));
   }
   setTimeout(viecVat, 20000);
+  // Ngủ say: thỉnh thoảng giật tai trong mơ hoặc trở mình một cái
+  function mo() {
+    if (dangNgu() && !document.hidden && !yenLang()) {
+      const r = Math.random();
+      lan(r < 0.4 ? 'giat-tai-trai' : r < 0.7 ? 'giat-tai-phai' : 'tro-minh', r < 0.7 ? 450 : 1400);
+    }
+    setTimeout(mo, 12000 + Math.random() * 20000);
+  }
+  setTimeout(mo, 15000);
   // Thức dậy sau giấc ngủ gật: vươn vai một cái
   let truoc = face.dataset.e;
   new MutationObserver(() => {

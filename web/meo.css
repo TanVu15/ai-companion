@@ -292,3 +292,12 @@ header.dang-laser { touch-action: none; cursor: crosshair; position: relative; }
 .face[data-long="den"] .trong-mieng { fill: #6e2a2e; }
 .kieu-long { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: -4px 0 12px; font-size: 14px; }
 .kieu-long button[aria-checked="true"] { font-weight: 700; text-decoration: none; color: var(--text); }
+
+/* Ngủ say: trở mình (meo.js), đang đọc to: đuôi vẫy nhanh hơn, tai động nhẹ */
+@media (prefers-reduced-motion: no-preference) {
+  .meo.tro-minh { animation: meo-tro 1.4s ease-in-out; }
+  .face.talking .tail { animation-duration: 1.3s; }
+  .face.talking .ear-l { animation: meo-tai-noi 1.6s ease-in-out infinite; }
+}
+@keyframes meo-tro { 30% { transform: rotate(-4deg) scale(1.03, .97); } 60% { transform: rotate(3deg); } }
+@keyframes meo-tai-noi { 50% { transform: rotate(-6deg); } }
