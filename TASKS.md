@@ -420,7 +420,11 @@
 
 ## Giai đoạn 79 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
 - [x] Bật "Giọng nói": lần "ke ke ke" đầu tiên trong ngày Bơ đọc to; các lần sau chỉ hiện chữ
-- [ ] Rà soát giai đoạn 79, sửa lỗi tìm được
+- [x] Rà soát giai đoạn 79, sửa lỗi tìm được
+
+## Giai đoạn 80 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
+- [ ] Lông vũ lướt nhẹ qua lưng/bụng Bơ (không phải mũi) → lông Bơ rùng nhẹ, Bơ quay đầu nhìn chỗ nhột
+- [ ] Rà soát giai đoạn 80, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):

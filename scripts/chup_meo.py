@@ -23,7 +23,7 @@ from app import config  # noqa: E402
 TRANG_THAI = config.EMOTIONS + ["ngu"]
 # (Ảnh chụp cả trang cho PROGRESS.md đừng đặt tên meo-<tư thế>.png: script này sẽ ghi đè.)
 TRANG_THAI_NHO = ["ngap", "liem", "cho", "lan", "mung", "bep", "hong", "nghe", "nguoc-long", "dap-tay", "rua-mat", "chong-mat",
-                  "hat-xi", "boop", "nung-ma-trai", "be", "dinh-sua", "rinh", "vo-rinh", "nhoi", "chop-cham", "quo-trai", "om-len", "ngo-chan", "khoe"]
+                  "hat-xi", "boop", "nung-ma-trai", "be", "dinh-sua", "rinh", "vo-rinh", "nhoi", "chop-cham", "quo-trai", "om-len", "ngo-chan", "khoe", "theo-len", "ke-ke"]
 
 
 def cong_trong():
@@ -62,7 +62,7 @@ def main(out):
                 face.screenshot(path=out / f"meo-{e}.png")
             pg.evaluate("() => { face.dataset.e = 'binh_thuong'; }")
             for c in TRANG_THAI_NHO:
-                pg.evaluate("c => { const s = face.querySelector('svg'); s.classList.add(c); s.style.setProperty('--nhac', 1); }", c)  # bế: nhấc hẳn lên, chân thòng vẫn nằm trong khung
+                pg.evaluate("c => { const s = face.querySelector('svg'); s.classList.add(c); s.style.setProperty('--nhac', 1); s.style.setProperty('--theo-len', .8); }", c)  # bế: nhấc hẳn lên, chân thòng vẫn nằm trong khung
                 pg.wait_for_timeout(450)
                 face.screenshot(path=out / f"meo-{c}.png")
                 pg.evaluate("c => face.querySelector('svg').classList.remove(c)", c)

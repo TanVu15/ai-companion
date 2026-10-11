@@ -5,17 +5,18 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
-## 2026-10-11 – Giai đoạn 79 (đang làm): giọng cho trò ke ke
+## 2026-10-11 – Giai đoạn 79 xong: giọng cho trò ke ke
 - Bật "Giọng nói": lần "ke ke ke" đầu tiên trong ngày Bơ đọc to; các lần sau chỉ hiện chữ (đã thử trên trình duyệt: lần 2 không đọc). 437 test qua hết.
+- Rà soát: bộ ảnh `docs/anh/meo-tat-ca.png` chụp lại, có thêm "theo-len" (quay đầu theo len) và "ke-ke". `scripts/chup_meo.py` giờ cũng chụp hai tư thế này (ảnh ghép riêng đổi tên thành `len-lan-qua.png`, `laser-tren-cao.png` cho khỏi bị ghi đè). Đã xem lại cách 3 trò mới chen nhau (len + vuốt, laser + cho ăn, tab ẩn): ổn. 437 test qua hết.
 **Tân cần thử:** bật Giọng nói, để chấm laser đứng yên ngay trên đầu Bơ.
 
 ## 2026-10-11 – Giai đoạn 78 xong: Bơ "ke ke ke"
-- **Ke ke ke**: bật tia laser, để chấm đỏ đứng yên trên cao phía trên đầu Bơ khoảng 1 giây → Bơ ngửa đầu nhìn lên, tai dỏng, mắt mở to, miệng hé run run, đuôi giật "Ke ke ke... cao quá, với không tới!" (mèo thật hay kêu vậy khi thấy chim ngoài cửa sổ). Kéo chấm đi thì thôi. Nghỉ 6 giây giữa hai lần. Ảnh `docs/anh/meo-ke-ke.png` (điện thoại, máy tính, mèo đen màn hình thấp, tam thể nền tối). `scripts/thu_cham.py` thử thêm — đạt hết. 437 test qua hết.
+- **Ke ke ke**: bật tia laser, để chấm đỏ đứng yên trên cao phía trên đầu Bơ khoảng 1 giây → Bơ ngửa đầu nhìn lên, tai dỏng, mắt mở to, miệng hé run run, đuôi giật "Ke ke ke... cao quá, với không tới!" (mèo thật hay kêu vậy khi thấy chim ngoài cửa sổ). Kéo chấm đi thì thôi. Nghỉ 6 giây giữa hai lần. Ảnh `docs/anh/laser-tren-cao.png` (điện thoại, máy tính, mèo đen màn hình thấp, tam thể nền tối). `scripts/thu_cham.py` thử thêm — đạt hết. 437 test qua hết.
 - Rà soát, sửa: đang "ke ke" mà bấm cho ăn thì trước đây miệng Bơ vẫn run run lẫn với miệng đang ăn → giờ Bơ thôi ke ke, ăn luôn (đã thử trên trình duyệt). Chấm phải đứng yên mới tính (còn rê là đếm lại). `scripts/thu_cham.py` đạt hết, 437 test qua hết.
 **Tân cần thử:** bật nút chấm đỏ, rê chấm lên khoảng trống ngay trên đầu Bơ (giữa hai tai) rồi giữ yên tay.
 
 ## 2026-10-11 – Giai đoạn 77 xong: Bơ dõi theo cuộn len
-- **Nhìn theo len**: ném/lăn cuộn len ngang sàn qua trước mặt Bơ → Bơ nghiêng đầu quay theo len (len bên trái thì quay trái, bên phải thì quay phải), mắt mở to dán vào len, tai dỏng, đuôi giật giật háo hức. Len dừng, bay cao hay lăn xa thì nửa giây sau Bơ thôi. Len lăn trúng chân thì Bơ vồ như cũ (thôi quay đầu ngay cho khỏi lẫn tư thế). Ảnh `docs/anh/meo-theo-len.png` (len bên trái, bên phải, máy tính). `scripts/thu_cham.py` thử thêm — đạt hết. 436 test qua hết.
+- **Nhìn theo len**: ném/lăn cuộn len ngang sàn qua trước mặt Bơ → Bơ nghiêng đầu quay theo len (len bên trái thì quay trái, bên phải thì quay phải), mắt mở to dán vào len, tai dỏng, đuôi giật giật háo hức. Len dừng, bay cao hay lăn xa thì nửa giây sau Bơ thôi. Len lăn trúng chân thì Bơ vồ như cũ (thôi quay đầu ngay cho khỏi lẫn tư thế). Ảnh `docs/anh/len-lan-qua.png` (len bên trái, bên phải, máy tính). `scripts/thu_cham.py` thử thêm — đạt hết. 436 test qua hết.
 - Rà soát, sửa: đang được vuốt, gãi cằm, boop, nựng má, khoe, nhồi bột, bế... mà len lăn qua thì trước đây đầu Bơ bị kéo quay theo len, đè mất tư thế đó → giờ Bơ lo tư thế đang làm, không quay đầu. Mèo đen (màn hình thấp, nền tối), mướp vằn, tam thể (giảm chuyển động): không vỡ hình (ảnh `docs/anh/theo-len-kieu-long.png`). 436 test qua hết, `scripts/thu_cham.py` đạt hết.
 **Tân cần thử:** bật nút cuộn len, kéo len xuống sát sàn ở mép trái rồi đẩy nhẹ sang phải.
 
