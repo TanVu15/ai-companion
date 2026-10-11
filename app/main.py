@@ -312,6 +312,12 @@ def health():
             (f"{len(bans)} bản trong {config.SAO_LUU_DIR.parent.name}/sao_luu/, mới nhất {bans[0].stem[3:]}" if bans
              else "Bật, bản đầu tiên ghi khi bạn nhắn tin") if config.TU_SAO_LUU else "Đang tắt (TU_SAO_LUU=0)",
             "canh_bao")
+    if config.NHAC_THOI_QUEN.strip():
+        from .brain import gio_phut
+
+        ok = gio_phut(config.NHAC_THOI_QUEN) is not None
+        add("Nhắc thói quen", ok, f"Tối nhắc lúc {config.NHAC_THOI_QUEN}" if ok else
+            f"NHAC_THOI_QUEN={config.NHAC_THOI_QUEN} không đúng dạng giờ (ví dụ 20:30) nên đang tắt", "canh_bao")
     add("Mật khẩu web", bool(config.APP_PASSWORD),
         "Đã đặt APP_PASSWORD" if config.APP_PASSWORD else "Chưa đặt APP_PASSWORD (ổn nếu chỉ dùng trong nhà)", "canh_bao")
     add("Ngân sách tháng", config.MONTHLY_USD_LIMIT > 0,
@@ -324,7 +330,7 @@ def health():
 @app.get("/api/nhac")
 def reminders_due():
     """Web gọi mỗi 30 giây: trả các lời nhắc vừa tới giờ (mỗi cái chỉ trả một lần)."""
-    return [{**r.to_dict(), "viec": r.viec_nhac, "id": r.msg_id} for r in get_brain().due_reminders()]
+    return [{**r.to_dict(), "viec": r.viec_nhac, "loai": r.loai, "id": r.msg_id} for r in get_brain().due_reminders()]
 
 
 class SnoozeIn(BaseModel):

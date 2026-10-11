@@ -125,3 +125,30 @@ def test_nhac_thoi_quen_qua_api(tmp_path, monkeypatch):
     r = c.get("/api/nhac").json()
     assert len(r) == 1 and "đọc sách" in r[0]["noi"]
     assert c.get("/api/nhac").json() == []
+
+
+def test_gio_phut_va_ten_viet_hoa(memory, monkeypatch):
+    from datetime import datetime
+
+    from app import config
+    from app.brain import gio_phut
+
+    assert gio_phut("20:30") == (20, 30) and gio_phut("20h30") == (20, 30) and gio_phut("8h") == (8, 0)
+    assert gio_phut("25:00") is None and gio_phut("20:61") is None and gio_phut("-1:00") is None
+    assert gio_phut("") is None and gio_phut("abc") is None
+    monkeypatch.setattr(config, "NHAC_THOI_QUEN", "20h")
+    memory.add_habits(["IELTS 30 phút"])
+    text = Brain(memory, client=FakeClient([]))._habit_nudge(datetime(2026, 10, 10, 20, 5))
+    assert "kể IELTS 30 phút" in text
+
+
+def test_loai_va_suc_khoe(tmp_path, monkeypatch):
+    from app import config, main
+
+    c = make_client(tmp_path, [])
+    monkeypatch.setattr(config, "NHAC_THOI_QUEN", "00:00")
+    main._brain.memory.add_habits(["Đọc sách"])
+    assert c.get("/api/nhac").json()[0]["loai"] == "thoi_quen"
+    monkeypatch.setattr(config, "NHAC_THOI_QUEN", "25h")
+    checks = {k["ten"]: k for k in c.get("/api/suc-khoe").json()["kiem_tra"]}
+    assert not checks["Nhắc thói quen"]["ok"] and checks["Nhắc thói quen"]["muc"] == "canh_bao"

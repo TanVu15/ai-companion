@@ -5,6 +5,15 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## Tóm tắt nhanh lần chạy 2026-10-10 23:31 → 2026-10-11 00:10 UTC
+Xong giai đoạn 31 → 38 (242 test qua hết, 8 lượt rà soát độc lập đã sửa lỗi). Đáng thử nhất:
+1. **Nhật ký:** kể chuyện trong ngày → nút "Nhật ký"; hỏi "hôm qua mình làm gì nhỉ?". Tự ghi/sửa/tải .txt được.
+2. **Thói quen:** "theo dõi giúp mình thói quen đọc sách" → kể "đọc sách rồi" → nút "Thói quen" xem chuỗi ngày. Tối 20:30 chưa làm thì Bơ nhắc nhẹ (miễn phí).
+3. **Nhắc linh hoạt:** "ngày đi làm 7h nhắc mình...", "ngày 5 hằng tháng nhắc đóng tiền nhà".
+4. **Đếm ngược:** "còn mấy ngày nữa Tết?"; danh sách ngày đặc biệt ghi "(còn X ngày)"; dòng lịch báo ngày sắp tới.
+5. **Lịch điện thoại:** "Bơ nhớ gì về mình?" → "Tải lịch cho điện thoại (.ics)" → thêm vào app Lịch iPhone.
+6. **Tự sao lưu** mỗi ngày vào `data/sao_luu/` (giữ 7 bản). Nút "?" có "Chuỗi N ngày liền trò chuyện"; tròn 100 ngày / 1 năm quen nhau Bơ tự nhắc.
+
 ## Tóm tắt nhanh lần chạy 2026-10-10 (22:31–23:10 UTC)
 Xong giai đoạn 24 → 30 (189 test qua hết, 4 lượt rà soát độc lập đã sửa lỗi). Đáng thử nhất:
 1. **Tâm trạng:** nút "?" có dải tâm trạng 7 ngày; mấy hôm buồn/mệt Bơ nhẹ nhàng hơn.
@@ -662,6 +671,12 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - 238 test qua hết.
 
 ## 2026-10-11 – Giai đoạn 38: nhắc thói quen buổi tối
-- Từ 20:30, nếu web đang mở và còn thói quen chưa làm, Bơ nhắn một câu: "Hôm nay chưa thấy bạn kể đọc sách. Đừng để đứt chuỗi 3 ngày nha!" — mỗi ngày một lần, câu soạn sẵn nên **không tốn tiền API**. Đổi giờ bằng `NHAC_THOI_QUEN` trong `.env` (để trống = tắt).
+- Từ 20:30, nếu web (hoặc thiết bị) đang mở và còn thói quen chưa làm, Bơ nhắn một câu: "Hôm nay chưa thấy bạn kể đọc sách. Đừng để đứt chuỗi 3 ngày nha!" — mỗi ngày một lần, câu soạn sẵn nên **không tốn tiền API**. Đổi giờ bằng `NHAC_THOI_QUEN` trong `.env` (để trống = tắt).
 - 240 test qua hết.
+
+## 2026-10-11 – Giai đoạn 38 xong: rà soát lần 18
+- `NHAC_THOI_QUEN` nhận cả "20h30", "20h"; giờ sai (25:00...) thì nút "?" → Tình trạng báo rõ thay vì im lặng tắt.
+- Cổng thiết bị `/api/thiet-bi/nhac` có thêm `"loai"` ("nhac" = nên kêu chuông, "thoi_quen" = chỉ nói).
+- Tên thói quen viết hoa ("IELTS") giữ nguyên trong câu nhắc.
+- 242 test qua hết.
 

@@ -46,6 +46,8 @@ Không có thì trả `{"noi": null}` → thiết bị im lặng. Không tốn t
 Thiết bị hỏi mỗi 30 giây. Có lời nhắc tới giờ (Tân nhờ "8h tối nhắc mình gọi mẹ") thì trả danh sách
 `[{"noi": "Tới giờ rồi nè: gọi mẹ!", "cam_xuc": "hao_hung", "hanh_dong": "vay_tay"}]`, không có thì `[]`.
 Mỗi lời nhắc chỉ báo **một lần**: nếu web và thiết bị cùng mở, nơi nào hỏi trước thì nơi đó nhận.
+Mỗi mục có `"loai"`: `"nhac"` = lời nhắc Tân nhờ (nên kêu chuông), `"thoi_quen"` = Bơ nhắc nhẹ buổi tối về thói quen
+chưa làm (chỉ nói, đừng kêu chuông).
 
 ### 4. Việc cần làm: `GET /api/thiet-bi/viec`
 

@@ -77,6 +77,7 @@ class Reply:
     thoi_quen_moi: list[str] = field(default_factory=list)
     thoi_quen_xong: list[str] = field(default_factory=list)
     tam_trang: str = ""  # tâm trạng người dùng Bơ đoán được (nội bộ, giao diện không dùng)
+    loai: str = "nhac"  # với tin tự gửi theo giờ: "nhac" (lời nhắc) hoặc "thoi_quen" (nhắc nhẹ buổi tối)
     viec_nhac: str = ""  # với lời nhắc tới giờ: việc gốc (để bấm "nhắc lại sau")
     msg_id: int = 0  # số thứ tự tin của Bơ trong lịch sử (để ghim)
     user_msg_id: int = 0
@@ -383,6 +384,15 @@ def cost_usd(u: dict) -> float:
     return (u["input_tokens"] * config.PRICE_INPUT_PER_MTOK + u["output_tokens"] * config.PRICE_OUTPUT_PER_MTOK) / 1e6
 
 
+def gio_phut(v: str) -> tuple[int, int] | None:
+    """ "20:30", "20h30", "20h", "8:05" → (giờ, phút); trống hoặc sai → None."""
+    m = re.fullmatch(r"(\d{1,2})\s*[:hH]\s*(\d{0,2})", (v or "").strip())
+    if not m:
+        return None
+    h, mi = int(m.group(1)), int(m.group(2) or 0)
+    return (h, mi) if h <= 23 and mi <= 59 else None
+
+
 def reminder_text(viec: str, luc: str = "", now: datetime | None = None) -> str:
     """Câu Bơ nói khi tới giờ nhắc. Trễ quá 15 phút (lúc đó không mở web) thì nói rõ là nhắc muộn."""
     viec = viec[:1].lower() + viec[1:]
@@ -480,7 +490,7 @@ class Brain:
                 out.append(reply)
             nudge = self._habit_nudge()
             if nudge:
-                reply = Reply(noi=nudge, cam_xuc="vui", hanh_dong="nghieng_dau")
+                reply = Reply(noi=nudge, cam_xuc="vui", hanh_dong="nghieng_dau", loai="thoi_quen")
                 reply.msg_id = self.memory.add_message("assistant", reply.noi, reply.cam_xuc, tu_dong=True)
                 out.append(reply)
             return out
@@ -488,10 +498,10 @@ class Brain:
     def _habit_nudge(self, now: datetime | None = None) -> str:
         """Từ giờ NHAC_THOI_QUEN tới hết ngày, còn thói quen chưa làm → một câu nhắc nhẹ (mỗi ngày một lần)."""
         now = now or datetime.now()
-        try:
-            h, m = (int(x) for x in config.NHAC_THOI_QUEN.split(":"))
-        except ValueError:
+        hm = gio_phut(config.NHAC_THOI_QUEN)
+        if hm is None:
             return ""
+        h, m = hm
         if (now.hour, now.minute) < (h, m) or self.memory.get_kv("nhac_thoi_quen") == now.date().isoformat():
             return ""
         habits = self.memory.habits(now.date())
@@ -501,7 +511,7 @@ class Brain:
         self.memory.set_kv("nhac_thoi_quen", now.date().isoformat())
         if not chua:
             return ""
-        ten = ", ".join(t[:1].lower() + t[1:] for t in chua[:3]) + (" ..." if len(chua) > 3 else "")
+        ten = ", ".join((t[:1].lower() + t[1:]) if t[1:2].islower() else t for t in chua[:3]) + (" ..." if len(chua) > 3 else "")
         giu = max((x["chuoi"] for x in habits if not x["hom_nay"]), default=0)
         tail = f" Đừng để đứt chuỗi {giu} ngày nha!" if giu >= 2 else " Còn kịp đó!"
         return f"Hôm nay chưa thấy bạn kể {ten}.{tail} Làm rồi thì nhắn Bơ để Bơ tích cho."
