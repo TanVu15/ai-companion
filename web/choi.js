@@ -504,6 +504,7 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
         ev.preventDefault(); ds[(i + (ev.key === 'ArrowDown' ? 1 : ds.length - 1)) % ds.length].focus();
       } else if (ev.key === 'Tab') dongMenuAn(false);
     });
+    document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && !menuAn.hidden) dongMenuAn(menuAn.contains(document.activeElement)); });
     document.addEventListener('pointerdown', ev => { if (!menuAn.hidden && !menuAn.contains(ev.target) && ev.target !== nutCa && !nutCa.contains(ev.target)) dongMenuAn(false); });
   }
   veNutAn();
