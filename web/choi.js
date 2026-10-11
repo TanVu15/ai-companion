@@ -199,7 +199,7 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
       const loc = ac.createBiquadFilter(); loc.type = 'bandpass'; loc.Q.value = 2.5;
       loc.frequency.setValueAtTime(vang[0], t0); loc.frequency.linearRampToValueAtTime(vang[1], giua); loc.frequency.linearRampToValueAtTime(vang[2], het);
       const to = ac.createGain(); to.gain.setValueAtTime(0, t0);
-      to.gain.linearRampToValueAtTime(0.22, t0 + 0.04); to.gain.setValueAtTime(0.22, het - 0.08); to.gain.linearRampToValueAtTime(0, het);
+      to.gain.linearRampToValueAtTime(0.45, t0 + 0.04); to.gain.setValueAtTime(0.45, het - 0.08); to.gain.linearRampToValueAtTime(0, het);
       osc.connect(loc); loc.connect(to); to.connect(ac.destination);
       osc.start(t0); osc.stop(het + 0.05);
       osc.onended = () => { try { to.disconnect(); } catch (e) {} };  // ngắt hẳn, kẻo kêu nhiều thì trình duyệt nặng dần

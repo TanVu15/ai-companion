@@ -325,7 +325,12 @@
 ## Giai đoạn 58 – Đuôi & tiếng meo (Claude tự thêm, trong hướng mèo/chạm/giọng)
 - [x] Chạm vào đuôi → đuôi giật vụt đi, Bơ quay đầu nhìn đuôi "Đuôi Bơ mà!" (vùng chạm 'duoi' có test)
 - [x] Tiếng "meo" ngắn tạo bằng Web Audio (không cần file, không gọi mạng) khi chạm tai/đập tay/mừng rỡ; chỉ kêu khi bật "Giọng nói", giờ yên lặng thì im
-- [ ] Rà soát giai đoạn 58, sửa lỗi tìm được
+- [x] Rà soát giai đoạn 58, sửa lỗi tìm được
+
+## Giai đoạn 59 – Ngửi tay & cọ má (Claude tự thêm, trong hướng mèo/chạm)
+- [ ] Giữ yên ngón tay/chuột trước mũi Bơ khoảng 1 giây → Bơ rướn đầu ngửi (mũi phập phồng), rồi cọ má vào tay "Thơm tay bạn ghê~" (hàm nhận biết "giữ yên gần mũi" có test)
+- [ ] Bàn phím: thêm phím tắt cho chạm mới khi đang chọn Bơ (T = chạm tai, D = đập tay), ghi vào nhãn aria
+- [ ] Rà soát giai đoạn 59, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):

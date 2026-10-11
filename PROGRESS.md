@@ -5,9 +5,11 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
-## 2026-10-11 – Giai đoạn 58 (đang làm): đuôi & tiếng meo
+## 2026-10-11 – Giai đoạn 58 xong: đuôi & tiếng meo
 - **Chạm đuôi**: đuôi vụt sang một bên, Bơ quay đầu liếc nhìn "Đuôi Bơ mà!". Ảnh `docs/anh/meo-cham-duoi.png`.
 - **Tiếng meo**: đang bật "Giọng nói" thì chạm tai/đuôi Bơ kêu "mrr?" ngắn, đập tay thì "meo~" cao dần. Tiếng tạo ngay trong trình duyệt (không file, không mạng). Không kêu trong giờ yên lặng, lúc Bơ đang đọc hay đang bật rảnh tay.
+- Rà soát: tiếng meo lúc đầu hơi nhỏ so với giọng đọc (đã đo bằng cách dựng âm thanh thử) → tăng gấp đôi. 407 test qua hết.
+**Tân cần thử:** bật "Giọng nói", chạm tai Bơ và chạm nhanh hai lần vào chân trước, nghe tiếng meo có dễ thương không (chưa ưng thì ghi `FEEDBACK.md`: cao/thấp, dài/ngắn).
 
 ## 2026-10-11 – Giai đoạn 57 xong: chạm tinh tế hơn
 - **Vuốt ngược lông**: chạm/bấm vào hai bên lưng Bơ rồi kéo **lên trên** → lông hai bên dựng đứng, tai cụp ngang, mắt nheo, miệng méo, "Ngược lông rồi á!". Kéo xuống (xuôi) thì vẫn rừ rừ như cũ. Rê chuột không bấm thì không tính. Ảnh `docs/anh/meo-nguoc-long.png`.
