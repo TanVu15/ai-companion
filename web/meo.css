@@ -208,6 +208,11 @@ header.dang-laser { touch-action: none; cursor: crosshair; position: relative; }
 .meo.chong-mat .ear-l { transform: rotate(-20deg); } .meo.chong-mat .ear-r { transform: rotate(20deg); }
 /* Gợi ý trò chơi: nghiêng đầu tinh nghịch */
 .meo.nghieng .head { transform: rotate(-10deg); } .meo.nghieng .ear-r { transform: rotate(10deg); }
+/* Hắt xì (lông vũ quét mũi): nhắm tịt mắt, há miệng, tai bật ra */
+.meo.hat-xi :is(.mat-mo, .mat-cuoi) { display: none !important; } .meo.hat-xi .mat-nham { display: inline !important; }
+.meo.hat-xi :is(.mieng-w, .mieng-buon) { display: none !important; } .meo.hat-xi .mieng-mo { display: inline !important; }
+.meo.hat-xi .ear-l { transform: rotate(-18deg); } .meo.hat-xi .ear-r { transform: rotate(18deg); }
+.meo.hat-xi .head { transform: translateY(4px) rotate(-3deg); }
 /* Gãi cằm: ngửa cổ */
 .meo.gai-cam .head { transform: translateY(-6px) rotate(-6deg); }
 /* Chạm tai: tai giật */
@@ -253,6 +258,7 @@ header.dang-laser { touch-action: none; cursor: crosshair; position: relative; }
   .meo.mung .tail { animation: meo-ngoe .4s ease-in-out infinite; }
   .meo.doi { transition: transform .3s; }
   .meo.giat { animation: meo-giat .45s ease-out; }
+  .meo.hat-xi .head { animation: meo-hat-xi .55s ease-out; }
   .meo.chong-mat { animation: meo-lac-lu .45s ease-in-out infinite alternate; }
   .meo.ngui .mui { animation: meo-hit .3s ease-in-out infinite alternate; }
   .meo.co-ma .head { animation: meo-co-ma .5s ease-in-out infinite alternate; }
@@ -277,6 +283,7 @@ header.dang-laser { touch-action: none; cursor: crosshair; position: relative; }
 @keyframes meo-hit { to { transform: scale(1.18, .85); } }
 @keyframes meo-co-ma { from { transform: translateY(3px) rotate(-9deg); } to { transform: translateY(3px) rotate(-3deg); } }
 @keyframes meo-lac-lu { from { transform: rotate(-6deg); } to { transform: rotate(6deg); } }
+@keyframes meo-hat-xi { 0% { transform: translateY(-4px) rotate(2deg); } 35% { transform: translateY(-6px); } 55% { transform: translateY(8px) rotate(-4deg); } }
 @keyframes meo-dung { from { opacity: 0; } }
 @keyframes meo-bong { from { transform: scale(.7); opacity: 0; } }
 

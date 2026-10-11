@@ -356,6 +356,11 @@
 - [x] Rà soát toàn bộ web/choi.js, do_choi.js, meo.js: bộ hẹn giờ chồng nhau, trạng thái kẹt, chạy lúc tab ẩn; sửa lỗi tìm được
 - [x] Rà soát giai đoạn 64, sửa lỗi tìm được
 
+## Giai đoạn 65 – Lông vũ & bữa ăn (Claude tự thêm, trong hướng mèo/chạm)
+- [x] Lông vũ quét ngang mũi Bơ → Bơ hắt xì "Hắt xì!" (lâu lâu, không lặp liền)
+- [ ] Cho ăn đa dạng: nhấn giữ nút cá để chọn cá / sữa / pate; mỗi món có hình và câu riêng (vẫn không có thanh đói)
+- [ ] Rà soát giai đoạn 65, sửa lỗi tìm được
+
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):
 - [ ] Xem / xóa "chuyện Bơ định hỏi thăm" trên web (trong "Bơ nhớ gì về mình?"), và báo trong dòng "✓ Bơ đã ghi: sẽ hỏi thăm ..."

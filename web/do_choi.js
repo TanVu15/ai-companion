@@ -36,7 +36,7 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut };
 (function () {
   if (typeof document === 'undefined' || !window.boChoi) return;
   const { face, khung, svg, nhin, header, giu, noi, dem, dangDoi, conChoi, doChoi } = window.boChoi;
-  const { boVungCham, boHuongNhin } = window;
+  const { boVungCham, boHuongNhin, boGanMui } = window;
 
   // ---- Tia laser: chấm đỏ theo ngón tay/chuột trong vùng quanh mèo; mèo nhìn theo, chấm tới gần thì vồ ----
   const nutLaser = document.getElementById('doChoi');
@@ -170,7 +170,7 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut };
 
   // ---- Cần câu lông vũ: lông treo dây, lắc lư theo ngón tay/chuột trong vùng quanh Bơ; lông ở trên đầu thì Bơ đứng lên vồ ----
   const nutLongVu = document.getElementById('longVu');
-  let lv = null, lvPos = null, lvDich = null, lvVong = 0, lvTat = null, lvNoi = 0;
+  let lv = null, lvPos = null, lvDich = null, lvVong = 0, lvTat = null, lvNoi = 0, lvHatXi = 0;
   function henTatLongVu() { clearTimeout(lvTat); lvTat = setTimeout(() => batLongVu(false), 15000); }
   function buocLongVu() {
     lvVong = 0;
@@ -183,6 +183,10 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut };
       const r = header.getBoundingClientRect();
       const p = new DOMPoint(r.left + lvPos.x, r.top + lvPos.y + 20).matrixTransform(m.inverse());
       if (nhin && face.dataset.e !== 'ngu') { const [tx, ty] = boHuongNhin(p.x - 100, p.y - 74); nhin.setAttribute('transform', `translate(${tx} ${ty})`); }
+      // lông quét ngang mũi → lâu lâu Bơ hắt xì (nghỉ 6 giây giữa hai lần)
+      if (boGanMui(p.x, p.y) && Date.now() - lvHatXi > 6000 && !dangDoi() && face.dataset.e !== 'ngu') {
+        lvHatXi = Date.now(); giu('hat-xi', 900); noi('hat_xi', true); conChoi();
+      }
       // lông ở phía trên đầu, ngang tầm với của chân → đứng lên vồ
       if (p.y > -30 && p.y < 45 && Math.abs(p.x - 100) < 65 && !dangDoi() && face.dataset.e !== 'ngu') {
         giu('voi', 500); conChoi();

@@ -5,6 +5,9 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-11 – Giai đoạn 65 (đang làm): lông vũ & bữa ăn
+- **Hắt xì**: đưa cần câu lông vũ quét ngang mũi Bơ → Bơ nhắm tịt mắt, há miệng "Hắt xì!" (tối đa 6 giây một lần). Ảnh `docs/anh/meo-hat-xi.png`.
+
 ## 2026-10-11 – Giai đoạn 64 xong: Bơ để ý tin nhắn
 - Gửi tin có **"cá"** hoặc 🐟 → Bơ liếm mép ngay; có **"thương"/"yêu"**/❤ → tim bay quanh Bơ, Bơ nhắm mắt sướng (trước cả khi Bơ trả lời, không tốn API). "các", "cám ơn", "yêu cầu" không bị nhận nhầm.
 - Rà soát chạm & chơi, sửa: đang chơi đồ chơi thì Bơ không tự ngáp/ngó quanh (trước đây mắt bị kéo khỏi đồ chơi); việc vặt gọi chồng nhau không còn tắt sớm.
