@@ -559,3 +559,14 @@ header.dang-long-vu { touch-action: none; position: relative; }
   .meo.ke-ke .tail { animation: meo-len-giat-duoi .25s ease-in-out infinite alternate; }
 }
 @keyframes meo-ke-ke { from { transform: scale(.55, .3); } to { transform: scale(.6, .6); } }
+
+/* Lông vũ cù lưng/bụng: lông rùng nhẹ, đầu cúi quay về chỗ nhột (--nhot: -1 trái, 1 phải), mắt cười, má hồng, tai giật, đuôi vẫy */
+.meo.nhot-long .head { transform: rotate(calc(var(--nhot, 0) * 10deg)) translateY(4px); }
+.meo.nhot-long :is(.mat-mo, .mat-nham) { display: none !important; } .meo.nhot-long .mat-cuoi { display: inline !important; }
+.meo.nhot-long .ma { opacity: .8; }
+.meo.nhot-long .ear-l { transform: rotate(-10deg); } .meo.nhot-long .ear-r { transform: rotate(10deg); }
+.meo.nhot-long .tail { transform: rotate(-12deg); }
+@media (prefers-reduced-motion: no-preference) {
+  .meo.nhot-long .body { animation: meo-rung-long .09s linear 8 alternate; }
+}
+@keyframes meo-rung-long { from { transform: translateX(-1.2px) scale(1.01, .99); } to { transform: translateX(1.2px) scale(.99, 1.01); } }

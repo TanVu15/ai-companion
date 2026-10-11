@@ -403,6 +403,17 @@ def test_laser_tren_cao_ke_ke():
     assert "doChoi.thaLen = () => { thaLen(); thoiRinhLaser(); thoiKeKe(); thoiTheoLen(); };" in js
 
 
+def test_long_vu_cu_lung():
+    """Lông vũ lướt qua lưng/bụng Bơ → lông rùng nhẹ, Bơ quay đầu nhìn chỗ nhột, cười; lông đứng yên thì không (nghỉ 3 giây)."""
+    v = node("console.log(JSON.stringify([C.BO_CAU_CHOI.nhot.length > 0, C.BO_DOC_TO.includes('nhot')]))")
+    assert v == [True, False]
+    css = (config.ROOT / "web" / "meo.css").read_text(encoding="utf-8")
+    assert ".meo.nhot-long .head" in css and "var(--nhot" in css and "@keyframes meo-rung-long" in css
+    js = (config.ROOT / "web" / "do_choi.js").read_text(encoding="utf-8")
+    assert "(vung === 'lung' || vung === 'bung') && dangLuot && Date.now() - lvNhot > 3000" in js
+    assert "giu('nhot-long', 900)" in js
+
+
 def test_cho_an_luc_om_len_thi_buong_len():
     """Đang ôm cuộn len mà cho ăn → Bơ buông len ra (không vừa ôm vừa ăn)."""
     choi = (config.ROOT / "web" / "choi.js").read_text(encoding="utf-8")

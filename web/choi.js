@@ -59,6 +59,7 @@ const BO_CAU_CHOI = {
   quo: ['Quơ quơ~ sắp tới rồi!', 'Ê, đứng yên coi!', 'Một chân thôi cũng bắt được!'],
   rinh: ['Rình... rình...', 'Suỵt... Bơ đang rình đó', 'Mông ngoáy ngoáy... chuẩn bị nè'],
   vo_rinh: ['Phập! Bắt được rồi!', 'Vồ! Lông vũ là của Bơ!', 'Hây da! Trúng phóc!', 'Bơ là thợ săn số một~'],
+  nhot: ['Hí hí, nhột! Lông vũ cù Bơ hả~', 'Ối, nhột lưng quá!', 'Hihi, chỗ đó nhột lắm á~'],
   ke_ke: ['Ke ke ke... cao quá, với không tới!', 'Ke ke ke~ xuống đây coi!', 'Ke ke... Bơ mà nhảy được là bắt liền!'],
   hat_xi: ['Hắt xì!', 'Hắt... xì! Lông vũ nhột mũi quá~', 'Ắt xì! Hí hí'],
   goi: ['Dạ? Bơ nghe nè!', 'Meo? Bạn gọi Bơ hả?', 'Dạaa~ Bơ đây!'],

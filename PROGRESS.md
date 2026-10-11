@@ -5,6 +5,10 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-11 – Giai đoạn 80 (đang làm): lông vũ cù Bơ
+- **Nhột**: bật cần câu lông vũ, lướt lông ngang qua lưng hay bụng Bơ → lông Bơ rùng rùng, Bơ cúi đầu quay về phía chỗ nhột, mắt cười, má hồng, tai giật, lâu lâu nói "Hí hí, nhột! Lông vũ cù Bơ hả~". Lông đứng yên thì không tính; nghỉ 3 giây giữa hai lần. Máy bật giảm chuyển động thì không rùng, chỉ đổi tư thế. Ảnh `docs/anh/long-vu-cu-lung.png` (điện thoại, máy tính, mèo đen màn hình thấp, mướp vằn nền tối). `scripts/thu_cham.py` thử thêm — đạt hết. 438 test qua hết.
+**Tân cần thử:** bật nút lông vũ, rê lông ngang qua bụng Bơ.
+
 ## 2026-10-11 – Giai đoạn 79 xong: giọng cho trò ke ke
 - Bật "Giọng nói": lần "ke ke ke" đầu tiên trong ngày Bơ đọc to; các lần sau chỉ hiện chữ (đã thử trên trình duyệt: lần 2 không đọc). 437 test qua hết.
 - Rà soát: bộ ảnh `docs/anh/meo-tat-ca.png` chụp lại, có thêm "theo-len" (quay đầu theo len) và "ke-ke". `scripts/chup_meo.py` giờ cũng chụp hai tư thế này (ảnh ghép riêng đổi tên thành `len-lan-qua.png`, `laser-tren-cao.png` cho khỏi bị ghi đè). Đã xem lại cách 3 trò mới chen nhau (len + vuốt, laser + cho ăn, tab ẩn): ổn. 437 test qua hết.

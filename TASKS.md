@@ -423,7 +423,7 @@
 - [x] Rà soát giai đoạn 79, sửa lỗi tìm được
 
 ## Giai đoạn 80 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
-- [ ] Lông vũ lướt nhẹ qua lưng/bụng Bơ (không phải mũi) → lông Bơ rùng nhẹ, Bơ quay đầu nhìn chỗ nhột
+- [x] Lông vũ lướt nhẹ qua lưng/bụng Bơ (không phải mũi) → lông Bơ rùng nhẹ, Bơ quay đầu nhìn chỗ nhột
 - [ ] Rà soát giai đoạn 80, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)

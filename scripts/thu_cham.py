@@ -118,6 +118,10 @@ def thu(pg, ten, w, h):
     for i in range(16):
         pg.mouse.move(X(15) + (i % 2) * 6, Y(100) + 10); pg.wait_for_timeout(60)
     kq.append(("lông vũ bên hông → quơ chân", co("quo-trai")))
+    pg.mouse.move(X(150), Y(120) + 10); pg.wait_for_timeout(3200)  # (đường về đã lướt qua bụng: đợi hết lúc nghỉ) lông lướt ngang qua lưng/bụng → nhột, lông rùng
+    for i in range(8):
+        pg.mouse.move(X(150 - i * 8), Y(120) + 10); pg.wait_for_timeout(40)
+    kq.append(("lông vũ lướt qua lưng → nhột", co("nhot-long")))
     pg.keyboard.press('Escape'); pg.wait_for_timeout(100)
     kq.append(("Esc cất đồ chơi", pg.evaluate("!document.querySelector('.long-vu, .len, .laser')")))
     pg.focus('#face'); pg.keyboard.press('d'); pg.wait_for_timeout(60); kq.append(("phím D", co("dap-tay"))); nghi()

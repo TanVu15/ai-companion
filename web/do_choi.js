@@ -345,6 +345,7 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
   const nutLongVu = document.getElementById('longVu');
   let lv = null, lvPos = null, lvDich = null, lvVong = 0, lvTat = null, lvNoi = 0, lvHatXi = 0;
   let lvRinh = null, lvVoRinh = 0;  // đang rình (hẹn giờ nhảy vồ), lần vồ gần nhất
+  let lvNhot = 0;  // lần lông vũ cù lưng/bụng gần nhất
   // Thôi rình (lông đi chỗ khác, cất lông, Bơ dỗi/ngủ...)
   function boRinh() { clearTimeout(lvRinh); lvRinh = null; svg.classList.remove('rinh'); }
   // Lông sát đất trước mặt: Bơ hạ người, mông ngoáy ngoáy; 1,4 giây sau nhảy vồ (nghỉ 3 giây giữa hai lần vồ)
@@ -385,6 +386,14 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
         if (Date.now() - lvNoi > 1500) { lvNoi = Date.now(); dem('long_vu'); noi('long_vu'); }
       }
       rinhLongVu(boLongVuRinh_(p.x, p.y));
+      // lông lướt qua lưng/bụng (đang di chuyển) → lông Bơ rùng nhẹ, Bơ quay đầu nhìn chỗ nhột, cười khúc khích (nghỉ 3 giây)
+      const vung = boVungCham(p.x, p.y), dangLuot = Math.abs(vx) + Math.abs(vy) > 1.2;
+      if ((vung === 'lung' || vung === 'bung') && dangLuot && Date.now() - lvNhot > 3000 && !boLongVuRinh_(p.x, p.y) &&
+          !boLongVuBenHong(p.x, p.y) && !dangDoi() && face.dataset.e !== 'ngu' &&
+          !['rinh', 'vo-rinh', 'voi', 'hat-xi', 'quo-trai', 'quo-phai', 'be', 'an'].some(c => svg.classList.contains(c))) {
+        lvNhot = Date.now(); svg.style.setProperty('--nhot', p.x < 100 ? -1 : 1);
+        giu('nhot-long', 900); conChoi(); dem('nhot'); noi('nhot');  // lướt ngang qua là hay gặp: lâu lâu mới nói
+      }
       // lông lơ lửng bên hông → nghiêng người quơ một chân về bên đó (lông còn lắc ở đó thì còn quơ)
       const hong = boLongVuBenHong(p.x, p.y);
       if (hong && !svg.classList.contains('rinh') && !svg.classList.contains('voi') && !dangDoi() && face.dataset.e !== 'ngu') {
