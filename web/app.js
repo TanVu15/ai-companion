@@ -150,23 +150,25 @@ function choiHomNay() {
     return dem;
   } catch (e) { return null; }
 }
-async function sendText(text, userBubble) {
+// Tin vừa gửi là nói bằng micro (giong_noi.js bật cờ này trước khi gửi) → Bơ trả lời ngắn và đọc to
+let lanGuiTuGiong = false;
+async function sendText(text, userBubble, giong) {
   send.disabled = true;
   statusEl.textContent = 'Bơ đang nghĩ...'; express('suy_nghi');
   if (window.meo) meo.cho(true);  // mèo ngoe nguẩy đuôi, nhìn lên trong lúc chờ
   const ctrl = new AbortController(), timer = setTimeout(() => ctrl.abort(), 150000);
   try {
-    const r = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text, choi: choiHomNay() }), signal: ctrl.signal });
+    const r = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text, choi: choiHomNay(), giong: !!giong }), signal: ctrl.signal });
     let data = {};
     try { data = await r.json(); } catch (e) {}
     if (!r.ok) throw new Error(data.detail || 'Máy chủ trả lỗi ' + r.status);
     if (userBubble && data.id_nguoi_dung) userBubble.dataset.id = data.id_nguoi_dung;
     try { if (localStorage.getItem('bo_nhap') === text && !input.value) localStorage.removeItem('bo_nhap'); } catch (x) {}
-    express(data.cam_xuc, data.hanh_dong); speak(data.noi); await addBo(data.noi, data.id, data.da_ghi);
+    express(data.cam_xuc, data.hanh_dong); speak(data.noi, giong); await addBo(data.noi, data.id, data.da_ghi);
   } catch (e) {
     const msg = e.name === 'AbortError' ? 'Bơ nghĩ lâu quá, thử lại nha.'
       : e instanceof TypeError ? 'Không kết nối được máy chủ. Máy chủ còn chạy không?' : e.message;
-    addError(msg, () => sendText(text, userBubble)); express('buon');
+    addError(msg, () => sendText(text, userBubble, giong)); express('buon');
     // Gửi lỗi: giữ tin vào bản nháp, lỡ tải lại trang thì tin vẫn nằm trong ô nhập để gửi lại
     try { if (!input.value) localStorage.setItem('bo_nhap', text); } catch (x) {}
   } finally {
@@ -182,7 +184,8 @@ form.addEventListener('submit', (ev) => {
   const chips = document.getElementById('chips'); if (chips) chips.remove();
   const bubble = add('user', text); input.value = '';
   if (/nhắc/i.test(text)) askNotify();
-  sendText(text, bubble);
+  const giong = lanGuiTuGiong; lanGuiTuGiong = false;
+  sendText(text, bubble, giong);
 });
 input.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); form.requestSubmit(); }

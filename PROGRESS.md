@@ -5,6 +5,14 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-11 17:40 UTC – Giai đoạn 49 xong: Trò chuyện bằng giọng mượt
+Ảnh: `docs/anh/giu-de-noi.png`.
+- Nút to **"Giữ để nói"** ngay dưới mèo (kiểu bộ đàm): giữ là Bơ nghe, thả tay là gửi. Bấm nhanh quá thì Bơ nhắc "giữ trong lúc nói".
+- Khi micro đang nghe, mèo **dựng tai, nghiêng đầu lắng nghe**.
+- Tin nói bằng micro (nút giữ, nút micro nhỏ, hay "Bơ ơi" rảnh tay) → Bơ được dặn trả lời **1–2 câu, không ký hiệu**, và **đọc to** câu trả lời kể cả khi đang tắt "Giọng nói".
+- Nút chỉ hiện khi trình duyệt nghe được giọng (Chrome/Edge trên máy tính; trên điện thoại cần https – xem `DUA_LEN_MANG.md`).
+**Tân cần thử:** trên máy tính mở Chrome ở http://localhost:8000, giữ nút, nói "Bơ ơi hôm nay vui không", thả tay.
+
 ## 2026-10-11 17:35 UTC – Giai đoạn 48 xong: Bơ nói bằng giọng AI miễn phí (edge-tts)
 - Bật "Giọng nói" → Bơ đọc bằng **giọng AI của Microsoft Edge** (Hoài My, giọng nữ, cao độ +8 cho dễ thương). Không cần tài khoản, không tốn tiền.
 - Máy chủ tạo mp3 (`/api/giong`), lưu đệm trong `data/am_thanh/` (giữ 200 file) nên câu lặp lại phát ngay không cần mạng.

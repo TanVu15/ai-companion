@@ -268,9 +268,9 @@
 - [x] Test giả lập edge-tts (không gọi mạng). Ghi "Tân cần thử" vì máy làm việc của Claude không gọi được Microsoft
 
 ## Giai đoạn 49 – Trò chuyện bằng giọng mượt
-- [ ] Nút micro to "bấm giữ để nói" ngay dưới mèo (kiểu bộ đàm), thả ra là gửi
-- [ ] Khi đang nói chuyện bằng giọng: dặn bộ não trả lời ngắn hơn (1–2 câu), không ký hiệu
-- [ ] Mèo nghiêng tai lắng nghe khi micro đang bật
+- [x] Nút micro to "bấm giữ để nói" ngay dưới mèo (kiểu bộ đàm), thả ra là gửi
+- [x] Khi đang nói chuyện bằng giọng: dặn bộ não trả lời ngắn hơn (1–2 câu), không ký hiệu
+- [x] Mèo nghiêng tai lắng nghe khi micro đang bật
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):

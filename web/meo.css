@@ -211,3 +211,20 @@ header.dang-laser { touch-action: none; cursor: crosshair; position: relative; }
 /* Giọng AI đang phát: miệng mở theo âm lượng thật (giong_noi.js đặt --mo) */
 .face.talking.noi-that .mieng-w { display: none; }
 .face.talking.noi-that .mieng-mo { display: inline; animation: none !important; transform: scaleY(var(--mo, .5)); transition: transform .06s; }
+
+/* Micro đang nghe: tai dựng hướng về phía trước, nghiêng đầu lắng nghe */
+.meo.nghe .ear-l { transform: rotate(10deg) scale(1.1); } .meo.nghe .ear-r { transform: rotate(-10deg) scale(1.1); }
+.meo.nghe .head { transform: rotate(-8deg); } .meo.nghe .con-nguoi { transform: translate(0, -2px); }
+/* Nút to "giữ để nói" dưới mèo */
+.giu-noi { display: flex; align-items: center; gap: 8px; margin-top: 4px; padding: 8px 20px; border-radius: 24px;
+  background: var(--me); color: var(--me-text); font-weight: 600; touch-action: none; user-select: none; -webkit-user-select: none;
+  -webkit-touch-callout: none; }
+.giu-noi[hidden] { display: none; }
+.giu-noi svg { width: 20px; height: 20px; fill: currentColor; }
+.giu-noi.on { background: #c0392b; }
+@media (prefers-reduced-motion: no-preference) {
+  .giu-noi.on { animation: meo-nhip 1s ease-in-out infinite; }
+  .meo.nghe .ear-l, .meo.nghe .ear-r { animation: meo-tai-nghe 1.2s ease-in-out infinite; }
+}
+@keyframes meo-nhip { 50% { box-shadow: 0 0 0 8px rgba(192,57,43,.2); } }
+@keyframes meo-tai-nghe { 50% { scale: 1.05; } }

@@ -85,3 +85,16 @@ def test_tach_cau_doc_cau_dau_ngan_khong_mat_chu():
     dau, dai, vua, rong = json.loads(r.stdout)
     assert dau == ["Chào bạn!", "Hôm nay trời đẹp ghê. Bơ muốn đi chơi quá."]  # câu đầu riêng để đọc ngay
     assert dai == "x" * 500 and vua and rong == []
+
+
+def test_noi_bang_giong_thi_dan_tra_loi_ngan(tmp_path):
+    import json
+
+    from app import main
+
+    c = make_client(tmp_path, [json.dumps({"noi": "Ừa!"}), json.dumps({"noi": "Ừa ừa!"})])
+    assert c.post("/api/chat", json={"text": "Bơ ơi", "giong": True}).status_code == 200
+    assert c.post("/api/chat", json={"text": "gõ phím nè"}).status_code == 200
+    calls = main._brain.client.calls
+    he_thong = lambda call: call["system"] if isinstance(call["system"], str) else "".join(b["text"] for b in call["system"])
+    assert "1–2 câu" in he_thong(calls[0]) and "1–2 câu" not in he_thong(calls[1])

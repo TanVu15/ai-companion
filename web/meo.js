@@ -85,6 +85,6 @@ const MEO_SVG = `
     if (truoc === 'ngu' && nay !== 'ngu') lan('vuon', 1300);
     truoc = nay;
   }).observe(face, { attributes: true, attributeFilter: ['data-e'] });
-  // app.js gọi meo.cho(true) khi Bơ đang nghĩ/gõ: mèo ngoe nguẩy đuôi, nhìn lên
-  window.meo = { cho(bat) { svg.classList.toggle('cho', !!bat); }, lan };
+  // app.js gọi meo.cho(true) khi Bơ đang nghĩ/gõ: mèo ngoe nguẩy đuôi, nhìn lên; meo.dat('nghe', true) khi micro đang nghe
+  window.meo = { cho(bat) { svg.classList.toggle('cho', !!bat); }, dat(cls, bat) { svg.classList.toggle(cls, !!bat); }, lan };
 })();

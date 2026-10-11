@@ -315,9 +315,8 @@ function settingsBody() {
 }
 document.getElementById('tryVoice').onclick = async () => {
   if (!(await sendSettings('PUT', settingsBody()))) return;
-  const bat = voiceOn; voiceOn = true; aiLoiDen = 0;  // nghe thử kể cả khi đang tắt giọng nói
-  speak('Meo~ Bơ nói giọng này nha. Nghe dễ thương không?');
-  voiceOn = bat;
+  aiLoiDen = 0;  // thử lại giọng AI ngay; nghe thử kể cả khi đang tắt giọng nói
+  speak('Meo~ Bơ nói giọng này nha. Nghe dễ thương không?', true);
 };
 document.getElementById('settingsForm').addEventListener('submit', (ev) => {
   ev.preventDefault();

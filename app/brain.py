@@ -301,6 +301,7 @@ def build_system_prompt(
     habits: list[dict] | None = None,
     reminders: list[dict] | None = None,
     choi: str = "",
+    giong_noi: bool = False,
 ) -> str:
     now = now or datetime.now()
     known = "\n".join(f"- {f}" for f in facts) if facts else "- (chưa biết gì)"
@@ -312,6 +313,9 @@ def build_system_prompt(
     if weather:
         out += f"{weather} (Chỉ nhắc tới thời tiết khi hợp chuyện, ví dụ trời mưa mà người dùng sắp ra ngoài.)\n"
     out += choi
+    if giong_noi:
+        out += ("Người dùng đang NÓI chuyện bằng giọng (bấm giữ micro), câu trả lời sẽ được đọc to: trả lời thật ngắn, "
+                "1–2 câu, như đang nói chuyện; không emoji, không ký hiệu, không gạch đầu dòng, không đường link.\n")
     out += f"\n## Điều bạn đã biết về người dùng\n{known}\n"
     if summary:
         out += f"\n## Tóm tắt những lần trò chuyện trước\n{summary.strip()}\n"
@@ -667,15 +671,16 @@ class Brain:
         except Exception:
             self._weather_text = None
 
-    def chat(self, user_text: str, choi: dict | None = None) -> Reply:
-        """choi: số lần chơi với mèo hôm nay do web đếm ({"vuot": 3, "cho_an": 1}...), xem mo_ta_choi."""
+    def chat(self, user_text: str, choi: dict | None = None, giong: bool = False) -> Reply:
+        """choi: số lần chơi với mèo hôm nay do web đếm ({"vuot": 3, "cho_an": 1}...), xem mo_ta_choi.
+        giong=True: tin này nói bằng micro → dặn Bơ trả lời ngắn để đọc to."""
         self._refresh_weather()
         with self._lock:
-            self._choi_text = mo_ta_choi(choi)
+            self._choi_text, self._giong_noi = mo_ta_choi(choi), bool(giong)
             try:
                 return self._chat(user_text)
             finally:
-                self._choi_text = ""
+                self._choi_text, self._giong_noi = "", False
 
     def greet(self, only_occasion: bool = False) -> Reply | None:
         """only_occasion=True: chỉ mở lời khi có dịp (ngày đặc biệt, tổng kết tuần) — web hỏi định kỳ lúc đang mở."""
@@ -973,6 +978,7 @@ class Brain:
             habits=self.memory.habits(today),
             reminders=self.memory.upcoming_reminders(),
             choi=getattr(self, "_choi_text", ""),
+            giong_noi=getattr(self, "_giong_noi", False),
         )
         resp = self._create(
             model=config.MODEL,

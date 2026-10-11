@@ -2,7 +2,7 @@
 // ---- Giọng nói: giọng AI miễn phí (edge-tts qua máy chủ), dự phòng bằng giọng có sẵn của trình duyệt ----
 let voiceOn = false, speaking = false;
 try { voiceOn = localStorage.getItem('bo_voice') === '1'; } catch (e) {}
-const voiceBtn = document.getElementById('voiceBtn'), micBtn = document.getElementById('mic');
+const voiceBtn = document.getElementById('voiceBtn'), micBtn = document.getElementById('mic'), giuBtn = document.getElementById('giuNoi');
 const RATES = [['vừa', 1], ['nhanh', 1.25], ['chậm', 0.8]];
 let rateIdx = 0;
 try { rateIdx = Math.max(0, RATES.findIndex(r => r[0] === localStorage.getItem('bo_rate'))); } catch (e) {}
@@ -51,9 +51,10 @@ function speakAuto(text) {
 }
 // Đọc to: ưu tiên giọng AI miễn phí (edge-tts, máy chủ trả mp3); lỗi/không mạng → giọng của trình duyệt.
 let aiLoiDen = 0, daBaoLoi = false, amThanh = null;
-function speak(text) {
+// batBuoc: đọc cả khi đang tắt "Giọng nói" (người dùng vừa nói bằng micro thì muốn nghe Bơ trả lời)
+function speak(text, batBuoc) {
   text = boChuDeDoc(text);
-  if (!voiceOn || !text) return;
+  if ((!voiceOn && !batBuoc) || !text) return;
   const id = ++speakSeq;  // chỉ lần đọc mới nhất được báo "đọc xong"
   if (handsFree) pauseListening();  // đừng để micro nghe giọng của chính Bơ
   dungAmThanh();
@@ -170,7 +171,7 @@ let rec = null, listening = false, handsFree = false, paused = false, awaitUntil
 function startRec() {
   if (!rec || listening) return;
   rec.continuous = handsFree; rec.interimResults = !handsFree;
-  try { rec.start(); listening = true; } catch (e) {}
+  try { rec.start(); listening = true; if (window.meo) meo.dat('nghe', true); } catch (e) {}
 }
 function showHands() {
   handsBtn.textContent = 'Rảnh tay: ' + (handsFree ? 'bật' : 'tắt'); handsBtn.setAttribute('aria-pressed', handsFree);
@@ -186,10 +187,10 @@ function handsHeard(text) {
   let cmd = Date.now() < awaitUntil ? text.trim() : boDanhThuc(text);
   if (cmd === null || send.disabled) return;
   if (cmd === '') { awaitUntil = Date.now() + 8000; express('ngac_nhien'); statusEl.textContent = 'Bơ nghe nè...'; return; }
-  awaitUntil = 0; input.value = cmd; pauseListening(); form.requestSubmit();
+  awaitUntil = 0; input.value = cmd; pauseListening(); lanGuiTuGiong = true; form.requestSubmit();
 }
 if (Rec && window.isSecureContext) {
-  micBtn.hidden = false; handsBtn.hidden = false;
+  micBtn.hidden = false; handsBtn.hidden = false; giuBtn.hidden = false;
   rec = new Rec(); rec.lang = 'vi-VN';
   rec.onresult = (ev) => {
     if (handsFree) {
@@ -200,11 +201,11 @@ if (Rec && window.isSecureContext) {
     }
   };
   rec.onend = () => {
-    listening = false; micBtn.classList.remove('on');
+    listening = false; micBtn.classList.remove('on'); giuBtn.classList.remove('on'); if (window.meo) meo.dat('nghe', false);
     if (handsFree) { if (!paused) setTimeout(startRec, 300); return; }  // máy tự ngắt sau một lúc → nghe lại
     statusEl.textContent = '';
     // chỉ tự gửi khi người dùng vừa bấm micro (không gửi chữ đang gõ dở lúc tắt rảnh tay)
-    if (micSession && input.value.trim() && !send.disabled) form.requestSubmit();
+    if (micSession && input.value.trim() && !send.disabled) { lanGuiTuGiong = true; form.requestSubmit(); }
     micSession = false;
   };
   rec.onerror = (ev) => {
@@ -220,6 +221,32 @@ if (Rec && window.isSecureContext) {
     input.value = ''; micSession = true; micBtn.classList.add('on'); statusEl.textContent = 'Bơ đang nghe...';
     startRec();
   };
+  // Nút to "giữ để nói" dưới mèo (kiểu bộ đàm): giữ là nghe, thả ra là gửi
+  let giuLuc = 0;
+  giuBtn.addEventListener('pointerdown', ev => {
+    if (handsFree || send.disabled) return;
+    ev.preventDefault();
+    try { giuBtn.setPointerCapture(ev.pointerId); } catch (e) {}
+    boNgungDoc();
+    if (listening) rec.abort();
+    giuLuc = Date.now(); input.value = ''; micSession = true;
+    giuBtn.classList.add('on'); statusEl.textContent = 'Bơ đang nghe... thả tay ra là gửi';
+    startRec();
+  });
+  const thaGiu = () => {
+    if (!giuLuc) return;
+    const ngan = Date.now() - giuLuc < 350; giuLuc = 0;
+    giuBtn.classList.remove('on');
+    if (ngan) {  // bấm nhanh: nhắc cách dùng (đợi micro tắt hẳn rồi mới hiện, kẻo bị xóa)
+      micSession = false; if (listening) rec.abort();
+      setTimeout(() => { statusEl.textContent = ''; baoNho('Giữ nút trong lúc nói, thả ra là gửi nha'); }, 200);
+      return;
+    }
+    if (listening) rec.stop();  // rec.onend sẽ gửi chữ vừa nghe
+  };
+  giuBtn.addEventListener('pointerup', thaGiu);
+  giuBtn.addEventListener('pointercancel', thaGiu);
+  giuBtn.addEventListener('contextmenu', ev => ev.preventDefault());  // giữ lâu trên điện thoại không hiện menu
   handsBtn.onclick = () => {
     handsFree = !handsFree; paused = false; awaitUntil = 0; micSession = false; showHands();
     micBtn.disabled = handsFree;
