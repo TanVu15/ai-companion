@@ -100,6 +100,7 @@ function phat(blob, id) {
     const ket = (err) => {
       if (xong) return; xong = true;
       URL.revokeObjectURL(url); if (amThanh === a) amThanh = null; ngungMieng();
+      try { if (a._nguon) a._nguon.disconnect(); } catch (e) {}  // nói chuyện lâu không bị dồn hàng trăm nút âm thanh cũ
       err ? loi(err) : ok();
     };
     a.playbackRate = RATES[rateIdx][1];
@@ -144,7 +145,7 @@ function theoMieng(a) {
     acMieng = acMieng || new (window.AudioContext || window.webkitAudioContext)();
     if (acMieng.state !== 'running') { acMieng.resume(); return; }
     if (!doAm) { doAm = acMieng.createAnalyser(); doAm.fftSize = 512; doAm.connect(acMieng.destination); }
-    acMieng.createMediaElementSource(a).connect(doAm);
+    a._nguon = acMieng.createMediaElementSource(a); a._nguon.connect(doAm);
   } catch (e) { return; }
   face.classList.add('noi-that');
   const buf = new Uint8Array(doAm.fftSize);
