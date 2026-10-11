@@ -339,3 +339,12 @@ def test_chop_cham_khong_chen_khi_vuot_lai():
     choi = (config.ROOT / "web" / "choi.js").read_text(encoding="utf-8")
     assert "svg.classList.remove('chop-cham');" in choi
     assert "if (!vuotDangChay && !svg.classList.contains('be')" in choi
+
+
+def test_long_vu_ben_hong():
+    """Lông vũ ngang tầm bên hông → Bơ quơ chân về bên đó; trên đầu, sát đất, trước mặt thì không."""
+    v = node("""console.log(JSON.stringify([C.boLongVuBenHong(10, 100), C.boLongVuBenHong(190, 80), C.boLongVuBenHong(100, 100),
+      C.boLongVuBenHong(10, 20), C.boLongVuBenHong(190, 190), C.boLongVuBenHong(-100, 100)]))""")
+    assert v == ["trai", "phai", None, None, None, None]
+    css = (config.ROOT / "web" / "meo.css").read_text(encoding="utf-8")
+    assert ".meo.quo-trai .paw-l" in css and ".meo.quo-phai .paw-r" in css

@@ -36,7 +36,16 @@ function boLongVuRinh(x, y) {
   return y >= 165 && y <= 250 && Math.abs(x - 100) <= 95;
 }
 
-if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boLongVuRinh };
+// Lông vũ lơ lửng ngang tầm bên hông Bơ (không trên đầu, không sát đất) → Bơ nghiêng người giơ một chân quơ về bên đó.
+// Trả về 'trai' / 'phai' (bên trái/phải của hình) hoặc null
+function boLongVuBenHong(x, y) {
+  if (y < 50 || y > 160) return null;
+  if (x < 35 && x > -50) return 'trai';
+  if (x > 165 && x < 250) return 'phai';
+  return null;
+}
+
+if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boLongVuRinh, boLongVuBenHong };
 
 // ---- Phần giao diện ----
 (function () {
@@ -44,6 +53,7 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
   const { face, khung, svg, nhin, header, giu, noi, dem, keu, dangDoi, conChoi, doChoi } = window.boChoi;
   const { boVungCham, boHuongNhin, boGanMui } = window;
   const boLongVuRinh_ = typeof boLongVuRinh === 'function' ? boLongVuRinh : () => false;
+  let lvQuo = 0;  // lần quơ chân gần nhất
 
   // ---- Tia laser: chấm đỏ theo ngón tay/chuột trong vùng quanh mèo; mèo nhìn theo, chấm tới gần thì vồ ----
   const nutLaser = document.getElementById('doChoi');
@@ -219,6 +229,13 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
         if (Date.now() - lvNoi > 1500) { lvNoi = Date.now(); dem('long_vu'); noi('long_vu'); }
       }
       rinhLongVu(boLongVuRinh_(p.x, p.y));
+      // lông lơ lửng bên hông → nghiêng người quơ một chân về bên đó (lông còn lắc ở đó thì còn quơ)
+      const hong = boLongVuBenHong(p.x, p.y);
+      if (hong && !svg.classList.contains('rinh') && !svg.classList.contains('voi') && !dangDoi() && face.dataset.e !== 'ngu') {
+        svg.classList.remove(hong === 'trai' ? 'quo-phai' : 'quo-trai');
+        giu('quo-' + hong, 650); conChoi();
+        if (Date.now() - lvQuo > 1500) { lvQuo = Date.now(); dem('quo'); noi('quo'); }
+      }
     }
     if (Math.abs(vx) + Math.abs(vy) > 0.05) lvVong = requestAnimationFrame(buocLongVu);
   }

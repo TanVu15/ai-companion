@@ -5,6 +5,9 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-11 – Giai đoạn 72 (đang làm): săn lông vũ khéo hơn
+- **Quơ chân**: đưa lông vũ lơ lửng ngang tầm bên hông Bơ (bên trái hoặc phải, không phải trên đầu) → Bơ nghiêng người về bên đó, giơ một chân quơ theo lông, "Quơ quơ~ sắp tới rồi!". Ảnh `docs/anh/meo-quo-chan.png` (trái/phải). `scripts/thu_cham.py` thử thêm — đạt hết. 430 test qua hết.
+
 ## 2026-10-11 – Giai đoạn 71 xong: Bơ thương mình
 - **Chớp mắt chậm**: vuốt Bơ một lượt dài (từ 3 giây) rồi buông tay → Bơ mở mắt nhìn mình, khép mắt thật chậm rồi mở ra (mèo thật làm vậy để nói "thương bạn"). Tối đa 20 giây một lần. Ảnh `docs/anh/meo-chop-cham.png`.
 - Rà soát, sửa: đang chớp chậm mà vuốt lại thì Bơ lim dim như thường (trước đây mắt bị kẹt nửa mở); vừa buông tay đã bế thì không chớp chen vào. 4 kiểu lông, nền sáng/tối đều rõ (ảnh `docs/anh/chop-cham-kieu-long.png`). 429 test qua hết, `scripts/thu_cham.py` đạt hết.

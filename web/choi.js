@@ -52,6 +52,7 @@ const BO_CAU_CHOI = {
   be: ['Ơ ơ, bế Bơ đi đâu đó?', 'Úi, Bơ bay lên rồi nè!', 'Bơ nặng lắm đó nha~', 'Thả Bơ xuống điii~'],
   em: ['Bế Bơ êm ghê~', 'Rừ rừ... cứ bế Bơ vầy hoài nha', 'Bơ ngủ trên tay bạn luôn á~'],
   tha: ['Bịch! Về chỗ cũ rồi~', 'Hú hồn, đất đây rồi!', 'Hạ cánh an toàn, meo!'],
+  quo: ['Quơ quơ~ sắp tới rồi!', 'Ê, đứng yên coi!', 'Một chân thôi cũng bắt được!'],
   rinh: ['Rình... rình...', 'Suỵt... Bơ đang rình đó', 'Mông ngoáy ngoáy... chuẩn bị nè'],
   vo_rinh: ['Phập! Bắt được rồi!', 'Vồ! Lông vũ là của Bơ!', 'Hây da! Trúng phóc!', 'Bơ là thợ săn số một~'],
   hat_xi: ['Hắt xì!', 'Hắt... xì! Lông vũ nhột mũi quá~', 'Ắt xì! Hí hí'],

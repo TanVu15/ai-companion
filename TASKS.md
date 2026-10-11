@@ -390,6 +390,10 @@
 - [x] Chớp mắt chậm (kiểu mèo nói "thương bạn"): vuốt xong một lượt dài (từ 3 giây) thì Bơ nhìn mình chớp mắt thật chậm một cái (nghỉ 20 giây giữa hai lần)
 - [x] Rà soát giai đoạn 71, sửa lỗi tìm được
 
+## Giai đoạn 72 – Săn lông vũ khéo hơn (Claude tự thêm, trong hướng mèo/chạm)
+- [x] Lông vũ lơ lửng ngang tầm bên hông Bơ → Bơ nghiêng người, giơ chân bên đó quơ theo
+- [ ] Rà soát giai đoạn 72, sửa lỗi tìm được
+
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):
 - [ ] Xem / xóa "chuyện Bơ định hỏi thăm" trên web (trong "Bơ nhớ gì về mình?"), và báo trong dòng "✓ Bơ đã ghi: sẽ hỏi thăm ..."

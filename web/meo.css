@@ -479,3 +479,15 @@ header.dang-long-vu { touch-action: none; position: relative; }
   .face[data-e] .meo.chop-cham .mat-mo { animation: meo-chop-cham 1.6s ease-in-out forwards; }
 }
 @keyframes meo-chop-cham { 0% { transform: scaleY(1); } 40% { transform: scaleY(.12); } 65% { transform: scaleY(.12); } 100% { transform: scaleY(1); } }
+
+/* Quơ chân bắt lông vũ bên hông: nghiêng người về bên đó, giơ chân bên đó vươn ra, mắt to */
+.meo.quo-trai .head { transform: rotate(-8deg) translateX(-4px); } .meo.quo-phai .head { transform: rotate(8deg) translateX(4px); }
+.meo.quo-trai .paw-l { transform: translate(-48px, -64px) rotate(-20deg); }
+.meo.quo-phai .paw-r { transform: translate(48px, -64px) rotate(20deg); }
+.meo:is(.quo-trai, .quo-phai) :is(.mat-cuoi, .mat-nham) { display: none !important; }
+.meo:is(.quo-trai, .quo-phai) .mat-mo { display: inline !important; transform: scale(1.15); }
+@media (prefers-reduced-motion: no-preference) {
+  .meo.quo-trai { animation: meo-quo-trai .65s ease-out; } .meo.quo-phai { animation: meo-quo-phai .65s ease-out; }
+}
+@keyframes meo-quo-trai { 40% { transform: rotate(-5deg); } }
+@keyframes meo-quo-phai { 40% { transform: rotate(5deg); } }
