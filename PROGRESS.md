@@ -5,6 +5,9 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-11 – Giai đoạn 60 (đang làm): đẹp đều mọi bộ lông
+- Chụp 6 tư thế mới (ngược lông · đập tay · rửa mặt · ngửi · cọ má · chạm đuôi) với 4 kiểu lông (thường, tam thể, mèo đen, mướp vằn), cả nền sáng và tối: đều rõ, không vỡ hình. Ảnh `docs/anh/tu-the-moi-kieu-long.png`, `docs/anh/tu-the-moi-kieu-long-toi.png`.
+
 ## 2026-10-11 – Giai đoạn 59 xong: ngửi tay & cọ má
 - **Ngửi tay**: để yên chuột (hoặc giữ ngón tay) ngay trước mũi Bơ khoảng 1 giây → Bơ rướn đầu, nhìn xuống tay, mũi phập phồng; rồi nhắm mắt cọ má, rừ rừ "Hít hít... thơm tay bạn ghê~". Mỗi 8 giây tối đa một lần. Ảnh `docs/anh/meo-ngui-tay.png` (ngửi · cọ má).
 - Bàn phím: Tab tới Bơ rồi bấm **T** = chạm tai, **D** = đập tay (cùng với Enter xoa đầu, phím cách gãi cằm).
