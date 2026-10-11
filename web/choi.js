@@ -14,6 +14,14 @@ function boVungCham(x, y) {
   if (trong(100, 130, 68, 50)) return 'lung';
   return null;
 }
+// Chỗ nhỏ trên mặt (chỉ dùng khi đã chạm vào 'dau'): mũi → 'mui' (boop), hai má → 'ma_trai' / 'ma_phai' (nựng má); không thì null
+function boChiTietDau(x, y) {
+  const trong = (cx, cy, rx, ry) => ((x - cx) / rx) ** 2 + ((y - cy) / ry) ** 2 <= 1;
+  if (trong(100, 88, 10, 8)) return 'mui';
+  if (trong(62, 91, 14, 10)) return 'ma_trai';
+  if (trong(138, 91, 14, 10)) return 'ma_phai';
+  return null;
+}
 // Đếm số lần chọc trong cửa sổ thời gian; trả về danh sách mốc còn giữ
 function boDemChoc(moc, bayGio, cuaSo = 4000) {
   return moc.concat(bayGio).filter(t => bayGio - t <= cuaSo);
@@ -38,6 +46,8 @@ const BO_CAU_CHOI = {
   duoi: ['Đuôi Bơ mà!', 'Ơ, ai đụng đuôi Bơ đó?', 'Đuôi này không phải đồ chơi nha~', 'Hửm? Đuôi Bơ có gì hả?'],
   ngui: ['Hít hít... thơm tay bạn ghê~', 'Cho Bơ ngửi xíu... ừm, quen quen!', 'Hít hít~ Bơ cọ cọ nè'],
   chong_mat: ['Ối ối, chóng mặt quá~', 'Đừng lắc nữa mà, Bơ xoay vòng vòng rồi!', 'Trời đất quay cuồng... meo~'],
+  boop: ['Boop! Mũi Bơ đó nha~', 'Hí, nhột mũi!', 'Ơ... Bơ bị boop rồi!', 'Mũi Bơ hồng hông?'],
+  ma: ['Nựng má Bơ hả~', 'Má Bơ phúng phính chưa?', 'Hí hí, cọ cọ nè', 'Thêm bên này nữa nha~'],
   be: ['Ơ ơ, bế Bơ đi đâu đó?', 'Úi, Bơ bay lên rồi nè!', 'Bơ nặng lắm đó nha~', 'Thả Bơ xuống điii~'],
   tha: ['Bịch! Về chỗ cũ rồi~', 'Hú hồn, đất đây rồi!', 'Hạ cánh an toàn, meo!'],
   hat_xi: ['Hắt xì!', 'Hắt... xì! Lông vũ nhột mũi quá~', 'Ắt xì! Hí hí'],
@@ -125,6 +135,7 @@ const BO_GOI_Y = {
   long_vu: 'Có cần câu lông vũ đó, đưa lên đầu Bơ thử!',
   chong_mat: 'Lắc điện thoại thử coi, Bơ chóng mặt cho xem!',
   be: 'Nhấn giữ đầu Bơ rồi kéo lên, bế Bơ đi~',
+  boop: 'Chạm nhẹ vào mũi Bơ thử coi... boop!',
   an_pate: 'Nhấn giữ nút con cá đi, Bơ thèm pate quá~',
 };
 function boGoiY(daThu, ngayCuoi, homNay, coLac, rnd = Math.random) {
@@ -167,7 +178,7 @@ function boLucMo(lanTruoc, bayGio, gio) {
   return null;
 }
 
-if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boChamChan, boThongSoMeo, boGanMui, boDoToRuRu, boDoGiat, boLac, boGoiY, BO_GOI_Y, boPhanUngTin, boLucMo, boMonAn, BO_MON_AN, boNhipAn, boDoNhac, BO_CAU_CHOI, BO_DOC_TO };
+if (typeof module !== 'undefined') module.exports = { boVungCham, boChiTietDau, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boChamChan, boThongSoMeo, boGanMui, boDoToRuRu, boDoGiat, boLac, boGoiY, BO_GOI_Y, boPhanUngTin, boLucMo, boMonAn, BO_MON_AN, boNhipAn, boDoNhac, BO_CAU_CHOI, BO_DOC_TO };
 
 // ---- Phần giao diện ----
 (function () {
@@ -376,9 +387,9 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
   }
   let lanChamChan = 0;
   // Chữ "Bốp!" bật ra chỗ hai bàn tay chạm nhau
-  function bop(x, y) {
+  function bop(x, y, chu) {
     const t = document.createElement('span');
-    t.className = 'tim bop'; t.textContent = 'Bốp!';
+    t.className = 'tim bop'; t.textContent = chu || 'Bốp!';
     t.style.left = x + 'px'; t.style.top = y + 'px';
     khung.appendChild(t);
     setTimeout(() => t.remove(), 1200);
@@ -416,7 +427,15 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
     } else if (vung === 'cam') {
       giu('gai-cam', 900); noi('gai_cam');
     } else if (vung === 'dau') {
-      giu('vuot', 900); const p = viTriKhung(ev); tim(p.x, p.y - 10); noi('vuot');
+      const q = toaDo(ev), ct = q && boChiTietDau(q.x, q.y);
+      if (ct === 'mui') {  // boop mũi: nhắm tịt mắt, chun mũi, chữ "Boop!" ngay chóp mũi
+        svg.classList.remove('nung-ma-trai', 'nung-ma-phai'); giu('boop', 700); dem('boop'); noi('boop', true); keu('ngan');
+        const m = svg.getScreenCTM(), r = khung.getBoundingClientRect();
+        if (m) { const d = new DOMPoint(126, 64).matrixTransform(m); bop(d.x - r.left, d.y - r.top, 'Boop!'); }
+      } else if (ct) {  // nựng má: Bơ nghiêng đầu dụi vào phía đó, má hồng đậm, rừ rừ ngắn
+        svg.classList.remove('nung-ma-trai', 'nung-ma-phai', 'boop'); giu(ct === 'ma_trai' ? 'nung-ma-trai' : 'nung-ma-phai', 1300); dem('ma'); noi('ma');
+        if (!vuotDangChay) { grgr(true); setTimeout(() => { if (!vuotDangChay) grgr(false); }, 1100); }
+      } else { giu('vuot', 900); const p = viTriKhung(ev); tim(p.x, p.y - 10); noi('vuot'); }
     }
   }
   // Nhấn giữ lên lưng/bụng (không kéo) khoảng 0,7 giây → Bơ lăn qua lăn lại nũng nịu

@@ -5,6 +5,10 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-11 – Giai đoạn 67 (đang làm): boop mũi & nựng má
+- **Boop mũi**: chạm nhanh đúng chóp mũi hồng → Bơ nhắm tịt mắt, mũi chun lại, ria vểnh, chữ "Boop!" bật ra, "Hí, nhột mũi!".
+- **Nựng má**: chạm vào má → Bơ nghiêng đầu dụi về bên đó, má hồng đậm, mắt cười, rừ rừ một chút. Chạm trán/đỉnh đầu vẫn là xoa đầu như cũ. Ảnh `docs/anh/meo-boop-nung-ma.png`.
+
 ## 2026-10-11 – Giai đoạn 66 xong: tiếng ăn & bế Bơ
 - **Tiếng ăn**: đang bật "Giọng nói" thì lúc Bơ ăn có tiếng: cá nhai **rộp rộp**, pate **chép chép** (trầm, mềm), sữa liếm **lép lép** nhanh. Tạo ngay trong trình duyệt, không file, không mạng; độ to đã đo bằng máy, cỡ tiếng meo. Giờ yên lặng, lúc Bơ đang đọc hay bật rảnh tay thì im.
 - **Bế Bơ**: nhấn giữ đầu Bơ nửa giây rồi kéo lên → Bơ bị nhấc lên, người dài ra, hai chân sau lủng lẳng, đuôi thõng, mắt tròn xoe "Ơ ơ, bế Bơ đi đâu đó?". Thả tay → Bơ rơi "bịch", bẹp xuống một chút "Hú hồn, đất đây rồi!". Vuốt đầu bình thường (không giữ trước) vẫn là vuốt. Bàn phím: giữ phím **B**. Ảnh `docs/anh/meo-be.png`.

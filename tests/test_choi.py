@@ -264,3 +264,8 @@ def test_be_bo_keo_len():
     assert "clearTimeout(henBe); thaBe();" in choi  # nhả tay (hay bị hủy) là thả Bơ xuống, không kẹt trên không
     css = (config.ROOT / "web" / "meo.css").read_text(encoding="utf-8")
     assert ".meo.be {" in css and ".meo.roi .body" in css
+
+
+def test_boop_mui_va_nung_ma():
+    v = node("""console.log(JSON.stringify([[100, 88], [100, 94], [62, 91], [138, 92], [100, 60], [80, 74]].map(([x, y]) => [C.boVungCham(x, y), C.boChiTietDau(x, y)])))""")
+    assert v == [["dau", "mui"], ["dau", "mui"], ["dau", "ma_trai"], ["dau", "ma_phai"], ["dau", None], ["dau", None]]  # mũi, má đều nằm trong đầu; trán, mắt thì vẫn là xoa đầu
