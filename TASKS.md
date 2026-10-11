@@ -361,6 +361,11 @@
 - [x] Cho ăn đa dạng: nhấn giữ nút cá để chọn cá / sữa / pate; mỗi món có hình và câu riêng (vẫn không có thanh đói)
 - [x] Rà soát giai đoạn 65, sửa lỗi tìm được
 
+## Giai đoạn 66 – Tiếng ăn & bế Bơ (Claude tự thêm, trong hướng mèo/chạm/giọng)
+- [x] Tiếng ăn khi bật "Giọng nói": cá nhai rộp rộp, pate chép chép, sữa liếm lép lép (Web Audio, không file; không kêu giờ yên lặng/lúc đang đọc/rảnh tay)
+- [ ] Bế Bơ: nhấn giữ đầu Bơ rồi kéo lên → Bơ bị nhấc lên, người dài ra, chân lủng lẳng, "Ơ ơ, bế Bơ đi đâu đó?"; thả ra Bơ rơi "bịch" xuống ngồi lại
+- [ ] Rà soát giai đoạn 66, sửa lỗi tìm được
+
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):
 - [ ] Xem / xóa "chuyện Bơ định hỏi thăm" trên web (trong "Bơ nhớ gì về mình?"), và báo trong dòng "✓ Bơ đã ghi: sẽ hỏi thăm ..."

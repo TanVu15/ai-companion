@@ -79,6 +79,21 @@ function boThongSoMeo(kieu) {
   };
   return ds[kieu] || ds.ngan;
 }
+// Tiếng ăn (Web Audio, tiếng ồn lọc, không file): danh sách nhịp {t: giây bắt đầu, dai: giây, hz: tần số lọc, to: độ to}.
+// (độ to đã đo bằng OfflineAudioContext: cả ba món cỡ tiếng meo ngắn.) Cá: nhai rộp rộp giòn; pate: chép chép mềm, trầm; sữa: liếm lép lép nhanh. Món lạ → cá. Nằm gọn trong lúc Bơ ăn (0,4–2,5 giây).
+function boNhipAn(mon, rnd = Math.random) {
+  const ds = {
+    ca: { dau: 0.45, cach: 0.3, so: 7, dai: 0.06, hz: 2200, to: 0.5 },
+    pate: { dau: 0.45, cach: 0.34, so: 6, dai: 0.09, hz: 900, to: 0.8 },
+    sua: { dau: 0.4, cach: 0.2, so: 10, dai: 0.045, hz: 1400, to: 0.7 },
+  };
+  const k = ds[mon] || ds.ca, kq = [];
+  for (let i = 0; i < k.so; i++) {
+    const lech = rnd() - 0.5;  // lệch nhẹ cho tự nhiên
+    kq.push({ t: +(k.dau + i * k.cach + lech * 0.04).toFixed(3), dai: k.dai, hz: Math.round(k.hz * (1 + lech * 0.2)), to: +(k.to * (0.8 + rnd() * 0.2)).toFixed(3) });
+  }
+  return kq;
+}
 // Ngón tay/chuột ở ngay trước mũi Bơ (khung vẽ 200×192, mũi ở 100,88)? Giữ yên ở đây ~1 giây thì Bơ ngửi
 function boGanMui(x, y) {
   return ((x - 100) / 24) ** 2 + ((y - 90) / 16) ** 2 <= 1;
@@ -144,7 +159,7 @@ function boLucMo(lanTruoc, bayGio, gio) {
   return null;
 }
 
-if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boChamChan, boThongSoMeo, boGanMui, boDoToRuRu, boDoGiat, boLac, boGoiY, BO_GOI_Y, boPhanUngTin, boLucMo, boMonAn, BO_MON_AN, BO_CAU_CHOI, BO_DOC_TO };
+if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boChamChan, boThongSoMeo, boGanMui, boDoToRuRu, boDoGiat, boLac, boGoiY, BO_GOI_Y, boPhanUngTin, boLucMo, boMonAn, BO_MON_AN, boNhipAn, BO_CAU_CHOI, BO_DOC_TO };
 
 // ---- Phần giao diện ----
 (function () {
@@ -255,10 +270,34 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
 
   // ---- Tiếng "meo" ngắn: chỉ khi bật "Giọng nói", ngoài giờ yên lặng, Bơ không đang đọc, không bật rảnh tay (micro khỏi nghe nhầm) ----
   let meoCuoi = 0;
+  function duocKeu() {
+    if (typeof voiceOn === 'undefined' || !voiceOn || (typeof speaking !== 'undefined' && speaking)) return false;
+    if (typeof handsFree !== 'undefined' && handsFree) return false;
+    if (typeof boGioYenLang === 'function' && typeof quietRange !== 'undefined' && boGioYenLang(new Date().getHours(), quietRange)) return false;
+    return true;
+  }
+  // Tiếng ăn: rộp rộp / chép chép / lép lép (cùng điều kiện với tiếng meo)
+  function tiengAn(mon) {
+    if (!duocKeu()) return;
+    try {
+      ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+      if (ac.state === 'suspended') ac.resume();
+      const buf = ac.createBuffer(1, Math.ceil(ac.sampleRate * 0.1), ac.sampleRate), d = buf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+      const t0 = ac.currentTime + 0.02;
+      for (const n of boNhipAn(mon)) {
+        const src = ac.createBufferSource(); src.buffer = buf;
+        const loc = ac.createBiquadFilter(); loc.type = 'bandpass'; loc.frequency.value = n.hz; loc.Q.value = 1.4;
+        const to = ac.createGain(), b = t0 + n.t;
+        to.gain.setValueAtTime(0, b); to.gain.linearRampToValueAtTime(n.to, b + 0.008); to.gain.exponentialRampToValueAtTime(0.001, b + n.dai);
+        src.connect(loc); loc.connect(to); to.connect(ac.destination);
+        src.start(b); src.stop(b + n.dai + 0.02);
+        src.onended = () => { try { to.disconnect(); } catch (e) {} };
+      }
+    } catch (e) {}
+  }
   function keu(kieu) {
-    if (typeof voiceOn === 'undefined' || !voiceOn || (typeof speaking !== 'undefined' && speaking)) return;
-    if (typeof handsFree !== 'undefined' && handsFree) return;
-    if (typeof boGioYenLang === 'function' && typeof quietRange !== 'undefined' && boGioYenLang(new Date().getHours(), quietRange)) return;
+    if (!duocKeu()) return;
     const now = Date.now();
     if (now - meoCuoi < 1500) return;
     meoCuoi = now;
@@ -467,7 +506,7 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
     const ca = document.createElement('span');
     ca.className = 'ca-an'; ca.innerHTML = m.svg;
     khung.appendChild(ca);
-    giu('an', 2600);
+    giu('an', 2600); tiengAn(boMonAn(mon));
     setTimeout(() => {
       ca.remove(); giu('liem-mep', 1300); noi(m.cau, true);
       if (mon === 'sua') giu('dinh-sua', 3200);  // râu dính sữa một lúc

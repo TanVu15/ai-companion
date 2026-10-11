@@ -5,6 +5,9 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-11 – Giai đoạn 66 (đang làm): tiếng ăn & bế Bơ
+- **Tiếng ăn**: đang bật "Giọng nói" thì lúc Bơ ăn có tiếng: cá nhai **rộp rộp**, pate **chép chép** (trầm, mềm), sữa liếm **lép lép** nhanh. Tạo ngay trong trình duyệt, không file, không mạng; độ to đã đo bằng máy, cỡ tiếng meo. Giờ yên lặng, lúc Bơ đang đọc hay bật rảnh tay thì im.
+
 ## 2026-10-11 – Giai đoạn 65 xong: lông vũ & bữa ăn
 - **Chọn món**: nhấn giữ nút con cá nửa giây → hiện menu **Cá / Sữa / Pate** (máy tính: chuột phải; bàn phím: mũi tên lên). Bấm thường thì cho món vừa chọn (nhớ trên máy này). Sữa: Bơ dính râu sữa trắng "Râu Bơ dính sữa rồi nè". Pate: tim bay, "Pate! Bơ mê pate nhất trần đời~". Vẫn không có thanh đói. Ảnh `docs/anh/meo-chon-mon.png`.
 - **Hắt xì**: đưa cần câu lông vũ quét ngang mũi Bơ → Bơ nhắm tịt mắt, há miệng "Hắt xì!" (tối đa 6 giây một lần). Ảnh `docs/anh/meo-hat-xi.png`.

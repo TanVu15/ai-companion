@@ -163,7 +163,8 @@ def test_thong_so_tieng_meo():
     assert v[2] == v[0]  # kiểu lạ → tiếng ngắn
     assert v[1]["cao"][1] > v[1]["cao"][0]  # "meo~" vui thì cao dần lên
     choi = (config.ROOT / "web" / "choi.js").read_text(encoding="utf-8")
-    ham = choi.split("function keu(")[1].split("\n  }\n")[0]
+    ham = choi.split("function duocKeu(")[1].split("\n  }\n")[0]
+    assert "if (!duocKeu()) return;" in choi.split("function keu(")[1] and "if (!duocKeu()) return;" in choi.split("function tiengAn(")[1]
     for dk in ("voiceOn", "speaking", "handsFree", "boGioYenLang"):  # chỉ kêu khi bật giọng, không lúc đang đọc/nghe/giờ yên lặng
         assert dk in ham, dk
 
@@ -241,3 +242,16 @@ def test_trang_co_menu_chon_mon(tmp_path):
     choi = (config.ROOT / "web" / "choi.js").read_text(encoding="utf-8")
     assert "localStorage.setItem('bo_mon_an'" in choi  # nhớ món vừa chọn trên máy này
     assert "cho_an > 5" in choi  # vẫn không có thanh đói: ăn nhiều chỉ bảo no
+
+
+def test_tieng_an_theo_mon():
+    v = node("""const r = () => 0.5; console.log(JSON.stringify(['ca', 'sua', 'pate', 'la'].map(m => C.boNhipAn(m, r))))""")
+    ca, sua, pate, la = v
+    assert la == ca  # món lạ → tiếng nhai cá
+    assert len(sua) > len(ca) > len(pate) >= 5  # sữa liếm nhanh, nhiều nhịp; pate chép chậm
+    assert pate[0]["hz"] < sua[0]["hz"] < ca[0]["hz"]  # cá giòn nhất, pate trầm nhất
+    for ds in (ca, sua, pate):
+        assert all(0.3 < n["t"] and n["t"] + n["dai"] < 2.6 and 0 < n["to"] <= 0.8 for n in ds)  # gọn trong lúc ăn, không quá to (đã đo: cỡ tiếng meo)
+        assert [n["t"] for n in ds] == sorted(n["t"] for n in ds)
+    w = node("""console.log(JSON.stringify([0, 0.999].map(x => C.boNhipAn('ca', () => x).every(n => n.to > 0 && n.t > 0.3))))""")
+    assert w == [True, True]
