@@ -5,7 +5,10 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
-## 2026-10-11 – Giai đoạn 62 (đang làm): giọng nói chơi đùa
+## 2026-10-11 – Giai đoạn 63 (đang làm): dễ khám phá
+- Hộp "Bơ làm được gì?" ghi đủ các trò chạm & đồ chơi mới, phím tắt. Ảnh `docs/anh/hop-choi-voi-bo.png`.
+
+## 2026-10-11 – Giai đoạn 62 xong: giọng nói chơi đùa
 - Đang bật "Giọng nói": câu **chóng mặt**, **ngửi tay** và **lần đập tay đầu tiên trong ngày** được đọc to (các lần đập tay sau chỉ kêu "meo~"). Giờ yên lặng thì vẫn chỉ hiện chữ.
 - Sửa: Bơ đang đọc to mà Tân **vuốt** Bơ thì trước đây Bơ im bặt (vì nhả tay ra bị tính là một cú chạm). Giờ chỉ **chạm nhanh** mới bảo Bơ im; vuốt hay nhấn giữ thì Bơ vẫn đọc tiếp, mắt lim dim sướng.
 

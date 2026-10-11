@@ -344,7 +344,12 @@
 ## Giai đoạn 62 – Giọng nói chơi đùa (Claude tự thêm, trong hướng mèo/giọng)
 - [x] Đang bật "Giọng nói": vài câu chơi mới được đọc to (chóng mặt, đập tay đầu tiên trong ngày, ngửi tay) – không đọc lặp liên tục, giờ yên lặng thì im
 - [x] Bơ đang đọc to mà bị vuốt → vẫn đọc tiếp nhưng mắt lim dim sướng (hiện giờ chạm = bảo im; vuốt thì không nên bảo im) – kiểm tra và sửa nếu cần
-- [ ] Rà soát giai đoạn 62, sửa lỗi tìm được
+- [x] Rà soát giai đoạn 62, sửa lỗi tìm được
+
+## Giai đoạn 63 – Dễ khám phá (Claude tự thêm, trong hướng mèo/chạm)
+- [x] Hộp "Bơ làm được gì?": cập nhật danh sách chạm & chơi (ngược lông, đập tay, ngửi tay, chạm đuôi, lắc, phím T/D)
+- [ ] Tối đa 1 lần/ngày, lúc rảnh Bơ gợi ý một trò chạm Tân chưa thử ("Thử chạm hai lần vào chân Bơ xem~") – dựa trên bộ đếm trên máy, không gọi API, không nhắc lại trò đã thử
+- [ ] Rà soát giai đoạn 63, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):
