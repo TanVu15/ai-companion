@@ -288,7 +288,7 @@
 - [x] Giọng AI đổi nhẹ theo cảm xúc của câu: vui/hào hứng nhanh và cao hơn, buồn chậm và trầm hơn (giọng trình duyệt cũng vậy)
 - [x] Đang bật "Giọng nói": vài câu chơi (mừng rỡ, ăn cá, dỗi, làm lành) được đọc to bằng giọng AI (câu ngắn, có sẵn → lưu đệm, gần như không tốn mạng)
 - [x] Đồ chơi cuộn len: nút cuộn len (trên nút cá); kéo ném cuộn len, nó lăn và nảy, Bơ vồ đập văng khi len chạm người
-- [ ] Rà soát giai đoạn 52, sửa lỗi tìm được
+- [x] Rà soát giai đoạn 52, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):

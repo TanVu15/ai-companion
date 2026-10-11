@@ -11,6 +11,7 @@
 - Đang bật "Giọng nói": câu chơi **mừng rỡ, ăn cá, no, dỗi, làm lành, bị đánh thức** được đọc to (câu ngắn có sẵn, lưu đệm). Câu vuốt/chọc chỉ hiện chữ cho đỡ ồn. Giờ yên lặng thì không đọc.
 - **Cuộn len** (nút mới màu hồng, trên nút cá): cuộn len rơi xuống, lăn, nảy. **Kéo rồi ném** nó; len chạm người Bơ là Bơ vồ, đập văng ra. Bật laser thì len cất đi; 20 giây không đụng thì tự cất (Esc cũng cất).
 - Bơ biết "hôm nay bạn chơi cuộn len với Bơ N lần". 398 test qua hết.
+- Rà soát: bong bóng câu nói trên điện thoại nhỏ bị bó thành 3–4 dòng hẹp → giờ rộng hơn, không đè tai Bơ (ảnh `docs/anh/man-nho-toi.png`, màn 375×600 chế độ tối).
 **Tân cần thử:** bật "Giọng nói", cho Bơ ăn cá → nghe Bơ nói "Măm măm"; bấm nút cuộn len, kéo ném vào Bơ.
 
 ## 2026-10-11 – Giai đoạn 51: Bơ sống động hơn (không tốn API)

@@ -146,9 +146,10 @@ header.dang-laser { touch-action: none; cursor: crosshair; position: relative; }
 .len svg { width: 100%; height: 100%; display: block; }
 .len:active { cursor: grabbing; }
 .nut-meo[aria-pressed="true"] { border-color: #ff3b3b; box-shadow: 0 0 0 2px rgba(255,59,59,.3); }
-.bong { position: absolute; top: 0; left: calc(50% + 48px); max-width: min(170px, calc(50% - 48px)); z-index: 2;
+.bong { position: absolute; top: 0; left: calc(50% + 48px); width: max-content; max-width: min(170px, calc(50vw - 60px)); z-index: 2;
   background: var(--panel); color: var(--text); border: 1px solid var(--border); border-radius: 14px 14px 14px 4px;
   padding: 4px 10px; font-size: 13px; line-height: 1.35; box-shadow: 0 2px 6px rgba(0,0,0,.08); pointer-events: none; }
+@media (max-height: 640px) { .bong { left: calc(50% + 44px); max-width: min(150px, calc(50vw - 52px)); } }
 .tim { position: absolute; color: #f06a86; font-size: 18px; pointer-events: none; z-index: 2; transform: translate(-50%, -50%); }
 .ca-an { position: absolute; left: 50%; bottom: 0; width: 40px; height: 26px; margin-left: -20px; pointer-events: none; z-index: 2; }
 .ca-an svg { width: 100%; height: 100%; }
