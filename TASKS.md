@@ -290,6 +290,13 @@
 - [x] Đồ chơi cuộn len: nút cuộn len (trên nút cá); kéo ném cuộn len, nó lăn và nảy, Bơ vồ đập văng khi len chạm người
 - [x] Rà soát giai đoạn 52, sửa lỗi tìm được
 
+## Giai đoạn 53 – Bơ hóng chuyện, giọng mẫu (Claude tự thêm, trong hướng mèo/chạm/giọng)
+- [x] Bơ hóng chuyện: đang gõ tin → Bơ nhìn xuống khung chat, tai vểnh; ngừng gõ 2 giây thì thôi
+- [x] Khuya (22h–5h) vuốt Bơ → câu riêng nhẹ nhàng ("khuya rồi, bạn ngủ sớm nha~"), không ép
+- [x] Cài đặt giọng: nút mẫu nhanh "Mèo con" / "Mèo béo lười" / "Mặc định" (đặt sẵn tốc độ + cao độ)
+- [ ] README: cập nhật ảnh và mô tả chạm & chơi mới (lăn nũng, cuộn len, mừng rỡ)
+- [ ] Rà soát giai đoạn 53, sửa lỗi tìm được
+
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):
 - [ ] Xem / xóa "chuyện Bơ định hỏi thăm" trên web (trong "Bơ nhớ gì về mình?"), và báo trong dòng "✓ Bơ đã ghi: sẽ hỏi thăm ..."

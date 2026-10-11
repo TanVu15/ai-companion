@@ -328,6 +328,13 @@ document.getElementById('tryVoice').onclick = async () => {
   aiLoiDen = 0;  // thử lại giọng AI ngay; nghe thử kể cả khi đang tắt giọng nói
   speak('Meo~ Bơ nói giọng này nha. Nghe dễ thương không?', true);
 };
+// Giọng mẫu: đặt sẵn tốc độ + cao độ (giọng Hoài My), lưu rồi cho nghe thử luôn
+document.querySelectorAll('[data-mau]').forEach(b => b.onclick = () => {
+  const [toc, cao] = b.dataset.mau.split(',').map(Number);
+  document.getElementById('setVoice').value = 'vi-VN-HoaiMyNeural';
+  document.getElementById('setRate').value = toc; document.getElementById('setPitch').value = cao;
+  showVoiceNums(); document.getElementById('tryVoice').click();
+});
 document.getElementById('settingsForm').addEventListener('submit', (ev) => {
   ev.preventDefault();
   sendSettings('PUT', settingsBody());

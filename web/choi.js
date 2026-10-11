@@ -27,6 +27,7 @@ const BO_CAU_CHOI = {
   no: ['Bơ no căng rồi, để dành mai nha~', 'Béo quá rồi, thôi thôi.'],
   len: ['Cuộn len! Của Bơ!', 'Bép! Bơ đập trúng rồi', 'Ném nữa đi, ném nữa đi!', 'Hí hí, lăn đi đâu đó?'],
   laser: ['Cái chấm đỏ kìa!!', 'Bắt được rồi... ủa đâu?', 'Lần này Bơ bắt được cho coi!'],
+  khuya: ['Khuya rồi nè, bạn ngủ sớm nha~', 'Rừ rừ... Bơ buồn ngủ quá, bạn cũng ngủ đi nha', 'Vuốt xíu nữa rồi mình đi ngủ ha~'],
   thuc: ['Ưm... ai gọi Bơ đó?', 'Bơ đâu có ngủ, Bơ nhắm mắt nghĩ thôi.'],
   lan: ['Gãi bụng Bơ đi mà~', 'Bơ lăn nè, thấy dễ thương hông?', 'Nũng xíu thôi hà~'],
   mung: ['Bạn về rồi! Bơ nhớ bạn ghê~', 'A, bạn đây rồi! Meo meo!', 'Vui quá, bạn quay lại rồi nè!'],
@@ -196,7 +197,11 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
     // rê chuột vuốt ve cũng là đang chơi: Bơ đang thức thì đừng ngủ gật giữa chừng (đang ngủ thì rừ rừ trong mơ)
     if (face.dataset.e !== 'ngu' && typeof scheduleSleep === 'function') scheduleSleep();
     const loai = vung === 'cam' ? 'gai_cam' : 'vuot';
-    if (!vuotDangChay) { vuotDangChay = loai; dem(loai); noi(loai); }
+    if (!vuotDangChay) {
+      vuotDangChay = loai; dem(loai);
+      const h = new Date().getHours();
+      noi(loai === 'vuot' && (h >= 22 || h < 5) && Math.random() < 0.5 ? 'khuya' : loai);
+    }
     giu(loai === 'gai_cam' ? 'gai-cam' : 'vuot', 700);
     if (loai === 'vuot') tim(pos.x, pos.y - 10);
     grgr(true);
@@ -400,6 +405,14 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
   }
   nutLen.addEventListener('click', ev => { ev.stopPropagation(); batLen(!len); });
   document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && len) batLen(false); });
+
+  // ---- Bơ hóng chuyện: đang gõ tin thì nhìn xuống khung chat; ngừng gõ 2 giây thì thôi ----
+  const oChat = document.getElementById('input');
+  if (oChat && oChat.form) oChat.form.addEventListener('submit', () => svg.classList.remove('hong'));
+  if (oChat) oChat.addEventListener('input', () => {
+    if (face.dataset.e === 'ngu' || !oChat.value.trim()) { svg.classList.remove('hong'); return; }
+    giu('hong', 2000);
+  });
 
   // ---- Mắt nhìn theo ngón tay/chuột (ngoài lúc chơi laser); đứng yên 3 giây thì thôi nhìn ----
   let nhinTat = null, nhinCho = false, nhinEv = null;

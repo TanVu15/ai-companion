@@ -279,6 +279,10 @@
       <select id="setVoice"><option value="vi-VN-HoaiMyNeural">Hoài My (nữ)</option><option value="vi-VN-NamMinhNeural">Nam Minh (nam)</option></select></label>
     <label><span>Tốc độ giọng: <output id="setRateOut">0</output>%</span><input id="setRate" type="range" min="-50" max="50" step="5"></label>
     <label><span>Cao độ giọng (cao = dễ thương hơn): <output id="setPitchOut">0</output></span><input id="setPitch" type="range" min="-30" max="40" step="2"></label>
+    <div class="giong-mau" role="group" aria-label="Giọng mẫu"><span>Giọng mẫu:</span>
+      <button class="link" type="button" data-mau="0,8">Mặc định</button>
+      <button class="link" type="button" data-mau="5,20">Mèo con</button>
+      <button class="link" type="button" data-mau="-15,-4">Mèo béo lười</button></div>
     <button class="link" id="tryVoice" type="button">Lưu rồi nghe thử giọng</button>
     <p id="settingsMsg" hidden></p>
     <div class="row"><button class="link" id="resetSettings" type="button">Về như file .env</button><button type="submit">Lưu cài đặt</button></div>

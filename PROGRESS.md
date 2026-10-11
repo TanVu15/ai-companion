@@ -5,6 +5,13 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-11 – Giai đoạn 53: Bơ hóng chuyện, giọng mẫu
+Ảnh: `docs/anh/bo-hong-chuyen.png`, `docs/anh/cai-dat-giong.png`.
+- **Hóng chuyện**: đang gõ tin thì Bơ nhìn xuống khung chat, tai vểnh, đầu hơi nghiêng; ngừng gõ 2 giây thì thôi.
+- **Khuya** (22h–5h) vuốt Bơ, thỉnh thoảng Bơ nói "Khuya rồi nè, bạn ngủ sớm nha~" (nhẹ nhàng, không ép).
+- Cài đặt → **Giọng mẫu**: "Mặc định", "Mèo con" (cao, nhanh nhẹ), "Mèo béo lười" (trầm, chậm). Bấm là lưu và nghe thử luôn.
+**Tân cần thử:** Cài đặt → bấm lần lượt 3 giọng mẫu, chọn cái nghe thích nhất.
+
 ## 2026-10-11 – Giai đoạn 52: giọng có cảm xúc, cuộn len
 Ảnh: `docs/anh/cuon-len.png`.
 - **Giọng theo cảm xúc**: câu vui/hào hứng Bơ đọc nhanh và cao hơn chút, câu buồn chậm và trầm hơn (giọng AI lẫn giọng trình duyệt).

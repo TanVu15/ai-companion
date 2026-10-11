@@ -255,3 +255,12 @@ header.dang-laser { touch-action: none; cursor: crosshair; position: relative; }
 }
 @keyframes meo-nhip { 50% { box-shadow: 0 0 0 8px rgba(192,57,43,.2); } }
 @keyframes meo-tai-nghe { 50% { scale: 1.05; } }
+
+/* Cài đặt: hàng giọng mẫu */
+.giong-mau { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; margin: 2px 0 6px; font-size: 14px; }
+.giong-mau span { color: var(--muted); width: 100%; }
+
+/* Bơ hóng chuyện: đang gõ tin thì nhìn xuống khung chat, tai vểnh */
+.meo.hong .nhin { transform: translate(0, 3.5px); }
+.meo.hong .ear-l { transform: rotate(8deg); } .meo.hong .ear-r { transform: rotate(-8deg); }
+.meo.hong .head { transform: translateY(2px) rotate(3deg); }
