@@ -74,6 +74,16 @@ def thu(pg, ten, w, h):
     pg.click('#doChoi'); pg.wait_for_timeout(150); kq.append(("laser", pg.evaluate("!!document.querySelector('.laser')")))
     pg.click('#cuonLen'); pg.wait_for_timeout(300)
     kq.append(("cuộn len (cất laser)", pg.evaluate("!!document.querySelector('.len') && !document.querySelector('.laser')")))
+    pg.wait_for_timeout(2200); l = pg.locator('.len').bounding_box()  # đặt len nằm yên sát bên Bơ → ôm, cắn, đá ra
+    pg.mouse.move(l['x'] + 15, l['y'] + 15); pg.mouse.down()
+    for i in range(1, 11):
+        pg.mouse.move(l['x'] + 15 + (X(20) - l['x'] - 15) * i / 10, l['y'] + 15 + (Y(175) - l['y'] - 15) * i / 10); pg.wait_for_timeout(30)
+    for _ in range(8):
+        pg.mouse.move(X(20), Y(175)); pg.wait_for_timeout(30)
+    pg.mouse.up(); pg.mouse.move(5, 5)
+    cho = lambda c, ms: any(co(c) or pg.wait_for_timeout(100) for _ in range(ms // 100))  # noqa: E731  (đợi tới khi có lớp c)
+    om = cho("om-len", 4000); da = cho("da-len", 3500)
+    kq.append(("len nằm yên sát bên → ôm rồi đá ra", om and da and not co("om-len")))
     pg.click('#longVu'); pg.wait_for_timeout(300); kq.append(("lông vũ", pg.evaluate("!!document.querySelector('.long-vu')")))
     for i in range(8):
         pg.mouse.move(X(100), Y(120 + i * 8) + 10); pg.wait_for_timeout(30)

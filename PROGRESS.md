@@ -5,6 +5,10 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-11 – Giai đoạn 73 (đang làm): Bơ ôm cuộn len
+- **Ôm len**: để cuộn len nằm yên sát bên Bơ (ngang tầm chân) khoảng 1,5 giây → Bơ kéo len vào lòng, hai chân trước kẹp len, cúi đầu cắn cắn "Ôm len! Cắn cắn~", khoảng 2 giây sau chân sau đá len văng ra "Đá! Bay xa chưa?". Nghỉ 8 giây giữa hai lần. Đang ôm mà cầm len lên thì Bơ thả ra ngay. Ảnh `docs/anh/meo-om-len.png` (trái: ôm, phải: đá). `scripts/thu_cham.py` thử thêm — đạt hết. 432 test qua hết.
+**Tân cần thử:** bật nút cuộn len, kéo len đặt nhẹ xuống sát bên chân Bơ rồi buông tay.
+
 ## 2026-10-11 – Giai đoạn 72 xong: săn lông vũ khéo hơn
 - **Quơ chân**: đưa lông vũ lơ lửng ngang tầm bên hông Bơ (bên trái hoặc phải, không phải trên đầu) → Bơ nghiêng người về bên đó, giơ một chân quơ theo lông, "Quơ quơ~ sắp tới rồi!". Ảnh `docs/anh/meo-quo-chan.png` (trái/phải). `scripts/thu_cham.py` thử thêm — đạt hết. 430 test qua hết.
 - Rà soát, sửa: lúc đầu chân Bơ hạ xuống giữa chừng mỗi ~0,7 giây dù lông vẫn còn bên hông (giật cục) → giờ lông còn lắc ở đó thì Bơ còn quơ; không quơ chen lúc đang rình hay đang đứng vồ lông trên đầu. 4 kiểu lông, nền sáng/tối đều rõ (ảnh `docs/anh/quo-chan-kieu-long.png`).

@@ -395,7 +395,7 @@
 - [x] Rà soát giai đoạn 72, sửa lỗi tìm được
 
 ## Giai đoạn 73 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
-- [ ] Cuộn len nằm yên cạnh Bơ một lúc → Bơ ôm len, cắn cắn, rồi đá văng ra
+- [x] Cuộn len nằm yên cạnh Bơ một lúc → Bơ ôm len, cắn cắn, rồi đá văng ra
 - [ ] Rà soát giai đoạn 73, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)

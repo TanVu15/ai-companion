@@ -19,7 +19,7 @@ Mèo vẽ bằng SVG (`web/meo.js`, `web/meo.css`), đọc JSON cảm xúc từ 
 | **Vuốt ngược lông** (kéo lên trên ở hai bên lưng) → Bơ xù lông, nheo mắt | **Chạm hai lần vào chân trước** → Bơ giơ chân đập tay "Bốp!" |
 | Lúc rảnh Bơ tự ngáp, liếm chân, **rửa mặt**, **ngó quanh** | Gọi **"Bơ ơi"** (rảnh tay) → Bơ nghiêng đầu "Dạ?" |
 | **Giữ yên tay trước mũi** → Bơ ngửi rồi cọ má | **Chạm đuôi** → đuôi vụt đi · **Lắc điện thoại** → Bơ chóng mặt @_@ |
-| **Nhấn giữ đầu rồi kéo lên** → bế Bơ, chân lủng lẳng | **Lông vũ quét mũi** → Bơ hắt xì · **thả lông sát đất** → Bơ rình, ngoáy mông rồi vồ · **lông bên hông** → Bơ quơ chân |
+| **Nhấn giữ đầu rồi kéo lên** → bế Bơ, chân lủng lẳng | **Lông vũ quét mũi** → Bơ hắt xì · **thả lông sát đất** → Bơ rình, ngoáy mông rồi vồ · **lông bên hông** → Bơ quơ chân · **len nằm yên sát Bơ** → Bơ ôm cắn rồi đá văng |
 | **Chạm chóp mũi** → boop! Bơ chun mũi | **Chạm má** → Bơ nghiêng đầu dụi vào tay |
 
 Lâu rồi mới mở web thì Bơ mừng rỡ "Bạn về rồi!"; sáng sớm Bơ vươn vai; khuya Bơ lim dim. Không có thanh "đói", không bị phạt khi bỏ đi lâu.

@@ -491,3 +491,28 @@ header.dang-long-vu { touch-action: none; position: relative; }
 }
 @keyframes meo-quo-trai { 40% { transform: rotate(-5deg); } }
 @keyframes meo-quo-phai { 40% { transform: rotate(5deg); } }
+
+/* Ôm cuộn len: cúi đầu cắn cắn, hai chân trước kẹp hai bên len, mắt to; rồi chân sau đá len văng ra */
+.meo.om-len .head { transform: translateY(16px); }
+.meo.om-len .paw-l { transform: translate(5px, -18px) rotate(-30deg); }
+.meo.om-len .paw-r { transform: translate(-5px, -18px) rotate(30deg); }
+.meo.om-len .ear-l { transform: rotate(-8deg); } .meo.om-len .ear-r { transform: rotate(8deg); }
+.meo.om-len :is(.mat-cuoi, .mat-nham) { display: none !important; } .meo.om-len .mat-mo { display: inline !important; transform: scale(1.15); }
+.meo.om-len :is(.mieng-w, .mieng-buon) { display: none !important; } .meo.om-len .mieng-mo { display: inline !important; }
+.meo.om-len .tail-ngu { display: none !important; }
+.meo.om-len .tail { transform: rotate(12deg); }
+.meo.da-len .chan-sau { transform: translateY(-14px); }
+.meo.da-len .paw-l { transform: translate(-10px, -6px) rotate(-20deg); } .meo.da-len .paw-r { transform: translate(10px, -6px) rotate(20deg); }
+.meo.da-len :is(.mat-mo, .mat-nham) { display: none !important; } .meo.da-len .mat-cuoi { display: inline !important; }
+.meo.da-len :is(.mieng-w, .mieng-buon) { display: none !important; } .meo.da-len .mieng-mo { display: inline !important; }
+.len.dang-om { transition: transform .3s ease-out; cursor: grab; }
+@media (prefers-reduced-motion: no-preference) {
+  .meo.om-len .head { animation: meo-can-len .32s ease-in-out .3s infinite alternate; }
+  .meo.om-len .mieng-mo { animation: meo-can-mieng .32s ease-in-out .3s infinite alternate; }
+  .len.dang-om svg { animation: len-bi-can .32s ease-in-out .3s infinite alternate; }
+  .meo.da-len { animation: meo-da-len .6s ease-out; }
+}
+@keyframes meo-can-len { from { transform: translateY(16px); } to { transform: translateY(21px) rotate(-3deg); } }
+@keyframes meo-can-mieng { from { transform: scale(1); } to { transform: scale(.55, .4); } }
+@keyframes len-bi-can { from { rotate: -9deg; scale: 1; } to { rotate: 9deg; scale: .94 1.04; } }
+@keyframes meo-da-len { 30% { transform: translateY(-6px) rotate(-3deg); } }

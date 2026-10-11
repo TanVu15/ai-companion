@@ -355,3 +355,16 @@ def test_quo_chan_khong_chong_tu_the():
     do_choi = (config.ROOT / "web" / "do_choi.js").read_text(encoding="utf-8")
     assert "!svg.classList.contains('rinh') && !svg.classList.contains('voi')" in do_choi
     assert "svg.classList.remove(hong === 'trai' ? 'quo-phai' : 'quo-trai')" in do_choi
+
+
+def test_len_gan_meo():
+    """Cuộn len nằm yên sát bên Bơ (ngang tầm chân, hai bên) → Bơ ôm len; xa quá hay trên cao thì không."""
+    v = node("""console.log(JSON.stringify([C.boLenGanMeo(20, 178), C.boLenGanMeo(185, 178), C.boLenGanMeo(100, 160),
+      C.boLenGanMeo(-30, 178), C.boLenGanMeo(240, 178), C.boLenGanMeo(20, 100)]))""")
+    assert v == [True, True, True, False, False, False]
+    css = (config.ROOT / "web" / "meo.css").read_text(encoding="utf-8")
+    assert ".meo.om-len .paw-l" in css and ".meo.da-len .chan-sau" in css
+    js = (config.ROOT / "web" / "do_choi.js").read_text(encoding="utf-8")
+    # cầm len lên giữa chừng thì thôi ôm; vừa đá ra thì khỏi vồ lại liền
+    assert "ev.preventDefault(); ev.stopPropagation(); thoiOmLen();" in js
+    assert "voLen = Date.now() + 400;" in js
