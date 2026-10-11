@@ -464,6 +464,10 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
     lacNhan.hidden = false;
     lacBat.checked = canHoi ? luu === '1' : luu !== '0';  // iPhone: quyền cấp theo lần mở trang, nên đã bật thì thử nghe luôn
     if (lacBat.checked) ngheLac(true);
+    // iPhone: quyền có thể mất sau khi tải lại trang → lần chạm Bơ đầu tiên hỏi lại (đã cho phép rồi thì máy không hiện hộp hỏi)
+    if (canHoi && lacBat.checked) face.addEventListener('pointerdown', () => {
+      DeviceMotionEvent.requestPermission().then(kq => { if (kq !== 'granted') ngheLac(false); }).catch(() => {});
+    }, { once: true });
     lacBat.addEventListener('change', () => {
       const bat = lacBat.checked;
       try { localStorage.setItem('bo_lac', bat ? '1' : '0'); } catch (e) {}
