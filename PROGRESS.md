@@ -5,8 +5,9 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
-## 2026-10-11 – Giai đoạn 80 (đang làm): lông vũ cù Bơ
+## 2026-10-11 – Giai đoạn 80 xong: lông vũ cù Bơ
 - **Nhột**: bật cần câu lông vũ, lướt lông ngang qua lưng hay bụng Bơ → lông Bơ rùng rùng, Bơ cúi đầu quay về phía chỗ nhột, mắt cười, má hồng, tai giật, lâu lâu nói "Hí hí, nhột! Lông vũ cù Bơ hả~". Lông đứng yên thì không tính; nghỉ 3 giây giữa hai lần. Máy bật giảm chuyển động thì không rùng, chỉ đổi tư thế. Ảnh `docs/anh/long-vu-cu-lung.png` (điện thoại, máy tính, mèo đen màn hình thấp, mướp vằn nền tối). `scripts/thu_cham.py` thử thêm — đạt hết. 438 test qua hết.
+- Rà soát, sửa: đang nhột mà lông bay ngay lên đầu (vồ), sang hông (quơ chân), xuống đất (rình) hay qua mũi (hắt xì) thì trước đây hai tư thế lẫn vào nhau → giờ bỏ tư thế nhột, làm tư thế mới. Câu "nhột" chỉ thỉnh thoảng hiện (lướt qua bụng là chuyện hay gặp, cho khỏi lắm lời). Bộ ảnh `docs/anh/meo-tat-ca.png` có thêm "nhot-long". 438 test qua hết, `scripts/thu_cham.py` đạt hết.
 **Tân cần thử:** bật nút lông vũ, rê lông ngang qua bụng Bơ.
 
 ## 2026-10-11 – Giai đoạn 79 xong: giọng cho trò ke ke

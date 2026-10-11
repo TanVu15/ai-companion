@@ -424,7 +424,11 @@
 
 ## Giai đoạn 80 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
 - [x] Lông vũ lướt nhẹ qua lưng/bụng Bơ (không phải mũi) → lông Bơ rùng nhẹ, Bơ quay đầu nhìn chỗ nhột
-- [ ] Rà soát giai đoạn 80, sửa lỗi tìm được
+- [x] Rà soát giai đoạn 80, sửa lỗi tìm được
+
+## Giai đoạn 81 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
+- [ ] Cuộn len lăn tới chạm đuôi Bơ → đuôi giật mình vểnh lên, Bơ ngoái lại nhìn đuôi "Ai đụng đuôi Bơ?" (thay vì vồ như chạm chân)
+- [ ] Rà soát giai đoạn 81, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):

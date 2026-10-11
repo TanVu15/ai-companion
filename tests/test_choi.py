@@ -412,6 +412,8 @@ def test_long_vu_cu_lung():
     js = (config.ROOT / "web" / "do_choi.js").read_text(encoding="utf-8")
     assert "(vung === 'lung' || vung === 'bung') && dangLuot && Date.now() - lvNhot > 3000" in js
     assert "giu('nhot-long', 900)" in js
+    # đang nhột mà lông bay lên đầu (vồ), sang hông (quơ), xuống đất (rình), qua mũi (hắt xì) → bỏ tư thế nhột cho khỏi lẫn
+    assert js.count("svg.classList.remove('nhot-long');") == 4
 
 
 def test_cho_an_luc_om_len_thi_buong_len():
