@@ -294,3 +294,10 @@ def test_rinh_co_cau_va_kieu_dang():
     for c in (".meo.rinh", ".meo.vo-rinh", "meo-ngoay"):
         assert c in css, c
     assert "boRinh();" in do_choi  # cất lông vũ thì thôi rình (không kẹt tư thế)
+
+
+def test_ngap_lay_khong_buon_ngu():
+    """Nói "không/chưa/hết buồn ngủ" thì Bơ không ngáp."""
+    v = node("""console.log(JSON.stringify(['mình không buồn ngủ', 'chưa buồn ngủ gì hết', 'hết buồn ngủ rồi',
+      'Bơ không buồn ngủ hả, mình buồn ngủ quá'].map(C.boPhanUngTin)))""")
+    assert v == [None, None, None, "ngap"]

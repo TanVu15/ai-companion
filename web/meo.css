@@ -446,6 +446,8 @@ header.dang-long-vu { touch-action: none; position: relative; }
 .meo.rinh :is(.mieng-mo, .mieng-buon) { display: none !important; } .meo.rinh .mieng-w { display: inline !important; }
 .meo.rinh .tail-ngu { display: none !important; }
 .meo.rinh .tail { transform: rotate(18deg); }
+/* Đang săn thì mắt mở to cả lúc khuya (lim dim) hay đang có cảm xúc khác */
+.face[data-e] .meo:is(.rinh, .vo-rinh) .mat-mo { transform: scale(1.2); }
 /* Nhảy vồ: bật lên lao tới (to ra như nhào về phía mình), rồi đáp xuống đè chân lên lông */
 .meo.vo-rinh .paw { transform: translateY(8px) scaleX(1.15); }
 .meo.vo-rinh :is(.mat-cuoi, .mat-nham) { display: none !important; } .meo.vo-rinh .mat-mo { display: inline !important; transform: scale(1.25); }

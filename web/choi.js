@@ -166,7 +166,8 @@ function boPhanUngTin(text) {
   const s = String(text || '');
   if (/[🐟🐠🐡🍣]/u.test(s) || /(^|[^\p{L}])cá(?!\s*(nhân|tính|cược|thể|biệt))($|[^\p{L}])/iu.test(s)) return 'ca';
   if (/[❤♥💕💖💗😍🥰😘]/u.test(s) || /(^|[^\p{L}])(thương|yêu)(?!\s*cầu)($|[^\p{L}])/iu.test(s)) return 'tim';
-  if (/[😴🥱💤]/u.test(s) || /(^|[^\p{L}])(buồn ngủ|ngáp|đi ngủ|ngủ ngon)($|[^\p{L}])/iu.test(s)) return 'ngap';  // ngáp lây
+  // ngáp lây ("không/chưa/hết buồn ngủ" thì thôi)
+  if (/[😴🥱💤]/u.test(s) || /(^|[^\p{L}])(?<!(không|chưa|hết|chẳng|chả|đỡ|đâu có)\s+)(buồn ngủ|ngáp|đi ngủ|ngủ ngon)($|[^\p{L}])/iu.test(s)) return 'ngap';
   return null;
 }
 // Hướng vuốt trên lưng (dx, dy: px từ chỗ bắt đầu vuốt tới giờ; y hướng xuống). Lông mèo mọc xuôi xuống,

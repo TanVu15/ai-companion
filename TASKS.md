@@ -379,7 +379,7 @@
 ## Giai đoạn 69 – Bơ đồng cảm (Claude tự thêm, trong hướng mèo/tương tác)
 - [x] Ngáp lây: gửi tin có "buồn ngủ", "ngáp", "đi ngủ", "ngủ ngon" hoặc 😴🥱 → Bơ ngáp theo (không gọi API thêm; có test)
 - [x] Lông vũ đưa xuống sát đất trước mặt Bơ → Bơ hạ người, mông ngoáy ngoáy chuẩn bị vồ (kiểu mèo rình), rồi nhảy vồ
-- [ ] Rà soát giai đoạn 69, sửa lỗi tìm được
+- [x] Rà soát giai đoạn 69, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):

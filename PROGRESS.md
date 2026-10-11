@@ -5,9 +5,11 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
-## 2026-10-11 – Giai đoạn 69 (đang làm): Bơ đồng cảm
+## 2026-10-11 – Giai đoạn 69 xong: Bơ đồng cảm
 - **Ngáp lây**: gửi tin có "buồn ngủ", "ngáp", "đi ngủ", "ngủ ngon" hoặc 😴 → Bơ ngáp theo ngay (trước khi Bơ trả lời, không tốn API). "ngủ trưa dậy rồi" thì không. Máy bật giảm chuyển động thì thôi.
 - **Rình & vồ lông vũ**: bật cần câu lông vũ, thả lông xuống sát đất ngay trước mặt Bơ (dưới hai chân trước) → Bơ hạ người, cúi đầu, mắt mở to dán vào lông, mông với đuôi ngoáy ngoáy "Rình... rình..."; khoảng 1,4 giây sau Bơ nhảy vồ "Phập! Bắt được rồi!" (điện thoại Android rung nhẹ). Rút lông đi trước lúc đó thì Bơ thôi rình. Nghỉ 3 giây giữa hai lần vồ. Ảnh `docs/anh/meo-rinh-long-vu.png` (trái: rình, phải: vồ).
+- Rà soát, sửa: nhắn "không buồn ngủ", "chưa buồn ngủ", "hết buồn ngủ" thì Bơ không ngáp nữa. Đang rình thì mắt Bơ mở to cả lúc khuya (trước đây lim dim). Rình/vồ với 4 kiểu lông, nền sáng và tối: rõ, không vỡ hình (ảnh `docs/anh/rinh-kieu-long.png`). `scripts/thu_cham.py` thử thêm rình & vồ — đạt hết. 424 test qua hết.
+**Tân cần thử:** bật nút lông vũ, kéo lông xuống ngay dưới chân Bơ rồi giữ yên một giây.
 
 ## 2026-10-11 – Giai đoạn 68 xong: bế Bơ ấm hơn
 - **Bế yên**: bế Bơ lên rồi giữ yên khoảng 2,5 giây → Bơ thả lỏng trên tay, nhắm mắt lim dim, má hồng, rừ rừ "Rừ rừ... cứ bế Bơ vầy hoài nha". Lắc lên xuống thì Bơ mở mắt lại. Ảnh `docs/anh/meo-be-em.png`.
