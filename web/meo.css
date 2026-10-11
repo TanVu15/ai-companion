@@ -470,3 +470,12 @@ header.dang-long-vu { touch-action: none; position: relative; }
   .meo.nhoi .paw-r { animation: meo-nhoi .5s ease-in-out -.5s infinite alternate; }
 }
 @keyframes meo-nhoi { from { transform: translateY(0) scaleX(1); } to { transform: translateY(-7px) scaleX(.92); } }
+
+/* Chớp mắt chậm (vuốt xong một lượt dài): mắt mở, khép thật chậm, giữ một nhịp rồi mở ra – kiểu mèo nói "thương bạn" */
+.meo.chop-cham :is(.mat-cuoi, .mat-nham) { display: none !important; } .meo.chop-cham .mat-mo { display: inline !important; transform: scaleY(.15); }
+.meo.chop-cham .ma { opacity: .55; }
+.face[data-e] .meo.chop-cham .mat-mo { transform: scaleY(.15); }
+@media (prefers-reduced-motion: no-preference) {
+  .face[data-e] .meo.chop-cham .mat-mo { animation: meo-chop-cham 1.6s ease-in-out forwards; }
+}
+@keyframes meo-chop-cham { 0% { transform: scaleY(1); } 40% { transform: scaleY(.12); } 65% { transform: scaleY(.12); } 100% { transform: scaleY(1); } }

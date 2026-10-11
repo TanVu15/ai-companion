@@ -324,3 +324,11 @@ def test_be_va_nguoc_long_tat_nhoi_bot():
     choi = (config.ROOT / "web" / "choi.js").read_text(encoding="utf-8")
     assert "svg.classList.add('be'); svg.classList.remove('vuot', 'gai-cam', 'lan', 'bep', 'nhoi');" in choi
     assert "svg.classList.remove('vuot', 'gai-cam', 'nhoi');\n    giu('nguoc-long'" in choi
+
+
+def test_chop_mat_cham():
+    """Vuốt xong một lượt dài (≥3 giây) thì Bơ chớp mắt chậm; không lặp trong 20 giây."""
+    v = node("console.log(JSON.stringify([C.boChopCham(1, 1e9), C.boChopCham(3, 1e9), C.boChopCham(8, 5000), C.boChopCham(8, 20000)]))")
+    assert v == [False, True, False, True]
+    css = (config.ROOT / "web" / "meo.css").read_text(encoding="utf-8")
+    assert "meo-chop-cham" in css

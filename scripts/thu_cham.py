@@ -59,7 +59,8 @@ def thu(pg, ten, w, h):
     pg.mouse.move(X(5), Y(5))
     for i in range(110):  # vuốt lưng liền ~6,6 giây → nhồi bột
         pg.mouse.move(X(60 + (i % 2) * 80), Y(130)); pg.wait_for_timeout(60)
-    kq.append(("vuốt lâu → nhồi bột", co("nhoi"))); pg.mouse.move(5, 5); nghi()
+    kq.append(("vuốt lâu → nhồi bột", co("nhoi"))); pg.mouse.move(5, 5); pg.wait_for_timeout(1200)
+    kq.append(("vuốt xong → chớp mắt chậm", co("chop-cham"))); nghi()
     pg.click('#choAn'); pg.wait_for_timeout(200); kq.append(("cho ăn", co("an"))); pg.wait_for_timeout(4200)
     b = pg.locator('#choAn').bounding_box()
     pg.mouse.move(b['x'] + b['width'] / 2, b['y'] + b['height'] / 2); pg.mouse.down(); pg.wait_for_timeout(700); pg.mouse.up()

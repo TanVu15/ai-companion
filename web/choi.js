@@ -122,6 +122,10 @@ function boDoToRuRu(giay) {
 function boNhoiBot(giayVuot) {
   return giayVuot >= 6;
 }
+// Vuốt xong một lượt dài (từ 3 giây) thì Bơ nhìn mình chớp mắt thật chậm (kiểu mèo nói "thương bạn"); nghỉ 20 giây giữa hai lần
+function boChopCham(giayVuot, msTuLanTruoc) {
+  return giayVuot >= 3 && msTuLanTruoc >= 20000;
+}
 // Lắc điện thoại: độ "giật" giữa hai lần đo gia tốc (m/s², có cả trọng lực) = tổng chênh lệch ba trục
 function boDoGiat(a, b) {
   if (!a || !b) return 0;
@@ -190,7 +194,7 @@ function boLucMo(lanTruoc, bayGio, gio) {
   return null;
 }
 
-if (typeof module !== 'undefined') module.exports = { boVungCham, boChiTietDau, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boChamChan, boThongSoMeo, boGanMui, boDoToRuRu, boNhoiBot, boDoGiat, boLac, boGoiY, BO_GOI_Y, boPhanUngTin, boLucMo, boMonAn, BO_MON_AN, boNhipAn, boDoNhac, BO_CAU_CHOI, BO_DOC_TO };
+if (typeof module !== 'undefined') module.exports = { boVungCham, boChiTietDau, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boChamChan, boThongSoMeo, boGanMui, boDoToRuRu, boNhoiBot, boChopCham, boDoGiat, boLac, boGoiY, BO_GOI_Y, boPhanUngTin, boLucMo, boMonAn, BO_MON_AN, boNhipAn, boDoNhac, BO_CAU_CHOI, BO_DOC_TO };
 
 // ---- Phần giao diện ----
 (function () {
@@ -365,7 +369,7 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boChiTietDau, 
   const dangDoi = () => svg.classList.contains('doi');
   // Đồ chơi (do_choi.js) điền các hàm này: đang bật đồ chơi nào không, chạm có đang dùng để điều khiển đồ chơi không
   const doChoi = { dangChoi: () => false, dieuKhien: () => false, keoLen: () => false };
-  let dauVuot = null, lanNguoc = 0, vuotBatDau = 0, daNoiNhoi = false;
+  let dauVuot = null, lanNguoc = 0, vuotBatDau = 0, daNoiNhoi = false, lanChopCham = 0;
   function vuot(ev, vung) {
     if (dangDoi()) return;
     const pos = viTriKhung(ev);
@@ -394,7 +398,14 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boChiTietDau, 
     }
     grgr(true);
     clearTimeout(vuotTat);
-    vuotTat = setTimeout(() => { vuotDangChay = false; quangVuot = 0; viTriTruoc = null; grgr(false); }, 700);
+    vuotTat = setTimeout(() => {
+      // vuốt xong một lượt dài: Bơ mở mắt nhìn mình, chớp thật chậm một cái
+      if (vuotDangChay === 'vuot' && face.dataset.e !== 'ngu' && !dangDoi() && !svg.classList.contains('be')
+          && boChopCham((Date.now() - vuotBatDau - 700) / 1000, Date.now() - lanChopCham)) {
+        lanChopCham = Date.now(); setTimeout(() => giu('chop-cham', 1700), 250);
+      }
+      vuotDangChay = false; quangVuot = 0; viTriTruoc = null; grgr(false);
+    }, 700);
   }
   function nguocLong() {
     clearTimeout(vuotTat); vuotDangChay = false; quangVuot = 0; viTriTruoc = null; grgr(false);
