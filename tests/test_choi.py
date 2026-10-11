@@ -131,3 +131,15 @@ def test_cuon_len_khong_nam_de_len_nut():
       console.log(JSON.stringify([C.boLenDeNut(20, 185, nut, 150), C.boLenDeNut(280, 185, nut, 150),
         C.boLenDeNut(150, 185, nut, 150), C.boLenDeNut(54, 185, nut, 150), C.boLenDeNut(20, 185, [], 150)]))""")
     assert v == [1, -1, 0, 1, 0]  # đè nút bên trái → lăn sang phải, bên phải → sang trái; chỉ chạm mép (54-15<40) cũng tính
+
+
+def test_huong_vuot_nguoc_long():
+    v = node("""console.log(JSON.stringify([C.boHuongVuot(0, -50), C.boHuongVuot(5, -40), C.boHuongVuot(0, 50),
+      C.boHuongVuot(60, -30), C.boHuongVuot(0, -10), C.boHuongVuot(-30, -45)]))""")
+    assert v == ["nguoc", "nguoc", "xuoi", "xuoi", "xuoi", "nguoc"]  # chỉ vuốt hẳn lên trên mới là ngược lông
+
+
+def test_meo_co_long_dung_khi_vuot_nguoc():
+    meo = (config.ROOT / "web" / "meo.js").read_text(encoding="utf-8")
+    css = (config.ROOT / "web" / "meo.css").read_text(encoding="utf-8")
+    assert 'class="long-dung"' in meo and ".meo.nguoc-long .long-dung" in css

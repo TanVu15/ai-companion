@@ -5,6 +5,9 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-11 – Giai đoạn 57 (đang làm): chạm tinh tế hơn
+- **Vuốt ngược lông**: chạm/bấm vào hai bên lưng Bơ rồi kéo **lên trên** → lông hai bên dựng đứng, tai cụp ngang, mắt nheo, miệng méo, "Ngược lông rồi á!". Kéo xuống (xuôi) thì vẫn rừ rừ như cũ. Rê chuột không bấm thì không tính. Ảnh `docs/anh/meo-nguoc-long.png`.
+
 ## 2026-10-11 – Giai đoạn 56 xong: bàn phím, "Bơ ơi", dọn code
 - Đồ chơi dùng được bằng **bàn phím**: bật laser/lông vũ rồi bấm phím mũi tên để di chuyển; cuộn len thì mũi tên để hất (lên = tung cao).
 - Rảnh tay: chỉ gọi "Bơ ơi" → Bơ nghiêng đầu, bong bóng "Dạ? Bơ nghe nè!" rồi chờ 8 giây nghe tiếp.

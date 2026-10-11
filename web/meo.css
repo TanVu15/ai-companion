@@ -162,6 +162,12 @@ header.dang-laser { touch-action: none; cursor: crosshair; position: relative; }
 .meo.vuot .ma, .meo.gai-cam .ma { opacity: .7; }
 .meo.vuot .ear-l { transform: rotate(-14deg); } .meo.vuot .ear-r { transform: rotate(14deg); }
 .meo.vuot .head { transform: rotate(4deg); }
+/* Vuốt ngược lông: lông hai bên dựng lên, tai cụp ngang, mắt nheo khó chịu, miệng méo */
+.meo .long-dung { fill: none; stroke: var(--vien); stroke-width: 3; stroke-linecap: round; display: none; }
+.meo.nguoc-long .long-dung { display: inline; }
+.meo.nguoc-long .ear-l { transform: rotate(-32deg) scaleY(.85); } .meo.nguoc-long .ear-r { transform: rotate(32deg) scaleY(.85); }
+.meo.nguoc-long .body { scale: 1.03; }
+.meo.nguoc-long .tail { transform: rotate(10deg); }
 /* Gãi cằm: ngửa cổ */
 .meo.gai-cam .head { transform: translateY(-6px) rotate(-6deg); }
 /* Chạm tai: tai giật */
@@ -207,6 +213,7 @@ header.dang-laser { touch-action: none; cursor: crosshair; position: relative; }
   .meo.mung .tail { animation: meo-ngoe .4s ease-in-out infinite; }
   .meo.doi { transition: transform .3s; }
   .meo.giat { animation: meo-giat .45s ease-out; }
+  .meo.nguoc-long .long-dung { animation: meo-dung .35s ease-out; }
   .meo.vo { animation: meo-vo .6s ease-out; }
   .meo.lanh { animation: meo-nhay .55s 1; }
   .meo.an .mieng-mo { animation: meo-noi .3s ease-in-out infinite alternate; }
@@ -222,6 +229,7 @@ header.dang-laser { touch-action: none; cursor: crosshair; position: relative; }
 @keyframes meo-tim { to { transform: translate(-50%, -60px) scale(1.4); opacity: 0; } }
 @keyframes meo-ca { 0% { transform: translateY(-80px); opacity: 0; } 15% { transform: none; opacity: 1; } 70% { transform: scale(.7); opacity: 1; } 100% { transform: scale(0); opacity: 0; } }
 @keyframes meo-lan { 0%, 100% { transform: rotate(-9deg); } 50% { transform: rotate(9deg); } }
+@keyframes meo-dung { from { opacity: 0; } }
 @keyframes meo-bong { from { transform: scale(.7); opacity: 0; } }
 
 /* Trạng thái tạm (ngáp, vuốt, ăn...) thắng mắt/miệng của cảm xúc đang có — chỉ hiện đúng một kiểu mắt, một kiểu miệng */
@@ -234,6 +242,10 @@ header.dang-laser { touch-action: none; cursor: crosshair; position: relative; }
 .meo:is(.ngap, .an, .giat) .mieng-mo { display: inline !important; }
 .meo:is(.liem, .liem-mep) :is(.mieng-w, .mieng-buon, .mieng-mo) { display: none !important; }
 .meo:is(.liem, .liem-mep) .luoi-liem { display: inline !important; }
+
+.meo.nguoc-long :is(.mat-cuoi, .mat-nham) { display: none !important; }
+.meo.nguoc-long .mat-mo { display: inline !important; transform: scaleY(.45); }
+.meo.nguoc-long :is(.mieng-w, .mieng-mo) { display: none !important; } .meo.nguoc-long .mieng-buon { display: inline !important; }
 
 /* Giọng AI đang phát: miệng mở theo âm lượng thật (giong_noi.js đặt --mo) */
 .face.talking.noi-that .mieng-w { display: none; }

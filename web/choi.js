@@ -28,6 +28,7 @@ const BO_CAU_CHOI = {
   len: ['Cuộn len! Của Bơ!', 'Bép! Bơ đập trúng rồi', 'Ném nữa đi, ném nữa đi!', 'Hí hí, lăn đi đâu đó?'],
   laser: ['Cái chấm đỏ kìa!!', 'Bắt được rồi... ủa đâu?', 'Lần này Bơ bắt được cho coi!'],
   long_vu: ['Lông vũ! Lông vũ!', 'Hụt rồi... lần nữa!', 'Bơ với tới nè!', 'Xuống thấp xíu đi mà~'],
+  nguoc: ['Ngược lông rồi á!', 'Ơ kìa, vuốt xuôi cơ mà~', 'Lông Bơ dựng hết rồi nè!', 'Hướng kia mới đúng nha!'],
   goi: ['Dạ? Bơ nghe nè!', 'Meo? Bạn gọi Bơ hả?', 'Dạaa~ Bơ đây!'],
   dep: ['Bộ lông mới nè, Bơ đẹp hông?', 'Hí, Bơ điệu chưa~', 'Thấy Bơ xinh lên hông?'],
   khuya: ['Khuya rồi nè, bạn ngủ sớm nha~', 'Rừ rừ... Bơ buồn ngủ quá, bạn cũng ngủ đi nha', 'Vuốt xíu nữa rồi mình đi ngủ ha~'],
@@ -55,6 +56,11 @@ function boHuongNhin(dx, dy) {
   const k = Math.min(1, d / 80);
   return [+(dx / d * 4 * k).toFixed(1), +(dy / d * 3 * k).toFixed(1)];
 }
+// Hướng vuốt trên lưng (dx, dy: px từ chỗ bắt đầu vuốt tới giờ; y hướng xuống). Lông mèo mọc xuôi xuống,
+// nên vuốt hẳn lên trên (dọc nhiều hơn ngang) là 'nguoc'; còn lại là 'xuoi'.
+function boHuongVuot(dx, dy) {
+  return dy < -25 && -dy > 1.2 * Math.abs(dx) ? 'nguoc' : 'xuoi';
+}
 // Lúc mở web (hoặc quay lại tab): lâu rồi mới gặp (từ 1 ngày) → 'mung'; sáng sớm 5–10h, lần đầu sau ít nhất 4 tiếng → 'vuon'.
 // Lần đầu dùng (chưa có mốc) hoặc giờ máy lùi → null. Không bao giờ trách người dùng đi lâu.
 function boLucMo(lanTruoc, bayGio, gio) {
@@ -65,7 +71,7 @@ function boLucMo(lanTruoc, bayGio, gio) {
   return null;
 }
 
-if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boLucMo, BO_CAU_CHOI, BO_DOC_TO };
+if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boLucMo, BO_CAU_CHOI, BO_DOC_TO };
 
 // ---- Phần giao diện ----
 (function () {
@@ -174,12 +180,18 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
   const dangDoi = () => svg.classList.contains('doi');
   // Đồ chơi (do_choi.js) điền các hàm này: đang bật đồ chơi nào không, chạm có đang dùng để điều khiển đồ chơi không
   const doChoi = { dangChoi: () => false, dieuKhien: () => false, keoLen: () => false };
+  let dauVuot = null, lanNguoc = 0;
   function vuot(ev, vung) {
     if (dangDoi()) return;
     const pos = viTriKhung(ev);
     if (viTriTruoc) quangVuot += Math.hypot(pos.x - viTriTruoc.x, pos.y - viTriTruoc.y);
+    else dauVuot = pos;
     viTriTruoc = pos;
     if (quangVuot < 40) return;
+    // Bấm/chạm rồi kéo ngược lên trên lưng = vuốt ngược lông (rê chuột không bấm thì không tính, kẻo lỡ tay)
+    if (bam && vung === 'lung' && face.dataset.e !== 'ngu' && boHuongVuot(pos.x - dauVuot.x, pos.y - dauVuot.y) === 'nguoc') {
+      nguocLong(); return;
+    }
     // rê chuột vuốt ve cũng là đang chơi: Bơ đang thức thì đừng ngủ gật giữa chừng (đang ngủ thì rừ rừ trong mơ)
     if (face.dataset.e !== 'ngu' && typeof scheduleSleep === 'function') scheduleSleep();
     const loai = vung === 'cam' ? 'gai_cam' : 'vuot';
@@ -193,6 +205,12 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
     grgr(true);
     clearTimeout(vuotTat);
     vuotTat = setTimeout(() => { vuotDangChay = false; quangVuot = 0; viTriTruoc = null; grgr(false); }, 700);
+  }
+  function nguocLong() {
+    clearTimeout(vuotTat); vuotDangChay = false; quangVuot = 0; viTriTruoc = null; grgr(false);
+    svg.classList.remove('vuot', 'gai-cam');
+    giu('nguoc-long', 1100);
+    if (Date.now() - lanNguoc > 4000) { lanNguoc = Date.now(); noi('nguoc', true); }
   }
   function cham(ev, vung, vuaNgu) {
     if (vuaNgu) { noi('thuc', true); return; }  // đang ngủ: chạm là tỉnh (hop_thoai.js lo), Bơ lầm bầm
