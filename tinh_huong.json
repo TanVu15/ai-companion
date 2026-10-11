@@ -260,5 +260,10 @@
     "ten": "Nhắc ngày đi làm",
     "tin_nhan": "Ngày đi làm 7h sáng nhắc mình uống nước nha",
     "phai_nhac_lap": "ngay_thuong"
+  },
+  {
+    "ten": "Nhờ theo dõi thói quen",
+    "tin_nhan": "Bơ theo dõi giúp mình thói quen đọc sách 20 phút mỗi tối nha",
+    "phai_thoi_quen_moi": true
   }
 ]

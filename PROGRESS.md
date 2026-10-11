@@ -679,4 +679,7 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - Cổng thiết bị `/api/thiet-bi/nhac` có thêm `"loai"` ("nhac" = nên kêu chuông, "thoi_quen" = chỉ nói).
 - Tên thói quen viết hoa ("IELTS") giữ nguyên trong câu nhắc.
 - 242 test qua hết.
+- Bộ chấm điểm `python -m app.thu_tinh_cach` thêm tình huống "nhờ theo dõi thói quen" (26 tình huống). 243 test qua hết.
+
+**Tân cần thử (giai đoạn 38):** chạy `python -m app.thu_tinh_cach` với API key thật, gửi điểm + câu trả lời lạ vào `FEEDBACK.md`.
 

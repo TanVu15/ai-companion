@@ -104,6 +104,8 @@ def cham(th: dict, chu_goc: str, reply, viec_con_lai: int = 0) -> KetQua:
         kq.kiem_tra.append(("Ghi vào việc cần làm", bool(reply.viec_can_lam)))
     if th.get("phai_xong_viec"):
         kq.kiem_tra.append(("Gạch việc đã xong", bool(reply.xong_viec) and viec_con_lai == 0))
+    if th.get("phai_thoi_quen_moi"):
+        kq.kiem_tra.append(("Thêm thói quen để theo dõi", bool(reply.thoi_quen_moi)))
     if th.get("phai_ghi_nhat_ky"):
         kq.kiem_tra.append(("Ghi nhật ký", bool(reply.nhat_ky)))
     if th.get("khong_ghi_nhat_ky"):

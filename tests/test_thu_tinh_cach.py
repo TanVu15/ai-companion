@@ -7,7 +7,7 @@ from tests.test_brain import FakeClient
 
 def test_file_tinh_huong_hop_le():
     ds = json.loads(t.TINH_HUONG_PATH.read_text(encoding="utf-8"))
-    assert len(ds) == 25
+    assert len(ds) == 26
     for th in ds:
         assert th["ten"] and th["tin_nhan"]
 
@@ -109,3 +109,11 @@ def test_cham_nhat_ky():
     assert ("Ghi nhật ký", True) in kq.kiem_tra
     kq = t.cham({"ten": "Hỏi", "tin_nhan": "x", "khong_ghi_nhat_ky": True}, co, parse_reply(co))
     assert ("Không ghi nhật ký chuyện vặt", False) in kq.kiem_tra
+
+
+def test_cham_thoi_quen():
+    from app.brain import parse_reply
+
+    co = json.dumps({"noi": "Ok luôn!", "cam_xuc": "vui", "thoi_quen_moi": ["Đọc sách 20 phút"]})
+    kq = t.cham({"ten": "TQ", "tin_nhan": "x", "phai_thoi_quen_moi": True}, co, parse_reply(co))
+    assert ("Thêm thói quen để theo dõi", True) in kq.kiem_tra
