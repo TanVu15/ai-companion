@@ -71,6 +71,10 @@ def thu(pg, ten, w, h):
     pg.click('#cuonLen'); pg.wait_for_timeout(300)
     kq.append(("cuộn len (cất laser)", pg.evaluate("!!document.querySelector('.len') && !document.querySelector('.laser')")))
     pg.click('#longVu'); pg.wait_for_timeout(300); kq.append(("lông vũ", pg.evaluate("!!document.querySelector('.long-vu')")))
+    for i in range(8):
+        pg.mouse.move(X(100), Y(120 + i * 8) + 10); pg.wait_for_timeout(30)
+    pg.wait_for_timeout(600); rinh = co("rinh"); pg.wait_for_timeout(1000)
+    kq.append(("lông vũ sát đất → rình rồi vồ", rinh and co("vo-rinh") and not co("rinh")))
     pg.keyboard.press('Escape'); pg.wait_for_timeout(100)
     kq.append(("Esc cất đồ chơi", pg.evaluate("!document.querySelector('.long-vu, .len, .laser')")))
     pg.focus('#face'); pg.keyboard.press('d'); pg.wait_for_timeout(60); kq.append(("phím D", co("dap-tay"))); nghi()

@@ -436,3 +436,26 @@ header.dang-long-vu { touch-action: none; position: relative; }
 .meo:is(.nung-ma-trai, .nung-ma-phai) .mat-cuoi { display: inline !important; }
 .meo.nung-ma-trai .head { transform: rotate(-9deg); } .meo.nung-ma-phai .head { transform: rotate(9deg); }
 @media (prefers-reduced-motion: no-preference) { .meo .mui, .meo .ria { transition: transform .15s ease; } }
+
+/* Rình lông vũ sát đất: hạ người, đầu cúi, tai hơi cụp ra sau, mắt mở to, mông (chân sau, đuôi) ngoáy ngoáy */
+.meo.rinh .head { transform: translateY(20px); }
+.meo.rinh .body { scale: 1.06 .86; }
+.meo.rinh .paw { transform: scaleX(1.1); }
+.meo.rinh .ear-l { transform: rotate(-12deg); } .meo.rinh .ear-r { transform: rotate(12deg); }
+.meo.rinh :is(.mat-cuoi, .mat-nham) { display: none !important; } .meo.rinh .mat-mo { display: inline !important; transform: scale(1.2); }
+.meo.rinh :is(.mieng-mo, .mieng-buon) { display: none !important; } .meo.rinh .mieng-w { display: inline !important; }
+.meo.rinh .tail-ngu { display: none !important; }
+.meo.rinh .tail { transform: rotate(18deg); }
+/* Nhảy vồ: bật lên lao tới (to ra như nhào về phía mình), rồi đáp xuống đè chân lên lông */
+.meo.vo-rinh .paw { transform: translateY(8px) scaleX(1.15); }
+.meo.vo-rinh :is(.mat-cuoi, .mat-nham) { display: none !important; } .meo.vo-rinh .mat-mo { display: inline !important; transform: scale(1.25); }
+.meo.vo-rinh .ear-l { transform: rotate(10deg); } .meo.vo-rinh .ear-r { transform: rotate(-10deg); }
+@media (prefers-reduced-motion: no-preference) {
+  .meo.rinh .body, .meo.rinh .chan-sau { animation: meo-ngoay .22s ease-in-out infinite alternate; }
+  .meo.rinh .tail { animation: meo-ngoay-duoi .22s ease-in-out infinite alternate; }
+  .meo.vo-rinh { animation: meo-vo-rinh .7s ease-out; }
+}
+@keyframes meo-ngoay { from { translate: -2.5px 0; } to { translate: 2.5px 0; } }
+@keyframes meo-ngoay-duoi { from { transform: rotate(10deg); } to { transform: rotate(26deg); } }
+@keyframes meo-vo-rinh { 0% { transform: translateY(6px) scale(1.04, .9); } 35% { transform: translateY(-8px) scale(1.03); }
+  65% { transform: translateY(6px) scale(1.07, .9); } 100% { transform: none; } }

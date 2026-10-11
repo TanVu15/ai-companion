@@ -277,3 +277,20 @@ def test_boop_mui_va_nung_ma():
 def test_ngap_lay():
     v = node("""console.log(JSON.stringify(['buồn ngủ quá', 'Bơ ơi mình đi ngủ nha', '😴', 'ngáp hoài', 'ngủ ngon nha Bơ', 'ngủ trưa dậy rồi', 'thương Bơ, buồn ngủ quá', 'tối ăn cá rồi đi ngủ'].map(C.boPhanUngTin)))""")
     assert v == ["ngap", "ngap", "ngap", "ngap", "ngap", None, "tim", "ca"]  # cá / tim ưu tiên trước
+
+
+def test_long_vu_rinh():
+    """Lông vũ sát đất trước mặt Bơ → Bơ rình; trên đầu, ngang mũi, xa hai bên thì không."""
+    v = node("""console.log(JSON.stringify([C.boLongVuRinh(100, 190), C.boLongVuRinh(40, 175), C.boLongVuRinh(170, 230),
+      C.boLongVuRinh(100, 20), C.boLongVuRinh(100, 90), C.boLongVuRinh(100, 140), C.boLongVuRinh(-10, 190), C.boLongVuRinh(100, 290)]))""")
+    assert v == [True, True, True, False, False, False, False, False]
+
+
+def test_rinh_co_cau_va_kieu_dang():
+    v = node("console.log(JSON.stringify([C.BO_CAU_CHOI.rinh.length, C.BO_CAU_CHOI.vo_rinh.length, 'rinh' in C.BO_GOI_Y]))")
+    assert v == [3, 4, True]
+    css = (config.ROOT / "web" / "meo.css").read_text(encoding="utf-8")
+    do_choi = (config.ROOT / "web" / "do_choi.js").read_text(encoding="utf-8")
+    for c in (".meo.rinh", ".meo.vo-rinh", "meo-ngoay"):
+        assert c in css, c
+    assert "boRinh();" in do_choi  # cất lông vũ thì thôi rình (không kẹt tư thế)

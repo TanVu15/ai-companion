@@ -7,6 +7,7 @@
 
 ## 2026-10-11 – Giai đoạn 69 (đang làm): Bơ đồng cảm
 - **Ngáp lây**: gửi tin có "buồn ngủ", "ngáp", "đi ngủ", "ngủ ngon" hoặc 😴 → Bơ ngáp theo ngay (trước khi Bơ trả lời, không tốn API). "ngủ trưa dậy rồi" thì không. Máy bật giảm chuyển động thì thôi.
+- **Rình & vồ lông vũ**: bật cần câu lông vũ, thả lông xuống sát đất ngay trước mặt Bơ (dưới hai chân trước) → Bơ hạ người, cúi đầu, mắt mở to dán vào lông, mông với đuôi ngoáy ngoáy "Rình... rình..."; khoảng 1,4 giây sau Bơ nhảy vồ "Phập! Bắt được rồi!" (điện thoại Android rung nhẹ). Rút lông đi trước lúc đó thì Bơ thôi rình. Nghỉ 3 giây giữa hai lần vồ. Ảnh `docs/anh/meo-rinh-long-vu.png` (trái: rình, phải: vồ).
 
 ## 2026-10-11 – Giai đoạn 68 xong: bế Bơ ấm hơn
 - **Bế yên**: bế Bơ lên rồi giữ yên khoảng 2,5 giây → Bơ thả lỏng trên tay, nhắm mắt lim dim, má hồng, rừ rừ "Rừ rừ... cứ bế Bơ vầy hoài nha". Lắc lên xuống thì Bơ mở mắt lại. Ảnh `docs/anh/meo-be-em.png`.

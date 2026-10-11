@@ -30,13 +30,20 @@ function boLenDeNut(x, y, nut, giua, r = 15) {
   return de ? (x < giua ? 1 : -1) : 0;
 }
 
-if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut };
+// Lông vũ (đầu lông, tọa độ khung vẽ 200×192 của mèo) đang sát đất ngay trước mặt Bơ? (chân Bơ ở y≈174, đất ≈184)
+// Ở yên vùng này một lúc thì Bơ hạ người rình, ngoáy mông rồi nhảy vồ
+function boLongVuRinh(x, y) {
+  return y >= 165 && y <= 250 && Math.abs(x - 100) <= 95;
+}
+
+if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boLongVuRinh };
 
 // ---- Phần giao diện ----
 (function () {
   if (typeof document === 'undefined' || !window.boChoi) return;
   const { face, khung, svg, nhin, header, giu, noi, dem, dangDoi, conChoi, doChoi } = window.boChoi;
   const { boVungCham, boHuongNhin, boGanMui } = window;
+  const boLongVuRinh_ = typeof boLongVuRinh === 'function' ? boLongVuRinh : () => false;
 
   // ---- Tia laser: chấm đỏ theo ngón tay/chuột trong vùng quanh mèo; mèo nhìn theo, chấm tới gần thì vồ ----
   const nutLaser = document.getElementById('doChoi');
@@ -171,6 +178,22 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut };
   // ---- Cần câu lông vũ: lông treo dây, lắc lư theo ngón tay/chuột trong vùng quanh Bơ; lông ở trên đầu thì Bơ đứng lên vồ ----
   const nutLongVu = document.getElementById('longVu');
   let lv = null, lvPos = null, lvDich = null, lvVong = 0, lvTat = null, lvNoi = 0, lvHatXi = 0;
+  let lvRinh = null, lvVoRinh = 0;  // đang rình (hẹn giờ nhảy vồ), lần vồ gần nhất
+  // Thôi rình (lông đi chỗ khác, cất lông, Bơ dỗi/ngủ...)
+  function boRinh() { clearTimeout(lvRinh); lvRinh = null; svg.classList.remove('rinh'); }
+  // Lông sát đất trước mặt: Bơ hạ người, mông ngoáy ngoáy; 1,4 giây sau nhảy vồ (nghỉ 3 giây giữa hai lần vồ)
+  function rinhLongVu(trongVung) {
+    const ranh = trongVung && !dangDoi() && face.dataset.e !== 'ngu' && Date.now() - lvVoRinh > 3000;
+    if (!ranh) { if (lvRinh) boRinh(); return; }
+    if (lvRinh) return;
+    svg.classList.add('rinh'); conChoi(); noi('rinh');
+    lvRinh = setTimeout(() => {
+      lvRinh = null; svg.classList.remove('rinh');
+      if (!lv || dangDoi() || face.dataset.e === 'ngu' || document.hidden) return;
+      lvVoRinh = Date.now(); giu('vo-rinh', 700); conChoi(); dem('rinh'); noi('vo_rinh', true);
+      if (navigator.vibrate && !matchMedia('(prefers-reduced-motion: reduce)').matches) { try { navigator.vibrate(18); } catch (e) {} }
+    }, 1400);
+  }
   function henTatLongVu() { clearTimeout(lvTat); lvTat = setTimeout(() => batLongVu(false), 15000); }
   function buocLongVu() {
     lvVong = 0;
@@ -192,6 +215,7 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut };
         giu('voi', 500); conChoi();
         if (Date.now() - lvNoi > 1500) { lvNoi = Date.now(); dem('long_vu'); noi('long_vu'); }
       }
+      rinhLongVu(boLongVuRinh_(p.x, p.y));
     }
     if (Math.abs(vx) + Math.abs(vy) > 0.05) lvVong = requestAnimationFrame(buocLongVu);
   }
@@ -211,7 +235,7 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut };
       lvDich = { x: fr.left - r.left + fr.width * 0.6, y: fr.top - r.top + 4 };
       chayLongVu(); noi('long_vu', true); henTatLongVu();
     } else {
-      cancelAnimationFrame(lvVong); lvVong = 0; clearTimeout(lvTat);
+      cancelAnimationFrame(lvVong); lvVong = 0; clearTimeout(lvTat); boRinh();
       lv.remove(); lv = null;
       if (nhin) nhin.removeAttribute('transform');
     }
