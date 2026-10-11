@@ -160,6 +160,7 @@
       <button class="link" id="openMem" type="button">Bơ nhớ gì về mình?</button>
       <button class="link" id="openTodo" type="button">Việc cần làm</button>
       <button class="link" id="openDiary" type="button">Nhật ký</button>
+      <button class="link" id="openHabit" type="button">Thói quen</button>
       <button class="link" id="openSearch" type="button">Tìm</button>
       <button class="link" id="openHelp" type="button" aria-label="Bơ làm được gì?">?</button>
       <button class="link" id="openCost" type="button">Chi phí</button>
@@ -214,6 +215,17 @@
   <p id="todoErr" hidden></p>
   <ul id="todos" class="plain todos"></ul>
   <div class="row"><span></span><button id="closeTodo" type="button">Xong</button></div>
+</dialog>
+<dialog id="habit">
+  <h2>Thói quen hằng ngày</h2>
+  <p>Nhắn Bơ "theo dõi giúp mình thói quen đọc sách" rồi mỗi ngày kể "đọc sách rồi nè", hoặc tự đánh dấu ở đây.</p>
+  <form id="addHabitForm" class="addfact">
+    <input id="newHabit" type="text" maxlength="100" placeholder="ví dụ: Uống 2 lít nước" aria-label="Thói quen mới">
+    <button type="submit">Thêm</button>
+  </form>
+  <p id="habitErr" class="err" hidden></p>
+  <ul id="habits" class="plain todos"></ul>
+  <div class="row"><span></span><button id="closeHabit" type="button">Xong</button></div>
 </dialog>
 <dialog id="diary">
   <h2>Nhật ký</h2>

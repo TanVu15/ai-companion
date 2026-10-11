@@ -190,6 +190,11 @@
 - [x] "Tìm" tìm cả trong nhật ký
 - [x] Rà soát code lần 16, sửa lỗi tìm được
 
+## Giai đoạn 37 – Thói quen hằng ngày (chỉ phần mềm, Claude tự thêm)
+- [x] Bơ theo dõi thói quen ("theo dõi giúp mình thói quen đọc sách"), đánh dấu khi Tân kể đã làm
+- [x] Nút "Thói quen" trên web: đánh dấu hôm nay, chuỗi ngày liền, số ngày/tuần; có trong sao lưu
+- [ ] Rà soát code lần 17, sửa lỗi tìm được
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo

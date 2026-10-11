@@ -48,6 +48,7 @@ Chỉ nhắc được khi **máy tính đang chạy Bơ và trang web đang mở
 - **Ghim tin nhắn:** chạm vào một tin → "Ghim tin này". Xem lại ở nút "Tìm" (khi chưa gõ gì).
 - **Sao lưu:** trong "Bơ nhớ gì về mình?" → tải bản sao lưu (.json, nạp lại được) hoặc tải trò chuyện (.txt, để đọc). Ngoài ra Bơ **tự sao lưu mỗi ngày** vào `data/sao_luu/` (giữ 7 bản; tắt bằng `TU_SAO_LUU=0`) — lỡ "Xóa hết" thì nạp lại bản hôm qua.
 - **Nhật ký:** kể Bơ nghe chuyện trong ngày, Bơ ghi một dòng vào nút "Nhật ký"; hỏi "hôm qua mình làm gì nhỉ?" Bơ kể lại.
+- **Thói quen:** "theo dõi giúp mình thói quen đọc sách" → mỗi ngày kể "đọc sách rồi" là Bơ đánh dấu; nút "Thói quen" xem chuỗi ngày liền.
 - **Lịch điện thoại:** "Bơ nhớ gì về mình?" → "Tải lịch cho điện thoại (.ics)" → mở file trên iPhone/Android để thêm ngày đặc biệt (cả ngày âm lịch, ghi sẵn 10 năm) và lời nhắc vào app Lịch.
 - **Thời tiết:** đặt `THANH_PHO=Da Nang` (tên thành phố, không dấu cũng được) trong `.env` → Bơ biết trời nắng/mưa hôm nay và ngày mai, nhắc mang áo mưa khi hợp chuyện. Miễn phí (Open-Meteo), không cần tài khoản.
 - **Cài đặt trên web:** nút "?" → mục Cài đặt: thành phố, giờ yên lặng, tổng kết tuần. Lưu ở `data/cai_dat.json`, ưu tiên hơn `.env`; "Về như file .env" để bỏ.

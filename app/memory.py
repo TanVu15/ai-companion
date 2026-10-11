@@ -73,6 +73,16 @@ class Memory:
                 content TEXT NOT NULL,       -- một dòng nhật ký, ví dụ "Đi đá bóng, thắng 3-1"
                 created_at TEXT DEFAULT (datetime('now', 'localtime'))
             );
+            CREATE TABLE IF NOT EXISTS habits (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                content TEXT NOT NULL,       -- thói quen, ví dụ "Đọc sách 20 phút"
+                created_at TEXT DEFAULT (datetime('now', 'localtime'))
+            );
+            CREATE TABLE IF NOT EXISTS habit_log (
+                habit_id INTEGER NOT NULL,
+                day TEXT NOT NULL,           -- "YYYY-MM-DD" ngày đã làm
+                PRIMARY KEY (habit_id, day)
+            );
             CREATE TABLE IF NOT EXISTS kv (
                 key TEXT PRIMARY KEY,        -- cài đặt nhỏ, ví dụ tuần đã tổng kết
                 value TEXT NOT NULL
@@ -863,6 +873,65 @@ class Memory:
         self.conn.execute("DELETE FROM diary WHERE id = ?", (diary_id,))
         self.conn.commit()
 
+    # --- Thói quen hằng ngày ---
+    HABIT_MAX = 10
+
+    def add_habits(self, items: list[str]) -> int:
+        known = {self._key(h["ten"]) for h in self.habits()}
+        added = 0
+        for item in items:
+            item = re.sub(r"\s+", " ", str(item)).strip()[:100]
+            key = self._key(item)
+            if key and key not in known and len(known) < self.HABIT_MAX:
+                known.add(key)
+                self.conn.execute("INSERT INTO habits (content) VALUES (?)", (item,))
+                added += 1
+        self.conn.commit()
+        return added
+
+    def _habit_streak(self, days: set[str], today: date) -> int:
+        d = today if today.isoformat() in days else today - timedelta(days=1)
+        n = 0
+        while d.isoformat() in days:
+            n += 1
+            d -= timedelta(days=1)
+        return n
+
+    def habits(self, today: date | None = None) -> list[dict]:
+        """[{"id", "ten", "hom_nay": đã làm hôm nay?, "chuoi": chuỗi ngày liền, "tuan": số ngày làm trong 7 ngày}]."""
+        today = today or date.today()
+        out = []
+        for i, c in self.conn.execute("SELECT id, content FROM habits ORDER BY id").fetchall():
+            days = {d for (d,) in self.conn.execute(
+                "SELECT day FROM habit_log WHERE habit_id = ? AND day >= ?", (i, (today - timedelta(days=400)).isoformat()))}
+            week = sum((today - timedelta(days=k)).isoformat() in days for k in range(7))
+            out.append({"id": i, "ten": c, "hom_nay": today.isoformat() in days,
+                        "chuoi": self._habit_streak(days, today), "tuan": week})
+        return out
+
+    def set_habit_done(self, habit_id: int, done: bool, day: date | None = None) -> bool:
+        if not self.conn.execute("SELECT 1 FROM habits WHERE id = ?", (habit_id,)).fetchone():
+            return False
+        day_s = (day or date.today()).isoformat()
+        if done:
+            self.conn.execute("INSERT OR IGNORE INTO habit_log (habit_id, day) VALUES (?, ?)", (habit_id, day_s))
+        else:
+            self.conn.execute("DELETE FROM habit_log WHERE habit_id = ? AND day = ?", (habit_id, day_s))
+        self.conn.commit()
+        return True
+
+    def done_habits(self, items: list[str], day: date | None = None) -> None:
+        """Đánh dấu hôm nay đã làm theo tên (Bơ chép lại y nguyên tên thói quen)."""
+        keys = {self._key(re.sub(r"\s*\(.*\)\s*$", "", str(t))) for t in items}
+        for h in self.habits(day):
+            if self._key(h["ten"]) in keys:
+                self.set_habit_done(h["id"], True, day)
+
+    def delete_habit(self, habit_id: int) -> None:
+        self.conn.execute("DELETE FROM habit_log WHERE habit_id = ?", (habit_id,))
+        self.conn.execute("DELETE FROM habits WHERE id = ?", (habit_id,))
+        self.conn.commit()
+
     # --- Sao lưu / khôi phục ---
     _BACKUP_TABLES = {
         "messages": ("role", "content", "created_at", "cam_xuc", "tu_dong", "ghim", "tam_trang"),
@@ -873,14 +942,17 @@ class Memory:
         "special_days": ("day", "content", "wished_year", "nhac_truoc_year", "am"),
         "todos": ("content", "done", "created_at", "done_at"),
         "diary": ("day", "content", "created_at"),
+        "habits": ("content", "created_at"),
+        "habit_log": ("habit_id", "day"),
     }
+    _ID_TABLES = {"messages", "habits"}  # giữ nguyên id (tin ghim / nhật ký thói quen trỏ tới)
 
     def export_all(self) -> dict:
         """Toàn bộ trí nhớ thành một dict (để lưu ra file JSON)."""
         out: dict = {"phien_ban": 1}
         for table, cols in self._BACKUP_TABLES.items():
-            id_col = "id, " if table == "messages" else ""
-            rows = self.conn.execute(f"SELECT {id_col}{', '.join(cols)} FROM {table} ORDER BY id").fetchall()
+            id_col = "id, " if table in self._ID_TABLES else ""
+            rows = self.conn.execute(f"SELECT {id_col}{', '.join(cols)} FROM {table} ORDER BY rowid").fetchall()
             names = (("id",) if id_col else ()) + cols
             out[table] = [dict(zip(names, r)) for r in rows]
         return out
@@ -899,7 +971,7 @@ class Memory:
                         # cột thiếu thì để SQLite tự điền mặc định (giờ tạo, done = 0)
                         if table == "reminders" and "ngay_goc" in row:
                             row = {**row, "ngay_goc": self._goc(row["ngay_goc"])}
-                        use = (("id",) if table == "messages" and "id" in row else ()) + tuple(
+                        use = (("id",) if table in self._ID_TABLES and "id" in row else ()) + tuple(
                             c for c in cols if c in row
                         )
                         self.conn.execute(

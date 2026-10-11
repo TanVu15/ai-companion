@@ -644,3 +644,8 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 
 **Tân cần thử (giai đoạn 36):** bấm "?" xem "Chuỗi N ngày liền trò chuyện"; "Tìm" gõ một chữ có trong nhật ký.
 
+## 2026-10-11 – Giai đoạn 37: thói quen hằng ngày
+- Nhắn "theo dõi giúp mình thói quen đọc sách" → Bơ thêm thói quen (tối đa 10). Mỗi ngày kể "đọc sách xong rồi" → Bơ đánh dấu, khen khi giữ chuỗi dài, tối chưa làm thì nhắc nhẹ.
+- Nút **"Thói quen"**: ô vuông đánh dấu hôm nay, "chuỗi 5 ngày · 6/7 ngày", thêm/xóa. Có trong bản sao lưu.
+- 236 test qua hết.
+

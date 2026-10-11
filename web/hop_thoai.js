@@ -512,3 +512,49 @@ document.getElementById('addDiaryForm').addEventListener('submit', async (ev) =>
     err.textContent = typeof d.detail === 'string' ? d.detail : 'Không ghi được'; err.hidden = false;
   } catch (e) { err.textContent = 'Mất mạng, thử lại nha.'; err.hidden = false; }
 });
+
+// Thói quen hằng ngày: ô vuông = hôm nay đã làm; kèm chuỗi ngày liền và số ngày trong tuần.
+const habitDlg = document.getElementById('habit'), habitsEl = document.getElementById('habits');
+const habitErr = document.getElementById('habitErr');
+function habitError(t) { habitErr.textContent = t; habitErr.hidden = false; }
+async function loadHabits() {
+  let list = [];
+  try { const r = await fetch('/api/thoi-quen'); if (r.ok) list = await r.json(); } catch (e) {}
+  habitsEl.innerHTML = '';
+  if (!list.length) { const li = document.createElement('li'); li.textContent = 'Chưa theo dõi thói quen nào.'; habitsEl.appendChild(li); }
+  list.forEach(x => {
+    const li = document.createElement('li'), lab = document.createElement('label');
+    const cb = document.createElement('input'), span = document.createElement('span'), b = document.createElement('button');
+    cb.type = 'checkbox'; cb.checked = x.hom_nay; cb.setAttribute('aria-label', 'Hôm nay đã làm: ' + x.ten);
+    span.textContent = x.ten + ' · ' + (x.chuoi >= 2 ? 'chuỗi ' + x.chuoi + ' ngày · ' : '') + x.tuan + '/7 ngày';
+    cb.onchange = async () => {
+      habitErr.hidden = true;
+      try {
+        const r = await fetch('/api/thoi-quen/' + x.id, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ xong: cb.checked }) });
+        if (!r.ok) habitError('Không đổi được');
+      } catch (e) { habitError('Mất mạng, thử lại nha.'); }
+      loadHabits();
+    };
+    b.textContent = 'Xóa'; b.type = 'button'; b.setAttribute('aria-label', 'Xóa thói quen: ' + x.ten);
+    b.onclick = async () => {
+      if (!confirm('Xóa thói quen "' + x.ten + '" và cả chuỗi ngày đã làm?')) return;
+      try { await fetch('/api/thoi-quen/' + x.id, { method: 'DELETE' }); } catch (e) { habitError('Mất mạng, thử lại nha.'); }
+      loadHabits();
+    };
+    lab.append(cb, span); li.append(lab, b); habitsEl.appendChild(li);
+  });
+}
+document.getElementById('openHabit').onclick = () => { habitErr.hidden = true; habitDlg.showModal(); loadHabits(); };
+document.getElementById('closeHabit').onclick = () => habitDlg.close();
+document.getElementById('addHabitForm').addEventListener('submit', async (ev) => {
+  ev.preventDefault();
+  const inp = document.getElementById('newHabit'), text = inp.value.trim();
+  if (!text) return;
+  habitErr.hidden = true;
+  try {
+    const r = await fetch('/api/thoi-quen', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ten: text }) });
+    if (r.ok) { inp.value = ''; loadHabits(); return; }
+    const d = await r.json().catch(() => ({}));
+    habitError(typeof d.detail === 'string' ? d.detail : 'Không thêm được');
+  } catch (e) { habitError('Mất mạng, thử lại nha.'); }
+});

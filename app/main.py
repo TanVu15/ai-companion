@@ -600,6 +600,50 @@ def diary_delete(diary_id: int):
     return {"ok": True}
 
 
+class HabitIn(BaseModel):
+    ten: str
+
+
+class HabitDone(BaseModel):
+    xong: bool
+
+
+@app.get("/api/thoi-quen")
+def habits():
+    brain = get_brain()
+    with brain._lock:
+        return brain.memory.habits()
+
+
+@app.post("/api/thoi-quen")
+def habit_add(body: HabitIn):
+    if not body.ten.strip():
+        raise HTTPException(400, "Tên thói quen đang trống")
+    brain = get_brain()
+    with brain._lock:
+        if not brain.memory.add_habits([body.ten]):
+            raise HTTPException(400, f"Thói quen này có rồi, hoặc đã đủ {brain.memory.HABIT_MAX} thói quen")
+    return {"ok": True}
+
+
+@app.put("/api/thoi-quen/{habit_id}")
+def habit_done(habit_id: int, body: HabitDone):
+    """Đánh dấu hôm nay đã làm / chưa làm."""
+    brain = get_brain()
+    with brain._lock:
+        if not brain.memory.set_habit_done(habit_id, body.xong):
+            raise HTTPException(404, "Không thấy thói quen này")
+    return {"ok": True}
+
+
+@app.delete("/api/thoi-quen/{habit_id}")
+def habit_delete(habit_id: int):
+    brain = get_brain()
+    with brain._lock:
+        brain.memory.delete_habit(habit_id)
+    return {"ok": True}
+
+
 @app.get("/api/ghim")
 def pinned():
     brain = get_brain()
