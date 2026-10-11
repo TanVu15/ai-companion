@@ -66,3 +66,12 @@ def test_meo_js_chay_khong_loi_va_tao_svg():
     """
     r = subprocess.run(["node", "-e", js], cwd=ROOT, capture_output=True, text=True, timeout=30)
     assert r.stdout.strip() == "ok", r.stderr
+
+
+def test_kieu_long_co_du_bo_phan_va_css():
+    css = (ROOT / "web" / "meo.css").read_text(encoding="utf-8")
+    html = (ROOT / "web" / "index.html").read_text(encoding="utf-8")
+    for cls in ["dom", "vien-dom", "van-them", "dong-tu", "dom-cam", "dom-den"]:
+        assert f'class="{cls}' in JS or f'class="soc {cls}' in JS or f" {cls}" in JS, cls
+    for kieu in ["van", "tam_the", "den"]:
+        assert f'data-long="{kieu}"' in css and f'data-long="{kieu}"' in html

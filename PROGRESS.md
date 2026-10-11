@@ -5,6 +5,12 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-11 – Giai đoạn 54: tư thế & bộ lông
+Ảnh: `docs/anh/kieu-long.png` (thường · mướp vằn · tam thể · mèo đen), `docs/anh/meo-o-banh-mi.png`, `docs/anh/meo-den-toi.png`.
+- **Ổ bánh mì**: 1 phút không ai đụng → Bơ nằm bẹp, giấu chân, đuôi quấn quanh người, mắt lim dim; 3 phút mới ngủ gật. Chạm/gõ là ngồi dậy.
+- **Kiểu lông** (trong "Bơ làm được gì? · Cài đặt", dưới bảng màu lông): Thường, **Mướp vằn** (thêm vằn, dùng màu đã chọn), **Tam thể** (trắng, đốm cam-đen, tai hai màu), **Mèo đen** (mắt vàng, con ngươi dọc). Lưu trên máy này.
+**Tân cần thử:** chọn "Tam thể" hoặc "Mèo đen" xem có thích không; để yên 1 phút xem Bơ nằm bẹp.
+
 ## 2026-10-11 – Giai đoạn 53: Bơ hóng chuyện, giọng mẫu
 Ảnh: `docs/anh/bo-hong-chuyen.png`, `docs/anh/cai-dat-giong.png`.
 - **Hóng chuyện**: đang gõ tin thì Bơ nhìn xuống khung chat, tai vểnh, đầu hơi nghiêng; ngừng gõ 2 giây thì thôi.

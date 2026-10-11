@@ -273,3 +273,22 @@ header.dang-laser { touch-action: none; cursor: crosshair; position: relative; }
 .meo.bep .tail { display: none; } .meo.bep .tail-ngu { display: inline; }
 .meo.bep .mat-mo { transform: scaleY(.7); } .meo.bep.chop .mat-mo { transform: scaleY(.1); }
 @media (prefers-reduced-motion: no-preference) { .meo .body, .meo .head { transition: translate .6s ease, scale .6s ease, transform .35s ease; } }
+
+/* ---- Kiểu lông (data-long trên #face): mướp vằn, tam thể, mèo đen ---- */
+.meo .dom, .meo .vien-dom, .meo .van-them, .meo .dong-tu { display: none; }
+.meo .vien-dom { fill: none; stroke: var(--vien); stroke-width: 3; }
+.meo .dom-cam { fill: #f0a050; } .meo .dom-den { fill: #4a3c35; }
+.face[data-long="van"] .van-them { display: inline; }
+.face[data-long="van"] .soc { opacity: .8; stroke-width: 3.5; }
+.face[data-long="tam_the"] { --face: #fff6ea; --vien: #8a6a55; }
+.face[data-long="tam_the"] :is(.dom, .vien-dom) { display: inline; }
+.face[data-long="tam_the"] .soc { display: none; }
+.face[data-long="tam_the"] .ear-l > .da { fill: #f0a050; } .face[data-long="tam_the"] .ear-r > .da { fill: #4a3c35; }
+.face[data-long="tam_the"] .tail .long { stroke: #f0a050; }
+.face[data-long="den"] { --face: #3a3431; --vien: #6a5d55; --muc: #f6e7d2; --kem: #4a423e; }
+.face[data-long="den"] .soc { display: none; }
+.face[data-long="den"] .den { fill: #f2c14e; }
+.face[data-long="den"] .dong-tu { display: inline; fill: #1e1a18; }
+.face[data-long="den"] .trong-mieng { fill: #6e2a2e; }
+.kieu-long { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: -4px 0 12px; font-size: 14px; }
+.kieu-long button[aria-checked="true"] { font-weight: 700; text-decoration: none; color: var(--text); }

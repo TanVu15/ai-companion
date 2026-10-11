@@ -3,14 +3,21 @@
 // vẽ mèo, chớp mắt ngẫu nhiên, thỉnh thoảng ngáp/liếm chân, vươn vai khi thức dậy, ngoe nguẩy đuôi lúc chờ.
 const MEO_SVG = `
 <svg class="meo" viewBox="0 0 200 192" aria-hidden="true" focusable="false">
+  <defs>
+    <clipPath id="meoClipDau"><ellipse cx="100" cy="74" rx="58" ry="47"/></clipPath>
+    <clipPath id="meoClipThan"><ellipse cx="100" cy="130" rx="68" ry="50"/></clipPath>
+  </defs>
   <g id="meoTail" class="tail">
     <path class="vien" d="M150,152 C186,150 194,110 184,84 C179,72 168,72 170,86"/>
     <path class="long" d="M150,152 C186,150 194,110 184,84 C179,72 168,72 170,86"/>
   </g>
   <g id="meoBody" class="body">
     <ellipse class="da" cx="100" cy="130" rx="68" ry="50"/>
+    <g class="dom" clip-path="url(#meoClipThan)"><ellipse class="dom-den" cx="50" cy="110" rx="28" ry="22"/><ellipse class="dom-cam" cx="152" cy="142" rx="26" ry="28"/></g>
+    <ellipse class="vien-dom" cx="100" cy="130" rx="68" ry="50"/>
     <ellipse class="bung" cx="100" cy="140" rx="40" ry="32"/>
     <path class="soc" d="M38,118 Q46,122 44,132 M36,138 Q44,140 42,150 M162,118 Q154,122 156,132 M164,138 Q156,140 158,150"/>
+    <path class="soc van-them" d="M48,100 Q56,104 54,114 M152,100 Q144,104 146,114 M40,156 Q48,158 48,166 M160,156 Q152,158 152,166"/>
   </g>
   <ellipse class="da chan-sau" cx="50" cy="170" rx="22" ry="12"/>
   <ellipse class="da chan-sau" cx="150" cy="170" rx="22" ry="12"/>
@@ -18,11 +25,15 @@ const MEO_SVG = `
     <g id="meoEarL" class="ear ear-l"><path class="da" d="M52,58 Q38,16 50,10 Q60,8 92,32 Z"/><path class="tai-trong" d="M57,48 Q50,24 55,20 Q62,18 80,33 Z"/></g>
     <g id="meoEarR" class="ear ear-r"><path class="da" d="M148,58 Q162,16 150,10 Q140,8 108,32 Z"/><path class="tai-trong" d="M143,48 Q150,24 145,20 Q138,18 120,33 Z"/></g>
     <ellipse class="da" cx="100" cy="74" rx="58" ry="47"/>
+    <g class="dom" clip-path="url(#meoClipDau)"><ellipse class="dom-cam" cx="62" cy="48" rx="30" ry="26"/><ellipse class="dom-den" cx="142" cy="42" rx="26" ry="22"/></g>
+    <ellipse class="vien-dom" cx="100" cy="74" rx="58" ry="47"/>
+    <path class="soc van-them" d="M43,68 L55,71 M43,77 L54,78 M157,68 L145,71 M157,77 L146,78 M94,30 L95,38 M106,30 L105,38"/>
     <path class="soc" d="M100,29 L100,40 M87,31 L90,41 M113,31 L110,41"/>
     <ellipse class="ma" cx="64" cy="90" rx="9" ry="5"/><ellipse class="ma" cx="136" cy="90" rx="9" ry="5"/>
     <g class="mat">
       <g class="mat-mo"><g class="nhin">
         <ellipse class="den" cx="78" cy="74" rx="8" ry="10"/><ellipse class="den" cx="122" cy="74" rx="8" ry="10"/>
+        <ellipse class="dong-tu" cx="78" cy="74" rx="2.6" ry="7.5"/><ellipse class="dong-tu" cx="122" cy="74" rx="2.6" ry="7.5"/>
         <g class="con-nguoi"><circle class="sang" cx="81" cy="70" r="3"/><circle class="sang" cx="125" cy="70" r="3"/></g>
       </g></g>
       <path class="mat-cuoi net" d="M70,77 Q78,66 86,77 M114,77 Q122,66 130,77"/>
@@ -54,6 +65,8 @@ const MEO_SVG = `
   const face = document.getElementById('face');
   if (!face) return;
   face.innerHTML = MEO_SVG;
+  // Kiểu lông đã chọn (hop_thoai.js cho chọn): thuong / van (mướp vằn) / tam_the / den
+  try { const l = localStorage.getItem('bo_long'); if (l && /^(van|tam_the|den)$/.test(l)) face.dataset.long = l; } catch (e) {}
   const svg = face.querySelector('svg');
   const yenLang = () => window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   const dangNgu = () => face.dataset.e === 'ngu';

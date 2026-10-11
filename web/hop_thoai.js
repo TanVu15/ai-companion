@@ -458,6 +458,18 @@ function renderColors() {
   });
 }
 renderColors();
+// Kiểu lông (tam thể, mèo đen có màu riêng nên không dùng màu ở trên; mướp vằn và "Thường" dùng màu đã chọn)
+function renderKieuLong() {
+  document.querySelectorAll('#kieuLong [data-long]').forEach(b => {
+    b.setAttribute('aria-checked', b.dataset.long === (face.dataset.long || ''));
+    b.onclick = () => {
+      if (b.dataset.long) face.dataset.long = b.dataset.long; else delete face.dataset.long;
+      try { localStorage.setItem('bo_long', b.dataset.long); } catch (e) {}
+      renderKieuLong();
+    };
+  });
+}
+renderKieuLong();
 
 // ---- Phím tắt: Esc = Bơ ngừng đọc (hộp đang mở thì trình duyệt tự đóng), Ctrl/Cmd+K = tìm ----
 document.addEventListener('keydown', (e) => {
