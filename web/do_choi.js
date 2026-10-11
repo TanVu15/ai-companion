@@ -23,7 +23,14 @@ function boBuocLen(s, dt, w, h, r = 15) {
   return { x, y, vx, vy, goc, yen: sat && vx === 0 && vy === 0 };
 }
 
-if (typeof module !== 'undefined') module.exports = { boBuocLen };
+// Cuộn len nằm yên đè lên nút (cá, laser...) thì che mất nút, bấm không được → trả về hướng lăn ra (về phía giữa khung), không đè thì 0.
+// nut: danh sách khung chữ nhật {x, y, w, h} (px, cùng gốc với cuộn len); giua: hoành độ giữa khung.
+function boLenDeNut(x, y, nut, giua, r = 15) {
+  const de = (nut || []).some(n => x + r > n.x && x - r < n.x + n.w && y + r > n.y && y - r < n.y + n.h);
+  return de ? (x < giua ? 1 : -1) : 0;
+}
+
+if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut };
 
 // ---- Phần giao diện ----
 (function () {
@@ -93,7 +100,17 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen };
     const dt = lenTruoc ? Math.min(0.04, (t - lenTruoc) / 1000) : 0.016; lenTruoc = t;
     if (!lenKeo) lenS = boBuocLen(lenS, dt, khung.clientWidth, khung.clientHeight);
     veLen(); lenChamMeo();
+    if (lenS.yen && !lenKeo) lenTranhNut();
     if (!lenS.yen || lenKeo) lenVong = requestAnimationFrame(buocLen);
+  }
+  // Len nằm yên đè lên nút → tự lăn nhẹ vào giữa cho khỏi che nút
+  function lenTranhNut() {
+    const r = khung.getBoundingClientRect();
+    const nut = [...khung.querySelectorAll('.nut-meo')].map(b => {
+      const q = b.getBoundingClientRect(); return { x: q.left - r.left, y: q.top - r.top, w: q.width, h: q.height };
+    });
+    const huong = boLenDeNut(lenS.x, lenS.y, nut, khung.clientWidth / 2);
+    if (huong) lenS = { ...lenS, vx: huong * 170, yen: false };
   }
   // Len chạm người Bơ → vồ: Bơ đập len văng ra xa (nghỉ 0,9 giây giữa hai lần vồ)
   function lenChamMeo() {

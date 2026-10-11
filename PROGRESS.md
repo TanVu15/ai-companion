@@ -9,6 +9,7 @@
 - Đồ chơi dùng được bằng **bàn phím**: bật laser/lông vũ rồi bấm phím mũi tên để di chuyển; cuộn len thì mũi tên để hất (lên = tung cao).
 - Rảnh tay: chỉ gọi "Bơ ơi" → Bơ nghiêng đầu, bong bóng "Dạ? Bơ nghe nè!" rồi chờ 8 giây nghe tiếp.
 - Dọn code: ba đồ chơi (laser, cuộn len, lông vũ) tách ra file riêng `web/do_choi.js`; `choi.js` còn phần vuốt/chạm/cho ăn. Hành vi giữ nguyên (đã bấm thử từng đồ chơi bằng Playwright, không lỗi). 401 test qua hết.
+- Sửa: cuộn len lăn tới nằm đè lên nút cá/cuộn len (máy tính) → che nút, bấm không trúng. Giờ len nằm đè nút thì tự lăn nhẹ vào giữa.
 
 ## 2026-10-11 – Giai đoạn 55 xong: thêm chút sống động
 - Ngủ say: Bơ thỉnh thoảng giật tai trong mơ hoặc trở mình. Đang đọc to: đuôi vẫy nhanh hơn, tai động nhẹ.

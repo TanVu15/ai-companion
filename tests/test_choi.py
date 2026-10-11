@@ -124,3 +124,10 @@ def test_do_choi_tach_rieng():
     for ten in ("function batLaser", "function batLen", "function batLongVu", "doChoi.dangChoi =", "doChoi.dieuKhien =", "doChoi.keoLen ="):
         assert ten in do_choi, ten
     assert "boBuocLen" not in choi
+
+
+def test_cuon_len_khong_nam_de_len_nut():
+    v = node("""const nut = [{x: 0, y: 150, w: 40, h: 40}, {x: 260, y: 150, w: 40, h: 40}];
+      console.log(JSON.stringify([C.boLenDeNut(20, 185, nut, 150), C.boLenDeNut(280, 185, nut, 150),
+        C.boLenDeNut(150, 185, nut, 150), C.boLenDeNut(54, 185, nut, 150), C.boLenDeNut(20, 185, [], 150)]))""")
+    assert v == [1, -1, 0, 1, 0]  # đè nút bên trái → lăn sang phải, bên phải → sang trái; chỉ chạm mép (54-15<40) cũng tính
