@@ -72,10 +72,15 @@ const MEO_SVG = `
   }
   setTimeout(chopMat, 1500);
   // Thỉnh thoảng ngáp hoặc liếm chân khi rảnh (không lúc đang nói, đang ngủ, đang chờ trả lời)
+  // Khuya (22h–5h): Bơ buồn ngủ — mắt lim dim, ngáp nhiều hơn, ít liếm chân
+  const khuya = () => { const h = new Date().getHours(); return h >= 22 || h < 5; };
+  function capNhatKhuya() { svg.classList.toggle('lim-dim', khuya()); }
+  capNhatKhuya(); setInterval(capNhatKhuya, 60000);
   function viecVat() {
     const ban = dangNgu() || face.classList.contains('talking') || svg.classList.contains('cho') || document.hidden;
-    if (!ban && !yenLang()) Math.random() < 0.5 ? lan('ngap', 2200) : lan('liem', 2600);
-    setTimeout(viecVat, 25000 + Math.random() * 30000);
+    const k = khuya();
+    if (!ban && !yenLang()) Math.random() < (k ? 0.8 : 0.5) ? lan('ngap', 2200) : lan('liem', 2600);
+    setTimeout(viecVat, (k ? 15000 : 25000) + Math.random() * (k ? 15000 : 30000));
   }
   setTimeout(viecVat, 20000);
   // Thức dậy sau giấc ngủ gật: vươn vai một cái

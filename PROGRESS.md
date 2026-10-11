@@ -5,6 +5,16 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-11 – Giai đoạn 51: Bơ sống động hơn (không tốn API)
+Ảnh: `docs/anh/meo-mung.png` (mừng rỡ), `docs/anh/meo-lan.png` (lăn nũng), `docs/anh/meo-nhin-theo.png`, `docs/anh/meo-lim-dim.png`.
+- **Mắt nhìn theo**: rê chuột (máy tính) hoặc kéo ngón tay trên Bơ (điện thoại) → con ngươi liếc theo; đứng yên 3 giây thì nhìn thẳng lại.
+- **Bạn về rồi!**: mở web sau từ 1 ngày → Bơ nhảy cẫng, mắt cười, đuôi ngoe nguẩy, bong bóng "Bạn về rồi! Bơ nhớ bạn ghê~". Không trách, không gọi API.
+  Sáng sớm (5–10h) lần đầu mở sau ít nhất 4 tiếng → Bơ vươn vai "chào buổi sáng".
+- **Nhấn giữ lưng/bụng ~1 giây** → Bơ lăn qua lăn lại nũng nịu, co hai chân trước lên ngực ("Gãi bụng Bơ đi mà~").
+- **Khuya (22h–5h)**: mắt Bơ lim dim, hay ngáp hơn.
+- 394 test qua hết.
+**Tân cần thử:** trên điện thoại, đặt ngón tay lên bụng Bơ và giữ yên 1 giây.
+
 ## 2026-10-11 – Giai đoạn 50 xong: gọn & chắc
 Ảnh: `docs/anh/tinh-trang-giong.png`, `docs/anh/meo-ban-phim.png`, `docs/anh/menu-them.png`.
 - Rà soát mèo / chạm / giọng AI / giữ để nói, sửa:

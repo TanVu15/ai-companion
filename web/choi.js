@@ -27,6 +27,9 @@ const BO_CAU_CHOI = {
   no: ['Bơ no căng rồi, để dành mai nha~', 'Béo quá rồi, thôi thôi.'],
   laser: ['Cái chấm đỏ kìa!!', 'Bắt được rồi... ủa đâu?', 'Lần này Bơ bắt được cho coi!'],
   thuc: ['Ưm... ai gọi Bơ đó?', 'Bơ đâu có ngủ, Bơ nhắm mắt nghĩ thôi.'],
+  lan: ['Gãi bụng Bơ đi mà~', 'Bơ lăn nè, thấy dễ thương hông?', 'Nũng xíu thôi hà~'],
+  mung: ['Bạn về rồi! Bơ nhớ bạn ghê~', 'A, bạn đây rồi! Meo meo!', 'Vui quá, bạn quay lại rồi nè!'],
+  vuon: ['Ưm... chào buổi sáng~', 'Sáng rồi hả? Bơ vươn vai cái đã.', 'Ngáp... chào bạn buổi sáng nha!'],
 };
 function boCauNgau(loai, rnd = Math.random) {
   const ds = BO_CAU_CHOI[loai] || [];
@@ -38,8 +41,24 @@ function boDemHomNay(cu, loai, ngay) {
   d[loai] = (d[loai] || 0) + 1;
   return d;
 }
+// Mắt nhìn theo ngón tay/chuột: (dx, dy) từ giữa đầu mèo (đơn vị khung vẽ) → độ dời con ngươi. Gần quá thì nhìn thẳng
+function boHuongNhin(dx, dy) {
+  const d = Math.hypot(dx, dy);
+  if (d < 6) return [0, 0];
+  const k = Math.min(1, d / 80);
+  return [+(dx / d * 4 * k).toFixed(1), +(dy / d * 3 * k).toFixed(1)];
+}
+// Lúc mở web (hoặc quay lại tab): lâu rồi mới gặp (từ 1 ngày) → 'mung'; sáng sớm 5–10h, lần đầu sau ít nhất 4 tiếng → 'vuon'.
+// Lần đầu dùng (chưa có mốc) hoặc giờ máy lùi → null. Không bao giờ trách người dùng đi lâu.
+function boLucMo(lanTruoc, bayGio, gio) {
+  if (!lanTruoc || bayGio < lanTruoc) return null;
+  const tieng = (bayGio - lanTruoc) / 3600000;
+  if (tieng >= 24) return 'mung';
+  if (gio >= 5 && gio < 10 && tieng >= 4) return 'vuon';
+  return null;
+}
 
-if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boCauNgau, boDemHomNay, BO_CAU_CHOI };
+if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boLucMo, BO_CAU_CHOI };
 
 // ---- Phần giao diện ----
 (function () {
@@ -176,10 +195,20 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
       giu('vuot', 900); const p = viTriKhung(ev); tim(p.x, p.y - 10); noi('vuot');
     }
   }
+  // Nhấn giữ lên lưng/bụng (không kéo) khoảng 0,7 giây → Bơ lăn qua lăn lại nũng nịu
+  let henLan = null;
   face.addEventListener('pointerdown', ev => {
-    bam = { t: Date.now(), x: ev.clientX, y: ev.clientY, di: 0, ngu: face.dataset.e === 'ngu' };
+    const b = bam = { t: Date.now(), x: ev.clientX, y: ev.clientY, di: 0, ngu: face.dataset.e === 'ngu' };
     viTriTruoc = null; quangVuot = 0;
     try { face.setPointerCapture(ev.pointerId); } catch (e) {}
+    clearTimeout(henLan);
+    const p = toaDo(ev), vung = p && boVungCham(p.x, p.y);
+    if (!b.ngu && !laserBat && (vung === 'bung' || vung === 'lung')) {
+      henLan = setTimeout(() => {
+        if (bam !== b || b.di >= 10 || dangDoi() || (typeof speaking !== 'undefined' && speaking)) return;
+        giu('lan', 3200); noi('lan', true);
+      }, 700);
+    }
   });
   face.addEventListener('pointermove', ev => {
     if (laserBat) return;
@@ -191,13 +220,13 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
     if (vung === 'dau' || vung === 'lung' || vung === 'cam') vuot(ev, vung);
   });
   face.addEventListener('pointerup', ev => {
-    const b = bam; bam = null;
+    const b = bam; bam = null; clearTimeout(henLan);
     if (!b || laserBat) return;
     if (b.di < 10 && Date.now() - b.t < 500) {
       const p = toaDo(ev); if (p) cham(ev, boVungCham(p.x, p.y), b.ngu);
     }
   });
-  face.addEventListener('pointercancel', () => { bam = null; });
+  face.addEventListener('pointercancel', () => { bam = null; clearTimeout(henLan); });
   // Bàn phím: Tab tới Bơ rồi bấm Enter = xoa đầu, phím cách = gãi cằm (đang ngủ thì Bơ tỉnh)
   face.tabIndex = 0;
   face.addEventListener('keydown', ev => {
@@ -274,5 +303,41 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
   });
   document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && laserBat) batLaser(false); });
 
-  window.boChoi = { batLaser, dem };
+  // ---- Mắt nhìn theo ngón tay/chuột (ngoài lúc chơi laser); đứng yên 3 giây thì thôi nhìn ----
+  let nhinTat = null, nhinCho = false, nhinEv = null;
+  function nhinTheo() {
+    nhinCho = false;
+    const ev = nhinEv;
+    if (!ev || laserBat || !nhin || face.dataset.e === 'ngu' || dangDoi()) return;
+    const m = svg.getScreenCTM(); if (!m) return;
+    const p = new DOMPoint(ev.clientX, ev.clientY).matrixTransform(m.inverse());
+    if (Math.hypot(p.x - 100, p.y - 74) > 600) { nhin.removeAttribute('transform'); return; }  // xa quá: kệ
+    const [tx, ty] = boHuongNhin(p.x - 100, p.y - 74);
+    nhin.setAttribute('transform', `translate(${tx} ${ty})`);
+    clearTimeout(nhinTat);
+    nhinTat = setTimeout(() => { if (!laserBat) nhin.removeAttribute('transform'); }, 3000);
+  }
+  document.addEventListener('pointermove', ev => {
+    if (ev.pointerType !== 'mouse' && !bam) return;  // điện thoại: chỉ khi đang chạm vào Bơ
+    nhinEv = ev;
+    if (!nhinCho) { nhinCho = true; requestAnimationFrame(nhinTheo); }
+  }, { passive: true });
+
+  // ---- Mở web / quay lại tab: lâu rồi mới gặp thì mừng rỡ, sáng sớm thì vươn vai (không gọi API) ----
+  const docMoc = () => { try { return +localStorage.getItem('bo_lan_gap') || 0; } catch (e) { return 0; } };
+  const ghiMoc = () => { try { localStorage.setItem('bo_lan_gap', String(Date.now())); } catch (e) {} };
+  function lucMo() {
+    const kieu = boLucMo(docMoc(), Date.now(), new Date().getHours());
+    ghiMoc();
+    if (!kieu) return;
+    setTimeout(() => {
+      if (face.dataset.e === 'ngu') return;
+      giu(kieu === 'mung' ? 'mung' : 'vuon', kieu === 'mung' ? 2400 : 1300); noi(kieu, true);
+    }, 700);
+  }
+  lucMo();
+  document.addEventListener('visibilitychange', () => { document.hidden ? ghiMoc() : lucMo(); });
+  setInterval(() => { if (!document.hidden) ghiMoc(); }, 60000);  // còn đang mở thì coi như vẫn đang gặp
+
+  window.boChoi = { batLaser, dem, lucMo };
 })();

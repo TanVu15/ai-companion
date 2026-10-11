@@ -8,7 +8,7 @@ from tests.test_api import make_client
 
 def node(code):
     r = subprocess.run(["node", "-e", "const C = require('./web/choi.js');\n" + code],
-                       cwd=config.ROOT, capture_output=True, text=True)
+                       cwd=config.ROOT, capture_output=True, text=True, timeout=30)
     assert r.returncode == 0, r.stderr
     return json.loads(r.stdout)
 
@@ -69,3 +69,16 @@ def test_chat_gui_kem_so_lan_choi(tmp_path):
     # không gửi thì lời dặn không có dòng này (và không dính từ câu trước)
     assert c.post("/api/chat", json={"text": "hi lần nữa"}).status_code == 200
     assert "gãi cằm Bơ 5 lần" not in he_thong(fake.calls[1]) and "bấm trên màn hình" not in he_thong(fake.calls[1])
+
+
+def test_huong_nhin():
+    v = node("""console.log(JSON.stringify([C.boHuongNhin(0, 0), C.boHuongNhin(200, 0), C.boHuongNhin(0, -300),
+      C.boHuongNhin(40, 0)]))""")
+    assert v == [[0, 0], [4, 0], [0, -3], [2, 0]]  # gần thì liếc nhẹ, xa thì liếc hết cỡ
+
+
+def test_luc_mo_mung_va_vuon_vai():
+    v = node("""const H = 3600000, t = 1000 * H;
+      console.log(JSON.stringify([C.boLucMo(0, t, 8), C.boLucMo(t - 30 * H, t, 15), C.boLucMo(t - 5 * H, t, 7),
+        C.boLucMo(t - 2 * H, t, 7), C.boLucMo(t - 5 * H, t, 14), C.boLucMo(t + H, t, 8)]))""")
+    assert v == [None, "mung", "vuon", None, None, None]

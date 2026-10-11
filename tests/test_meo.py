@@ -57,12 +57,12 @@ def test_meo_js_chay_khong_loi_va_tao_svg():
     global.document = { getElementById: () => face, hidden: false };
     global.window = global; global.matchMedia = () => ({ matches: false });
     global.MutationObserver = class { constructor(f) {} observe() {} };
-    global.setTimeout = () => 0;
+    global.setTimeout = () => 0; global.setInterval = () => 0;
     require('./web/meo.js');
     if (!face.h.includes('<svg')) throw new Error('khong ve svg');
     window.meo.cho(true); if (!added.has('cho')) throw new Error('cho khong bat');
     window.meo.cho(false); if (added.has('cho')) throw new Error('cho khong tat');
     console.log('ok');
     """
-    r = subprocess.run(["node", "-e", js], cwd=ROOT, capture_output=True, text=True)
+    r = subprocess.run(["node", "-e", js], cwd=ROOT, capture_output=True, text=True, timeout=30)
     assert r.stdout.strip() == "ok", r.stderr

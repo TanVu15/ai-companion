@@ -278,10 +278,10 @@
 - [x] Rà soát code giai đoạn 46–49 (mèo, chạm & chơi, giọng AI, giữ để nói), sửa lỗi tìm được
 
 ## Giai đoạn 51 – Bơ sống động hơn (Claude tự thêm, trong hướng mèo/chạm)
-- [ ] Mắt Bơ nhìn theo ngón tay/chuột khi rê gần (không chỉ lúc chơi laser); đứng yên 3 giây thì thôi nhìn
-- [ ] Mở web sau lâu (từ 1 ngày) → Bơ mừng rỡ: nhảy cẫng, bong bóng "Bạn về rồi!" (không trách, không gọi API)
-- [ ] Nhấn giữ lên lưng/bụng khoảng 1 giây → Bơ lăn ra ngửa bụng khoe bụng vài giây
-- [ ] Theo giờ: khuya (sau 22h) Bơ lim dim, hay ngáp hơn; sáng sớm mở web thì Bơ vươn vai
+- [x] Mắt Bơ nhìn theo ngón tay/chuột khi rê gần (không chỉ lúc chơi laser); đứng yên 3 giây thì thôi nhìn
+- [x] Mở web sau lâu (từ 1 ngày) → Bơ mừng rỡ: nhảy cẫng, bong bóng "Bạn về rồi!" (không trách, không gọi API)
+- [x] Nhấn giữ lên lưng/bụng khoảng 1 giây → Bơ lăn qua lăn lại nũng nịu, co chân trước lên ngực
+- [x] Theo giờ: khuya (sau 22h) Bơ lim dim, hay ngáp hơn; sáng sớm mở web thì Bơ vươn vai
 - [ ] Rà soát giai đoạn 51, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
