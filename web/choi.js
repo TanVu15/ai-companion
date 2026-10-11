@@ -55,6 +55,7 @@ const BO_CAU_CHOI = {
   tha: ['Bịch! Về chỗ cũ rồi~', 'Hú hồn, đất đây rồi!', 'Hạ cánh an toàn, meo!'],
   om_len: ['Ôm len! Cắn cắn~', 'Của Bơ, không cho ai hết!', 'Gặm gặm... len ngon ghê~'],
   da_len: ['Đá! Bay xa chưa?', 'Hây! Đá văng luôn~', 'Chán rồi, trả nè!'],
+  khoe: ['Bơ giỏi hông? Khen Bơ đi~', 'Thấy chưa, Bơ bắt trúng phóc!', 'Thợ săn số một là Bơ nè!', 'Hì hì, Bơ siêu chưa?'],
   quo: ['Quơ quơ~ sắp tới rồi!', 'Ê, đứng yên coi!', 'Một chân thôi cũng bắt được!'],
   rinh: ['Rình... rình...', 'Suỵt... Bơ đang rình đó', 'Mông ngoáy ngoáy... chuẩn bị nè'],
   vo_rinh: ['Phập! Bắt được rồi!', 'Vồ! Lông vũ là của Bơ!', 'Hây da! Trúng phóc!', 'Bơ là thợ săn số một~'],
@@ -130,6 +131,10 @@ function boNhoiBot(giayVuot) {
 function boChopCham(giayVuot, msTuLanTruoc) {
   return giayVuot >= 3 && msTuLanTruoc >= 20000;
 }
+// Khoe chiến tích: vừa vồ trúng đồ chơi (trong 8 giây) mà được vuốt → Bơ ưỡn ngực khoe "Bơ giỏi hông?" (nghỉ 20 giây giữa hai lần)
+function boKhoe(msSauBat, msSauKhoe) {
+  return msSauBat >= 0 && msSauBat <= 8000 && msSauKhoe >= 20000;
+}
 // Lắc điện thoại: độ "giật" giữa hai lần đo gia tốc (m/s², có cả trọng lực) = tổng chênh lệch ba trục
 function boDoGiat(a, b) {
   if (!a || !b) return 0;
@@ -199,7 +204,7 @@ function boLucMo(lanTruoc, bayGio, gio) {
   return null;
 }
 
-if (typeof module !== 'undefined') module.exports = { boVungCham, boChiTietDau, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boChamChan, boThongSoMeo, boGanMui, boDoToRuRu, boNhoiBot, boChopCham, boDoGiat, boLac, boGoiY, BO_GOI_Y, boPhanUngTin, boLucMo, boMonAn, BO_MON_AN, boNhipAn, boDoNhac, BO_CAU_CHOI, BO_DOC_TO };
+if (typeof module !== 'undefined') module.exports = { boVungCham, boChiTietDau, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boChamChan, boThongSoMeo, boGanMui, boDoToRuRu, boNhoiBot, boChopCham, boKhoe, boDoGiat, boLac, boGoiY, BO_GOI_Y, boPhanUngTin, boLucMo, boMonAn, BO_MON_AN, boNhipAn, boDoNhac, BO_CAU_CHOI, BO_DOC_TO };
 
 // ---- Phần giao diện ----
 (function () {
@@ -375,6 +380,8 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boChiTietDau, 
   // Đồ chơi (do_choi.js) điền các hàm này: đang bật đồ chơi nào không, chạm có đang dùng để điều khiển đồ chơi không
   const doChoi = { dangChoi: () => false, dieuKhien: () => false, keoLen: () => false, thaLen: () => {} };
   let dauVuot = null, lanNguoc = 0, vuotBatDau = 0, daNoiNhoi = false, lanChopCham = 0;
+  let lanBat = -1e9, lanKhoe = -1e9;  // lần Bơ vồ trúng đồ chơi gần nhất (do_choi.js báo qua daBat), lần khoe gần nhất
+  function daBat() { lanBat = Date.now(); }
   function vuot(ev, vung) {
     if (dangDoi()) return;
     const pos = viTriKhung(ev);
@@ -393,7 +400,9 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boChiTietDau, 
       vuotDangChay = loai; dem(loai); vuotBatDau = Date.now(); daNoiNhoi = false;
       svg.classList.remove('chop-cham');  // vuốt lại thì Bơ nhắm mắt lim dim như thường
       const h = new Date().getHours();
-      noi(loai === 'vuot' && (h >= 22 || h < 5) && Math.random() < 0.5 ? 'khuya' : loai);
+      if (loai === 'vuot' && face.dataset.e !== 'ngu' && boKhoe(Date.now() - lanBat, Date.now() - lanKhoe)) {
+        lanKhoe = Date.now(); lanBat = -1e9; giu('khoe', 1800); dem('khoe'); noi('khoe', true);  // vừa vồ trúng: khoe trước đã
+      } else noi(loai === 'vuot' && (h >= 22 || h < 5) && Math.random() < 0.5 ? 'khuya' : loai);
     }
     giu(loai === 'gai_cam' ? 'gai-cam' : 'vuot', 700);
     if (loai === 'vuot') tim(pos.x, pos.y - 10);
@@ -790,5 +799,5 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boChiTietDau, 
 
   const conChoi = () => { if (typeof scheduleSleep === 'function') scheduleSleep(); };  // đang chơi: đừng nằm bẹp/ngủ gật
   // Cho do_choi.js (và các file khác) dùng chung
-  window.boChoi = { dem, lucMo, noi, keu, vuaKeo: () => vuaKeo, giu, dangDoi, conChoi, doChoi, face, khung, svg, nhin, header: khung.closest('header') || khung };
+  window.boChoi = { dem, daBat, lucMo, noi, keu, vuaKeo: () => vuaKeo, giu, dangDoi, conChoi, doChoi, face, khung, svg, nhin, header: khung.closest('header') || khung };
 })();

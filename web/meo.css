@@ -525,3 +525,15 @@ header.dang-long-vu { touch-action: none; position: relative; }
 .meo.ngo-chan :is(.mat-cuoi, .mat-nham) { display: none !important; } .meo.ngo-chan .mat-mo { display: inline !important; }
 .meo.ngo-chan .nhin { transform: translate(-1px, 3px); }
 .meo.ngo-chan :is(.mieng-w, .mieng-buon) { display: none !important; } .meo.ngo-chan .mieng-mo { display: inline !important; transform: scale(.55); }
+
+/* Khoe chiến tích (vừa vồ trúng mà được vuốt): ưỡn ngực, ngẩng đầu, mắt cười, tai dựng, đuôi vểnh cao */
+.meo.khoe .head { transform: translateY(-7px) rotate(-5deg); }
+.meo.khoe .body { scale: 1.05 1.03; }
+.meo.khoe .ear-l { transform: rotate(-6deg); } .meo.khoe .ear-r { transform: rotate(6deg); }
+.meo.khoe .tail { transform: rotate(-12deg); }
+.meo.khoe :is(.mat-mo, .mat-nham) { display: none !important; } .meo.khoe .mat-cuoi { display: inline !important; }
+.meo.khoe .ma { opacity: .75; }
+@media (prefers-reduced-motion: no-preference) {
+  .meo.khoe { animation: meo-khoe .55s ease-out; }
+}
+@keyframes meo-khoe { 40% { transform: translateY(-5px) scale(1.03); } }

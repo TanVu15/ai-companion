@@ -403,7 +403,7 @@
 - [x] Rà soát giai đoạn 74, sửa lỗi tìm được
 
 ## Giai đoạn 75 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
-- [ ] Vừa vồ trúng (laser/lông vũ/len) xong mà vuốt Bơ ngay → Bơ "khoe" chiến tích: ưỡn ngực, mắt cười, "Bơ giỏi hông?"
+- [x] Vừa vồ trúng (laser/lông vũ/len) xong mà vuốt Bơ ngay → Bơ "khoe" chiến tích: ưỡn ngực, mắt cười, "Bơ giỏi hông?"
 - [ ] Rà soát giai đoạn 75, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)

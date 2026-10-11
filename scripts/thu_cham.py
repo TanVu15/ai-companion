@@ -77,6 +77,11 @@ def thu(pg, ten, w, h):
     cho = lambda c, ms: any(co(c) or pg.wait_for_timeout(100) for _ in range(ms // 100))  # noqa: E731  (đợi tới khi có lớp c)
     kq.append(("laser đứng yên trước chân → rình, vồ, ngó", cho("rinh", 2000) and cho("vo-rinh", 2000) and cho("ngo-chan", 1500)))
     pg.wait_for_timeout(1500)
+    pg.click('#doChoi'); pg.wait_for_timeout(300)  # vừa vồ trúng chấm laser, cất laser rồi vuốt đầu → Bơ khoe
+    for i in range(8):
+        pg.mouse.move(X(70 + (i % 2) * 60), Y(60)); pg.wait_for_timeout(40)
+    kq.append(("vừa vồ trúng mà vuốt → khoe", co("khoe"))); pg.mouse.move(5, 5); pg.wait_for_timeout(1900)
+    pg.click('#doChoi'); pg.wait_for_timeout(300)
     pg.click('#cuonLen'); pg.wait_for_timeout(300)
     kq.append(("cuộn len (cất laser)", pg.evaluate("!!document.querySelector('.len') && !document.querySelector('.laser')")))
     pg.wait_for_timeout(2200); l = pg.locator('.len').bounding_box()  # đặt len nằm yên sát bên Bơ → ôm, cắn, đá ra

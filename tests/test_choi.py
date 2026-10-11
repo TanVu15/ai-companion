@@ -387,3 +387,12 @@ def test_laser_truoc_mat():
     assert ".laser.bi-de" in css and ".meo.ngo-chan .paw-r" in css
     js = (config.ROOT / "web" / "do_choi.js").read_text(encoding="utf-8")
     assert "clearTimeout(laserTat); thoiRinhLaser();" in js  # tắt laser thì thôi rình
+
+
+def test_khoe_chien_tich():
+    """Vừa vồ trúng (trong 8 giây) mà được vuốt → Bơ khoe; lâu quá hoặc vừa khoe xong (dưới 20 giây) thì không."""
+    v = node("""console.log(JSON.stringify([C.boKhoe(2000, 60000), C.boKhoe(9000, 60000), C.boKhoe(2000, 5000), C.boKhoe(-5, 60000)]))""")
+    assert v == [True, False, False, False]
+    assert "khoe" in node("console.log(JSON.stringify(Object.keys(C.BO_CAU_CHOI)))")
+    js = (config.ROOT / "web" / "do_choi.js").read_text(encoding="utf-8")
+    assert js.count("daBat();") >= 5  # laser vồ, laser rình-vồ, len vồ, đá len, lông vũ rình-vồ

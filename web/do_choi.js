@@ -63,6 +63,7 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
 (function () {
   if (typeof document === 'undefined' || !window.boChoi) return;
   const { face, khung, svg, nhin, header, giu, noi, dem, keu, dangDoi, conChoi, doChoi } = window.boChoi;
+  const daBat = window.boChoi.daBat || (() => {});  // báo choi.js: Bơ vừa vồ trúng (vuốt ngay thì Bơ khoe)
   const { boVungCham, boHuongNhin, boGanMui } = window;
   const boLongVuRinh_ = typeof boLongVuRinh === 'function' ? boLongVuRinh : () => false;
   let lvQuo = 0;  // lần quơ chân gần nhất
@@ -91,7 +92,7 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
         lzRinh = null; svg.classList.remove('rinh');
         if (!ranhRinhLaser() || !cham_) return;
         lzCuoi = Date.now(); voCuoi = Date.now(); conChoi(); dem('laser');
-        giu('vo-rinh', 700); cham_.classList.add('bi-de');  // chân đè lên: chấm khuất dưới chân
+        giu('vo-rinh', 700); cham_.classList.add('bi-de'); daBat();  // chân đè lên: chấm khuất dưới chân
         lzNgo = setTimeout(() => {
           giu('ngo-chan', 1500); noi('laser_mat', true);
           lzNgo = setTimeout(() => { lzNgo = null; if (cham_) cham_.classList.remove('bi-de'); }, 900);
@@ -134,7 +135,7 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
       if (boLaserTruocMat(p.x, p.y) && !boVungCham(p.x, p.y)) { if (!lzRinh) henRinhLaser(); } else thoiRinhLaser();
       // chấm đỏ chạy vào người mèo → vồ (nghỉ 1,2 giây giữa hai lần)
       if (boVungCham(p.x, p.y) && Date.now() - voCuoi > 1200) {
-        voCuoi = Date.now(); giu('vo', 600); dem('laser'); noi('laser');
+        voCuoi = Date.now(); giu('vo', 600); dem('laser'); noi('laser'); daBat();
       }
     }
   }
@@ -183,7 +184,7 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
       const [tx, ty] = boHuongNhin(p.x - 100, p.y - 74); nhin.setAttribute('transform', `translate(${tx} ${ty})`);
     }
     if (lenKeo || !boVungCham(p.x, p.y) || Date.now() - voLen < 900 || dangDoi() || face.dataset.e === 'ngu') return;
-    voLen = Date.now(); giu('vo', 600); dem('len'); noi('len'); conChoi();
+    voLen = Date.now(); giu('vo', 600); dem('len'); noi('len'); conChoi(); daBat();
     const huong = p.x < 100 ? -1 : 1;
     lenS = { ...lenS, vx: huong * (260 + Math.random() * 200), vy: -380 - Math.random() * 200 };
   }
@@ -226,7 +227,7 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
   function daLen() {
     thoiOmLen();
     if (!len) return;
-    giu('da-len', 600); noi('da_len', true); conChoi(); henCatLen();
+    giu('da-len', 600); noi('da_len', true); conChoi(); henCatLen(); daBat();
     voLen = Date.now() + 400;  // vừa đá ra thì len còn sát người: khỏi vồ lại liền
     const huong = Math.random() < 0.5 ? -1 : 1;
     lenS = { ...lenS, vx: huong * (420 + Math.random() * 180), vy: -560 - Math.random() * 160, yen: false };
@@ -299,7 +300,7 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
     lvRinh = setTimeout(() => {
       lvRinh = null; svg.classList.remove('rinh');
       if (!lv || dangDoi() || face.dataset.e === 'ngu' || document.hidden) return;
-      lvVoRinh = Date.now(); giu('vo-rinh', 700); conChoi();
+      lvVoRinh = Date.now(); giu('vo-rinh', 700); conChoi(); daBat();
       // lần vồ đầu tiên trong ngày: đọc to (khi bật Giọng nói); các lần sau chỉ hiện chữ và kêu "meo"
       const dauTien = dem('rinh').rinh === 1;
       noi('vo_rinh', true, dauTien); if (!dauTien && keu) keu('vui');
