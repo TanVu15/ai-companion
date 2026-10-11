@@ -310,8 +310,10 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
     }
   }
   function henTatLaser() { clearTimeout(laserTat); laserTat = setTimeout(() => batLaser(false), 15000); }
+  const conChoi = () => { if (typeof scheduleSleep === 'function') scheduleSleep(); };  // đang chơi: đừng nằm bẹp/ngủ gật
   function datLaser(cx, cy) {
     if (!cham_) return;
+    conChoi();
     const r = header.getBoundingClientRect();
     cham_.style.left = (cx - r.left) + 'px'; cham_.style.top = (cy - r.top) + 'px';
     // mắt nhìn theo
@@ -360,7 +362,7 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
       const [tx, ty] = boHuongNhin(p.x - 100, p.y - 74); nhin.setAttribute('transform', `translate(${tx} ${ty})`);
     }
     if (lenKeo || !boVungCham(p.x, p.y) || Date.now() - voLen < 900 || dangDoi() || face.dataset.e === 'ngu') return;
-    voLen = Date.now(); giu('vo', 600); dem('len'); noi('len');
+    voLen = Date.now(); giu('vo', 600); dem('len'); noi('len'); conChoi();
     const huong = p.x < 100 ? -1 : 1;
     lenS = { ...lenS, vx: huong * (260 + Math.random() * 200), vy: -380 - Math.random() * 200 };
   }

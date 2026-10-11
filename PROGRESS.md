@@ -9,6 +9,7 @@
 Ảnh: `docs/anh/kieu-long.png` (thường · mướp vằn · tam thể · mèo đen), `docs/anh/meo-o-banh-mi.png`, `docs/anh/meo-den-toi.png`.
 - **Ổ bánh mì**: 1 phút không ai đụng → Bơ nằm bẹp, giấu chân, đuôi quấn quanh người, mắt lim dim; 3 phút mới ngủ gật. Chạm/gõ là ngồi dậy.
 - **Kiểu lông** (trong "Bơ làm được gì? · Cài đặt", dưới bảng màu lông): Thường, **Mướp vằn** (thêm vằn, dùng màu đã chọn), **Tam thể** (trắng, đốm cam-đen, tai hai màu), **Mèo đen** (mắt vàng, con ngươi dọc). Lưu trên máy này.
+- Rà soát: đang chơi laser/cuộn len bằng chuột thì Bơ không nằm bẹp hay ngủ gật giữa chừng nữa. 399 test qua hết.
 **Tân cần thử:** chọn "Tam thể" hoặc "Mèo đen" xem có thích không; để yên 1 phút xem Bơ nằm bẹp.
 
 ## 2026-10-11 – Giai đoạn 53: Bơ hóng chuyện, giọng mẫu
