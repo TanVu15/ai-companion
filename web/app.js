@@ -141,13 +141,22 @@ function addError(text, retry) {
   b.onclick = () => { b.closest('.msg').remove(); retry(); };
   log.lastChild.appendChild(b);
 }
+// Số lần chơi với mèo hôm nay (choi.js đếm trên máy này) → gửi kèm để Bơ thỉnh thoảng nhắc tới. Không có thì null
+function choiHomNay() {
+  try {
+    const d = JSON.parse(localStorage.getItem('bo_choi') || 'null');
+    if (!d || d.ngay !== new Date().toLocaleDateString('sv')) return null;
+    const { ngay, ...dem } = d;
+    return dem;
+  } catch (e) { return null; }
+}
 async function sendText(text, userBubble) {
   send.disabled = true;
   statusEl.textContent = 'Bơ đang nghĩ...'; express('suy_nghi');
   if (window.meo) meo.cho(true);  // mèo ngoe nguẩy đuôi, nhìn lên trong lúc chờ
   const ctrl = new AbortController(), timer = setTimeout(() => ctrl.abort(), 150000);
   try {
-    const r = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text }), signal: ctrl.signal });
+    const r = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text, choi: choiHomNay() }), signal: ctrl.signal });
     let data = {};
     try { data = await r.json(); } catch (e) {}
     if (!r.ok) throw new Error(data.detail || 'Máy chủ trả lỗi ' + r.status);

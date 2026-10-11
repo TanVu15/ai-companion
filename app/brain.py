@@ -265,6 +265,27 @@ def _le_sap_toi(today) -> str:
     return f"Ngày lễ sắp tới: {'; '.join(items)}.\n" if items else ""
 
 
+CHOI_TEN = {"vuot": "vuốt ve Bơ", "gai_cam": "gãi cằm Bơ", "cho_an": "cho Bơ ăn cá", "choc": "chọc bụng Bơ",
+            "laser": "chơi tia laser với Bơ"}
+
+
+def mo_ta_choi(dem: dict | None) -> str:
+    """Số lần người dùng chơi với mèo Bơ hôm nay (web đếm, không tốn API) → một dòng ngắn cho lời dặn.
+    Chỉ nhận các loại đã biết, số nguyên 1–999; không có gì thì trả chuỗi rỗng."""
+    if not isinstance(dem, dict):
+        return ""
+    phan = []
+    for k, ten in CHOI_TEN.items():
+        n = dem.get(k)
+        if isinstance(n, bool) or not isinstance(n, int) or n <= 0:
+            continue
+        phan.append(f"{ten} {min(n, 999)} lần")
+    if not phan:
+        return ""
+    return ("Hôm nay người dùng đã " + ", ".join(phan) + " (bấm trên màn hình). Thỉnh thoảng nhắc tới cho vui khi hợp chuyện, "
+            "ví dụ \"hôm nay bạn gãi cằm Bơ 5 lần đó nha\"; đừng câu nào cũng nhắc.\n")
+
+
 def build_system_prompt(
     persona: str,
     facts: list[str],
@@ -279,6 +300,7 @@ def build_system_prompt(
     diary: list[dict] | None = None,
     habits: list[dict] | None = None,
     reminders: list[dict] | None = None,
+    choi: str = "",
 ) -> str:
     now = now or datetime.now()
     known = "\n".join(f"- {f}" for f in facts) if facts else "- (chưa biết gì)"
@@ -289,6 +311,7 @@ def build_system_prompt(
     out += _am_lich_va_le(now.date())
     if weather:
         out += f"{weather} (Chỉ nhắc tới thời tiết khi hợp chuyện, ví dụ trời mưa mà người dùng sắp ra ngoài.)\n"
+    out += choi
     out += f"\n## Điều bạn đã biết về người dùng\n{known}\n"
     if summary:
         out += f"\n## Tóm tắt những lần trò chuyện trước\n{summary.strip()}\n"
@@ -644,10 +667,15 @@ class Brain:
         except Exception:
             self._weather_text = None
 
-    def chat(self, user_text: str) -> Reply:
+    def chat(self, user_text: str, choi: dict | None = None) -> Reply:
+        """choi: số lần chơi với mèo hôm nay do web đếm ({"vuot": 3, "cho_an": 1}...), xem mo_ta_choi."""
         self._refresh_weather()
         with self._lock:
-            return self._chat(user_text)
+            self._choi_text = mo_ta_choi(choi)
+            try:
+                return self._chat(user_text)
+            finally:
+                self._choi_text = ""
 
     def greet(self, only_occasion: bool = False) -> Reply | None:
         """only_occasion=True: chỉ mở lời khi có dịp (ngày đặc biệt, tổng kết tuần) — web hỏi định kỳ lúc đang mở."""
@@ -944,6 +972,7 @@ class Brain:
             diary=self.memory.diary_recent(today, days=3),
             habits=self.memory.habits(today),
             reminders=self.memory.upcoming_reminders(),
+            choi=getattr(self, "_choi_text", ""),
         )
         resp = self._create(
             model=config.MODEL,

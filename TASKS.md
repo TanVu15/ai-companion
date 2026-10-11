@@ -256,7 +256,7 @@
 - [x] Nút "Cho ăn" (con cá): mèo chạy tới ăn, liếm mép. Không có thanh "đói", không bắt buộc cho ăn
 - [x] Đồ chơi: cuộn len / chấm laser đi theo ngón tay, mèo đuổi theo vồ
 - [x] Mỗi tương tác thỉnh thoảng có câu ngắn có sẵn ("meo~ thêm chút nữa đi") hiện bong bóng nhỏ, không lưu vào lịch sử chat
-- [ ] Bơ "nhớ" nhẹ: hôm nay được vuốt mấy lần, cho ăn chưa → gửi kèm 1 dòng ngắn cho bộ não để Bơ nhắc tới khi hợp ("hôm nay bạn gãi cằm Bơ 5 lần đó nha")
+- [x] Bơ "nhớ" nhẹ: hôm nay được vuốt mấy lần, cho ăn chưa → gửi kèm 1 dòng ngắn cho bộ não để Bơ nhắc tới khi hợp ("hôm nay bạn gãi cằm Bơ 5 lần đó nha")
 - [x] Chụp ảnh/kiểm tra trên màn hình điện thoại: chạm không bị nhầm với cuộn trang
 
 ## Giai đoạn 48 – Bơ nói bằng giọng AI miễn phí (edge-tts)

@@ -105,6 +105,7 @@ def get_brain() -> Brain:
 
 class ChatIn(BaseModel):
     text: str
+    choi: dict | None = None  # số lần chơi với mèo hôm nay (web đếm), không bắt buộc
 
 
 class FactIn(BaseModel):
@@ -146,7 +147,7 @@ def chat(body: ChatIn):
     if not text:
         raise HTTPException(400, "Tin nhắn trống")
     try:
-        reply = get_brain().chat(text[:2000])
+        reply = get_brain().chat(text[:2000], choi=body.choi)
     except HTTPException:
         raise
     except Exception as e:  # lỗi mạng, hết tiền API... (đã thử lại vài lần trong bộ não)
