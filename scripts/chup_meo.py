@@ -21,7 +21,7 @@ sys.path.insert(0, str(ROOT))
 from app import config  # noqa: E402
 
 TRANG_THAI = config.EMOTIONS + ["ngu"]
-TRANG_THAI_NHO = ["ngap", "liem", "cho"]
+TRANG_THAI_NHO = ["ngap", "liem", "cho", "lan", "mung", "bep", "hong", "nghe"]
 
 
 def cong_trong():
