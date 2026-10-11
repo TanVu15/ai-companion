@@ -219,6 +219,11 @@
 - [x] Nút "Thói quen": số ngày làm trong tháng này của từng thói quen
 - [x] Rà soát code lần 21, sửa lỗi tìm được
 
+## Giai đoạn 42 – Nhắc mỗi vài tiếng (chỉ phần mềm, Claude tự thêm)
+- [x] "Cứ 2 tiếng nhắc mình uống nước" → nhắc mỗi N tiếng (1–12), tự nghỉ trong giờ yên lặng; sửa được trên web; không đưa vào lịch .ics
+- [ ] Nói "thôi khỏi nhắc uống nước nữa" → Bơ xóa lời nhắc đó (huy_nhac)
+- [ ] Rà soát code lần 22, sửa lỗi tìm được
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo

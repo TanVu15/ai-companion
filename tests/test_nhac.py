@@ -339,3 +339,34 @@ def test_sua_nhac_thang_giu_ngay_goc_va_sao_luu_loi(tmp_path):
     data["reminders"][0]["ngay_goc"] = None
     mem.import_all(data)
     assert mem.pop_due_reminders(datetime(2027, 2, 28, 20))  # không lỗi
+
+
+def test_nhac_moi_vai_tieng_bo_qua_dem(tmp_path, monkeypatch):
+    from datetime import datetime as dt
+
+    from app import config
+    from app.lich_ics import tao_ics
+    from app.memory import Memory
+
+    monkeypatch.setattr(config, "GIO_YEN_LANG", "23-6")
+    m = Memory(tmp_path / "g.db")
+    now = dt(2026, 10, 11, 20, 0)
+    assert m.add_reminders([{"luc": "2026-10-11 20:30", "viec": "Uống nước", "lap": "gio_2"}], now=now) == 1
+    assert m.add_reminders([{"luc": "2026-10-11 21:00", "viec": "uống nước", "lap": "gio_2"}], now=now) == 0  # trùng
+    (r,) = m.upcoming_reminders()
+    assert r["luc"] == "2026-10-11 20:30" and r["lap"] == "gio_2"
+    m.pop_due_reminders(dt(2026, 10, 11, 20, 30))
+    assert m.upcoming_reminders()[0]["luc"] == "2026-10-11 22:30"
+    m.pop_due_reminders(dt(2026, 10, 11, 22, 31))  # 00:30 rơi vào giờ yên lặng → 6:00 sáng
+    assert m.upcoming_reminders()[0]["luc"] == "2026-10-12 06:00"
+    m.pop_due_reminders(dt(2026, 10, 12, 6, 0))
+    assert m.upcoming_reminders()[0]["luc"] == "2026-10-12 08:00"
+    # Máy tắt cả ngày: lần sau tính tiếp từ bây giờ, không nhắc dồn
+    assert len(m.pop_due_reminders(dt(2026, 10, 12, 15, 10))) == 1
+    assert m.upcoming_reminders()[0]["luc"] == "2026-10-12 16:00"
+    monkeypatch.setattr(config, "GIO_YEN_LANG", "")
+    m.pop_due_reminders(dt(2026, 10, 12, 23, 59))
+    assert m.upcoming_reminders()[0]["luc"] == "2026-10-13 00:00"
+    assert "Uống nước" not in tao_ics([], m.upcoming_reminders())
+    assert m.add_reminders([{"luc": "2026-10-11 20:30", "viec": "X", "lap": "gio_13"}], now=now) == 1
+    assert [x["lap"] for x in m.upcoming_reminders() if x["viec"] == "X"] == [""]

@@ -273,5 +273,10 @@
       "Đọc sách"
     ],
     "phai_tich_hom_qua": true
+  },
+  {
+    "ten": "Nhắc mỗi 2 tiếng",
+    "tin_nhan": "Cứ 2 tiếng nhắc mình uống nước một lần nha Bơ",
+    "phai_nhac_lap": "gio_2"
   }
 ]

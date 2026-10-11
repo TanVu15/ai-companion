@@ -7,7 +7,7 @@ from tests.test_brain import FakeClient
 
 def test_file_tinh_huong_hop_le():
     ds = json.loads(t.TINH_HUONG_PATH.read_text(encoding="utf-8"))
-    assert len(ds) == 27
+    assert len(ds) == 28
     for th in ds:
         assert th["ten"] and th["tin_nhan"]
 

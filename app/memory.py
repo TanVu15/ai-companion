@@ -360,7 +360,26 @@ class Memory:
 
     # --- Lời nhắc theo giờ ---
     # ngay: mỗi ngày; tuan: mỗi tuần; ngay_thuong: thứ 2–6; thang: mỗi tháng (cùng ngày, tháng thiếu thì ngày cuối tháng)
-    _LAP = {"ngay": timedelta(days=1), "tuan": timedelta(weeks=1), "ngay_thuong": None, "thang": None}
+    _LAP = {"ngay": timedelta(days=1), "tuan": timedelta(weeks=1), "ngay_thuong": None, "thang": None,
+            # "cứ 2 tiếng nhắc uống nước": gio_N = mỗi N giờ (1–12), tự bỏ qua giờ yên lặng ban đêm
+            **{f"gio_{n}": timedelta(hours=n) for n in range(1, 13)}}
+
+    @staticmethod
+    def _yen_lang(t: datetime) -> datetime | None:
+        """t rơi vào giờ yên lặng (GIO_YEN_LANG, ví dụ "23-6") → giờ hết yên lặng kế tiếp; không thì None."""
+        from . import config
+
+        m = re.fullmatch(r"\s*(\d{1,2})\s*-\s*(\d{1,2})\s*", config.GIO_YEN_LANG or "")
+        if not m:
+            return None
+        a, b = int(m.group(1)), int(m.group(2))
+        if a == b or a > 23 or b > 23:
+            return None
+        trong = (a <= t.hour < b) if a < b else (t.hour >= a or t.hour < b)
+        if not trong:
+            return None
+        het = t.replace(hour=b, minute=0)
+        return het if het > t else het + timedelta(days=1)
 
     @staticmethod
     def _cong_thang(t: datetime, ngay: int) -> datetime:
@@ -396,9 +415,10 @@ class Memory:
                 t = cls._cong_thang(t, ngay)
             return t
         step = cls._LAP[lap]
-        if luc > now:
-            return luc
-        return luc + step * ((now - luc) // step + 1)
+        t = luc if luc > now else luc + step * ((now - luc) // step + 1)
+        if lap.startswith("gio_"):
+            t = cls._yen_lang(t) or t
+        return t
 
     def add_reminders(self, items: list[dict], now: datetime | None = None) -> int:
         """Thêm lời nhắc dạng {"luc": "YYYY-MM-DD HH:MM", "viec": "...", "lap": "ngay"|"tuan"|"ngay_thuong"|"thang"|""}.
@@ -434,7 +454,7 @@ class Memory:
                         o = datetime.strptime(other, "%Y-%m-%d %H:%M")
                     except ValueError:
                         continue
-                    if o.time() == luc.time() and (
+                    if lap.startswith("gio_") or o.time() == luc.time() and (
                         lap in ("ngay", "ngay_thuong") or (lap == "tuan" and o.weekday() == luc.weekday())
                         or (lap == "thang" and o.day == luc.day)
                     ):

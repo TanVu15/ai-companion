@@ -80,6 +80,8 @@ def tao_ics(special_days: list[dict], reminders: list[dict], today: date | None 
                 event(f"ngay-am-{x.get('id')}-{y}", [*ca_ngay(on), f"SUMMARY:{_esc(x['viec'] + ' (âm lịch ' + x['ngay'] + ')')}"],
                       "-PT4H")
     for r in reminders:
+        if str(r.get("lap") or "").startswith("gio_"):  # nhắc mỗi vài giờ: không đưa vào lịch (điện thoại kêu cả đêm)
+            continue
         try:
             luc = datetime.strptime(str(r["luc"])[:16], "%Y-%m-%d %H:%M")
         except (KeyError, ValueError):

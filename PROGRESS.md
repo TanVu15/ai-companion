@@ -730,3 +730,8 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 
 **Tân cần thử (giai đoạn 41):** đặt thành phố trong Cài đặt rồi hỏi "hôm nay trời thế nào?", "mai có mưa không?"; xem nút "Thói quen" có "tháng 10: N ngày".
 
+## 2026-10-11 – Giai đoạn 42: nhắc mỗi vài tiếng
+- Nhắn **"cứ 2 tiếng nhắc mình uống nước"** → Bơ nhắc mỗi 2 tiếng (được 1–12 tiếng). Trong giờ yên lặng (mặc định 23h–6h) Bơ nghỉ, sáng ra nhắc tiếp. Máy tắt lâu thì không nhắc dồn.
+- Sửa được trên web ("Mỗi 2 tiếng" trong ô Lặp lại). Loại nhắc này không đưa vào file lịch điện thoại (để điện thoại khỏi kêu cả đêm).
+- Bộ chấm điểm thêm tình huống "nhắc mỗi 2 tiếng" (28 tình huống). SU_CO.md thêm mục. 327 test qua hết.
+

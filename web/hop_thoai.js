@@ -1,4 +1,6 @@
-const LAP_TEN = { ngay: 'Mỗi ngày', ngay_thuong: 'Thứ 2–6', tuan: 'Mỗi tuần', thang: 'Mỗi tháng' };
+const LAP_TEN = { ngay: 'Mỗi ngày', ngay_thuong: 'Thứ 2–6', tuan: 'Mỗi tuần', thang: 'Mỗi tháng',
+  gio_1: 'Mỗi 1 tiếng', gio_2: 'Mỗi 2 tiếng', gio_3: 'Mỗi 3 tiếng', gio_4: 'Mỗi 4 tiếng' };
+for (let n = 5; n <= 12; n++) LAP_TEN['gio_' + n] = 'Mỗi ' + n + ' tiếng';
 // Các hộp thoại và tiện ích: trí nhớ, ngủ gật, tìm, "?", ghim, tính cách, màu mặt, phím tắt.
 const mem = document.getElementById('mem'), factsEl = document.getElementById('facts');
 async function delFact(content) {

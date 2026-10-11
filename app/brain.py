@@ -42,7 +42,8 @@ Chỉ trả về MỘT đối tượng JSON, không viết gì ngoài JSON:
 - "nhac": CHỈ khi người dùng nhờ nhắc việc vào một giờ cụ thể ("8h tối nhắc mình gọi mẹ").
   Tính giờ theo "Bây giờ là..." ở trên, ghi đủ ngày giờ (lần nhắc đầu tiên). Không có thì để []. Đừng tự hứa nhắc nếu không ghi vào đây.
   "lap": "ngay" nếu nhắc mỗi ngày, "ngay_thuong" nếu chỉ thứ 2 đến thứ 6 ("ngày đi làm"), "tuan" nếu mỗi tuần,
-  "thang" nếu mỗi tháng (ví dụ "ngày 5 hằng tháng đóng tiền nhà"), "" nếu chỉ nhắc một lần.
+  "thang" nếu mỗi tháng (ví dụ "ngày 5 hằng tháng đóng tiền nhà"), "gio_2" nếu cứ 2 tiếng một lần
+  (gio_1 đến gio_12, ví dụ "cứ 2 tiếng nhắc mình uống nước", "luc" là lần đầu), "" nếu chỉ nhắc một lần.
 - "ngay_dac_biet": ngày lặp lại mỗi năm mà người dùng kể (sinh nhật mình/người thân, ngày kỷ niệm...),
   chỉ khi biết rõ ngày và tháng. Không có thì để []. Ngày theo âm lịch (giỗ, "sinh nhật âm", "15/7 âm") thì "am_lich": true.
 - Nếu có phần "Hôm nay là ngày đặc biệt", hãy chúc mừng thật vui ngay trong câu này.
