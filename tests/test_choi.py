@@ -374,7 +374,7 @@ def test_cho_an_luc_om_len_thi_buong_len():
     """Đang ôm cuộn len mà cho ăn → Bơ buông len ra (không vừa ôm vừa ăn)."""
     choi = (config.ROOT / "web" / "choi.js").read_text(encoding="utf-8")
     assert "dangAn = true; doChoi.thaLen();" in choi
-    assert "doChoi.thaLen = thaLen;" in (config.ROOT / "web" / "do_choi.js").read_text(encoding="utf-8")
+    assert "doChoi.thaLen = () => { thaLen(); thoiRinhLaser(); };" in (config.ROOT / "web" / "do_choi.js").read_text(encoding="utf-8")
 
 
 def test_laser_truoc_mat():

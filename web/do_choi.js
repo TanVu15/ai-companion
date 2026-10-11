@@ -395,6 +395,6 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
   doChoi.dangChoi = () => laserBat || !!len || !!lv;
   doChoi.dieuKhien = () => laserBat || !!lv;
   doChoi.keoLen = () => !!lenKeo;
-  doChoi.thaLen = thaLen;
+  doChoi.thaLen = () => { thaLen(); thoiRinhLaser(); };  // có việc khác (cho ăn): buông len đang ôm, thôi rình chấm laser
   Object.assign(window.boChoi, { batLaser, batLen, batLongVu });
 })();

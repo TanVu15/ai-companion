@@ -5,8 +5,9 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
-## 2026-10-11 – Giai đoạn 74 (đang làm): Bơ săn chấm laser
+## 2026-10-11 – Giai đoạn 74 xong: Bơ săn chấm laser
 - **Vồ chấm laser**: bật tia laser, để chấm đỏ dừng yên trên sàn ngay trước/cạnh chân Bơ khoảng 1 giây → Bơ hạ người rình, ngoáy mông, rồi vồ đè chân lên chấm (chấm khuất dưới chân), xong nhấc chân lên ngó "Ủa, đâu mất rồi?". Rê chấm đi chỗ khác thì Bơ thôi rình. Nghỉ 4 giây giữa hai lần. Ảnh `docs/anh/meo-vo-laser.png` (trái: rình, phải: nhấc chân ngó). `scripts/thu_cham.py` thử thêm — đạt hết. 434 test qua hết.
+- Rà soát, sửa: đang rình chấm mà bấm cho ăn thì Bơ thôi rình, ăn luôn (trước đây vừa rình vừa ăn). Máy màn hình thấp (cao 600–640px) vẫn để chấm được trước chân Bơ. Mèo đen, tam thể (nền tối), mướp vằn: rõ, không vỡ hình (ảnh `docs/anh/vo-laser-kieu-long.png`). 434 test qua hết.
 **Tân cần thử:** bật nút chấm đỏ, rê chấm xuống sàn ngay dưới chân Bơ rồi giữ yên tay.
 
 ## 2026-10-11 – Giai đoạn 73 xong: Bơ ôm cuộn len
