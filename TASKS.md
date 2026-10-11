@@ -224,6 +224,15 @@
 - [x] Nói "thôi khỏi nhắc uống nước nữa" → Bơ xóa lời nhắc đó (huy_nhac); chấm điểm thêm tình huống (29)
 - [x] Rà soát code lần 22, sửa lỗi tìm được
 
+## Giai đoạn 43 – Chạy thật với API (chỉ phần mềm, Claude tự thêm sau khi chạy thử trên máy Tân)
+- [x] Ép model trả đúng khuôn JSON (structured outputs): hết cảnh Bơ trả lời chữ thường làm mất cảm xúc, điều ghi nhớ, lời nhắc
+- [x] Giá tính chi phí lấy theo model (Haiku 5.5: 0,10 / 0,50 đô), nút "?" báo khi .env ghi giá lệch
+- [x] Sửa lỗi Bơ hỏi lại mãi một chuyện (model chép cả ghi chú "(kể hôm qua)" nên không gạch được chuyện đã hỏi thăm)
+- [x] Lời dặn chắc hơn: không bịa số đường dây nóng (chỉ 115), không hứa "đi cùng", nhất định chúc ngày đặc biệt, chuyện hỏi thăm ghi ngày cụ thể, không chép việc vặt vào điều nhớ lâu dài
+- [x] Bộ chấm điểm: kiểm tra chặt hơn (gạch được chuyện hỏi thăm thật, không bịa số điện thoại...), báo số token đã dùng
+- [ ] Giảm token mỗi câu (lời dặn đang ~5.700 token): gom lời dặn cố định lên đầu để dùng prompt caching, đo lại bằng API thật
+- [ ] Rà soát code lần 23 (phần mới của giai đoạn 43), sửa lỗi tìm được
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo

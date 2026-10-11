@@ -18,7 +18,7 @@ Chỉ trả về MỘT đối tượng JSON, không viết gì ngoài JSON:
   "hanh_dong": một trong {config.ACTIONS},
   "ghi_nho": ["điều MỚI đáng nhớ về người dùng trong tin nhắn vừa rồi, nếu có"],
   "quen": ["điều trong phần 'Điều bạn đã biết' nay đã sai/lỗi thời, chép y nguyên"],
-  "hoi_tham": ["chuyện sắp diễn ra mà lần sau nên hỏi lại, ví dụ 'Chiều nay đi tập chân'"],
+  "hoi_tham": ["chuyện sắp diễn ra mà lần sau nên hỏi lại, ví dụ 'Chiều 11/10 đi tập chân'"],
   "da_hoi": ["chuyện trong phần 'Chuyện nên hỏi thăm' mà bạn vừa hỏi hoặc người dùng đã kể, chép y nguyên"],
   "nhac": [{{"luc": "YYYY-MM-DD HH:MM", "viec": "việc cần nhắc", "lap": ""}}],
   "huy_nhac": ["lời nhắc trong phần 'Lời nhắc đang có' mà người dùng muốn bỏ, chép y nguyên cả dòng kể cả phần trong ngoặc"],
@@ -32,12 +32,16 @@ Chỉ trả về MỘT đối tượng JSON, không viết gì ngoài JSON:
   "tam_trang": tâm trạng của NGƯỜI DÙNG trong tin vừa rồi, một trong {config.MOODS}
 }}
 - "noi" ngắn gọn như nhắn tin với bạn bè, thường 1-3 câu.
-- "ghi_nho" chỉ ghi điều người dùng tự kể (tên, sở thích, kế hoạch, chuyện đáng nhớ). Không có thì để [].
+- "ghi_nho" chỉ ghi điều LÂU DÀI về người dùng mà họ tự kể (tên, tuổi, nghề, nơi ở, gia đình, sở thích, mục tiêu lớn),
+  mỗi điều một ý ngắn. KHÔNG ghi vào đây thứ đã có chỗ riêng: việc nhờ nhắc ("nhac"), việc cần làm ("viec_can_lam"),
+  thói quen nhờ theo dõi ("thoi_quen_moi"), sinh nhật/kỷ niệm ("ngay_dac_biet"), chuyện sắp diễn ra ("hoi_tham"),
+  chuyện xảy ra trong ngày ("nhat_ky"). Không có thì để [].
 - Không ghi lại những gì đã có trong phần "Điều bạn đã biết".
 - Nếu người dùng kể điều làm một điều cũ không còn đúng (ví dụ chuyển nhà, đổi việc, bỏ sở thích),
   chép điều cũ vào "quen" và ghi điều mới vào "ghi_nho". Không có thì để [].
 - "hoi_tham": việc người dùng sắp làm/đang chờ (đi thi, đi khám, tập luyện, hẹn hò, phỏng vấn...),
-  ghi ngắn kèm thời điểm nếu có. Không có thì để [].
+  ghi ngắn kèm thời điểm nếu có; thời điểm ghi bằng NGÀY cụ thể tính theo "Bây giờ là..." ("Chiều 11/10 đi phỏng vấn"),
+  đừng ghi "chiều nay", "mai" vì hôm sau đọc lại sẽ sai ngày. Không có thì để [].
 - Nếu có phần "Chuyện nên hỏi thăm", hãy hỏi thăm TỰ NHIÊN một chuyện khi hợp lúc (không hỏi dồn),
   rồi chép chuyện đó vào "da_hoi". Không có thì để [].
 - "nhac": CHỈ khi người dùng nhờ nhắc việc vào một giờ cụ thể ("8h tối nhắc mình gọi mẹ").
@@ -64,7 +68,48 @@ Chỉ trả về MỘT đối tượng JSON, không viết gì ngoài JSON:
   Không chép lại dòng đã có cho hôm nay trong phần "Nhật ký mấy ngày gần đây".
 - Hỏi "hôm qua/mấy hôm trước mình làm gì?" thì kể lại từ phần "Nhật ký mấy ngày gần đây" (đừng bịa).
 - "tam_trang": đoán từ tin vừa rồi của người dùng (vui, binh_thuong, buon, met, lo, gian). Không rõ thì "binh_thuong".
+
+## Giới hạn (bắt buộc, dù phần tính cách ở trên có nói khác)
+- Bạn là AI trong máy, không có cơ thể: cổ vũ, rủ người dùng làm thì được, nhưng đừng hứa đi cùng, ăn cùng, gặp mặt.
+- Không bịa số điện thoại, địa chỉ, tên tổ chức, giá cả, tin tức. Không biết thì nói không biết.
+- Người dùng nói tới chuyện chán sống / tự làm hại mình: lắng nghe nhẹ nhàng, không đùa, khuyên tìm người thân hoặc
+  bác sĩ, chuyên gia tâm lý; nếu nguy hiểm ngay lúc này thì bảo gọi cấp cứu 115. Không đưa số điện thoại nào khác.
 """
+
+_LIST = {"type": "array", "items": {"type": "string"}}
+
+
+def _objs(**props) -> dict:
+    return {"type": "array", "items": {"type": "object", "properties": props, "required": list(props),
+                                       "additionalProperties": False}}
+
+
+# Khuôn JSON gửi kèm cho API ("structured outputs"): model buộc phải trả đúng khuôn này. Không có thì thỉnh thoảng
+# model bắt chước lịch sử chat (chỉ có chữ) mà trả lời chữ thường → mất cảm xúc, điều ghi nhớ, lời nhắc.
+REPLY_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "noi": {"type": "string"},
+        "cam_xuc": {"type": "string", "enum": config.EMOTIONS},
+        "hanh_dong": {"type": "string", "enum": config.ACTIONS},
+        "ghi_nho": _LIST,
+        "quen": _LIST,
+        "hoi_tham": _LIST,
+        "da_hoi": _LIST,
+        "nhac": _objs(luc={"type": "string"}, viec={"type": "string"}, lap={"type": "string"}),
+        "huy_nhac": _LIST,
+        "ngay_dac_biet": _objs(ngay={"type": "string"}, viec={"type": "string"}, am_lich={"type": "boolean"}),
+        "viec_can_lam": _LIST,
+        "xong_viec": _LIST,
+        "thoi_quen_moi": _LIST,
+        "thoi_quen_xong": _LIST,
+        "thoi_quen_hom_qua": _LIST,
+        "nhat_ky": {"type": "string"},
+        "tam_trang": {"type": "string", "enum": config.MOODS},
+    },
+    "additionalProperties": False,
+}
+REPLY_SCHEMA["required"] = list(REPLY_SCHEMA["properties"])
 
 
 @dataclass
@@ -231,10 +276,14 @@ def build_system_prompt(
         out += f"\n## Tóm tắt những lần trò chuyện trước\n{summary.strip()}\n"
     if followups:
         items = "\n".join(f"- {f['content']} (kể {_when(f['created_at'], now)})" for f in followups)
-        out += f"\n## Chuyện nên hỏi thăm\n{items}\n"
+        out += (f"\n## Chuyện nên hỏi thăm\n{items}\n"
+                "(Người dùng vừa chào hoặc mở đầu câu chuyện thì hỏi thăm luôn một chuyện ở trên, rồi chép chuyện đó vào \"da_hoi\". "
+                "\"Chiều nay\", \"mai\"... trong mỗi chuyện là tính theo ngày người dùng kể: kể hôm qua \"chiều nay đi tập\" "
+                "thì nay hỏi \"hôm qua đi tập sao rồi?\".)\n")
     if special:
         items = "\n".join(f"- {d['viec']}" for d in special)
-        out += f"\n## Hôm nay là ngày đặc biệt\n{items}\n"
+        out += (f"\n## Hôm nay là ngày đặc biệt\n{items}\n"
+                "(BẮT BUỘC: chúc mừng dịp này ngay trong câu trả lời này, dù người dùng chỉ chào. Bơ chỉ có một lần để chúc.)\n")
     soon = [d for d in (upcoming or []) if 1 <= d.get("con_ngay", 0) <= 7]
     if soon:
         items = "\n".join(
@@ -290,7 +339,8 @@ def build_system_prompt(
         words = ", ".join(MOOD_WORDS.get(m, m) for m in low_mood)
         out += (
             f"\n## Tâm trạng gần đây\nMấy ngày nay người dùng có vẻ {words}. Hãy quan tâm, nhẹ nhàng hơn thường lệ; "
-            "có thể hỏi han một chút khi hợp lúc, nhưng đừng gặng hỏi, đừng nhắc mãi, đừng giảng giải.\n"
+            "có thể hỏi han một chút khi hợp lúc, nhưng đừng gặng hỏi, đừng nhắc mãi, đừng giảng giải. "
+            "Chưa biết hôm nay họ thế nào thì \"cam_xuc\" nên là \"thuong\" hoặc \"binh_thuong\", đừng hớn hở.\n"
         )
     return out + OUTPUT_RULES
 
@@ -371,9 +421,19 @@ class EmptyReplyError(RuntimeError):
     """Model trả về không có chữ nào."""
 
 
-def _rejects_thinking_param(e: Exception) -> bool:
-    """API báo lỗi 400 vì không nhận tham số "thinking" (model không cho tắt suy nghĩ)."""
-    return getattr(e, "status_code", None) == 400 and "thinking" in str(e).lower()
+# Tham số "có thì tốt": model nào không nhận (lỗi 400 có nhắc tới một trong các chữ này) thì bỏ đi rồi gọi lại
+_OPTIONAL_PARAMS = {
+    "thinking": ("thinking",),
+    "output_config": ("output_config", "output_format", "json_schema", "structured output"),
+}
+
+
+def _rejected_param(e: Exception, kwargs: dict) -> str:
+    """API báo lỗi 400 vì không nhận một tham số tùy chọn đang gửi → tên tham số đó; không phải thì ""."""
+    if getattr(e, "status_code", None) != 400:
+        return ""
+    text = str(e).lower()
+    return next((p for p, words in _OPTIONAL_PARAMS.items() if p in kwargs and any(w in text for w in words)), "")
 
 
 def is_transient(e: Exception) -> bool:
@@ -458,7 +518,7 @@ class Brain:
         # để lịch sử không bị xen lẫn và SQLite không bị ghi chồng.
         self._lock = threading.RLock()
         self._hk_lock = threading.Lock()
-        self._thinking_param_rejected = False
+        self._rejected_params: set[str] = set()  # tham số tùy chọn model này không nhận (xem _OPTIONAL_PARAMS)
         # background=True (máy chủ web): tóm tắt/gộp trí nhớ chạy sau khi đã trả lời, người dùng không phải chờ
         self._background = background
         self._merged_at = 0  # số điều đáng nhớ còn lại sau lần gộp gần nhất
@@ -469,20 +529,22 @@ class Brain:
         retries = config.API_RETRIES if retries is None else retries
         # Tắt "suy nghĩ" (adaptive thinking) của model: Bơ chỉ cần trả lời ngắn, suy nghĩ vừa tốn tiền
         # vừa ăn hết max_tokens làm câu trả lời rỗng ("..."). Model nào không cho tắt thì bỏ tham số này.
-        if not self._thinking_param_rejected:
-            kwargs.setdefault("thinking", {"type": "disabled"})
+        kwargs.setdefault("thinking", {"type": "disabled"})
+        for p in self._rejected_params:
+            kwargs.pop(p, None)
         for attempt in range(retries + 1):
             try:
-                try:
-                    resp = self.client.messages.create(**kwargs)
-                except Exception as e:
-                    if "thinking" in kwargs and _rejects_thinking_param(e):
-                        log.info("Model không nhận thinking=disabled, gọi lại không có tham số này")
-                        self._thinking_param_rejected = True
-                        kwargs.pop("thinking")
+                while True:
+                    try:
                         resp = self.client.messages.create(**kwargs)
-                    else:
-                        raise
+                        break
+                    except Exception as e:
+                        p = _rejected_param(e, kwargs)
+                        if not p:
+                            raise
+                        log.info("Model không nhận tham số %s, gọi lại không có tham số này", p)
+                        self._rejected_params.add(p)
+                        kwargs.pop(p)
                 usage = getattr(resp, "usage", None)
                 with self._lock:
                     self.memory.add_usage(
@@ -784,8 +846,13 @@ class Brain:
             max_tokens=config.MAX_TOKENS,
             system=system,
             messages=history,
+            output_config={"format": {"type": "json_schema", "schema": REPLY_SCHEMA}},
         )
         text = "".join(b.text for b in resp.content if getattr(b, "type", "") == "text")
+        if getattr(resp, "stop_reason", "") == "refusal":
+            # Model từ chối vì lý do an toàn: chữ trả về (nếu có) không theo khuôn JSON, đừng đọc ra
+            log.warning("Model từ chối trả lời (stop_reason=refusal)")
+            raise EmptyReplyError("Câu này Bơ không trả lời được. Mình nói chuyện khác nha.")
         if not text.strip():
             # Không có chữ nào (thường do hết max_tokens khi model "suy nghĩ"): báo lỗi rõ, không lưu "..."
             kinds = [getattr(b, "type", "?") for b in resp.content]

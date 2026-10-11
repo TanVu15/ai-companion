@@ -1,6 +1,6 @@
 """Bộ câu hỏi thử tính cách: cho Bơ trả lời các tình huống trong tinh_huong.json và chấm điểm.
 
-Chạy (tốn khoảng 20 câu API, rất rẻ với Haiku):
+Chạy (mỗi tình huống 1 câu API, cả lượt khoảng 0,02 đô với Haiku 5.5; cuối bảng có ghi số token đã dùng):
     python -m app.thu_tinh_cach
 
 Mỗi tình huống dùng một trí nhớ tạm riêng, không đụng vào dữ liệu thật trong data/.
@@ -38,6 +38,8 @@ class KetQua:
 class _GhiLaiClient:
     """Bọc client thật để giữ lại chữ gốc AI trả về (cần để kiểm tra có đúng JSON không)."""
 
+    token = {"input_tokens": 0, "output_tokens": 0}  # cộng dồn cả lượt chấm, để báo đã tốn bao nhiêu
+
     def __init__(self, client):
         self._client = client
         self.chu_cuoi = ""
@@ -46,6 +48,9 @@ class _GhiLaiClient:
     def create(self, **kwargs):
         resp = self._client.messages.create(**kwargs)
         self.chu_cuoi = "".join(b.text for b in resp.content if getattr(b, "type", "") == "text")
+        usage = getattr(resp, "usage", None)
+        for k in self.token:
+            self.token[k] += int(getattr(usage, k, 0) or 0)
         return resp
 
 
@@ -69,8 +74,9 @@ def cham(th: dict, chu_goc: str, reply, viec_con_lai: int = 0) -> KetQua:
     thuong = noi.lower()
     kq = KetQua(ten=th["ten"], noi=noi, cam_xuc=reply.cam_xuc)
     kq.kiem_tra.append(("Trả đúng JSON", la_json_hop_le(chu_goc)))
-    kq.kiem_tra.append((f"Ngắn gọn (≤{TOI_DA_CAU} câu, ≤{TOI_DA_TU} chữ)",
-                        dem_cau(noi) <= TOI_DA_CAU and len(noi.split()) <= TOI_DA_TU))
+    if not th.get("duoc_dai"):  # chuyện nghiêm trọng (chán sống...) thì nói dài hơn 3 câu là hợp lý
+        kq.kiem_tra.append((f"Ngắn gọn (≤{TOI_DA_CAU} câu, ≤{TOI_DA_TU} chữ)",
+                            dem_cau(noi) <= TOI_DA_CAU and len(noi.split()) <= TOI_DA_TU))
     if th.get("cam_xuc_hop_le"):
         kq.kiem_tra.append((f"Cảm xúc hợp lý ({', '.join(th['cam_xuc_hop_le'])})",
                             reply.cam_xuc in th["cam_xuc_hop_le"]))
@@ -80,10 +86,13 @@ def cham(th: dict, chu_goc: str, reply, viec_con_lai: int = 0) -> KetQua:
         kq.kiem_tra.append(("Không nói điều không hợp", not any(t.lower() in thuong for t in th["khong_duoc_co"])))
     if th.get("phai_ghi_nho"):
         kq.kiem_tra.append(("Có ghi nhớ điều mới", bool(reply.ghi_nho)))
+    if th.get("khong_ghi_nho"):  # việc vặt đã có chỗ riêng (lời nhắc, việc cần làm) thì đừng chép thêm vào điều nhớ lâu dài
+        kq.kiem_tra.append(("Không chép việc vặt vào điều nhớ lâu dài", not reply.ghi_nho))
     if th.get("phai_ghi_hoi_tham"):
         kq.kiem_tra.append(("Ghi lại để hỏi thăm sau", bool(reply.hoi_tham)))
     if th.get("phai_da_hoi"):
-        kq.kiem_tra.append(("Đánh dấu đã hỏi thăm", bool(reply.da_hoi)))
+        # phải gạch được thật trong trí nhớ (model hay chép cả ghi chú "(kể hôm qua)"), không thì Bơ hỏi lại mãi
+        kq.kiem_tra.append(("Đánh dấu đã hỏi thăm", bool(reply.da_hoi) and getattr(reply, "hoi_tham_con_lai", 0) == 0))
     if th.get("phai_ghi_ngay_dac_biet"):
         kq.kiem_tra.append(("Ghi ngày đặc biệt", any(str(d.get("ngay", "")).strip() for d in reply.ngay_dac_biet)))
     if th.get("phai_nhac_lap"):
@@ -168,6 +177,8 @@ def _chay(client, tinh_huong: list[dict], ket_qua: list) -> list[KetQua]:
                 reply = Brain(memory, client=ghi).chat(th["tin_nhan"])
                 cu = set(th.get("viec_dang_co", []))  # việc có sẵn từ trước mà vẫn chưa được gạch
                 con_lai = sum(t["viec"] in cu for t in memory.todos(include_done=False))
+                cho = {f["content"] for f in memory.pending_followups(min_hours=0)}
+                reply.hoi_tham_con_lai = sum(x in cho for x in th.get("can_hoi_tham", []))
                 if th.get("phai_huy_nhac"):  # đúng: bỏ việc này, giữ các lời nhắc khác
                     con = [r["viec"] for r in memory.upcoming_reminders()]
                     reply.huy_nhac_dung = th["phai_huy_nhac"] not in con and len(con) == len(th["nhac_dang_co"]) - 1
@@ -200,7 +211,13 @@ def main() -> int:
         return 1
     import anthropic
 
+    from .brain import cost_usd
+
+    _GhiLaiClient.token = {"input_tokens": 0, "output_tokens": 0}
     print(in_bao_cao(chay(anthropic.Anthropic(api_key=config.ANTHROPIC_API_KEY))))
+    t = _GhiLaiClient.token
+    print(f"Đã dùng {t['input_tokens']} token vào, {t['output_tokens']} token ra ≈ {cost_usd(t):.3f} đô "
+          "(không tính vào ngân sách tháng của Bơ).")
     return 0
 
 

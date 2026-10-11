@@ -4,4 +4,5 @@ __pycache__/
 *.pyc
 .pytest_cache/
 .venv/
+.claude/launch.json
 venv/

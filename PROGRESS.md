@@ -45,9 +45,31 @@ Xong giai đoạn 3 → 12: hỏi thăm chuyện cũ, nhắc việc, giọng nó
 - Bài học cho các phiên tự chạy: test bằng bộ não giả KHÔNG bắt được lỗi kiểu này. Khi đổi cách gọi API,
   luôn giả lập phản hồi giống API thật (có khối thinking, stop_reason) như tests/test_tra_loi_rong.py.
 
+## 2026-10-11 đêm – Giai đoạn 43: chạy thử với API thật trên máy Tân, sửa 4 lỗi thật
+Chạy `python -m app.thu_tinh_cach` (29 tình huống) và một cuộc trò chuyện 14 lượt bằng API thật (trí nhớ tạm, không đụng `data/`).
+Điểm bộ chấm: 95% → 98% (bộ chấm cũng đã chặt hơn). Tổng tiền thử: khoảng 0,1 đô. 351 test qua hết.
+- **Bơ thỉnh thoảng trả lời chữ thường thay vì JSON** (bắt chước lịch sử chat chỉ có chữ) → mất cảm xúc, không ghi nhớ,
+  không đặt lời nhắc. Sửa: gửi kèm khuôn JSON bắt buộc (`output_config`, "structured outputs"); model nào không nhận thì tự bỏ.
+- **Chi phí hiện cao gấp 10 lần thật:** giá Haiku 5.5 là 0,10 / 0,50 đô cho 1 triệu token, `.env` đang ghi 1 / 5 (giá Haiku 4.5)
+  → ngân sách 5 đô/tháng sẽ dừng Bơ khi mới tiêu thật 0,5 đô. Sửa: để trống `PRICE_*` thì Bơ tự lấy giá theo model;
+  đã xóa hai số đó trong `.env` trên máy Tân; nút "?" → Tình trạng có dòng "Giá tính chi phí" báo khi lệch.
+  Mỗi câu trả lời tốn khoảng 0,0008 đô (≈ 20 đồng). **Tân nên so với số tiền thật trên console.anthropic.com.**
+- **Bơ hỏi lại mãi một chuyện:** model chép "Chiều nay đi tập chân (kể hôm qua)" vào `da_hoi` nên không khớp, chuyện
+  không bao giờ được gạch. Sửa: bỏ ghi chú "(kể ...)" trước khi so. Chuyện hỏi thăm mới giờ ghi ngày cụ thể ("Chiều 11/10...").
+- **Bơ bịa số đường dây nóng** khi Tân nói chán sống, và hứa "mai mình đi tập cùng". Sửa: thêm phần "Giới hạn" cố định
+  (không nằm trong tính cách tự sửa được): không bịa số điện thoại, nguy hiểm thì chỉ bảo gọi 115, không hứa đi cùng.
+- Lời dặn chắc hơn: đúng ngày đặc biệt thì bắt buộc chúc (trước đây 1/4 lần Bơ quên mà vẫn bị tính là đã chúc);
+  việc nhờ nhắc / việc cần làm không bị chép thêm vào "điều Bơ nhớ" nữa (trí nhớ đỡ phình).
+- Bài học cho phiên tự chạy: máy của Tân gọi được API thật. Khi sửa lời dặn (prompt), chạy `python -m app.thu_tinh_cach`
+  để xem model thật phản ứng ra sao; test giả chỉ kiểm tra được phần code.
+
+**Tân cần thử (giai đoạn 43):** tắt cửa sổ `run.bat` đang chạy rồi mở lại (để nạp code mới); nhắn vài câu, bấm "Chi phí" xem
+số tiền (giờ nhỏ hơn 10 lần); bấm "?" → Tình trạng xem dòng "Giá tính chi phí".
+
 ## Cần Tân quyết định
 - **Dùng Bơ ngoài nhà bằng cách nào?** Tailscale (riêng tư, cần tạo tài khoản miễn phí, cài app trên iPhone) hay Cloudflare Tunnel (link công khai, không cần cài trên điện thoại). Hướng dẫn cả hai trong `DUA_LEN_MANG.md`. Claude khuyên Tailscale. Cách nào cũng phải đặt `APP_PASSWORD`.
-- **Ngân sách tháng:** `.env.example` đặt sẵn `MONTHLY_USD_LIMIT=5` (5 đô/tháng). File `.env` cũ của Tân chưa có dòng này nên đang không giới hạn. Tân tự chọn mức và thêm vào `.env`.
+- **Ngân sách tháng:** `.env` trên máy Tân đang đặt `MONTHLY_USD_LIMIT=5` (5 đô/tháng). Với giá Haiku 5.5 thật thì 5 đô là khoảng 6.000 câu trả lời — Tân có thể hạ xuống 1–2 đô nếu muốn chặt hơn.
+- **Số đường dây hỗ trợ tâm lý:** hiện Bơ chỉ nhắc 115 khi nguy hiểm. Nếu Tân muốn Bơ đưa thêm một số tư vấn tâm lý cụ thể thì Tân tự kiểm tra số đó còn hoạt động rồi ghi vào `FEEDBACK.md` (Claude không tự thêm vì không xác minh được).
 - **Phần cứng:** mua linh kiện nào (ESP32 loại nào, màn hình, loa, servo) — cần tiền, Claude không tự làm.
 - **Nghe/nói trên thiết bị thật:** ESP32 không tự nhận dạng tiếng Việt được. Cần chọn: (a) điện thoại/máy tính làm "tai" rồi gửi chữ cho thiết bị, hoặc (b) dịch vụ nhận dạng/đọc giọng trả phí. Cần Tân chọn.
 

@@ -69,9 +69,36 @@ APP_PASSWORD = os.getenv("APP_PASSWORD", "")
 # Khóa riêng cho thiết bị phần cứng (ESP32) gọi /api/thiet-bi/... Để trống = tắt cổng thiết bị.
 DEVICE_KEY = os.getenv("DEVICE_KEY", "")
 
-# Giá API (đô la Mỹ cho 1 triệu token) để ước tính chi phí. Kiểm tra giá mới ở trang giá của Anthropic.
-PRICE_INPUT_PER_MTOK = float(os.getenv("PRICE_INPUT_PER_MTOK", "1"))
-PRICE_OUTPUT_PER_MTOK = float(os.getenv("PRICE_OUTPUT_PER_MTOK", "5"))
+# Giá API (đô la Mỹ cho 1 triệu token: chiều vào, chiều ra) để ước tính chi phí. Giá Anthropic công bố, xem lại
+# ở trang giá khi đổi model. Model lạ thì tính theo giá cao (1 / 5) để ngân sách tháng không bị vượt.
+GIA_THEO_MODEL = {
+    "claude-haiku-5-5": (0.10, 0.50),
+    "claude-haiku-4-5": (1.0, 5.0),
+    "claude-sonnet-5": (2.0, 10.0),  # cả claude-sonnet-5-5
+    "claude-sonnet-4-6": (3.0, 15.0),
+    "claude-opus-5-5": (4.0, 20.0),
+    "claude-opus-5": (5.0, 25.0),
+}
+
+
+def gia_theo_model(model: str) -> tuple[float, float]:
+    """Giá của model (khớp theo tên dài nhất, nên "claude-haiku-5-5-xxx" vẫn ra giá Haiku 5.5)."""
+    for ten in sorted(GIA_THEO_MODEL, key=len, reverse=True):
+        if model.startswith(ten):
+            return GIA_THEO_MODEL[ten]
+    return (1.0, 5.0)
+
+
+def _gia(ten_bien: str, mac_dinh: float) -> float:
+    """Giá ghi trong .env; để trống hoặc ghi sai thì lấy theo bảng trên."""
+    try:
+        return float(os.getenv(ten_bien, "").strip() or mac_dinh)
+    except ValueError:
+        return mac_dinh
+
+
+PRICE_INPUT_PER_MTOK = _gia("PRICE_INPUT_PER_MTOK", gia_theo_model(MODEL)[0])
+PRICE_OUTPUT_PER_MTOK = _gia("PRICE_OUTPUT_PER_MTOK", gia_theo_model(MODEL)[1])
 
 # Ngân sách mỗi tháng (đô la Mỹ, ước tính theo giá ở trên). Tiêu tới mức này thì Bơ nghỉ tới tháng sau. 0 = không giới hạn.
 MONTHLY_USD_LIMIT = float(os.getenv("MONTHLY_USD_LIMIT", "0"))

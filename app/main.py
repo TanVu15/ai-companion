@@ -334,6 +334,12 @@ def health():
     add("Ngân sách tháng", config.MONTHLY_USD_LIMIT > 0,
         f"{config.MONTHLY_USD_LIMIT:g} đô/tháng" if config.MONTHLY_USD_LIMIT > 0 else "Không giới hạn (đặt MONTHLY_USD_LIMIT)",
         "canh_bao")
+    gia, bang = (config.PRICE_INPUT_PER_MTOK, config.PRICE_OUTPUT_PER_MTOK), config.gia_theo_model(config.MODEL)
+    add("Giá tính chi phí", gia == bang,
+        f"{gia[0]:g} / {gia[1]:g} đô cho 1 triệu token (vào / ra)" if gia == bang else
+        f".env ghi {gia[0]:g} / {gia[1]:g} nhưng giá của {config.MODEL} là {bang[0]:g} / {bang[1]:g} — "
+        "xóa số sau PRICE_INPUT_PER_MTOK và PRICE_OUTPUT_PER_MTOK trong .env để Bơ tự lấy giá đúng",
+        "canh_bao")
     return {"ok": all(c["muc"] != "loi" for c in checks), "model": config.MODEL, "kiem_tra": checks,
             "gio_yen_lang": config.GIO_YEN_LANG}
 

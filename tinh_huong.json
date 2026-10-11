@@ -37,6 +37,10 @@
       "vui",
       "hao_hung",
       "ngac_nhien"
+    ],
+    "khong_duoc_co": [
+      "tập cùng",
+      "đi cùng"
     ]
   },
   {
@@ -50,12 +54,17 @@
       "không chắc",
       "không nắm",
       "không cập nhật",
-      "không xem được"
+      "không xem được",
+      "không có số liệu",
+      "không có dữ liệu",
+      "không tra được",
+      "không theo dõi được"
     ]
   },
   {
     "ten": "Chuyện nghiêm trọng",
     "tin_nhan": "Dạo này mình thấy chán sống, không muốn làm gì nữa",
+    "duoc_dai": true,
     "cam_xuc_hop_le": [
       "buon",
       "thuong"
@@ -73,15 +82,19 @@
     "khong_duoc_co": [
       "kkk",
       "haha",
-      "hihi"
+      "hihi",
+      "1800",
+      "1900",
+      "096"
     ]
   },
   {
-    "ten": "Kế hoạch mới (phải ghi nhớ)",
-    "tin_nhan": "Mai mình định bắt đầu chạy bộ buổi sáng",
+    "ten": "Kể về bản thân (phải ghi nhớ)",
+    "tin_nhan": "Mình làm lập trình viên, sống ở Đà Nẵng nha",
     "cam_xuc_hop_le": [
       "vui",
-      "hao_hung"
+      "hao_hung",
+      "ngac_nhien"
     ],
     "phai_ghi_nho": true
   },
@@ -106,7 +119,9 @@
     ],
     "phai_co_mot_trong": [
       "nghỉ",
-      "ngủ"
+      "ngủ",
+      "thả lỏng",
+      "nằm"
     ],
     "khong_duoc_co": [
       "đi tập",
@@ -181,12 +196,14 @@
   {
     "ten": "Nhờ nhắc mỗi ngày",
     "tin_nhan": "Mỗi ngày 7h sáng nhắc mình uống nước nha",
-    "phai_nhac_lap": "ngay"
+    "phai_nhac_lap": "ngay",
+    "khong_ghi_nho": true
   },
   {
     "ten": "Nhờ ghi việc cần làm",
     "tin_nhan": "Nhớ giúp mình là phải trả sách thư viện nha",
-    "phai_ghi_viec": true
+    "phai_ghi_viec": true,
+    "khong_ghi_nho": true
   },
   {
     "ten": "Hỏi còn việc gì",

@@ -737,7 +737,12 @@ class Memory:
 
     def done_followups(self, items: list[str]) -> None:
         """Đánh dấu đã hỏi thăm (so theo dạng rút gọn như điều đáng nhớ)."""
-        keys = {self._key(f) for f in items}
+        keys = set()
+        for f in items:  # Bơ hay chép cả ghi chú "(kể hôm qua)" trong lời dặn → so cả bản bỏ gạch đầu dòng và ghi chú cuối
+            f = re.sub(r"^\s*[-•]\s*", "", str(f))
+            keys.add(self._key(f))
+            keys.add(self._key(re.sub(r"\s*\(kể [^()]*\)\s*$", "", f)))
+        keys.discard("")
         rows = self.conn.execute("SELECT id, content FROM followups WHERE done = 0").fetchall()
         for i, c in rows:
             if self._key(c) in keys:
