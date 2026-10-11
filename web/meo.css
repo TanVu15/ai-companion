@@ -186,6 +186,11 @@ header.dang-laser { touch-action: none; cursor: crosshair; position: relative; }
 .meo.dap-tay :is(.mat-mo, .mat-nham) { display: none !important; } .meo.dap-tay .mat-cuoi { display: inline !important; }
 .meo.dap-tay :is(.mieng-w, .mieng-buon) { display: none !important; } .meo.dap-tay .mieng-mo { display: inline !important; }
 .tim.bop { color: #e0703a; font: 800 15px system-ui, sans-serif; }
+/* Chạm đuôi: đuôi vụt đi, Bơ quay đầu liếc nhìn đuôi */
+.meo.giat-duoi .head { transform: rotate(7deg); }
+.meo.giat-duoi .nhin { transform: translate(4px, 1px); }
+.meo.giat-duoi .ear-r { transform: rotate(14deg); }
+.meo.giat-duoi .tail { transform: rotate(16deg); }
 /* Gãi cằm: ngửa cổ */
 .meo.gai-cam .head { transform: translateY(-6px) rotate(-6deg); }
 /* Chạm tai: tai giật */
@@ -231,6 +236,7 @@ header.dang-laser { touch-action: none; cursor: crosshair; position: relative; }
   .meo.mung .tail { animation: meo-ngoe .4s ease-in-out infinite; }
   .meo.doi { transition: transform .3s; }
   .meo.giat { animation: meo-giat .45s ease-out; }
+  .meo.giat-duoi .tail { animation: meo-vut-duoi .5s ease-out; }
   .meo.nguoc-long .long-dung { animation: meo-dung .35s ease-out; }
   .meo.vo { animation: meo-vo .6s ease-out; }
   .meo.lanh { animation: meo-nhay .55s 1; }
@@ -247,6 +253,7 @@ header.dang-laser { touch-action: none; cursor: crosshair; position: relative; }
 @keyframes meo-tim { to { transform: translate(-50%, -60px) scale(1.4); opacity: 0; } }
 @keyframes meo-ca { 0% { transform: translateY(-80px); opacity: 0; } 15% { transform: none; opacity: 1; } 70% { transform: scale(.7); opacity: 1; } 100% { transform: scale(0); opacity: 0; } }
 @keyframes meo-lan { 0%, 100% { transform: rotate(-9deg); } 50% { transform: rotate(9deg); } }
+@keyframes meo-vut-duoi { 0% { transform: none; } 35% { transform: rotate(28deg); } 70% { transform: rotate(8deg); } }
 @keyframes meo-dung { from { opacity: 0; } }
 @keyframes meo-bong { from { transform: scale(.7); opacity: 0; } }
 

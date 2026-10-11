@@ -9,6 +9,7 @@ function boVungCham(x, y) {
   if (y > 4 && y < 54) { if (x > 38 && x < 72) return 'tai_trai'; if (x > 128 && x < 162) return 'tai_phai'; }
   if (trong(100, 74, 58, 47)) return y > 100 && Math.abs(x - 100) < 30 ? 'cam' : 'dau';
   if (trong(82, 174, 15, 11) || trong(118, 174, 15, 11)) return 'chan';  // hai chân trước
+  if (trong(184, 108, 13, 30) || trong(175, 80, 10, 9)) return 'duoi';  // đuôi dựng bên phải
   if (trong(100, 140, 40, 32)) return 'bung';
   if (trong(100, 130, 68, 50)) return 'lung';
   return null;
@@ -32,6 +33,7 @@ const BO_CAU_CHOI = {
   nguoc: ['Ngược lông rồi á!', 'Ơ kìa, vuốt xuôi cơ mà~', 'Lông Bơ dựng hết rồi nè!', 'Hướng kia mới đúng nha!'],
   chan: ['Chân Bơ đó nha~', 'Hí, nhột chân!', 'Hửm? Muốn nắm tay Bơ hả?'],
   dap_tay: ['Đập tay nè!', 'Bốp! Tuyệt vời!', 'Hi-five với Bơ nè!', 'Một, hai, bốp!'],
+  duoi: ['Đuôi Bơ mà!', 'Ơ, ai đụng đuôi Bơ đó?', 'Đuôi này không phải đồ chơi nha~', 'Hửm? Đuôi Bơ có gì hả?'],
   goi: ['Dạ? Bơ nghe nè!', 'Meo? Bạn gọi Bơ hả?', 'Dạaa~ Bơ đây!'],
   dep: ['Bộ lông mới nè, Bơ đẹp hông?', 'Hí, Bơ điệu chưa~', 'Thấy Bơ xinh lên hông?'],
   khuya: ['Khuya rồi nè, bạn ngủ sớm nha~', 'Rừ rừ... Bơ buồn ngủ quá, bạn cũng ngủ đi nha', 'Vuốt xíu nữa rồi mình đi ngủ ha~'],
@@ -242,6 +244,9 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
         svg.classList.remove('lan'); giu('doi', 4500); noi('doi', true);
         setTimeout(() => { noi('lanh', true); giu('lanh', 1200); }, 4600);
       } else { giu('giat', 500); noi('choc'); }
+    } else if (vung === 'duoi') {
+      if (svg.classList.contains('bep')) return;  // đang nằm bẹp: đuôi quấn quanh người, không ở chỗ này
+      giu('giat-duoi', 1000); noi('duoi');
     } else if (vung === 'chan') {
       const kieu = boChamChan(lanChamChan, Date.now());
       if (kieu === 'dap_tay') {

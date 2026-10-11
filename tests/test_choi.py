@@ -19,6 +19,7 @@ def test_vung_cham():
       C.boVungCham(100, 145), C.boVungCham(45, 140), C.boVungCham(5, 5), C.boVungCham(198, 190)]))""")
     assert v == ["tai_trai", "tai_phai", "dau", "cam", "bung", "lung", None, None]
     assert node("console.log(JSON.stringify([C.boVungCham(82, 176), C.boVungCham(118, 172), C.boVungCham(100, 150)]))") == ["chan", "chan", "bung"]
+    assert node("console.log(JSON.stringify([C.boVungCham(186, 105), C.boVungCham(176, 80), C.boVungCham(190, 150)]))") == ["duoi", "duoi", None]
 
 
 def test_dem_choc_trong_4_giay():

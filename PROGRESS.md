@@ -5,6 +5,9 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-11 – Giai đoạn 58 (đang làm): đuôi & tiếng meo
+- **Chạm đuôi**: đuôi vụt sang một bên, Bơ quay đầu liếc nhìn "Đuôi Bơ mà!". Ảnh `docs/anh/meo-cham-duoi.png`.
+
 ## 2026-10-11 – Giai đoạn 57 xong: chạm tinh tế hơn
 - **Vuốt ngược lông**: chạm/bấm vào hai bên lưng Bơ rồi kéo **lên trên** → lông hai bên dựng đứng, tai cụp ngang, mắt nheo, miệng méo, "Ngược lông rồi á!". Kéo xuống (xuôi) thì vẫn rừ rừ như cũ. Rê chuột không bấm thì không tính. Ảnh `docs/anh/meo-nguoc-long.png`.
 - **Đập tay**: chạm nhanh **hai lần** vào chân trước của Bơ → Bơ giơ chân lên cạnh má, mắt cười, chữ "Bốp!" bật ra, "Đập tay nè!". Chạm một lần thì Bơ chỉ rụt chân. Bơ biết hôm nay đập tay mấy lần. Ảnh `docs/anh/meo-dap-tay.png`.
