@@ -153,3 +153,16 @@ def test_cham_chan_hai_lan_la_dap_tay():
     assert v == ["chan", "dap_tay", "chan", "chan"]
     from app.brain import mo_ta_choi
     assert "đập tay với Bơ 2 lần" in mo_ta_choi({"dap_tay": 2})  # lần đầu / hai lần nhanh / cách xa / giờ máy lùi
+
+
+def test_thong_so_tieng_meo():
+    v = node("""console.log(JSON.stringify(['ngan', 'vui', 'la'].map(C.boThongSoMeo)))""")
+    for s in v:
+        assert 0.1 < s["dai"] < 1 and len(s["cao"]) == 3 and len(s["vang"]) == 3
+        assert all(200 < f < 3000 for f in s["cao"] + s["vang"])
+    assert v[2] == v[0]  # kiểu lạ → tiếng ngắn
+    assert v[1]["cao"][1] > v[1]["cao"][0]  # "meo~" vui thì cao dần lên
+    choi = (config.ROOT / "web" / "choi.js").read_text(encoding="utf-8")
+    ham = choi.split("function keu(")[1].split("\n  }\n")[0]
+    for dk in ("voiceOn", "speaking", "handsFree", "boGioYenLang"):  # chỉ kêu khi bật giọng, không lúc đang đọc/nghe/giờ yên lặng
+        assert dk in ham, dk

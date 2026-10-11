@@ -65,6 +65,15 @@ function boHuongNhin(dx, dy) {
 function boChamChan(lanTruoc, bayGio) {
   return lanTruoc && bayGio - lanTruoc >= 0 && bayGio - lanTruoc < 450 ? 'dap_tay' : 'chan';
 }
+// Tiếng "meo" tổng hợp (Web Audio, không cần file): thời lượng (giây) và ba mốc cao độ / độ vang (Hz) theo kiểu
+// 'ngan' = "mrr?" ngắn (chạm tai/đuôi), 'vui' = "meo~" cao dần (đập tay). Kiểu lạ → 'ngan'.
+function boThongSoMeo(kieu) {
+  const ds = {
+    ngan: { dai: 0.22, cao: [520, 640, 560], vang: [900, 1300, 1000] },
+    vui: { dai: 0.5, cao: [560, 820, 700], vang: [1000, 1900, 1400] },
+  };
+  return ds[kieu] || ds.ngan;
+}
 // Hướng vuốt trên lưng (dx, dy: px từ chỗ bắt đầu vuốt tới giờ; y hướng xuống). Lông mèo mọc xuôi xuống,
 // nên vuốt hẳn lên trên (dọc nhiều hơn ngang) là 'nguoc'; còn lại là 'xuoi'.
 function boHuongVuot(dx, dy) {
@@ -80,7 +89,7 @@ function boLucMo(lanTruoc, bayGio, gio) {
   return null;
 }
 
-if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boChamChan, boLucMo, BO_CAU_CHOI, BO_DOC_TO };
+if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boChamChan, boThongSoMeo, boLucMo, BO_CAU_CHOI, BO_DOC_TO };
 
 // ---- Phần giao diện ----
 (function () {
@@ -172,6 +181,31 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
     } catch (e) { rr = null; }
   }
 
+  // ---- Tiếng "meo" ngắn: chỉ khi bật "Giọng nói", ngoài giờ yên lặng, Bơ không đang đọc, không bật rảnh tay (micro khỏi nghe nhầm) ----
+  let meoCuoi = 0;
+  function keu(kieu) {
+    if (typeof voiceOn === 'undefined' || !voiceOn || (typeof speaking !== 'undefined' && speaking)) return;
+    if (typeof handsFree !== 'undefined' && handsFree) return;
+    if (typeof boGioYenLang === 'function' && typeof quietRange !== 'undefined' && boGioYenLang(new Date().getHours(), quietRange)) return;
+    const now = Date.now();
+    if (now - meoCuoi < 1500) return;
+    meoCuoi = now;
+    try {
+      ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+      if (ac.state === 'suspended') ac.resume();
+      const { dai, cao, vang } = boThongSoMeo(kieu), t0 = ac.currentTime, giua = t0 + dai * 0.4, het = t0 + dai;
+      const osc = ac.createOscillator(); osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(cao[0], t0); osc.frequency.linearRampToValueAtTime(cao[1], giua); osc.frequency.linearRampToValueAtTime(cao[2], het);
+      const loc = ac.createBiquadFilter(); loc.type = 'bandpass'; loc.Q.value = 2.5;
+      loc.frequency.setValueAtTime(vang[0], t0); loc.frequency.linearRampToValueAtTime(vang[1], giua); loc.frequency.linearRampToValueAtTime(vang[2], het);
+      const to = ac.createGain(); to.gain.setValueAtTime(0, t0);
+      to.gain.linearRampToValueAtTime(0.22, t0 + 0.04); to.gain.setValueAtTime(0.22, het - 0.08); to.gain.linearRampToValueAtTime(0, het);
+      osc.connect(loc); loc.connect(to); to.connect(ac.destination);
+      osc.start(t0); osc.stop(het + 0.05);
+      osc.onended = () => { try { to.disconnect(); } catch (e) {} };  // ngắt hẳn, kẻo kêu nhiều thì trình duyệt nặng dần
+    } catch (e) {}
+  }
+
   // ---- Đổi tọa độ màn hình sang khung vẽ của mèo ----
   function toaDo(ev) {
     const m = svg.getScreenCTM();
@@ -235,7 +269,7 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
     if (dangDoi()) return;
     if (typeof speaking !== 'undefined' && speaking) return;  // đang đọc to: chạm là để Bơ im (hop_thoai.js)
     if (vung === 'tai_trai' || vung === 'tai_phai') {
-      giu(vung === 'tai_trai' ? 'giat-tai-trai' : 'giat-tai-phai', 450); noi('tai');
+      giu(vung === 'tai_trai' ? 'giat-tai-trai' : 'giat-tai-phai', 450); noi('tai'); keu('ngan');
     } else if (vung === 'bung' || vung === 'lung') {
       mocChoc = boDemChoc(mocChoc, Date.now());
       dem('choc');
@@ -246,11 +280,11 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
       } else { giu('giat', 500); noi('choc'); }
     } else if (vung === 'duoi') {
       if (svg.classList.contains('bep')) return;  // đang nằm bẹp: đuôi quấn quanh người, không ở chỗ này
-      giu('giat-duoi', 1000); noi('duoi');
+      giu('giat-duoi', 1000); noi('duoi'); keu('ngan');
     } else if (vung === 'chan') {
       const kieu = boChamChan(lanChamChan, Date.now());
       if (kieu === 'dap_tay') {
-        lanChamChan = 0; svg.classList.remove('rut-chan'); giu('dap-tay', 1100); noi('dap_tay', true); dem('dap_tay');
+        lanChamChan = 0; svg.classList.remove('rut-chan'); giu('dap-tay', 1100); noi('dap_tay', true); dem('dap_tay'); keu('vui');
         setTimeout(() => {  // chữ "Bốp!" ngay trên bàn chân vừa giơ (khung vẽ 182,66)
           const m = svg.getScreenCTM(), r = khung.getBoundingClientRect(); if (!m) return;
           const q = new DOMPoint(182, 66).matrixTransform(m); bop(q.x - r.left, q.y - r.top);
@@ -372,5 +406,5 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
 
   const conChoi = () => { if (typeof scheduleSleep === 'function') scheduleSleep(); };  // đang chơi: đừng nằm bẹp/ngủ gật
   // Cho do_choi.js (và các file khác) dùng chung
-  window.boChoi = { dem, lucMo, noi, giu, dangDoi, conChoi, doChoi, face, khung, svg, nhin, header: khung.closest('header') || khung };
+  window.boChoi = { dem, lucMo, noi, keu, giu, dangDoi, conChoi, doChoi, face, khung, svg, nhin, header: khung.closest('header') || khung };
 })();

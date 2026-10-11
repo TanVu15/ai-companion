@@ -324,7 +324,7 @@
 
 ## Giai đoạn 58 – Đuôi & tiếng meo (Claude tự thêm, trong hướng mèo/chạm/giọng)
 - [x] Chạm vào đuôi → đuôi giật vụt đi, Bơ quay đầu nhìn đuôi "Đuôi Bơ mà!" (vùng chạm 'duoi' có test)
-- [ ] Tiếng "meo" ngắn tạo bằng Web Audio (không cần file, không gọi mạng) khi chạm tai/đập tay/mừng rỡ; chỉ kêu khi bật "Giọng nói", giờ yên lặng thì im
+- [x] Tiếng "meo" ngắn tạo bằng Web Audio (không cần file, không gọi mạng) khi chạm tai/đập tay/mừng rỡ; chỉ kêu khi bật "Giọng nói", giờ yên lặng thì im
 - [ ] Rà soát giai đoạn 58, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
