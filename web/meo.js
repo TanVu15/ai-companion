@@ -1,6 +1,6 @@
 // Mèo Bơ: vẽ bằng SVG, mỗi bộ phận một id/class để meo.css cho chuyển động riêng.
 // Cảm xúc/hành động vẫn do app.js đặt lên #face (data-e="vui", class "a-gat_dau"...), file này chỉ lo "cơ thể":
-// vẽ mèo, chớp mắt ngẫu nhiên, thỉnh thoảng ngáp/liếm chân, vươn vai khi thức dậy, ngoe nguẩy đuôi lúc chờ.
+// vẽ mèo, chớp mắt ngẫu nhiên, thỉnh thoảng ngáp/liếm chân/rửa mặt/ngó quanh, vươn vai khi thức dậy, ngoe nguẩy đuôi lúc chờ.
 const MEO_SVG = `
 <svg class="meo" viewBox="0 0 200 192" aria-hidden="true" focusable="false">
   <defs>
@@ -62,7 +62,18 @@ const MEO_SVG = `
   <g class="zzz"><text x="150" y="40">z</text><text x="164" y="26">z</text><text x="178" y="12">Z</text></g>
 </svg>`;
 
+// Việc vặt lúc rảnh: r là số ngẫu nhiên 0..1. Trả về [tên trạng thái, số ms].
+// Khuya hay ngáp; đang nằm bẹp (ổ bánh mì, giấu chân) thì không liếm chân/rửa mặt mà chỉ ngáp hoặc ngó quanh.
+function boViecVat(r, khuya, bep) {
+  let v = khuya ? (r < 0.75 ? 'ngap' : r < 0.88 ? 'liem' : 'ngo')
+                : (r < 0.3 ? 'ngap' : r < 0.55 ? 'liem' : r < 0.78 ? 'rua-mat' : 'ngo');
+  if (bep && (v === 'liem' || v === 'rua-mat')) v = 'ngo';
+  return [v, { ngap: 2200, liem: 2600, 'rua-mat': 3200, ngo: 2600 }[v]];
+}
+if (typeof module !== 'undefined') module.exports = { boViecVat };
+
 (function () {
+  if (typeof document === 'undefined') return;
   const face = document.getElementById('face');
   if (!face) return;
   face.innerHTML = MEO_SVG;
@@ -93,7 +104,7 @@ const MEO_SVG = `
   function viecVat() {
     const ban = dangNgu() || face.classList.contains('talking') || svg.classList.contains('cho') || document.hidden;
     const k = khuya();
-    if (!ban && !yenLang()) Math.random() < (k ? 0.8 : 0.5) ? lan('ngap', 2200) : lan('liem', 2600);
+    if (!ban && !yenLang()) lan(...boViecVat(Math.random(), k, svg.classList.contains('bep')));
     setTimeout(viecVat, (k ? 15000 : 25000) + Math.random() * (k ? 15000 : 30000));
   }
   setTimeout(viecVat, 20000);

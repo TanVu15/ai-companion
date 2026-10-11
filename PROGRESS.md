@@ -8,6 +8,7 @@
 ## 2026-10-11 – Giai đoạn 57 (đang làm): chạm tinh tế hơn
 - **Vuốt ngược lông**: chạm/bấm vào hai bên lưng Bơ rồi kéo **lên trên** → lông hai bên dựng đứng, tai cụp ngang, mắt nheo, miệng méo, "Ngược lông rồi á!". Kéo xuống (xuôi) thì vẫn rừ rừ như cũ. Rê chuột không bấm thì không tính. Ảnh `docs/anh/meo-nguoc-long.png`.
 - **Đập tay**: chạm nhanh **hai lần** vào chân trước của Bơ → Bơ giơ chân lên cạnh má, mắt cười, chữ "Bốp!" bật ra, "Đập tay nè!". Chạm một lần thì Bơ chỉ rụt chân. Bơ biết hôm nay đập tay mấy lần. Ảnh `docs/anh/meo-dap-tay.png`.
+- **Việc vặt lúc rảnh** thêm hai kiểu: **rửa mặt** (lấy chân xoa má, nhắm mắt) và **ngó quanh** (đầu và mắt liếc trái rồi phải), xen với ngáp/liếm chân. Đang nằm bẹp thì không rửa mặt. Máy bật giảm chuyển động thì không có. Ảnh `docs/anh/meo-rua-mat-ngo.png`.
 
 ## 2026-10-11 – Giai đoạn 56 xong: bàn phím, "Bơ ơi", dọn code
 - Đồ chơi dùng được bằng **bàn phím**: bật laser/lông vũ rồi bấm phím mũi tên để di chuyển; cuộn len thì mũi tên để hất (lên = tung cao).

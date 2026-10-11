@@ -75,3 +75,18 @@ def test_kieu_long_co_du_bo_phan_va_css():
         assert f'class="{cls}' in JS or f'class="soc {cls}' in JS or f" {cls}" in JS, cls
     for kieu in ["van", "tam_the", "den"]:
         assert f'data-long="{kieu}"' in css and f'data-long="{kieu}"' in html
+
+
+def test_viec_vat_luc_ranh():
+    r = subprocess.run(["node", "-e", """const M = require('./web/meo.js'); const ra = {};
+      for (let i = 0; i < 100; i++) for (const k of [false, true]) for (const b of [false, true]) {
+        const [v, ms] = M.boViecVat(i / 100, k, b); ra[v + (b ? '|bep' : '')] = ms; }
+      console.log(JSON.stringify(ra))"""], cwd=ROOT, capture_output=True, text=True, timeout=30)
+    assert r.returncode == 0, r.stderr
+    import json
+    ra = json.loads(r.stdout)
+    assert set(k for k in ra if "|bep" not in k) == {"ngap", "liem", "rua-mat", "ngo"}
+    assert set(ra) & {"liem|bep", "rua-mat|bep"} == set()  # nằm bẹp giấu chân thì không liếm chân/rửa mặt
+    assert all(1000 < ms < 4000 for ms in ra.values())
+    for cls in ("rua-mat", "ngo"):
+        assert f".meo.{cls}" in CSS, cls
