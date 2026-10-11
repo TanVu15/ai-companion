@@ -387,6 +387,19 @@ def test_len_lan_qua():
         assert c in js.split("const TU_THE_KHAC")[1].split("];")[0]
 
 
+def test_laser_tren_cao_ke_ke():
+    """Chấm laser đứng yên trên cao phía trên đầu Bơ → Bơ ngửa nhìn, miệng run run "ke ke ke"; chấm trước chân/xa thì không."""
+    v = node("""console.log(JSON.stringify([C.boLaserTrenCao(100, 10), C.boLaserTrenCao(20, -5), C.boLaserTrenCao(180, 20),
+      C.boLaserTrenCao(100, 60), C.boLaserTrenCao(100, 190), C.boLaserTrenCao(-60, 0), C.BO_CAU_CHOI.ke_ke.length > 0]))""")
+    assert v == [True, True, True, False, False, False, True]
+    css = (config.ROOT / "web" / "meo.css").read_text(encoding="utf-8")
+    assert ".meo.ke-ke .mieng-mo" in css and "@keyframes meo-ke-ke" in css
+    js = (config.ROOT / "web" / "do_choi.js").read_text(encoding="utf-8")
+    # phải đứng yên mới tính (chấm còn chạy thì đếm lại); tắt laser thì thôi; nghỉ 6 giây giữa hai lần
+    assert "clearTimeout(kkHen);        // chấm còn di chuyển" in js
+    assert "thoiRinhLaser(); thoiKeKe();" in js and "Date.now() - kkCuoi < 6000" in js
+
+
 def test_cho_an_luc_om_len_thi_buong_len():
     """Đang ôm cuộn len mà cho ăn → Bơ buông len ra (không vừa ôm vừa ăn)."""
     choi = (config.ROOT / "web" / "choi.js").read_text(encoding="utf-8")

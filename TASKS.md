@@ -415,7 +415,7 @@
 - [x] Rà soát giai đoạn 77, sửa lỗi tìm được
 
 ## Giai đoạn 78 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
-- [ ] Lông vũ đung đưa trên đầu mà Bơ đang nằm lăn ngửa → Bơ giơ cả bốn chân lên quào quào
+- [x] Chấm laser đứng yên trên cao, phía trên đầu Bơ → Bơ ngửa nhìn, miệng run run "ke ke ke" như mèo thấy chim (đổi từ ý "lăn ngửa quào lông vũ": đang bật lông vũ thì không nhấn giữ cho Bơ lăn được)
 - [ ] Rà soát giai đoạn 78, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)

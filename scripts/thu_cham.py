@@ -72,6 +72,10 @@ def thu(pg, ten, w, h):
     kq.append(("bấm lại nhớ món sữa", co("dinh-sua") and 'sữa' in (pg.get_attribute('#choAn', 'aria-label') or '')))
     pg.evaluate("localStorage.removeItem('bo_mon_an')"); pg.wait_for_timeout(1400)
     pg.click('#doChoi'); pg.wait_for_timeout(150); kq.append(("laser", pg.evaluate("!!document.querySelector('.laser')")))
+    for i in range(8):  # chấm đứng yên trên cao, phía trên đầu → ke ke ke; kéo chấm xuống thì thôi
+        pg.mouse.move(X(60 + i * 5), Y(0)); pg.wait_for_timeout(30)
+    pg.wait_for_timeout(1500); kk = co("ke-ke"); pg.mouse.move(X(170), Y(120)); pg.wait_for_timeout(100)
+    kq.append(("laser đứng yên trên cao → ke ke ke", kk and not co("ke-ke"))); nghi()
     for i in range(10):  # chấm đứng yên trước chân → rình, vồ đè lên, nhấc chân ngó
         pg.mouse.move(X(140 - i * 4), Y(189)); pg.wait_for_timeout(30)
     cho = lambda c, ms: any(co(c) or pg.wait_for_timeout(100) for _ in range(ms // 100))  # noqa: E731  (đợi tới khi có lớp c)

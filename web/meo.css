@@ -547,3 +547,15 @@ header.dang-long-vu { touch-action: none; position: relative; }
   .meo.theo-len .tail { animation: meo-len-giat-duoi .3s ease-in-out infinite alternate; }
 }
 @keyframes meo-len-giat-duoi { from { transform: rotate(4deg); } to { transform: rotate(13deg); } }
+
+/* Ke ke ke (chấm laser đứng yên trên cao): ngửa đầu nhìn lên, tai dỏng, mắt mở to, miệng hé run run, đuôi giật */
+.meo.ke-ke .head { transform: translateY(-5px) rotate(-4deg); }
+.meo.ke-ke .ear-l { transform: rotate(6deg); } .meo.ke-ke .ear-r { transform: rotate(-6deg); }
+.meo.ke-ke :is(.mat-cuoi, .mat-nham) { display: none !important; } .meo.ke-ke .mat-mo { display: inline !important; transform: scale(1.15); }
+.meo.ke-ke :is(.mieng-w, .mieng-buon) { display: none !important; } .meo.ke-ke .mieng-mo { display: inline !important; transform: scale(.55, .45); }
+.meo.ke-ke .tail { transform: rotate(10deg); }
+@media (prefers-reduced-motion: no-preference) {
+  .meo.ke-ke .mieng-mo { animation: meo-ke-ke .09s linear infinite alternate; }
+  .meo.ke-ke .tail { animation: meo-len-giat-duoi .25s ease-in-out infinite alternate; }
+}
+@keyframes meo-ke-ke { from { transform: scale(.55, .3); } to { transform: scale(.6, .6); } }

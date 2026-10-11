@@ -42,6 +42,12 @@ function boLaserTruocMat(x, y) {
   return y >= 176 && y <= 250 && Math.abs(x - 100) <= 80;
 }
 
+// Chấm laser đứng yên trên cao, phía trên đầu Bơ (tọa độ khung vẽ 200×192; chạm hẳn tai/đầu thì chỗ gọi tự loại)?
+// Đứng yên vậy một lúc → Bơ ngửa nhìn, miệng run run "ke ke ke" (như mèo thấy chim ngoài cửa sổ mà với không tới)
+function boLaserTrenCao(x, y) {
+  return y < 28 && Math.abs(x - 100) <= 130;
+}
+
 // Lông vũ lơ lửng ngang tầm bên hông Bơ (không trên đầu, không sát đất) → Bơ nghiêng người giơ một chân quơ về bên đó.
 // Trả về 'trai' / 'phai' (bên trái/phải của hình) hoặc null
 function boLongVuBenHong(x, y) {
@@ -64,7 +70,7 @@ function boLenLanQua(x, y, vx) {
   return Math.max(-1, Math.min(1, (x - 100) / 120));
 }
 
-if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boLongVuRinh, boLongVuBenHong, boLenGanMeo, boLaserTruocMat, boLenLanQua };
+if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boLongVuRinh, boLongVuBenHong, boLenGanMeo, boLaserTruocMat, boLenLanQua, boLaserTrenCao };
 
 // ---- Phần giao diện ----
 (function () {
@@ -107,6 +113,23 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
       }, 1200);
     }, 900);
   }
+  // ---- Ke ke ke: chấm đỏ đứng yên trên cao 1,2 giây → Bơ ngửa nhìn, miệng run run ~1,8 giây (nghỉ 6 giây) ----
+  let kkHen = null, kkTat = null, kkCuoi = 0;
+  function thoiKeKe() {
+    clearTimeout(kkHen); kkHen = null;
+    if (kkTat) { clearTimeout(kkTat); kkTat = null; svg.classList.remove('ke-ke'); }
+  }
+  function henKeKe() {
+    if (kkTat) return;          // đang ke ke: chấm còn trên cao thì cứ ke ke tiếp
+    clearTimeout(kkHen);        // chấm còn di chuyển → đếm lại từ đầu (phải đứng yên mới tính)
+    kkHen = setTimeout(() => {
+      kkHen = null;
+      if (!ranhRinhLaser() || Date.now() - kkCuoi < 6000 || svg.classList.contains('rinh')) return;
+      kkCuoi = Date.now(); conChoi();
+      svg.classList.add('ke-ke'); noi('ke_ke', true); keu('ngan');
+      kkTat = setTimeout(() => { kkTat = null; svg.classList.remove('ke-ke'); }, 1800);
+    }, 1200);
+  }
   function batLaser(bat) {
     laserBat = bat;
     nutLaser.setAttribute('aria-pressed', bat);
@@ -122,7 +145,7 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
     } else {
       if (cham_) cham_.remove(); cham_ = null;
       if (nhin) nhin.removeAttribute('transform');
-      clearTimeout(laserTat); thoiRinhLaser();
+      clearTimeout(laserTat); thoiRinhLaser(); thoiKeKe();
       clearTimeout(lzNgo); lzNgo = null;
     }
   }
@@ -140,6 +163,8 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
       nhin.setAttribute('transform', `translate(${(dx / dai * 4).toFixed(1)} ${(dy / dai * 3).toFixed(1)})`);
       // chấm đỏ dừng trước chân Bơ → hẹn rình; chấm chạy đi chỗ khác → thôi rình
       if (boLaserTruocMat(p.x, p.y) && !boVungCham(p.x, p.y)) { if (!lzRinh) henRinhLaser(); } else thoiRinhLaser();
+      // chấm đỏ đứng yên trên cao, phía trên đầu → ke ke ke; chấm đi chỗ khác → thôi
+      if (boLaserTrenCao(p.x, p.y) && !boVungCham(p.x, p.y)) henKeKe(); else thoiKeKe();
       // chấm đỏ chạy vào người mèo → vồ (nghỉ 1,2 giây giữa hai lần)
       if (boVungCham(p.x, p.y) && Date.now() - voCuoi > 1200) {
         voCuoi = Date.now(); giu('vo', 600); dem('laser'); noi('laser'); daBat();
@@ -201,7 +226,7 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
   // Bơ đang làm tư thế khác (được vuốt, gãi cằm, boop, vồ, ăn, bế...) thì khỏi quay đầu theo len
   const TU_THE_KHAC = ['be', 'em', 'an', 'lan', 'vo', 'om-len', 'da-len', 'rinh', 'vo-rinh', 'ngo-chan', 'vuot', 'nguoc-long', 'giat',
     'giat-duoi', 'ngui', 'co-ma', 'nghieng', 'gai-cam', 'hong', 'khoe', 'boop', 'nhoi', 'chong-mat', 'roi', 'dap-tay', 'ngap',
-    'hat-xi', 'nung-ma-trai', 'nung-ma-phai', 'liem-mep', 'dinh-sua', 'chop-cham'];
+    'hat-xi', 'nung-ma-trai', 'nung-ma-phai', 'liem-mep', 'dinh-sua', 'chop-cham', 'ke-ke'];
   function thoiTheoLen() { clearTimeout(theoLenTat); theoLenTat = null; svg.classList.remove('theo-len'); }
   function theoLen(p) {
     // đang vồ, ôm, ăn, bế, ngủ, dỗi... → thôi liền cho khỏi lẫn tư thế
