@@ -537,3 +537,13 @@ header.dang-long-vu { touch-action: none; position: relative; }
   .meo.khoe { animation: meo-khoe .55s ease-out; }
 }
 @keyframes meo-khoe { 40% { transform: translateY(-5px) scale(1.03); } }
+
+/* Len lăn ngang qua trước mặt: đầu quay theo len (--theo-len: -1 trái … 1 phải), tai dỏng, mắt mở to, đuôi giật giật háo hức */
+.meo.theo-len .head { transform: translateX(calc(var(--theo-len, 0) * 3px)) rotate(calc(var(--theo-len, 0) * 15deg)) translateY(2px); transition: transform .18s ease-out; }
+.meo.theo-len .ear-l { transform: rotate(5deg); } .meo.theo-len .ear-r { transform: rotate(-5deg); }
+.meo.theo-len :is(.mat-cuoi, .mat-nham) { display: none !important; } .meo.theo-len .mat-mo { display: inline !important; transform: scale(1.12); }
+.meo.theo-len .tail { transform: rotate(8deg); }
+@media (prefers-reduced-motion: no-preference) {
+  .meo.theo-len .tail { animation: meo-len-giat-duoi .3s ease-in-out infinite alternate; }
+}
+@keyframes meo-len-giat-duoi { from { transform: rotate(4deg); } to { transform: rotate(13deg); } }

@@ -57,7 +57,14 @@ function boLenGanMeo(x, y) {
   return y >= 150 && y <= 215 && Math.abs(x - 100) <= 115;
 }
 
-if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boLongVuRinh, boLongVuBenHong, boLenGanMeo, boLaserTruocMat };
+// Cuộn len đang lăn ngang qua trước mặt Bơ (tọa độ khung vẽ 200×192; vx: tốc độ ngang, px/giây)? → Bơ quay đầu nhìn theo,
+// đuôi giật giật háo hức. Trả về độ quay đầu -1 (len bên trái) … 1 (bên phải), hoặc null (len đứng yên/chậm, trên cao, xa quá)
+function boLenLanQua(x, y, vx) {
+  if (Math.abs(vx || 0) < 60 || y < 120 || y > 260 || Math.abs(x - 100) > 280) return null;
+  return Math.max(-1, Math.min(1, (x - 100) / 120));
+}
+
+if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boLongVuRinh, boLongVuBenHong, boLenGanMeo, boLaserTruocMat, boLenLanQua };
 
 // ---- Phần giao diện ----
 (function () {
@@ -183,10 +190,28 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
     if (nhin && face.dataset.e !== 'ngu') {
       const [tx, ty] = boHuongNhin(p.x - 100, p.y - 74); nhin.setAttribute('transform', `translate(${tx} ${ty})`);
     }
+    theoLen(p);
     if (lenKeo || !boVungCham(p.x, p.y) || Date.now() - voLen < 900 || dangDoi() || face.dataset.e === 'ngu') return;
-    voLen = Date.now(); giu('vo', 600); dem('len'); noi('len'); conChoi(); daBat();
+    voLen = Date.now(); thoiTheoLen(); giu('vo', 600); dem('len'); noi('len'); conChoi(); daBat();
     const huong = p.x < 100 ? -1 : 1;
     lenS = { ...lenS, vx: huong * (260 + Math.random() * 200), vy: -380 - Math.random() * 200 };
+  }
+  // Len lăn ngang qua trước mặt (không chạm) → đầu Bơ quay theo len, đuôi giật giật; len dừng/đi xa 0,5 giây thì thôi
+  let theoLenTat = null;
+  function thoiTheoLen() { clearTimeout(theoLenTat); theoLenTat = null; svg.classList.remove('theo-len'); }
+  function theoLen(p) {
+    // đang vồ, ôm, ăn, bế, ngủ, dỗi... → thôi liền cho khỏi lẫn tư thế
+    if (dangDoi() || face.dataset.e === 'ngu' || ['be', 'an', 'lan', 'vo', 'om-len', 'da-len', 'rinh'].some(c => svg.classList.contains(c))) {
+      thoiTheoLen(); return;
+    }
+    const h = lenKeo || lenS.yen || boVungCham(p.x, p.y) ? null : boLenLanQua(p.x, p.y, lenS.vx);
+    if (h === null) {  // len dừng, bay cao, đi xa: nhìn thêm chút rồi thôi
+      if (svg.classList.contains('theo-len') && !theoLenTat) theoLenTat = setTimeout(thoiTheoLen, 500);
+      return;
+    }
+    clearTimeout(theoLenTat); theoLenTat = null;
+    svg.style.setProperty('--theo-len', h.toFixed(2));
+    svg.classList.add('theo-len');
   }
   // ---- Ôm len: len nằm yên sát bên Bơ 1,5 giây → Bơ kéo len vào lòng, ôm cắn cắn ~2,2 giây rồi đá văng ra (nghỉ 8 giây) ----
   function lenTrenMeo() {
@@ -213,7 +238,7 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
     len.classList.add('dang-om');
     lenS = { ...lenS, x: q.x - r.left, y: q.y - r.top, vx: 0, vy: 0, yen: true };
     veLen();
-    svg.classList.add('om-len'); conChoi();
+    thoiTheoLen(); svg.classList.add('om-len'); conChoi();
     noi('om_len', true, dem('om_len').om_len === 1);  // lần ôm đầu tiên trong ngày: đọc to (khi bật Giọng nói)
     if (nhin) nhin.setAttribute('transform', 'translate(0 3)');
     lenOm = setTimeout(daLen, 2200);
@@ -279,7 +304,7 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
       len.addEventListener('pointerup', tha); len.addEventListener('pointercancel', tha);
     } else {
       cancelAnimationFrame(lenVong); lenVong = 0; clearTimeout(lenTat);
-      len.remove(); len = null; lenKeo = null;
+      len.remove(); len = null; lenKeo = null; thoiTheoLen();
       if (nhin) nhin.removeAttribute('transform');
     }
   }

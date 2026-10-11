@@ -371,6 +371,19 @@ def test_len_gan_meo():
     assert "noi('om_len', true, dem('om_len').om_len === 1);" in js  # lần ôm đầu tiên trong ngày đọc to
 
 
+def test_len_lan_qua():
+    """Cuộn len lăn ngang qua trước mặt Bơ → đầu quay theo (-1 trái … 1 phải); len đứng yên, chậm, trên cao, xa quá thì thôi."""
+    v = node("""console.log(JSON.stringify([C.boLenLanQua(-20, 180, 300), C.boLenLanQua(220, 180, -300), C.boLenLanQua(100, 200, 200),
+      C.boLenLanQua(40, 180, 0), C.boLenLanQua(40, 180, 30), C.boLenLanQua(40, 60, 300), C.boLenLanQua(-250, 180, 300)]))""")
+    assert v == [-1, 1, 0, None, None, None, None]
+    css = (config.ROOT / "web" / "meo.css").read_text(encoding="utf-8")
+    assert ".meo.theo-len .head" in css and "var(--theo-len" in css and ".meo.theo-len .tail { animation" in css
+    js = (config.ROOT / "web" / "do_choi.js").read_text(encoding="utf-8")
+    # vồ len thì thôi quay đầu liền (khỏi lẫn tư thế); cất len, ôm len cũng thôi
+    assert "thoiTheoLen(); giu('vo', 600)" in js and "thoiTheoLen(); svg.classList.add('om-len')" in js
+    assert "len.remove(); len = null; lenKeo = null; thoiTheoLen();" in js
+
+
 def test_cho_an_luc_om_len_thi_buong_len():
     """Đang ôm cuộn len mà cho ăn → Bơ buông len ra (không vừa ôm vừa ăn)."""
     choi = (config.ROOT / "web" / "choi.js").read_text(encoding="utf-8")

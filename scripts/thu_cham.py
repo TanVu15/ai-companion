@@ -93,6 +93,18 @@ def thu(pg, ten, w, h):
     pg.mouse.up(); pg.mouse.move(5, 5)
     om = cho("om-len", 4000); da = cho("da-len", 3500)
     kq.append(("len nằm yên sát bên → ôm rồi đá ra", om and da and not co("om-len")))
+    pg.wait_for_timeout(1500)  # lăn len ngang sàn qua trước mặt Bơ → đầu quay theo, đuôi giật
+    kh = pg.evaluate("(()=>{const b=document.querySelector('.len').parentElement.getBoundingClientRect();return [b.left,b.top,b.width,b.height]})()")
+    l = pg.locator('.len').bounding_box(); x0, fy = kh[0] + 18, kh[1] + kh[3] - 16
+    pg.mouse.move(l['x'] + 15, l['y'] + 15); pg.mouse.down()
+    for i in range(1, 9):
+        pg.mouse.move(l['x'] + 15 + (x0 - l['x'] - 15) * i / 8, l['y'] + 15 + (fy - l['y'] - 15) * i / 8); pg.wait_for_timeout(30)
+    for _ in range(10):
+        pg.mouse.move(x0, fy); pg.wait_for_timeout(30)
+    for i in range(1, 5):
+        pg.mouse.move(x0 + 10 * i, fy); pg.wait_for_timeout(16)
+    pg.mouse.up(); pg.mouse.move(5, 5)
+    kq.append(("len lăn qua trước mặt → quay đầu nhìn theo", cho("theo-len", 600)))
     pg.click('#longVu'); pg.wait_for_timeout(300); kq.append(("lông vũ", pg.evaluate("!!document.querySelector('.long-vu')")))
     for i in range(8):
         pg.mouse.move(X(100), Y(120 + i * 8) + 10); pg.wait_for_timeout(30)

@@ -411,7 +411,7 @@
 - [x] Rà soát giai đoạn 76, sửa lỗi tìm được
 
 ## Giai đoạn 77 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
-- [ ] Cuộn len lăn ngang qua trước mặt Bơ (không chạm) → đầu và mắt Bơ quay theo, đuôi giật giật háo hức
+- [x] Cuộn len lăn ngang qua trước mặt Bơ (không chạm) → đầu và mắt Bơ quay theo, đuôi giật giật háo hức
 - [ ] Rà soát giai đoạn 77, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
