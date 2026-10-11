@@ -527,7 +527,32 @@ class Brain:
             self.memory.add_reminders([{"luc": luc, "viec": viec}], now=now)
         return luc
 
+    def _quick(self, user_text: str, now: datetime | None = None) -> Reply | None:
+        """Câu hỏi ngắn trả lời được bằng câu soạn sẵn → không gọi API (vẫn lưu vào lịch sử)."""
+        if not config.TRA_LOI_NHANH:
+            return None
+        from .tra_loi_nhanh import nhan_dien, tra_loi
+
+        loai = nhan_dien(user_text)
+        if not loai:
+            return None
+        try:
+            noi, cam_xuc = tra_loi(loai, now or datetime.now(), self.memory)
+        except Exception as e:  # lỗi thì để AI trả lời như thường
+            log.warning("Trả lời nhanh lỗi: %s", type(e).__name__)
+            return None
+        if not noi:
+            return None
+        reply = Reply(noi=noi, cam_xuc=cam_xuc, hanh_dong="gat_dau")
+        reply.user_msg_id = self.memory.add_message("user", user_text)
+        reply.msg_id = self.memory.add_message("assistant", noi, cam_xuc)
+        log.info("Trả lời nhanh (%s), không gọi API", loai)
+        return reply
+
     def _chat(self, user_text: str) -> Reply:
+        quick = self._quick(user_text)  # miễn phí nên vẫn trả lời khi đã hết lượt / hết ngân sách
+        if quick:
+            return quick
         if self.memory.replies_today() >= config.DAILY_LIMIT:
             return Reply(noi="Hôm nay mình nói nhiều quá rồi, mai nói tiếp nha!", cam_xuc="thuong")
         if self.over_budget():

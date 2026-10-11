@@ -202,6 +202,11 @@
 - [x] Bộ chấm điểm thêm tình huống "nhờ theo dõi thói quen" (26 tình huống)
 - [x] Chỉnh giờ nhắc thói quen trong "?" → Cài đặt (không cần sửa .env)
 
+## Giai đoạn 39 – Trả lời nhanh không tốn API (chỉ phần mềm, Claude tự thêm)
+- [x] "Mấy giờ rồi?", "hôm nay ngày mấy (âm)?", "còn mấy ngày Tết?", "mình còn việc gì cần làm?" → Bơ tự trả lời (miễn phí, cả khi hết ngân sách)
+- [ ] Mục "Bơ làm được gì?" và SU_CO.md nhắc tới trả lời nhanh; nút "?" → Tình trạng đếm số câu trả lời nhanh tháng này
+- [ ] Rà soát code lần 19, sửa lỗi tìm được
+
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
 - Phần cứng ESP32: micro, loa, màn hình mặt, servo

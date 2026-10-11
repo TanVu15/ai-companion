@@ -684,3 +684,8 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 **Tân cần thử (giai đoạn 38):** chạy `python -m app.thu_tinh_cach` với API key thật, gửi điểm + câu trả lời lạ vào `FEEDBACK.md`.
 - Giờ nhắc thói quen chỉnh được trong nút "?" → **Cài đặt** (gõ "21h" hay "21:00" đều được, để trống = tắt). 244 test qua hết.
 
+## 2026-10-11 – Giai đoạn 39: trả lời nhanh không tốn API
+- Hỏi ngắn **"mấy giờ rồi?", "hôm nay thứ mấy / ngày mấy âm?", "còn mấy ngày nữa Tết?", "mình còn việc gì cần làm?"** → Bơ trả lời ngay bằng câu soạn sẵn, **không gọi API** (nhanh hơn, không tốn tiền, vẫn trả lời được khi hết ngân sách). Gõ không dấu cũng được.
+- Chỉ áp dụng khi CẢ tin nhắn là câu hỏi đó; câu dài hơn ("mấy giờ rồi mà mình chưa ngủ được") vẫn để AI trả lời tự nhiên. Tắt bằng `TRA_LOI_NHANH=0` trong `.env`.
+- 271 test qua hết.
+
