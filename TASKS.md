@@ -352,7 +352,7 @@
 - [x] Rà soát giai đoạn 63, sửa lỗi tìm được
 
 ## Giai đoạn 64 – Bơ để ý tin nhắn & rà soát (Claude tự thêm, trong hướng mèo/tương tác)
-- [ ] Gửi tin có "cá"/🐟 → Bơ liếm mép; có ❤/"thương"/"yêu" → tim bay quanh Bơ (phản ứng ngay lúc gửi, trước khi bộ não trả lời; không gọi API thêm; hàm nhận biết có test)
+- [x] Gửi tin có "cá"/🐟 → Bơ liếm mép; có ❤/"thương"/"yêu" → tim bay quanh Bơ (phản ứng ngay lúc gửi, trước khi bộ não trả lời; không gọi API thêm; hàm nhận biết có test)
 - [ ] Rà soát toàn bộ web/choi.js, do_choi.js, meo.js: bộ hẹn giờ chồng nhau, trạng thái kẹt, chạy lúc tab ẩn; sửa lỗi tìm được
 - [ ] Rà soát giai đoạn 64, sửa lỗi tìm được
 

@@ -110,6 +110,13 @@ function boGoiY(daThu, ngayCuoi, homNay, coLac, rnd = Math.random) {
   const con = Object.keys(BO_GOI_Y).filter(k => !(daThu || []).includes(k) && (coLac || k !== 'chong_mat'));
   return con.length ? con[Math.floor(rnd() * con.length) % con.length] : null;
 }
+// Tin nhắn Tân vừa gửi có nhắc tới cá → 'ca' (Bơ liếm mép); có tim / thương / yêu → 'tim' (tim bay); không thì null
+function boPhanUngTin(text) {
+  const s = String(text || '');
+  if (/[🐟🐠🐡🍣]/u.test(s) || /(^|[^\p{L}])cá($|[^\p{L}])/iu.test(s)) return 'ca';
+  if (/[❤♥💕💖💗😍🥰😘]/u.test(s) || /(^|[^\p{L}])(thương|yêu)(?!\s*cầu)($|[^\p{L}])/iu.test(s)) return 'tim';
+  return null;
+}
 // Hướng vuốt trên lưng (dx, dy: px từ chỗ bắt đầu vuốt tới giờ; y hướng xuống). Lông mèo mọc xuôi xuống,
 // nên vuốt hẳn lên trên (dọc nhiều hơn ngang) là 'nguoc'; còn lại là 'xuoi'.
 function boHuongVuot(dx, dy) {
@@ -125,7 +132,7 @@ function boLucMo(lanTruoc, bayGio, gio) {
   return null;
 }
 
-if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boChamChan, boThongSoMeo, boGanMui, boDoToRuRu, boDoGiat, boLac, boGoiY, BO_GOI_Y, boLucMo, BO_CAU_CHOI, BO_DOC_TO };
+if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boChamChan, boThongSoMeo, boGanMui, boDoToRuRu, boDoGiat, boLac, boGoiY, BO_GOI_Y, boPhanUngTin, boLucMo, BO_CAU_CHOI, BO_DOC_TO };
 
 // ---- Phần giao diện ----
 (function () {
@@ -446,6 +453,20 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
   // ---- Bơ hóng chuyện: đang gõ tin thì nhìn xuống khung chat; ngừng gõ 2 giây thì thôi ----
   const oChat = document.getElementById('input');
   if (oChat && oChat.form) oChat.form.addEventListener('submit', () => svg.classList.remove('hong'));
+  // Bơ để ý tin vừa gửi: nói tới cá thì liếm mép, nói thương/yêu thì tim bay (nghe lúc "bắt" — trước khi app.js xóa ô chữ)
+  document.addEventListener('submit', ev => {
+    if (!oChat || ev.target !== oChat.form) return;
+    const kieu = boPhanUngTin(oChat.value);
+    if (!kieu || dangDoi()) return;
+    setTimeout(() => {
+      if (kieu === 'ca') { giu('liem-mep', 1400); return; }
+      const r = face.getBoundingClientRect(), k = khung.getBoundingClientRect();
+      [[0.3, 0.25], [0.7, 0.2], [0.5, 0.05]].forEach(([fx, fy], i) => setTimeout(() => {
+        timCuoi = 0; tim(r.left - k.left + r.width * fx, r.top - k.top + r.height * fy);
+      }, i * 380));
+      giu('vuot', 900);
+    }, 150);
+  }, true);
   if (oChat) oChat.addEventListener('input', () => {
     if (face.dataset.e === 'ngu' || !oChat.value.trim()) { svg.classList.remove('hong'); return; }
     giu('hong', 2000);

@@ -5,6 +5,9 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-11 – Giai đoạn 64 (đang làm): Bơ để ý tin nhắn
+- Gửi tin có **"cá"** hoặc 🐟 → Bơ liếm mép ngay; có **"thương"/"yêu"**/❤ → tim bay quanh Bơ, Bơ nhắm mắt sướng (trước cả khi Bơ trả lời, không tốn API). "các", "cám ơn", "yêu cầu" không bị nhận nhầm.
+
 ## 2026-10-11 – Giai đoạn 63 xong: dễ khám phá
 - Hộp "Bơ làm được gì?" ghi đủ các trò chạm & đồ chơi mới, phím tắt. Ảnh `docs/anh/hop-choi-voi-bo.png`.
 - **Bơ gợi ý trò chưa thử**: mở web khoảng 40 giây mà Bơ đang rảnh (không gõ, không chơi, không mở hộp nào) → Bơ nghiêng đầu, bong bóng gợi ý một trò Tân chưa từng thử ("Psst... chạm nhanh hai lần vào chân Bơ thử xem~"). Tối đa 1 lần/ngày, chỉ hiện chữ; thử hết các trò rồi thì Bơ thôi gợi ý. Ảnh `docs/anh/bo-goi-y.png`.
