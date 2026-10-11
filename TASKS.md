@@ -211,7 +211,7 @@
 - [x] Nút "Thói quen": 30 ô vuông cho 30 ngày qua, bấm ô để tích bù ngày quên; "N/30 ngày · chuỗi dài nhất"
 - [x] Kể "hôm qua mình có đọc sách" → Bơ tích bù hôm qua (thoi_quen_hom_qua); bộ chấm điểm thêm tình huống (27)
 - [x] Hỏi nhanh "thói quen hôm nay?" → Bơ trả lời đã/chưa làm gì (miễn phí)
-- [ ] Rà soát code lần 20, sửa lỗi tìm được
+- [x] Rà soát code lần 20, sửa lỗi tìm được
 
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định

@@ -39,6 +39,7 @@ def test_nhan_dien(text, loai):
     "mấy giờ?", "mấy giờ đi?", "mấy giờ vậy bạn", "mấy giờ nhé", "mấy giờ ạ",  # hỏi giờ hẹn, không phải giờ hiện tại
     "tui việc gì phải làm vậy", "việc gì phải làm thế", "em việc gì phải làm", "mình gì phải làm", "mình nào chưa xong",
     "hôm nay ngày gì vậy", "thói quen xấu của mình là thức khuya", "theo dõi giúp mình thói quen đọc sách",
+    "Thói quen là gì?", "bơ ơi thói quen của em là gì vậy",
 ])
 def test_khong_nhan_nham(text):
     assert nhan_dien(text) == ""

@@ -547,6 +547,7 @@ async function loadHabits() {
     if (Array.isArray(x.ngay_30)) {  // 30 ô: cũ → hôm nay; bấm để tích bù / bỏ tích ngày đó
       const grid = document.createElement('div'), note = document.createElement('div');
       grid.className = 'o30'; note.className = 'o30-ghi';
+      grid.setAttribute('role', 'group'); grid.setAttribute('aria-label', '30 ngày qua: ' + x.ten);
       const [y0, m0, d0] = (x.tu_ngay || '').split('-').map(Number);  // ngày theo máy chủ, không theo đồng hồ điện thoại
       const start = y0 ? new Date(y0, m0 - 1, d0) : new Date(new Date().setDate(new Date().getDate() - 29));
       x.ngay_30.forEach((co, i) => {
@@ -555,7 +556,14 @@ async function loadHabits() {
         const nhan = d.getDate() + '/' + (d.getMonth() + 1) + (co ? ': đã làm' : ': chưa làm');
         const o = document.createElement('button');
         o.type = 'button'; o.className = (co ? 'co' : '') + (i === 29 ? ' nay' : '');
-        o.title = nhan; o.setAttribute('aria-label', x.ten + ', ngày ' + nhan);
+        o.title = nhan; o.setAttribute('aria-label', 'Ngày ' + d.getDate() + '/' + (d.getMonth() + 1));
+        o.setAttribute('aria-pressed', co ? 'true' : 'false');
+        if (i < 29) o.tabIndex = -1;  // Tab chỉ dừng ở ô hôm nay; mũi tên trái/phải để đi qua các ngày
+        o.onkeydown = (ev) => {
+          const k = ev.key === 'ArrowLeft' ? -1 : ev.key === 'ArrowRight' ? 1 : 0;
+          const next = k && grid.children[i + k];
+          if (next) { ev.preventDefault(); next.focus(); }
+        };
         o.onclick = async () => {
           habitErr.hidden = true;
           try {
@@ -572,6 +580,7 @@ async function loadHabits() {
     habitsEl.appendChild(li);
   });
 }
+window.addEventListener('focus', () => { if (habitDlg.open) loadHabits(); });  // để qua nửa đêm ô "hôm nay" không bị lệch
 document.getElementById('openHabit').onclick = () => { habitErr.hidden = true; habitDlg.showModal(); loadHabits(); };
 document.getElementById('closeHabit').onclick = () => habitDlg.close();
 document.getElementById('addHabitForm').addEventListener('submit', async (ev) => {

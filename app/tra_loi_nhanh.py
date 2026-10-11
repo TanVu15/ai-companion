@@ -53,7 +53,7 @@ _MAU = {
         r"(?:danh sach\s+)?viec can lam(?:\s+(?:hom nay|cua\s+(?:minh|to|tui|toi|em)|(?:minh|to|tui|toi|em)))?(?:\s+(?:co gi|la gi|gom gi|con gi))?",
     ],
     "thoi_quen": [
-        r"(?:(?:danh sach|cac)\s+)?thoi quen(?:\s+(?:hom nay|cua\s+(?:minh|to|tui|toi|em)|(?:minh|to|tui|toi|em)))?(?:\s+(?:sao roi|the nao|co gi|la gi|toi dau roi))?",
+        r"(?:(?:danh sach|cac)\s+)?thoi quen(?:\s+(?:hom nay|cua\s+(?:minh|to|tui|toi|em)|(?:minh|to|tui|toi|em)))?(?:\s+(?:sao roi|the nao|co gi|toi dau roi))?",
         r"(?:hom nay\s+)?(?:(?:minh|to|tui|toi|em)\s+)?(?:con|co)\s+thoi quen\s+(?:nao|gi)\s+(?:chua lam|chua)(?:\s+(?:khong|ko|k|hom nay))?",
     ],
 }

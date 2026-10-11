@@ -901,14 +901,15 @@ class Memory:
         """[{"id", "ten", "hom_nay": đã làm hôm nay?, "chuoi": chuỗi ngày liền, "tuan": số ngày làm trong 7 ngày}]."""
         today = today or date.today()
         out = []
-        for i, c in self.conn.execute("SELECT id, content FROM habits ORDER BY id").fetchall():
+        for i, c, tao in self.conn.execute("SELECT id, content, created_at FROM habits ORDER BY id").fetchall():
             days = {d for (d,) in self.conn.execute(
                 "SELECT day FROM habit_log WHERE habit_id = ? AND day >= ?", (i, (today - timedelta(days=400)).isoformat()))}
             week = sum((today - timedelta(days=k)).isoformat() in days for k in range(7))
             ngay_30 = [(today - timedelta(days=k)).isoformat() in days for k in range(29, -1, -1)]  # cũ → hôm nay
             out.append({"id": i, "ten": c, "hom_nay": today.isoformat() in days,
                         "chuoi": self._habit_streak(days, today), "tuan": week,
-                        "ngay_30": ngay_30, "tu_ngay": (today - timedelta(days=29)).isoformat(), "thang": sum(ngay_30), "dai_nhat": self._habit_best(days)})
+                        "ngay_30": ngay_30, "tu_ngay": (today - timedelta(days=29)).isoformat(), "thang": sum(ngay_30), "dai_nhat": self._habit_best(days),
+                        "tao_ngay": str(tao or "")[:10]})
         return out
 
     @staticmethod
@@ -916,7 +917,10 @@ class Memory:
         """Chuỗi ngày liền dài nhất từng có (trong dữ liệu đã đọc)."""
         best = 0
         for d in days:
-            day = date.fromisoformat(d)
+            try:
+                day = date.fromisoformat(d)
+            except (TypeError, ValueError):  # dòng hỏng (bản sao lưu bị sửa tay) → bỏ qua, đừng làm hỏng trò chuyện
+                continue
             if (day - timedelta(days=1)).isoformat() in days:
                 continue  # không phải ngày đầu chuỗi
             n = 0

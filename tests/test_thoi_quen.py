@@ -175,7 +175,8 @@ def test_30_ngay_va_tich_bu(tmp_path):
     assert x["ngay_30"][-2] and not x["hom_nay"] and x["chuoi"] == 1
     assert c.put(f"/api/thoi-quen/{hid}", json={"xong": False, "ngay": hom_qua}).status_code == 200
     assert not c.get("/api/thoi-quen").json()[0]["ngay_30"][-2]
-    xa = (_d.today() - timedelta(days=30)).isoformat()
+    assert c.put(f"/api/thoi-quen/{hid}", json={"xong": True, "ngay": (_d.today() - timedelta(days=30)).isoformat()}).status_code == 200
+    xa = (_d.today() - timedelta(days=31)).isoformat()
     mai = (_d.today() + timedelta(days=1)).isoformat()
     for bad in (xa, mai, "hôm qua"):
         assert c.put(f"/api/thoi-quen/{hid}", json={"xong": True, "ngay": bad}).status_code == 400
@@ -183,7 +184,12 @@ def test_30_ngay_va_tich_bu(tmp_path):
 
 def test_tich_bu_hom_qua_qua_chat(memory):
     memory.add_habits(["Đọc sách"])
-    client = FakeClient([reply(thoi_quen_hom_qua=["Đọc sách"]), reply()])
+    client = FakeClient([reply(), reply(thoi_quen_hom_qua=["Đọc sách"]), reply()])
+    brain = Brain(memory, client=client)
+    brain.chat("chào")  # thói quen mới tạo hôm nay: đừng nói "hôm qua chưa làm"
+    assert "- Đọc sách (hôm nay chưa làm; chuỗi 0" in client.calls.pop(0)["system"]
+    memory.conn.execute("UPDATE habits SET created_at = datetime('now', 'localtime', '-3 day')")
+    memory.conn.commit()
     brain = Brain(memory, client=client)
     brain.chat("hôm qua mình có đọc sách mà quên báo")
     assert "- Đọc sách (hôm nay chưa làm, hôm qua chưa làm;" in client.calls[0]["system"]
@@ -192,3 +198,13 @@ def test_tich_bu_hom_qua_qua_chat(memory):
     brain.chat("ok")
     assert "- Đọc sách (hôm nay chưa làm; chuỗi 1 ngày" in client.calls[1]["system"]
     assert parse_reply(reply(thoi_quen_hom_qua="x")).thoi_quen_hom_qua == []
+
+
+def test_ngay_hong_trong_sao_luu_khong_lam_hong(memory):
+    memory.add_habits(["Đọc sách"])
+    (h,) = memory.habits()
+    memory.conn.execute("INSERT INTO habit_log (habit_id, day) VALUES (?, '2026-10-1')", (h["id"],))
+    memory.conn.execute("INSERT INTO habit_log (habit_id, day) VALUES (?, 'abc')", (h["id"],))
+    memory.conn.commit()
+    (h,) = memory.habits()
+    assert h["dai_nhat"] == 0 and h["thang"] == 0

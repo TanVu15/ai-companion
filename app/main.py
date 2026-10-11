@@ -655,7 +655,7 @@ def habit_done(habit_id: int, body: HabitDone):
             day = date.fromisoformat(body.ngay)
         except ValueError:
             raise HTTPException(400, "Ngày không đúng dạng")
-        if not 0 <= (date.today() - day).days < 30:
+        if not 0 <= (date.today() - day).days <= 30:  # 30: web mở từ hôm qua, qua nửa đêm ô cũ nhất vẫn bấm được
             raise HTTPException(400, "Chỉ sửa được trong 30 ngày gần đây")
     brain = get_brain()
     with brain._lock:

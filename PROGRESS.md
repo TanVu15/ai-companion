@@ -706,3 +706,12 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - Bộ chấm điểm `python -m app.thu_tinh_cach`: thêm tình huống "kể bù thói quen hôm qua" (27 tình huống); khi chấm thì tắt trả lời nhanh để chấm đúng câu của AI. 295 test qua hết.
 - Hỏi nhanh **"thói quen hôm nay?"** / "mình còn thói quen nào chưa làm?" → Bơ trả lời ngay (miễn phí): đã xong gì, còn gì, chuỗi đang giữ. 301 test qua hết.
 
+## 2026-10-11 – Giai đoạn 40 xong: rà soát lần 20
+- Sửa lỗi: bản sao lưu bị sửa tay có ngày sai dạng ("2026-10-1") làm Bơ không trả lời được nữa → giờ bỏ qua dòng hỏng.
+- Thói quen mới thêm hôm nay không bị Bơ coi là "hôm qua chưa làm".
+- "Thói quen là gì?" để AI trả lời (không bật danh sách thói quen).
+- Web mở qua nửa đêm: ô ngày tự cập nhật khi quay lại trang; ô cũ nhất vẫn bấm được. Ô ngày dùng được bằng bàn phím (Tab tới ô hôm nay, mũi tên trái/phải) và trình đọc màn hình.
+- 304 test qua hết.
+
+**Tân cần thử (giai đoạn 40):** nút "Thói quen" → bấm một ô ngày hôm qua để tích bù; nhắn "hôm qua mình có đọc sách mà quên báo"; hỏi "thói quen hôm nay?".
+

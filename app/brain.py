@@ -252,7 +252,8 @@ def build_system_prompt(
         lines = []
         for h in habits:
             st = "hôm nay đã làm" if h["hom_nay"] else "hôm nay chưa làm"
-            if h.get("ngay_30") and not h["ngay_30"][-2]:
+            hom_qua = (now - timedelta(days=1)).strftime("%Y-%m-%d")
+            if h.get("ngay_30") and not h["ngay_30"][-2] and (h.get("tao_ngay") or "9999") <= hom_qua:
                 st += ", hôm qua chưa làm"
             lines.append(f"- {h['ten']} ({st}; chuỗi {h['chuoi']} ngày liền; {h['tuan']}/7 ngày qua)")
         out += "\n## Thói quen hằng ngày (người dùng nhờ theo dõi)\n" + "\n".join(lines) + "\n"
