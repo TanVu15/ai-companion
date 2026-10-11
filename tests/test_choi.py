@@ -82,3 +82,9 @@ def test_luc_mo_mung_va_vuon_vai():
       console.log(JSON.stringify([C.boLucMo(0, t, 8), C.boLucMo(t - 30 * H, t, 15), C.boLucMo(t - 5 * H, t, 7),
         C.boLucMo(t - 2 * H, t, 7), C.boLucMo(t - 5 * H, t, 14), C.boLucMo(t + H, t, 8)]))""")
     assert v == [None, "mung", "vuon", None, None, None]
+
+
+def test_cau_doc_to_deu_co_cau_va_doc_duoc():
+    v = node("""console.log(JSON.stringify(C.BO_DOC_TO.map(k => C.BO_CAU_CHOI[k])))""")
+    for ds in v:
+        assert ds and all(len(c) < 60 for c in ds)

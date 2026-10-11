@@ -31,6 +31,8 @@ const BO_CAU_CHOI = {
   mung: ['Bạn về rồi! Bơ nhớ bạn ghê~', 'A, bạn đây rồi! Meo meo!', 'Vui quá, bạn quay lại rồi nè!'],
   vuon: ['Ưm... chào buổi sáng~', 'Sáng rồi hả? Bơ vươn vai cái đã.', 'Ngáp... chào bạn buổi sáng nha!'],
 };
+// Những loại câu chơi được đọc to khi bật "Giọng nói" (câu vuốt/chọc lặp nhiều quá nên chỉ hiện chữ)
+const BO_DOC_TO = ['mung', 'vuon', 'an', 'no', 'doi', 'lanh', 'thuc'];
 function boCauNgau(loai, rnd = Math.random) {
   const ds = BO_CAU_CHOI[loai] || [];
   return ds.length ? ds[Math.floor(rnd() * ds.length) % ds.length] : '';
@@ -58,7 +60,7 @@ function boLucMo(lanTruoc, bayGio, gio) {
   return null;
 }
 
-if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boLucMo, BO_CAU_CHOI };
+if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boLucMo, BO_CAU_CHOI, BO_DOC_TO };
 
 // ---- Phần giao diện ----
 (function () {
@@ -86,7 +88,13 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
     const now = Date.now();
     if (!batBuoc && (now - lanNoiCuoi < 3500 || Math.random() < 0.45)) return;
     lanNoiCuoi = now;
-    bong.textContent = boCauNgau(loai); bong.hidden = false;
+    const cau = boCauNgau(loai);
+    bong.textContent = cau; bong.hidden = false;
+    // Đang bật "Giọng nói": vài câu chơi được đọc to (không cắt ngang khi Bơ đang đọc câu trả lời; giờ yên lặng thì thôi)
+    // (đợi một chút: cú chạm vừa rồi còn sự kiện "click" — chạm Bơ lúc đang đọc là bảo Bơ im — kẻo câu vừa đọc bị tắt ngay)
+    if (BO_DOC_TO.includes(loai)) setTimeout(() => {
+      if (typeof speakAuto === 'function' && typeof speaking !== 'undefined' && !speaking) speakAuto(cau);
+    }, 80);
     bong.classList.remove('hien'); void bong.offsetWidth; bong.classList.add('hien');
     clearTimeout(bongTimer);
     bongTimer = setTimeout(() => { bong.hidden = true; }, 2600);
