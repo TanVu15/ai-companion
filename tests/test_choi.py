@@ -396,3 +396,5 @@ def test_khoe_chien_tich():
     assert "khoe" in node("console.log(JSON.stringify(Object.keys(C.BO_CAU_CHOI)))")
     js = (config.ROOT / "web" / "do_choi.js").read_text(encoding="utf-8")
     assert js.count("daBat();") >= 5  # laser vồ, laser rình-vồ, len vồ, đá len, lông vũ rình-vồ
+    choi = (config.ROOT / "web" / "choi.js").read_text(encoding="utf-8")
+    assert "noi('khoe', true, dem('khoe').khoe === 1);" in choi  # lần đầu trong ngày đọc to

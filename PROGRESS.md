@@ -5,8 +5,9 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
-## 2026-10-11 – Giai đoạn 75 (đang làm): Bơ khoe chiến tích
+## 2026-10-11 – Giai đoạn 75 xong: Bơ khoe chiến tích
 - **Khoe**: Bơ vừa vồ trúng đồ chơi (chấm laser, lông vũ, cuộn len, hay vừa đá len) mà trong 8 giây mình vuốt đầu/lưng Bơ → Bơ ưỡn ngực, ngẩng đầu, mắt cười, má hồng "Bơ giỏi hông? Khen Bơ đi~". Nghỉ 20 giây giữa hai lần. (Đang bật laser/lông vũ thì chạm là để điều khiển, nên cất đồ chơi rồi vuốt.) Ảnh `docs/anh/meo-khoe.png` (mèo cam, mèo đen nền tối). `scripts/thu_cham.py` thử thêm — đạt hết. 435 test qua hết.
+- Rà soát, thêm: bật "Giọng nói" thì lần khoe đầu tiên trong ngày Bơ đọc to, các lần sau chỉ hiện chữ (cho khỏi lặp). Đang ngủ, đang dỗi thì không khoe. `scripts/thu_cham.py` đạt hết.
 **Tân cần thử:** cho Bơ vồ chấm laser, bấm nút chấm đỏ để cất rồi vuốt đầu Bơ ngay.
 
 ## 2026-10-11 – Giai đoạn 74 xong: Bơ săn chấm laser

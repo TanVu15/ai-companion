@@ -401,7 +401,8 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boChiTietDau, 
       svg.classList.remove('chop-cham');  // vuốt lại thì Bơ nhắm mắt lim dim như thường
       const h = new Date().getHours();
       if (loai === 'vuot' && face.dataset.e !== 'ngu' && boKhoe(Date.now() - lanBat, Date.now() - lanKhoe)) {
-        lanKhoe = Date.now(); lanBat = -1e9; giu('khoe', 1800); dem('khoe'); noi('khoe', true);  // vừa vồ trúng: khoe trước đã
+        lanKhoe = Date.now(); lanBat = -1e9; giu('khoe', 1800);  // vừa vồ trúng: khoe trước đã
+        noi('khoe', true, dem('khoe').khoe === 1);  // lần khoe đầu tiên trong ngày: đọc to (khi bật Giọng nói)
       } else noi(loai === 'vuot' && (h >= 22 || h < 5) && Math.random() < 0.5 ? 'khuya' : loai);
     }
     giu(loai === 'gai_cam' ? 'gai-cam' : 'vuot', 700);
