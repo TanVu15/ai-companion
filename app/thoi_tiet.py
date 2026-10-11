@@ -2,6 +2,7 @@
 Đặt THANH_PHO trong .env (ví dụ "Da Nang") để Bơ biết trời nắng hay mưa. Để trống = tắt.
 Lỗi mạng thì trả None — Bơ vẫn nói chuyện bình thường, chỉ không biết thời tiết."""
 import threading
+from datetime import datetime
 import time
 
 from .nhat_ky import log
@@ -76,6 +77,17 @@ class ThoiTiet:
         self._lock = threading.Lock()  # hai tin cùng lúc thì chỉ hỏi mạng một lần
         self.loi = ""  # lỗi lần lấy gần nhất (để trang kiểm tra sức khỏe báo)
 
+    def moi(self) -> str | None:
+        """Bản đã lấy nếu còn MỚI (lấy được trong 2 giờ qua, cùng ngày, lần lấy gần nhất không lỗi), KHÔNG gọi mạng.
+        Dùng cho trả lời nhanh đọc nguyên văn: bản cũ ("bây giờ 28°C" từ hôm qua) thì thà không nói."""
+        lay = getattr(self, "_lay_luc", None)
+        if self.loi or not self._cache or lay is None:
+            return None
+        now = datetime.now()
+        if lay.date() != now.date() or (now - lay).total_seconds() > 2 * 3600:
+            return None
+        return self._cache[1]
+
     def da_lay(self) -> str | None:
         """Kết quả lần lấy gần nhất, KHÔNG gọi mạng (dùng cho kiểm tra sức khỏe)."""
         return self._cache[1] if self._cache else None
@@ -116,6 +128,7 @@ class ThoiTiet:
             })
             text = tom_tat(ten, data)
             self._cache = (now + 3600, text)
+            self._lay_luc = datetime.now()
             self.loi = ""
         except Exception as e:
             log.warning("Lấy thời tiết lỗi: %s", e)

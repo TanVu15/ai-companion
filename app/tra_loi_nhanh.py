@@ -20,6 +20,9 @@ _GIO = r"(?:gio|h)"
 _ROI = r"(?:roi|r)"
 _NAY = r"(?:hom nay|nay)\s+(?:la\s+)?"
 
+_LUC = r"(?:hom nay|bay gio|nay|ngay mai|mai|toi nay|chieu nay|sang nay|sang mai|toi mai|chieu mai)"
+_HOI_TT = r"(?:the nao|ra sao|sao|nhu the nao|(?:co\s+)?(?:mua|nong|lanh|ret)\s+(?:khong|ko|k))"
+
 _MAU = {
     "gio": [  # phải có "rồi" hoặc "bây giờ/hiện tại": "mấy giờ?" trơn có thể là hỏi giờ hẹn
         rf"(?:bay gio|hien tai|hien gio|gio)\s+(?:la\s+)?may {_GIO}(?:\s+{_ROI})?",
@@ -53,10 +56,10 @@ _MAU = {
         r"(?:danh sach\s+)?viec can lam(?:\s+(?:hom nay|cua\s+(?:minh|to|tui|toi|em)|(?:minh|to|tui|toi|em)))?(?:\s+(?:co gi|la gi|gom gi|con gi))?",
     ],
     "thoi_tiet": [
-        r"(?:thoi tiet|troi)\s+(?:hom nay|bay gio|nay|ngay mai|mai)\s+(?:the nao|ra sao|sao|nhu the nao|co mua khong|co mua ko|co mua k|mua khong|nong khong|lanh khong)",
-        r"(?:hom nay|bay gio|nay|ngay mai|mai)\s+(?:troi|thoi tiet)\s+(?:the nao|ra sao|sao|nhu the nao|co mua khong|co mua ko|co mua k|nong khong|lanh khong)",
-        r"(?:hom nay|bay gio|nay|ngay mai|mai)\s+(?:troi\s+)?co mua\s+(?:khong|ko|k)",
-        r"thoi tiet(?:\s+(?:hom nay|ngay mai|mai|bay gio))?",
+        rf"(?:thoi tiet|troi)(?:\s+{_LUC})?\s+{_HOI_TT}",
+        rf"{_LUC}\s+(?:troi|thoi tiet)\s+{_HOI_TT}",
+        rf"(?:{_LUC}\s+)?(?:troi\s+)?(?:co\s+)?(?:mua|nong|lanh|ret)\s+(?:khong|ko|k)",
+        rf"thoi tiet(?:\s+{_LUC})?",
         r"(?:bay gio|ngoai troi|hom nay|troi)\s+(?:dang\s+)?(?:may|bao nhieu)\s+do(?:\s+(?:c|roi))?",
     ],
     "thoi_quen": [
@@ -82,6 +85,9 @@ def nhan_dien(text: str) -> str:
         return ""
     for loai, mau in _RE.items():
         if any(m.fullmatch(t) for m in mau):
+            # "mua" không dấu có thể là "mua" (mua đồ) / "múa": có gõ dấu mà không có chữ "mưa" thì để AI hiểu
+            if loai == "thoi_tiet" and re.search(r"\bmua\b", t) and "mưa" not in text.lower() and khong_dau(text) != " ".join(text.lower().split()):
+                return ""
             return loai
     return ""
 
@@ -99,7 +105,8 @@ def _am(now: datetime) -> str:
         return ""
 
 
-def tra_loi(loai: str, now: datetime, memory=None, thoi_tiet: str | None = None, co_thanh_pho: bool = False) -> tuple[str, str]:
+def tra_loi(loai: str, now: datetime, memory=None, thoi_tiet: str | None = None, co_thanh_pho: bool = False,
+            loi_thoi_tiet: str = "") -> tuple[str, str]:
     """(câu Bơ nói, cảm xúc). Câu rỗng = không trả lời nhanh được (để AI làm).
     thoi_tiet: dòng thời tiết đã lấy sẵn (thoi_tiet.py), co_thanh_pho: đã đặt thành phố chưa."""
     if loai == "thoi_tiet":
@@ -108,7 +115,10 @@ def tra_loi(loai: str, now: datetime, memory=None, thoi_tiet: str | None = None,
         if not co_thanh_pho:
             return ('Bơ chưa biết bạn ở thành phố nào nên chưa xem thời tiết được. Bấm nút "?" → Cài đặt → '
                     'gõ thành phố (ví dụ Da Nang) là Bơ xem được nè!'), "suy_nghi"
-        return "Bơ chưa lấy được thời tiết (chắc mạng chập chờn), lát hỏi lại Bơ nha!", "buon"
+        if loi_thoi_tiet.startswith("Không tìm thấy"):
+            return (f'{loi_thoi_tiet} nên Bơ chưa xem thời tiết được. Bấm nút "?" → Cài đặt, gõ lại tên thành phố '
+                    '(không dấu cũng được, ví dụ Da Nang) nha!'), "suy_nghi"
+        return "Bơ chưa lấy được thời tiết mới (chắc mạng chập chờn), lát hỏi lại Bơ nha!", "buon"
     if loai == "gio":
         h, m = now.hour, now.minute
         return f"Bây giờ là {h} giờ {m:02d} phút nè ({now.strftime('%H:%M')}).", "vui"

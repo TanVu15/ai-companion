@@ -217,7 +217,7 @@
 - [x] Hỏi nhanh thời tiết ("hôm nay trời thế nào?", "mai có mưa không?") dùng dữ liệu đã lấy sẵn, miễn phí
 - [x] Tổng kết tuần tối Chủ nhật nhắc tới thói quen (khen/động viên theo số ngày đã làm)
 - [x] Nút "Thói quen": số ngày làm trong tháng này của từng thói quen
-- [ ] Rà soát code lần 21, sửa lỗi tìm được
+- [x] Rà soát code lần 21, sửa lỗi tìm được
 
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định

@@ -29,6 +29,9 @@ def memory(tmp_path):
     ("hôm nay mình còn thói quen nào chưa làm", "thoi_quen"),
     ("hôm nay trời thế nào?", "thoi_tiet"), ("mai có mưa không Bơ", "thoi_tiet"), ("thời tiết hôm nay", "thoi_tiet"),
     ("trời hôm nay sao vậy", "thoi_tiet"), ("bây giờ bao nhiêu độ", "thoi_tiet"),
+    ("thời tiết thế nào", "thoi_tiet"), ("trời có mưa không", "thoi_tiet"), ("tối nay có mưa không", "thoi_tiet"),
+    ("hôm nay trời nóng không", "thoi_tiet"), ("hôm nay trời mưa không", "thoi_tiet"), ("mai mưa không", "thoi_tiet"),
+    ("mai co mua khong", "thoi_tiet"),
 ])
 def test_nhan_dien(text, loai):
     assert nhan_dien(text) == loai
@@ -42,7 +45,7 @@ def test_nhan_dien(text, loai):
     "tui việc gì phải làm vậy", "việc gì phải làm thế", "em việc gì phải làm", "mình gì phải làm", "mình nào chưa xong",
     "hôm nay ngày gì vậy", "thói quen xấu của mình là thức khuya", "theo dõi giúp mình thói quen đọc sách",
     "Thói quen là gì?", "bơ ơi thói quen của em là gì vậy",
-    "trời ơi mệt quá", "may đồ", "mấy độ", "thời tiết thế này chỉ muốn ngủ", "mai mình đi Đà Lạt, trời có lạnh không",
+    "trời ơi mệt quá", "may đồ", "mấy độ", "mai có mua không", "nay có mua không", "hôm nay có múa không", "thời tiết thế này chỉ muốn ngủ", "mai mình đi Đà Lạt, trời có lạnh không",
 ])
 def test_khong_nhan_nham(text):
     assert nhan_dien(text) == ""
@@ -135,3 +138,24 @@ def test_thoi_tiet(memory):
     client = FakeClient([])
     brain = Brain(memory, client=client, weather=W())
     assert brain.chat("hôm nay trời thế nào?").noi.startswith("Thời tiết ở Đà Nẵng: bây giờ 28°C") and client.calls == []
+
+
+def test_thoi_tiet_cu_va_sai_ten(memory, monkeypatch):
+    from datetime import timedelta
+
+    from app import thoi_tiet as tt
+
+    w = tt.ThoiTiet("Da Nang", get=lambda url, params: {})
+    w._cache = (1e18, "Thời tiết ở Đà Nẵng: bây giờ 28°C.")
+    assert w.moi() is None  # chưa từng lấy thành công trong phiên này
+    w._lay_luc = datetime.now()
+    assert w.moi().startswith("Thời tiết")
+    w._lay_luc = datetime.now() - timedelta(hours=3)
+    assert w.moi() is None
+    w._lay_luc, w.loi = datetime.now(), "mất mạng"
+    assert w.moi() is None
+    w.loi = "Không tìm thấy thành phố 'Da Nangg'"
+    brain = Brain(memory, client=FakeClient([]), weather=w)
+    monkeypatch.setattr(w, "hien_tai", lambda: None)
+    noi = brain.chat("hôm nay trời thế nào?").noi
+    assert "Không tìm thấy thành phố 'Da Nangg'" in noi and "Cài đặt" in noi

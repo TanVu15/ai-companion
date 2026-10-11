@@ -550,8 +550,11 @@ class Brain:
         if not loai:
             return None
         try:
-            noi, cam_xuc = tra_loi(loai, now or datetime.now(), self.memory, thoi_tiet=self._weather_text,
-                                   co_thanh_pho=bool(getattr(self.weather, "thanh_pho", "")))
+            w = self.weather
+            moi = getattr(w, "moi", None)
+            noi, cam_xuc = tra_loi(loai, now or datetime.now(), self.memory,
+                                   thoi_tiet=moi() if callable(moi) else self._weather_text,
+                                   co_thanh_pho=bool(getattr(w, "thanh_pho", "")), loi_thoi_tiet=getattr(w, "loi", "") or "")
         except Exception as e:  # lỗi thì để AI trả lời như thường
             log.warning("Trả lời nhanh lỗi: %s", type(e).__name__)
             return None

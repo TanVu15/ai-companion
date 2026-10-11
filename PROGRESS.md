@@ -721,3 +721,12 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - 313 test qua hết.
 - Nút "Thói quen" ghi thêm **"tháng 10: 9 ngày"** cho từng thói quen. 315 test qua hết.
 
+## 2026-10-11 – Giai đoạn 41 xong: rà soát lần 21
+- Sửa lỗi: mất mạng qua đêm thì hỏi nhanh thời tiết đọc nhầm số liệu hôm qua → giờ chỉ đọc dự báo lấy trong 2 giờ qua, cùng ngày; cũ hơn thì Bơ nói chưa lấy được.
+- Gõ sai tên thành phố → Bơ nói rõ "Không tìm thấy thành phố ..." và chỉ chỗ sửa, thay vì đổ cho mạng.
+- "Mai có mua không" (mua đồ) không bị hiểu nhầm thành hỏi mưa; gõ không dấu "mai co mua khong" vẫn hiểu là hỏi mưa.
+- Hiểu thêm "thời tiết thế nào", "trời có mưa không", "tối nay có mưa không", "hôm nay trời nóng không".
+- 326 test qua hết.
+
+**Tân cần thử (giai đoạn 41):** đặt thành phố trong Cài đặt rồi hỏi "hôm nay trời thế nào?", "mai có mưa không?"; xem nút "Thói quen" có "tháng 10: N ngày".
+
