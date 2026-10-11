@@ -198,7 +198,11 @@ function resumeListening() {
 function handsHeard(text) {
   let cmd = Date.now() < awaitUntil ? text.trim() : boDanhThuc(text);
   if (cmd === null || send.disabled) return;
-  if (cmd === '') { awaitUntil = Date.now() + 8000; express('ngac_nhien'); statusEl.textContent = 'Bơ nghe nè...'; return; }
+  if (cmd === '') {  // chỉ gọi "Bơ ơi": Bơ quay sang, tai dựng, "Dạ?" rồi chờ 8 giây
+    awaitUntil = Date.now() + 8000; express('ngac_nhien', 'nghieng_dau'); statusEl.textContent = 'Bơ nghe nè...';
+    if (window.boChoi) boChoi.noi('goi', true);
+    return;
+  }
   awaitUntil = 0; input.value = cmd; pauseListening(); lanGuiTuGiong = true; form.requestSubmit();
 }
 if (Rec && window.isSecureContext) {

@@ -28,6 +28,7 @@ const BO_CAU_CHOI = {
   len: ['Cuộn len! Của Bơ!', 'Bép! Bơ đập trúng rồi', 'Ném nữa đi, ném nữa đi!', 'Hí hí, lăn đi đâu đó?'],
   laser: ['Cái chấm đỏ kìa!!', 'Bắt được rồi... ủa đâu?', 'Lần này Bơ bắt được cho coi!'],
   long_vu: ['Lông vũ! Lông vũ!', 'Hụt rồi... lần nữa!', 'Bơ với tới nè!', 'Xuống thấp xíu đi mà~'],
+  goi: ['Dạ? Bơ nghe nè!', 'Meo? Bạn gọi Bơ hả?', 'Dạaa~ Bơ đây!'],
   dep: ['Bộ lông mới nè, Bơ đẹp hông?', 'Hí, Bơ điệu chưa~', 'Thấy Bơ xinh lên hông?'],
   khuya: ['Khuya rồi nè, bạn ngủ sớm nha~', 'Rừ rừ... Bơ buồn ngủ quá, bạn cũng ngủ đi nha', 'Vuốt xíu nữa rồi mình đi ngủ ha~'],
   thuc: ['Ưm... ai gọi Bơ đó?', 'Bơ đâu có ngủ, Bơ nhắm mắt nghĩ thôi.'],

@@ -5,6 +5,9 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-11 – Giai đoạn 56 (đang làm)
+- Rảnh tay: chỉ gọi "Bơ ơi" → Bơ nghiêng đầu, bong bóng "Dạ? Bơ nghe nè!" rồi chờ 8 giây nghe tiếp.
+
 ## 2026-10-11 – Giai đoạn 55 xong: thêm chút sống động
 - Ngủ say: Bơ thỉnh thoảng giật tai trong mơ hoặc trở mình. Đang đọc to: đuôi vẫy nhanh hơn, tai động nhẹ.
 - **Cần câu lông vũ** (nút xanh, trên nút laser): lông vũ treo dây, lắc lư theo ngón tay/chuột; đưa lên trên đầu Bơ là Bơ giơ hai chân trước vồ. Ảnh `docs/anh/long-vu.png`. Mỗi lúc chỉ một đồ chơi (bật cái này thì cất cái kia).
