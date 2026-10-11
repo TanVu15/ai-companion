@@ -141,3 +141,9 @@ def test_cham_qua_ghi_loi(gia, monkeypatch):
         asyncio.run(giong.doc("xin chào"))
     ok, ghi_chu = giong.tinh_trang()
     assert not ok and "chậm" in ghi_chu
+
+
+def test_env_giong_ghi_sai_khong_lam_hong_may_chu(monkeypatch):
+    for gt, mong in [("+10%", 10), ("8Hz", 8), (" -5 ", -5), ("abc", 3), ("", 3), ("99", 50), ("-80%", -50)]:
+        monkeypatch.setenv("TOC_DO_GIONG", gt)
+        assert config._so_giong("TOC_DO_GIONG", 3, -50, 50) == mong, gt

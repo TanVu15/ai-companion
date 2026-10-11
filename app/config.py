@@ -51,8 +51,19 @@ SAO_LUU_DIR = (ROOT / DB_PATH).resolve().parent / "sao_luu"
 NHAC_THOI_QUEN = os.getenv("NHAC_THOI_QUEN", "20:30")
 # Giọng AI miễn phí (edge-tts, giọng Microsoft Edge, không cần tài khoản). Chỉnh được trên web (nút "?" → Cài đặt)
 GIONG = os.getenv("GIONG", "vi-VN-HoaiMyNeural")
-TOC_DO_GIONG = int(os.getenv("TOC_DO_GIONG", "0") or 0)  # phần trăm, -50..50
-CAO_DO_GIONG = int(os.getenv("CAO_DO_GIONG", "8") or 0)  # Hz, -30..40; hơi cao cho dễ thương
+
+
+def _so_giong(ten_bien: str, mac_dinh: int, thap: int, cao: int) -> int:
+    """Số chỉnh giọng trong .env. Chấp nhận cả "+10%", "8Hz", " -5 "; ghi sai thì lấy mặc định, quá khoảng thì kẹp lại
+    (để một dòng .env gõ nhầm không làm máy chủ không chạy được)."""
+    import re
+
+    m = re.fullmatch(r"\s*([+-]?\d+)\s*(%|hz)?\s*", os.getenv(ten_bien, "") or "", re.IGNORECASE)
+    return max(thap, min(cao, int(m.group(1)))) if m else mac_dinh
+
+
+TOC_DO_GIONG = _so_giong("TOC_DO_GIONG", 0, -50, 50)  # phần trăm, -50..50
+CAO_DO_GIONG = _so_giong("CAO_DO_GIONG", 8, -30, 40)  # Hz, -30..40; hơi cao cho dễ thương
 AM_THANH_DIR = (ROOT / DB_PATH).resolve().parent / "am_thanh"
 AM_THANH_GIU = 200  # giữ tối đa bấy nhiêu file mp3 đệm
 

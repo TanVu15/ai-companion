@@ -275,7 +275,14 @@
 ## Giai đoạn 50 – Gọn & chắc (Claude tự thêm, trong hướng mèo/chạm/giọng)
 - [x] Gọn đầu trang trên điện thoại: gom các nút chữ (nhớ, việc, nhật ký, thói quen, tìm, chi phí, tính cách...) vào nút "☰ Thêm", chỉ để lại Giọng nói / Rảnh tay → mèo + khung chat rộng hơn
 - [x] Nút "?" → Tình trạng: báo giọng AI dùng được không (đã thử gần nhất lúc nào, lỗi gì)
-- [ ] Rà soát code giai đoạn 46–49 (mèo, chạm & chơi, giọng AI, giữ để nói), sửa lỗi tìm được
+- [x] Rà soát code giai đoạn 46–49 (mèo, chạm & chơi, giọng AI, giữ để nói), sửa lỗi tìm được
+
+## Giai đoạn 51 – Bơ sống động hơn (Claude tự thêm, trong hướng mèo/chạm)
+- [ ] Mắt Bơ nhìn theo ngón tay/chuột khi rê gần (không chỉ lúc chơi laser); đứng yên 3 giây thì thôi nhìn
+- [ ] Mở web sau lâu (từ 1 ngày) → Bơ mừng rỡ: nhảy cẫng, bong bóng "Bạn về rồi!" (không trách, không gọi API)
+- [ ] Nhấn giữ lên lưng/bụng khoảng 1 giây → Bơ lăn ra ngửa bụng khoe bụng vài giây
+- [ ] Theo giờ: khuya (sau 22h) Bơ lim dim, hay ngáp hơn; sáng sớm mở web thì Bơ vươn vai
+- [ ] Rà soát giai đoạn 51, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):

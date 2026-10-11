@@ -5,6 +5,16 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-11 – Giai đoạn 50 xong: gọn & chắc
+Ảnh: `docs/anh/tinh-trang-giong.png`, `docs/anh/meo-ban-phim.png`, `docs/anh/menu-them.png`.
+- Rà soát mèo / chạm / giọng AI / giữ để nói, sửa:
+  - Giọng AI đọc đoạn dài hơn 20 giây (máy chưa biết độ dài file) bị cắt ngang và đọc chồng đoạn sau → giờ chỉ coi là "xong" khi âm thanh thật sự dừng.
+  - Dùng được bằng **bàn phím**: Tab tới nút "Giữ để nói" rồi giữ phím cách = giữ để nói; Tab tới Bơ, Enter = xoa đầu, phím cách = gãi cằm (đang đọc to thì phím bảo Bơ im).
+  - Rê chuột vuốt Bơ lâu không làm Bơ ngủ gật giữa chừng nữa.
+  - `.env` ghi `TOC_DO_GIONG=+10%` hay `CAO_DO_GIONG=8Hz` (gõ nhầm kiểu edge-tts) trước đây làm máy chủ **không chạy được** → giờ hiểu được, sai hẳn thì dùng mặc định.
+- 392 test qua hết.
+**Tân cần thử (giai đoạn 50):** mở "Bơ làm được gì? · Cài đặt" → Tình trạng, xem dòng "Giọng AI" sau khi bật Giọng nói và nhắn một câu.
+
 ## 2026-10-11 18:00 UTC – Giai đoạn 50: Tình trạng báo giọng AI
 - "Bơ làm được gì? · Cài đặt" → **Tình trạng** có dòng **Giọng AI**: chưa thử / "Dùng được — đọc thành công lần gần nhất lúc 18:02" /
   "Lỗi lúc 18:05: không gọi được máy chủ giọng — kiểm tra mạng" / "Chưa cài edge-tts — chạy lại run.bat". Ảnh: `docs/anh/tinh-trang-giong.png`.
