@@ -272,6 +272,11 @@
 - [x] Khi đang nói chuyện bằng giọng: dặn bộ não trả lời ngắn hơn (1–2 câu), không ký hiệu
 - [x] Mèo nghiêng tai lắng nghe khi micro đang bật
 
+## Giai đoạn 50 – Gọn & chắc (Claude tự thêm, trong hướng mèo/chạm/giọng)
+- [x] Gọn đầu trang trên điện thoại: gom các nút chữ (nhớ, việc, nhật ký, thói quen, tìm, chi phí, tính cách...) vào nút "☰ Thêm", chỉ để lại Giọng nói / Rảnh tay → mèo + khung chat rộng hơn
+- [ ] Nút "?" → Tình trạng: báo giọng AI dùng được không (đã thử gần nhất lúc nào, lỗi gì)
+- [ ] Rà soát code giai đoạn 46–49 (mèo, chạm & chơi, giọng AI, giữ để nói), sửa lỗi tìm được
+
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):
 - [ ] Xem / xóa "chuyện Bơ định hỏi thăm" trên web (trong "Bơ nhớ gì về mình?"), và báo trong dòng "✓ Bơ đã ghi: sẽ hỏi thăm ..."

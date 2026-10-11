@@ -132,6 +132,16 @@ document.getElementById('clearMem').onclick = async () => {
   await fetch('/api/facts/all', { method: 'DELETE' }); loadFacts();
 };
 
+// ---- Nút "☰ Thêm": các mục ít dùng nằm trong menu cho đầu trang gọn (mèo + chat rộng hơn trên điện thoại) ----
+const menuDlg = document.getElementById('menu');
+document.getElementById('openMenu').onclick = () => menuDlg.showModal();
+document.getElementById('closeMenu').onclick = () => menuDlg.close();
+menuDlg.addEventListener('click', ev => {
+  if (ev.target === menuDlg) { menuDlg.close(); return; }  // bấm ra ngoài khung
+  const b = ev.target.closest('.menu-ds button');
+  if (b && !b.classList.contains('giu-mo')) menuDlg.close();  // mở mục khác thì đóng menu (nút tốc độ/giọng thì giữ mở)
+}, true);
+
 // ---- Ngủ gật: 3 phút không ai đụng tới thì Bơ nhắm mắt; chạm/gõ/nói là tỉnh ----
 var SLEEP_AFTER = 3 * 60 * 1000;
 var idleTimer = null;

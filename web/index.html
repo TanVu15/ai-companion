@@ -55,6 +55,10 @@
     font: inherit; background: var(--bg); color: var(--text); max-height: 120px; }
   button { border: none; border-radius: 20px; padding: 0 18px; background: var(--me); color: var(--me-text); font: inherit; font-weight: 600; cursor: pointer; }
   button:disabled { opacity: .5; cursor: default; }
+  .nut-hang { display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 6px; }
+  .menu-ds { display: flex; flex-direction: column; margin-bottom: 8px; }
+  .menu-ds .link { text-align: left; font-size: 16px; color: var(--text); text-decoration: none; padding: 12px 8px; border-bottom: 1px solid var(--border); border-radius: 0; }
+  .menu-ds .link[hidden] { display: none; }
   .link { background: none; color: var(--muted); font-size: 13px; padding: 2px 8px; text-decoration: underline; font-weight: 400; }
   dialog { border: 1px solid var(--border); border-radius: 16px; background: var(--panel); color: var(--text);
     width: min(480px, calc(100% - 32px)); max-height: 80vh; padding: 16px; }
@@ -142,19 +146,10 @@
     <div class="name">Bơ</div>
     <div class="lich" id="lich"></div>
     <div class="status" id="status"></div>
-    <div>
-      <button class="link" id="openMem" type="button">Bơ nhớ gì về mình?</button>
-      <button class="link" id="openTodo" type="button">Việc cần làm</button>
-      <button class="link" id="openDiary" type="button">Nhật ký</button>
-      <button class="link" id="openHabit" type="button">Thói quen</button>
-      <button class="link" id="openSearch" type="button">Tìm</button>
-      <button class="link" id="openHelp" type="button" aria-label="Bơ làm được gì?">?</button>
-      <button class="link" id="openCost" type="button">Chi phí</button>
-      <button class="link" id="openPersona" type="button">Tính cách</button>
+    <div class="nut-hang">
       <button class="link" id="voiceBtn" type="button" aria-pressed="false">Giọng nói: tắt</button>
-      <button class="link" id="rateBtn" type="button" hidden>Tốc độ đọc: vừa</button>
-      <button class="link" id="pickVoiceBtn" type="button" hidden>Giọng</button>
       <button class="link" id="handsBtn" type="button" aria-pressed="false" hidden>Rảnh tay: tắt</button>
+      <button class="link" id="openMenu" type="button" aria-haspopup="dialog">☰ Thêm</button>
     </div>
   </header>
   <main id="log" aria-live="polite"></main>
@@ -166,6 +161,21 @@
     <button id="send" type="submit" disabled>Gửi</button>
   </form>
 </div>
+<dialog id="menu" class="menu" aria-label="Thêm">
+  <div class="menu-ds">
+    <button class="link" id="openMem" type="button">Bơ nhớ gì về mình?</button>
+    <button class="link" id="openTodo" type="button">Việc cần làm</button>
+    <button class="link" id="openDiary" type="button">Nhật ký</button>
+    <button class="link" id="openHabit" type="button">Thói quen</button>
+    <button class="link" id="openSearch" type="button">Tìm chuyện cũ</button>
+    <button class="link" id="openPersona" type="button">Tính cách</button>
+    <button class="link" id="openCost" type="button">Chi phí</button>
+    <button class="link giu-mo" id="rateBtn" type="button" hidden>Tốc độ đọc: vừa</button>
+    <button class="link giu-mo" id="pickVoiceBtn" type="button" hidden>Giọng</button>
+    <button class="link" id="openHelp" type="button" aria-label="Bơ làm được gì?">Bơ làm được gì? · Cài đặt</button>
+  </div>
+  <div class="row"><span></span><button id="closeMenu" type="button">Đóng</button></div>
+</dialog>
 <dialog id="mem">
   <h2>Bơ nhớ gì về bạn</h2>
   <p>Sửa/xóa những điều sai, hoặc tự thêm điều bạn muốn Bơ nhớ.</p>
@@ -229,7 +239,7 @@
   <p id="stats"></p>
   <div id="moods" class="moods" hidden></div>
   <h2>Bơ làm được gì?</h2>
-  <p>Cứ nhắn tự nhiên như với bạn bè. Vài mẹo:</p>
+  <p>Cứ nhắn tự nhiên như với bạn bè. Các mục (Bơ nhớ gì, Việc cần làm, Nhật ký, Thói quen, Tìm, Chi phí, Tính cách) nằm trong nút "☰ Thêm". Vài mẹo:</p>
   <ul class="plain">
     <li><b>Chơi với Bơ (miễn phí):</b> vuốt đầu/lưng để Bơ rừ rừ, gãi cằm, chạm tai, chọc bụng (chọc nhiều quá là Bơ dỗi đó). Nút con cá: cho Bơ ăn. Nút chấm đỏ: tia laser, rê/kéo ngón tay quanh Bơ.</li>
     <li><b>Nhớ chuyện:</b> kể tên, sở thích, kế hoạch → Bơ tự nhớ. Xem/xóa ở "Bơ nhớ gì về mình?".</li>

@@ -5,6 +5,11 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-11 17:45 UTC – Giai đoạn 50 (đang làm): đầu trang gọn
+- Các nút chữ (Bơ nhớ gì, Việc cần làm, Nhật ký, Thói quen, Tìm, Chi phí, Tính cách, "?") gom vào nút **"☰ Thêm"**;
+  đầu trang chỉ còn mèo, nút "Giữ để nói", Giọng nói, Rảnh tay → khung chat trên điện thoại rộng gần gấp đôi.
+  Ảnh: `docs/anh/trang-dien-thoai.png`, `docs/anh/menu-them.png`.
+
 ## 2026-10-11 17:40 UTC – Giai đoạn 49 xong: Trò chuyện bằng giọng mượt
 Ảnh: `docs/anh/giu-de-noi.png`.
 - Nút to **"Giữ để nói"** ngay dưới mèo (kiểu bộ đàm): giữ là Bơ nghe, thả tay là gửi. Bấm nhanh quá thì Bơ nhắc "giữ trong lúc nói".
