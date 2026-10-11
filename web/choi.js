@@ -372,7 +372,7 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boChiTietDau, 
   let bam = null, vuotDangChay = false, vuotTat = null, quangVuot = 0, viTriTruoc = null, mocChoc = [];
   const dangDoi = () => svg.classList.contains('doi');
   // Đồ chơi (do_choi.js) điền các hàm này: đang bật đồ chơi nào không, chạm có đang dùng để điều khiển đồ chơi không
-  const doChoi = { dangChoi: () => false, dieuKhien: () => false, keoLen: () => false };
+  const doChoi = { dangChoi: () => false, dieuKhien: () => false, keoLen: () => false, thaLen: () => {} };
   let dauVuot = null, lanNguoc = 0, vuotBatDau = 0, daNoiNhoi = false, lanChopCham = 0;
   function vuot(ev, vung) {
     if (dangDoi()) return;
@@ -610,7 +610,7 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boChiTietDau, 
   }
   function choAn(mon) {
     if (dangAn || dangDoi()) return;
-    dangAn = true;
+    dangAn = true; doChoi.thaLen();  // đang ôm cuộn len thì buông ra để ăn
     const d = dem('cho_an');
     if (d.cho_an > 5) { noi('no', true); giu('liem-mep', 1200); setTimeout(() => { dangAn = false; }, 1200); return; }
     const m = BO_MON_AN[boMonAn(mon)];

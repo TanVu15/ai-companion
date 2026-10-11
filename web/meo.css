@@ -505,8 +505,8 @@ header.dang-long-vu { touch-action: none; position: relative; }
 .meo.da-len .paw-l { transform: translate(-10px, -6px) rotate(-20deg); } .meo.da-len .paw-r { transform: translate(10px, -6px) rotate(20deg); }
 .meo.da-len :is(.mat-mo, .mat-nham) { display: none !important; } .meo.da-len .mat-cuoi { display: inline !important; }
 .meo.da-len :is(.mieng-w, .mieng-buon) { display: none !important; } .meo.da-len .mieng-mo { display: inline !important; }
-.len.dang-om { transition: transform .3s ease-out; cursor: grab; }
 @media (prefers-reduced-motion: no-preference) {
+  .len.dang-om { transition: transform .3s ease-out; }
   .meo.om-len .head { animation: meo-can-len .32s ease-in-out .3s infinite alternate; }
   .meo.om-len .mieng-mo { animation: meo-can-mieng .32s ease-in-out .3s infinite alternate; }
   .len.dang-om svg { animation: len-bi-can .32s ease-in-out .3s infinite alternate; }

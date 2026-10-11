@@ -194,6 +194,14 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
     lenS = { ...lenS, vx: huong * (420 + Math.random() * 180), vy: -560 - Math.random() * 160, yen: false };
     chayLen();
   }
+  // Đang ôm len mà có việc khác (cho ăn...) → buông len, len lăn nhẹ ra một bên
+  function thaLen() {
+    if (!lenOm || !len) { thoiOmLen(); return; }
+    thoiOmLen();
+    voLen = Date.now() + 400;
+    lenS = { ...lenS, vx: (Math.random() < 0.5 ? -1 : 1) * 220, vy: -220, yen: false };
+    chayLen();
+  }
   function batLen(bat) {
     if (bat === !!len) return;
     thoiOmLen();
@@ -349,5 +357,6 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
   doChoi.dangChoi = () => laserBat || !!len || !!lv;
   doChoi.dieuKhien = () => laserBat || !!lv;
   doChoi.keoLen = () => !!lenKeo;
+  doChoi.thaLen = thaLen;
   Object.assign(window.boChoi, { batLaser, batLen, batLongVu });
 })();

@@ -396,7 +396,11 @@
 
 ## Giai đoạn 73 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
 - [x] Cuộn len nằm yên cạnh Bơ một lúc → Bơ ôm len, cắn cắn, rồi đá văng ra
-- [ ] Rà soát giai đoạn 73, sửa lỗi tìm được
+- [x] Rà soát giai đoạn 73, sửa lỗi tìm được
+
+## Giai đoạn 74 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
+- [ ] Chấm laser đứng yên trên sàn trước mặt Bơ → Bơ rình rồi vồ đè chân lên chấm, nhấc chân lên ngó "Ủa, đâu mất rồi?"
+- [ ] Rà soát giai đoạn 74, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):

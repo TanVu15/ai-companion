@@ -5,8 +5,9 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
-## 2026-10-11 – Giai đoạn 73 (đang làm): Bơ ôm cuộn len
+## 2026-10-11 – Giai đoạn 73 xong: Bơ ôm cuộn len
 - **Ôm len**: để cuộn len nằm yên sát bên Bơ (ngang tầm chân) khoảng 1,5 giây → Bơ kéo len vào lòng, hai chân trước kẹp len, cúi đầu cắn cắn "Ôm len! Cắn cắn~", khoảng 2 giây sau chân sau đá len văng ra "Đá! Bay xa chưa?". Nghỉ 8 giây giữa hai lần. Đang ôm mà cầm len lên thì Bơ thả ra ngay. Ảnh `docs/anh/meo-om-len.png` (trái: ôm, phải: đá). `scripts/thu_cham.py` thử thêm — đạt hết. 432 test qua hết.
+- Rà soát, sửa: đang ôm len mà bấm cho ăn thì trước đây Bơ vừa ôm vừa ăn (miệng, chân lẫn lộn) → giờ Bơ buông len (len lăn nhẹ ra) rồi ăn. Máy bật giảm chuyển động thì len không trượt/lắc, chỉ đổi tư thế. Ôm len với mèo đen, tam thể (nền tối), mướp vằn trên màn hình thấp: rõ, không vỡ hình (ảnh `docs/anh/om-len-kieu-long.png`). 433 test qua hết.
 **Tân cần thử:** bật nút cuộn len, kéo len đặt nhẹ xuống sát bên chân Bơ rồi buông tay.
 
 ## 2026-10-11 – Giai đoạn 72 xong: săn lông vũ khéo hơn

@@ -368,3 +368,10 @@ def test_len_gan_meo():
     # cầm len lên giữa chừng thì thôi ôm; vừa đá ra thì khỏi vồ lại liền
     assert "ev.preventDefault(); ev.stopPropagation(); thoiOmLen();" in js
     assert "voLen = Date.now() + 400;" in js
+
+
+def test_cho_an_luc_om_len_thi_buong_len():
+    """Đang ôm cuộn len mà cho ăn → Bơ buông len ra (không vừa ôm vừa ăn)."""
+    choi = (config.ROOT / "web" / "choi.js").read_text(encoding="utf-8")
+    assert "dangAn = true; doChoi.thaLen();" in choi
+    assert "doChoi.thaLen = thaLen;" in (config.ROOT / "web" / "do_choi.js").read_text(encoding="utf-8")
