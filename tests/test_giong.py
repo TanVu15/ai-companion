@@ -72,3 +72,16 @@ def test_cai_dat_giong(gia):
     for sai in [{"giong": "en-US-Bad"}, {"toc_do_giong": 99}, {"cao_do_giong": "cao"}, {"toc_do_giong": True}]:
         with pytest.raises(ValueError):
             cai_dat.luu(sai)
+
+
+def test_tach_cau_doc_cau_dau_ngan_khong_mat_chu():
+    import json
+    import subprocess
+
+    js = """const { boTachCauDoc: f } = require('./web/doc_to.js');
+    console.log(JSON.stringify([f('Chào bạn! Hôm nay trời đẹp ghê. Bơ muốn đi chơi quá.'), f('x'.repeat(500)).join(''),
+      f('a '.repeat(300)).every(s => s.length <= 220), f('   ')]))"""
+    r = subprocess.run(["node", "-e", js], cwd=config.ROOT, capture_output=True, text=True)
+    dau, dai, vua, rong = json.loads(r.stdout)
+    assert dau == ["Chào bạn!", "Hôm nay trời đẹp ghê. Bơ muốn đi chơi quá."]  # câu đầu riêng để đọc ngay
+    assert dai == "x" * 500 and vua and rong == []

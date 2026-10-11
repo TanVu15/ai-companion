@@ -32,6 +32,30 @@ function boTachTin(text, toiDa = 3) {
   return gom;
 }
 
+// Tách chữ để đọc bằng giọng AI: đoạn đầu là câu đầu tiên (tạo nhanh, đỡ chờ), các đoạn sau gộp lại tới khoảng `dai` chữ.
+// Câu quá dài (không có dấu câu) thì cắt ở dấu phẩy/khoảng trắng gần nhất.
+function boTachCauDoc(text, dai = 220) {
+  const t = (text || '').replace(/\s+/g, ' ').trim();
+  if (!t) return [];
+  const raw = t.split(/([.!?…]+)\s+/), cau = [];
+  for (let i = 0; i < raw.length; i += 2) cau.push((raw[i] + (raw[i + 1] || '')).trim());
+  const nho = [];
+  for (let c of cau.filter(Boolean)) {
+    while (c.length > dai) {
+      let k = Math.max(c.lastIndexOf(', ', dai), c.lastIndexOf(' ', dai));
+      if (k < dai / 3) { nho.push(c.slice(0, dai)); c = c.slice(dai); continue; }  // không có chỗ ngắt: cắt cứng
+      nho.push(c.slice(0, k + (c[k] === ',' ? 1 : 0)).trim()); c = c.slice(k + 1).trim();
+    }
+    if (c) nho.push(c);
+  }
+  const out = [nho[0]];
+  for (const c of nho.slice(1)) {
+    if (out.length > 1 && out[out.length - 1].length + c.length + 1 <= dai) out[out.length - 1] += ' ' + c;
+    else out.push(c);
+  }
+  return out;
+}
+
 // Các giọng tiếng Việt của máy, và giọng đang chọn (giọng đã lưu nếu còn, không thì giọng tiếng Việt đầu tiên)
 function boGiongViet(voices) {
   return (voices || []).filter(v => v.lang && v.lang.toLowerCase().replace('_', '-').startsWith('vi'));
@@ -57,4 +81,4 @@ function boGioYenLang(gio, khoang) {
   return a < b ? gio >= a && gio < b : gio >= a || gio < b;
 }
 
-if (typeof module !== 'undefined') module.exports = { boChuDeDoc, boTachTin, boGiongViet, boChonGiong, boGiongKe, boGioYenLang };
+if (typeof module !== 'undefined') module.exports = { boChuDeDoc, boTachTin, boTachCauDoc, boGiongViet, boChonGiong, boGiongKe, boGioYenLang };

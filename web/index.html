@@ -99,6 +99,8 @@
   .settings label.check { flex-direction: row; align-items: center; gap: 8px; color: var(--text); }
   .settings input[type=text] { border: 1px solid var(--border); border-radius: 12px; padding: 8px 12px; font: inherit; background: var(--bg); color: var(--text); }
   .settings input[type=checkbox] { width: 20px; height: 20px; }
+  .settings select { border: 1px solid var(--border); border-radius: 12px; padding: 8px 12px; font: inherit; background: var(--bg); color: var(--text); }
+  .settings input[type=range] { width: 100%; accent-color: var(--me); } #tryVoice { align-self: flex-start; padding-left: 0; }
   .rem-edit { display: flex; flex-direction: column; gap: 6px; padding: 4px 0; border: none; background: none; }
   .rem-edit input, .rem-edit select { border: 1px solid var(--border); border-radius: 10px; padding: 6px 10px; font: inherit; background: var(--bg); color: var(--text); }
   .rem-edit .row { display: flex; gap: 8px; align-items: center; justify-content: flex-end; }
@@ -238,7 +240,7 @@
     <li><b>Thói quen:</b> "theo dõi giúp mình thói quen đọc sách" → mỗi ngày kể "đọc sách rồi"; xem chuỗi ngày ở nút "Thói quen".</li>
     <li><b>Hỏi nhanh, miễn phí:</b> "mấy giờ rồi?", "hôm nay ngày mấy âm?", "còn mấy ngày nữa Tết?", "mình còn việc gì cần làm?", "thói quen hôm nay?", "hôm nay trời thế nào?" → Bơ trả lời ngay, không tốn tiền API (cả khi đã hết ngân sách).</li>
     <li><b>Lịch điện thoại:</b> "Bơ nhớ gì về mình?" → "Tải lịch cho điện thoại" để thêm ngày đặc biệt, lời nhắc vào app Lịch.</li>
-    <li><b>Giọng nói:</b> bật "Giọng nói" để Bơ đọc to; bấm micro để nói. "Rảnh tay": gọi "Bơ ơi" rồi nói. Chạm vào mèo Bơ để Bơ im.</li>
+    <li><b>Giọng nói:</b> bật "Giọng nói" để Bơ đọc to bằng giọng AI miễn phí (đổi giọng, tốc độ, cao độ ở Cài đặt bên dưới); bấm micro để nói. "Rảnh tay": gọi "Bơ ơi" rồi nói. Chạm vào mèo Bơ để Bơ im.</li>
     <li><b>Tìm chuyện cũ:</b> nút "Tìm" (hoặc Ctrl+K), gõ không dấu cũng được.</li>
     <li><b>Phím tắt:</b> Esc để Bơ ngừng đọc; Enter gửi, Shift+Enter xuống dòng.</li>
     <li><b>Ghim:</b> chạm vào một tin nhắn → "Ghim tin này". Xem lại trong nút "Tìm".</li>
@@ -256,6 +258,11 @@
     <label class="check"><input id="setRecap" type="checkbox"> Tổng kết tuần vào tối Chủ nhật</label>
     <label class="check"><input id="setHoliday" type="checkbox"> Chúc ngày lễ (Tết, Trung thu, 20/10...)</label>
     <label>Giờ nhắc thói quen chưa làm <input id="setHabit" type="text" maxlength="8" placeholder="ví dụ: 20:30 — để trống = tắt"></label>
+    <label>Giọng của Bơ (giọng AI miễn phí, cần mạng; lỗi thì dùng giọng của trình duyệt)
+      <select id="setVoice"><option value="vi-VN-HoaiMyNeural">Hoài My (nữ)</option><option value="vi-VN-NamMinhNeural">Nam Minh (nam)</option></select></label>
+    <label><span>Tốc độ giọng: <output id="setRateOut">0</output>%</span><input id="setRate" type="range" min="-50" max="50" step="5"></label>
+    <label><span>Cao độ giọng (cao = dễ thương hơn): <output id="setPitchOut">0</output></span><input id="setPitch" type="range" min="-30" max="40" step="2"></label>
+    <button class="link" id="tryVoice" type="button">Lưu rồi nghe thử giọng</button>
     <p id="settingsMsg" hidden></p>
     <div class="row"><button class="link" id="resetSettings" type="button">Về như file .env</button><button type="submit">Lưu cài đặt</button></div>
   </form>

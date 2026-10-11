@@ -5,6 +5,16 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-11 17:35 UTC – Giai đoạn 48 xong: Bơ nói bằng giọng AI miễn phí (edge-tts)
+- Bật "Giọng nói" → Bơ đọc bằng **giọng AI của Microsoft Edge** (Hoài My, giọng nữ, cao độ +8 cho dễ thương). Không cần tài khoản, không tốn tiền.
+- Máy chủ tạo mp3 (`/api/giong`), lưu đệm trong `data/am_thanh/` (giữ 200 file) nên câu lặp lại phát ngay không cần mạng.
+- Câu dài: đọc câu đầu ngay, tải sẵn câu sau trong lúc đọc. **Miệng mèo mở theo âm lượng thật** của giọng.
+- Nút "?" → Cài đặt: chọn giọng (Hoài My / Nam Minh), thanh trượt tốc độ và cao độ, nút "Lưu rồi nghe thử giọng". Ảnh: `docs/anh/cai-dat-giong.png`.
+- Không có mạng / Microsoft lỗi → tự dùng giọng của trình duyệt, báo nhỏ một lần, 5 phút sau thử lại giọng AI.
+- **Tân cần thử (quan trọng):** máy làm việc của Claude KHÔNG gọi được máy chủ Microsoft nên chưa nghe thử giọng thật.
+  `git pull`, chạy `run.bat` (nó tự cài `edge-tts`), bật "Giọng nói", nhắn một câu. Nếu thấy dòng
+  "Giọng AI chưa dùng được" thì gửi mấy dòng cuối `data/loi.log` vào `FEEDBACK.md`. Nghe xong thấy giọng cao/thấp/nhanh quá thì chỉnh ở Cài đặt.
+
 ## 2026-10-11 17:25 UTC – Giai đoạn 47 xong: Chạm & chơi với Bơ, không tốn API
 Ảnh: `docs/anh/choi-voi-bo.png` (vuốt đầu · gãi cằm · dỗi quay lưng · ăn cá). 379 test qua hết.
 - **Vuốt** đầu/lưng (kéo ngón tay, hoặc rê chuột trên máy tính): Bơ nhắm mắt, tim bay, kêu **rừ rừ** (tạo bằng Web Audio, không cần file).

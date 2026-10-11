@@ -146,12 +146,7 @@ function wake() {
 scheduleSleep();
 
 // Chạm vào mặt Bơ khi đang đọc to → Bơ im ngay
-function stopSpeaking() {
-  if (!speaking || !window.speechSynthesis) return false;
-  speakSeq++; speechSynthesis.cancel();
-  speaking = false; face.classList.remove('talking'); resumeListening();
-  return true;
-}
+function stopSpeaking() { return boNgungDoc(); }
 face.addEventListener('click', stopSpeaking);
 
 // ---- Tìm trong chuyện cũ ----
@@ -279,30 +274,54 @@ function fillSettings(d) {
   document.getElementById('setRecap').checked = !!d.hien_tai.tong_ket_tuan;
   document.getElementById('setHoliday').checked = !!d.hien_tai.chuc_le;
   document.getElementById('setHabit').value = d.hien_tai.nhac_thoi_quen || '';
+  if (d.hien_tai.giong) document.getElementById('setVoice').value = d.hien_tai.giong;
+  document.getElementById('setRate').value = d.hien_tai.toc_do_giong || 0;
+  document.getElementById('setPitch').value = d.hien_tai.cao_do_giong || 0;
+  showVoiceNums();
   quietRange = d.hien_tai.gio_yen_lang || '';  // áp dụng ngay cho giọng đọc
 }
+function showVoiceNums() {
+  const r = +document.getElementById('setRate').value, p = +document.getElementById('setPitch').value;
+  document.getElementById('setRateOut').textContent = (r > 0 ? '+' : '') + r;
+  document.getElementById('setPitchOut').textContent = (p > 0 ? '+' : '') + p;
+}
+['setRate', 'setPitch'].forEach(id => document.getElementById(id).addEventListener('input', showVoiceNums));
 function settingsNote(text) { settingsMsg.textContent = text; settingsMsg.hidden = !text; }
 async function loadSettings() {
   settingsNote('');
   try { const r = await fetch('/api/cai-dat'); if (r.ok) fillSettings(await r.json()); } catch (e) {}
 }
 async function sendSettings(method, body) {
+  let ok = false;
   try {
     const r = await fetch('/api/cai-dat', { method, headers: { 'Content-Type': 'application/json' }, body: body && JSON.stringify(body) });
     const d = await r.json().catch(() => ({}));
     if (!r.ok) { settingsNote(typeof d.detail === 'string' ? d.detail : 'Không lưu được'); return; }
-    fillSettings(d); settingsNote(method === 'DELETE' ? 'Đã về như file .env.' : 'Đã lưu, áp dụng ngay.');
+    fillSettings(d); settingsNote(method === 'DELETE' ? 'Đã về như file .env.' : 'Đã lưu, áp dụng ngay.'); ok = true;
   } catch (e) { settingsNote('Mất mạng, thử lại nha.'); }
+  return ok;
 }
-document.getElementById('settingsForm').addEventListener('submit', (ev) => {
-  ev.preventDefault();
-  sendSettings('PUT', {
+function settingsBody() {
+  return {
     thanh_pho: document.getElementById('setCity').value,
     gio_yen_lang: document.getElementById('setQuiet').value,
     tong_ket_tuan: document.getElementById('setRecap').checked,
     chuc_le: document.getElementById('setHoliday').checked,
     nhac_thoi_quen: document.getElementById('setHabit').value,
-  });
+    giong: document.getElementById('setVoice').value,
+    toc_do_giong: +document.getElementById('setRate').value,
+    cao_do_giong: +document.getElementById('setPitch').value,
+  };
+}
+document.getElementById('tryVoice').onclick = async () => {
+  if (!(await sendSettings('PUT', settingsBody()))) return;
+  const bat = voiceOn; voiceOn = true; aiLoiDen = 0;  // nghe thử kể cả khi đang tắt giọng nói
+  speak('Meo~ Bơ nói giọng này nha. Nghe dễ thương không?');
+  voiceOn = bat;
+};
+document.getElementById('settingsForm').addEventListener('submit', (ev) => {
+  ev.preventDefault();
+  sendSettings('PUT', settingsBody());
 });
 document.getElementById('resetSettings').onclick = () => {
   if (confirm('Bỏ cài đặt đã chỉnh trên web, dùng lại giá trị trong file .env?')) sendSettings('DELETE');

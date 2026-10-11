@@ -207,3 +207,7 @@ header.dang-laser { touch-action: none; cursor: crosshair; position: relative; }
 .meo:is(.ngap, .an, .giat) .mieng-mo { display: inline !important; }
 .meo:is(.liem, .liem-mep) :is(.mieng-w, .mieng-buon, .mieng-mo) { display: none !important; }
 .meo:is(.liem, .liem-mep) .luoi-liem { display: inline !important; }
+
+/* Giọng AI đang phát: miệng mở theo âm lượng thật (giong_noi.js đặt --mo) */
+.face.talking.noi-that .mieng-w { display: none; }
+.face.talking.noi-that .mieng-mo { display: inline; animation: none !important; transform: scaleY(var(--mo, .5)); transition: transform .06s; }

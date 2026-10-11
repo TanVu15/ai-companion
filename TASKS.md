@@ -260,12 +260,12 @@
 - [x] Chụp ảnh/kiểm tra trên màn hình điện thoại: chạm không bị nhầm với cuộn trang
 
 ## Giai đoạn 48 – Bơ nói bằng giọng AI miễn phí (edge-tts)
-- [ ] Thêm `edge-tts` vào requirements. Endpoint `/api/giong` nhận chữ → trả mp3; lưu đệm theo nội dung trong data/am_thanh/ (xóa bớt khi quá 200 file)
-- [ ] Giọng mặc định `vi-VN-HoaiMyNeural`, chỉnh cao độ hơi cao cho dễ thương; chọn được `vi-VN-NamMinhNeural`, tốc độ, cao độ trong Cài đặt
-- [ ] Web phát mp3 thay cho giọng trình duyệt khi bật "Giọng nói"; edge-tts lỗi/không mạng → tự dùng giọng trình duyệt, báo nhỏ một lần
-- [ ] Miệng mèo mấp máy theo âm lượng thật của file đang phát (Web Audio analyser)
-- [ ] Câu dài: tách câu, đọc câu đầu ngay để đỡ chờ
-- [ ] Test giả lập edge-tts (không gọi mạng). Ghi "Tân cần thử" vì máy làm việc của Claude không gọi được Microsoft
+- [x] Thêm `edge-tts` vào requirements. Endpoint `/api/giong` nhận chữ → trả mp3; lưu đệm theo nội dung trong data/am_thanh/ (xóa bớt khi quá 200 file)
+- [x] Giọng mặc định `vi-VN-HoaiMyNeural`, chỉnh cao độ hơi cao cho dễ thương; chọn được `vi-VN-NamMinhNeural`, tốc độ, cao độ trong Cài đặt
+- [x] Web phát mp3 thay cho giọng trình duyệt khi bật "Giọng nói"; edge-tts lỗi/không mạng → tự dùng giọng trình duyệt, báo nhỏ một lần
+- [x] Miệng mèo mấp máy theo âm lượng thật của file đang phát (Web Audio analyser)
+- [x] Câu dài: tách câu, đọc câu đầu ngay để đỡ chờ
+- [x] Test giả lập edge-tts (không gọi mạng). Ghi "Tân cần thử" vì máy làm việc của Claude không gọi được Microsoft
 
 ## Giai đoạn 49 – Trò chuyện bằng giọng mượt
 - [ ] Nút micro to "bấm giữ để nói" ngay dưới mèo (kiểu bộ đàm), thả ra là gửi
