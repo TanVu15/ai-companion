@@ -213,7 +213,8 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
     len.classList.add('dang-om');
     lenS = { ...lenS, x: q.x - r.left, y: q.y - r.top, vx: 0, vy: 0, yen: true };
     veLen();
-    svg.classList.add('om-len'); conChoi(); dem('om_len'); noi('om_len', true);
+    svg.classList.add('om-len'); conChoi();
+    noi('om_len', true, dem('om_len').om_len === 1);  // lần ôm đầu tiên trong ngày: đọc to (khi bật Giọng nói)
     if (nhin) nhin.setAttribute('transform', 'translate(0 3)');
     lenOm = setTimeout(daLen, 2200);
   }

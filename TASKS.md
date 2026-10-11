@@ -407,7 +407,7 @@
 - [x] Rà soát giai đoạn 75, sửa lỗi tìm được
 
 ## Giai đoạn 76 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
-- [ ] Bật "Giọng nói": lần ôm len đầu tiên trong ngày Bơ đọc to câu ôm len; các lần sau chỉ hiện chữ
+- [x] Bật "Giọng nói": lần ôm len đầu tiên trong ngày Bơ đọc to câu ôm len; các lần sau chỉ hiện chữ
 - [ ] Rà soát giai đoạn 76, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)

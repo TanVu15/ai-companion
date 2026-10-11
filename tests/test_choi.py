@@ -368,6 +368,7 @@ def test_len_gan_meo():
     # cầm len lên giữa chừng thì thôi ôm; vừa đá ra thì khỏi vồ lại liền
     assert "ev.preventDefault(); ev.stopPropagation(); thoiOmLen();" in js
     assert "voLen = Date.now() + 400;" in js
+    assert "noi('om_len', true, dem('om_len').om_len === 1);" in js  # lần ôm đầu tiên trong ngày đọc to
 
 
 def test_cho_an_luc_om_len_thi_buong_len():
