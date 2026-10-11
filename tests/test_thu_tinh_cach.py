@@ -7,7 +7,7 @@ from tests.test_brain import FakeClient
 
 def test_file_tinh_huong_hop_le():
     ds = json.loads(t.TINH_HUONG_PATH.read_text(encoding="utf-8"))
-    assert len(ds) == 26
+    assert len(ds) == 27
     for th in ds:
         assert th["ten"] and th["tin_nhan"]
 
@@ -117,3 +117,17 @@ def test_cham_thoi_quen():
     co = json.dumps({"noi": "Ok luôn!", "cam_xuc": "vui", "thoi_quen_moi": ["Đọc sách 20 phút"]})
     kq = t.cham({"ten": "TQ", "tin_nhan": "x", "phai_thoi_quen_moi": True}, co, parse_reply(co))
     assert ("Thêm thói quen để theo dõi", True) in kq.kiem_tra
+
+
+def test_tich_hom_qua_va_khong_tra_loi_nhanh():
+    from app import config
+
+    th = {"ten": "Bù", "tin_nhan": "hôm qua mình có đọc sách", "thoi_quen_dang_co": ["Đọc sách"], "phai_tich_hom_qua": True}
+    ok = FakeClient([json.dumps({"noi": "Tích rồi nha!", "cam_xuc": "vui", "thoi_quen_hom_qua": ["Đọc sách"]})])
+    sai = FakeClient([json.dumps({"noi": "Tích rồi nha!", "cam_xuc": "vui", "thoi_quen_xong": ["Đọc sách"]})])
+    assert t.chay(ok, [th])[0].kiem_tra[-1] == ("Tích thói quen vào hôm qua (không phải hôm nay)", True)
+    assert t.chay(sai, [th])[0].kiem_tra[-1][1] is False
+    # Câu hỏi nhanh vẫn được gửi cho AI khi chấm điểm, rồi bật lại như cũ
+    c = FakeClient([json.dumps({"noi": "7h nè", "cam_xuc": "vui"})])
+    [kq] = t.chay(c, [{"ten": "Giờ", "tin_nhan": "mấy giờ rồi"}])
+    assert kq.noi == "7h nè" and len(c.calls) == 1 and config.TRA_LOI_NHANH is True

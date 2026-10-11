@@ -209,7 +209,7 @@
 
 ## Giai đoạn 40 – Thói quen rõ hơn (chỉ phần mềm, Claude tự thêm)
 - [x] Nút "Thói quen": 30 ô vuông cho 30 ngày qua, bấm ô để tích bù ngày quên; "N/30 ngày · chuỗi dài nhất"
-- [ ] Kể "hôm qua mình có đọc sách" → Bơ tích bù hôm qua (thoi_quen_hom_qua)
+- [x] Kể "hôm qua mình có đọc sách" → Bơ tích bù hôm qua (thoi_quen_hom_qua); bộ chấm điểm thêm tình huống (27)
 - [ ] Hỏi nhanh "thói quen hôm nay?" → Bơ trả lời đã/chưa làm gì (miễn phí)
 - [ ] Rà soát code lần 20, sửa lỗi tìm được
 

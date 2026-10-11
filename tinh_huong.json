@@ -265,5 +265,13 @@
     "ten": "Nhờ theo dõi thói quen",
     "tin_nhan": "Bơ theo dõi giúp mình thói quen đọc sách 20 phút mỗi tối nha",
     "phai_thoi_quen_moi": true
+  },
+  {
+    "ten": "Kể bù thói quen hôm qua",
+    "tin_nhan": "À hôm qua mình có đọc sách nha, quên báo Bơ",
+    "thoi_quen_dang_co": [
+      "Đọc sách"
+    ],
+    "phai_tich_hom_qua": true
   }
 ]

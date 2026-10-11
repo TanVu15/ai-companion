@@ -702,4 +702,6 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 ## 2026-10-11 – Giai đoạn 40: thói quen 30 ngày
 - Nút **"Thói quen"**: mỗi thói quen có **30 ô vuông** (30 ngày qua, ô viền vàng là hôm nay, ô xanh là đã làm). Quên tích hôm nào thì **bấm ô ngày đó** để tích bù / bỏ tích. Dưới ô ghi "12/30 ngày · chuỗi dài nhất 9 ngày".
 - 293 test qua hết; đã chụp màn hình kiểm tra trên khổ điện thoại.
+- Kể **"hôm qua mình có đọc sách mà quên báo"** → Bơ tích bù vào hôm qua (chuỗi ngày không bị đứt). Bơ cũng biết thói quen nào hôm qua chưa làm.
+- Bộ chấm điểm `python -m app.thu_tinh_cach`: thêm tình huống "kể bù thói quen hôm qua" (27 tình huống); khi chấm thì tắt trả lời nhanh để chấm đúng câu của AI. 295 test qua hết.
 

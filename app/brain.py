@@ -26,6 +26,7 @@ Chỉ trả về MỘT đối tượng JSON, không viết gì ngoài JSON:
   "xong_viec": ["việc trong phần 'Việc cần làm' mà người dùng nói đã làm xong, chép y nguyên"],
   "thoi_quen_moi": ["thói quen hằng ngày người dùng nhờ theo dõi, ví dụ 'Đọc sách 20 phút'"],
   "thoi_quen_xong": ["thói quen trong phần 'Thói quen hằng ngày' mà người dùng kể HÔM NAY đã làm, chép y nguyên tên"],
+  "thoi_quen_hom_qua": ["thói quen người dùng kể HÔM QUA đã làm (quên báo), chép y nguyên tên"],
   "nhat_ky": "một dòng nhật ký về chuyện đáng nhớ người dùng vừa kể HÔM NAY, hoặc chuỗi rỗng",
   "tam_trang": tâm trạng của NGƯỜI DÙNG trong tin vừa rồi, một trong {config.MOODS}
 }}
@@ -51,6 +52,7 @@ Chỉ trả về MỘT đối tượng JSON, không viết gì ngoài JSON:
 - Hỏi "mình còn việc gì?" thì kể lại từ phần "Việc cần làm" (đừng bịa).
 - "thoi_quen_moi": CHỈ khi người dùng muốn tập/theo dõi một thói quen mỗi ngày ("mình muốn tập dậy sớm, theo dõi giúp
   mình nha"). Tên ngắn. Không có thì để []. "thoi_quen_xong": hôm nay đã làm thói quen nào thì chép tên. Không có thì [].
+  "thoi_quen_hom_qua": người dùng kể HÔM QUA có làm ("hôm qua mình có đọc sách mà quên báo") thì chép tên. Không có thì [].
   Khen khi giữ được chuỗi ngày dài; chưa làm thì có thể nhắc nhẹ vào buổi tối, đừng cằn nhằn.
 - "nhat_ky": khi người dùng kể một việc đã xảy ra/đã làm trong ngày (đi đâu, gặp ai, làm được gì, chuyện vui buồn),
   ghi MỘT dòng ngắn ngôi thứ ba, ví dụ "Đi đá bóng với nhóm bạn cũ, thắng 3-1". Chào hỏi, hỏi đáp thường thì để "".
@@ -76,6 +78,7 @@ class Reply:
     nhat_ky: str = ""  # một dòng nhật ký ngày (nội bộ)
     thoi_quen_moi: list[str] = field(default_factory=list)
     thoi_quen_xong: list[str] = field(default_factory=list)
+    thoi_quen_hom_qua: list[str] = field(default_factory=list)
     tam_trang: str = ""  # tâm trạng người dùng Bơ đoán được (nội bộ, giao diện không dùng)
     loai: str = "nhac"  # với tin tự gửi theo giờ: "nhac" (lời nhắc) hoặc "thoi_quen" (nhắc nhẹ buổi tối)
     viec_nhac: str = ""  # với lời nhắc tới giờ: việc gốc (để bấm "nhắc lại sau")
@@ -249,6 +252,8 @@ def build_system_prompt(
         lines = []
         for h in habits:
             st = "hôm nay đã làm" if h["hom_nay"] else "hôm nay chưa làm"
+            if h.get("ngay_30") and not h["ngay_30"][-2]:
+                st += ", hôm qua chưa làm"
             lines.append(f"- {h['ten']} ({st}; chuỗi {h['chuoi']} ngày liền; {h['tuan']}/7 ngày qua)")
         out += "\n## Thói quen hằng ngày (người dùng nhờ theo dõi)\n" + "\n".join(lines) + "\n"
     if diary:
@@ -324,6 +329,7 @@ def parse_reply(text: str) -> Reply:
                     xong_viec=_str_list(data.get("xong_viec") or []),
                     thoi_quen_moi=_str_list(data.get("thoi_quen_moi") or []),
                     thoi_quen_xong=_str_list(data.get("thoi_quen_xong") or []),
+                    thoi_quen_hom_qua=_str_list(data.get("thoi_quen_hom_qua") or []),
                     nhat_ky=re.sub(r"\s+", " ", data["nhat_ky"]).strip()[:200]
                     if isinstance(data.get("nhat_ky"), str) else "",
                     tam_trang=data.get("tam_trang") if data.get("tam_trang") in config.MOODS else "",
@@ -745,6 +751,7 @@ class Brain:
         if from_user:
             self.memory.add_habits(reply.thoi_quen_moi)
             self.memory.done_habits(reply.thoi_quen_xong, today)
+            self.memory.done_habits(reply.thoi_quen_hom_qua, today - timedelta(days=1))
         if from_user:  # Bơ tự mở lời (tổng kết tuần...) thì không ghi: chuyện cũ sẽ bị ghi nhầm vào hôm nay
             self.memory.add_diary(reply.nhat_ky, today)
         eve_before = {d["id"] for d in self.memory.special_days_tomorrow(today)}

@@ -179,3 +179,16 @@ def test_30_ngay_va_tich_bu(tmp_path):
     mai = (_d.today() + timedelta(days=1)).isoformat()
     for bad in (xa, mai, "hôm qua"):
         assert c.put(f"/api/thoi-quen/{hid}", json={"xong": True, "ngay": bad}).status_code == 400
+
+
+def test_tich_bu_hom_qua_qua_chat(memory):
+    memory.add_habits(["Đọc sách"])
+    client = FakeClient([reply(thoi_quen_hom_qua=["Đọc sách"]), reply()])
+    brain = Brain(memory, client=client)
+    brain.chat("hôm qua mình có đọc sách mà quên báo")
+    assert "- Đọc sách (hôm nay chưa làm, hôm qua chưa làm;" in client.calls[0]["system"]
+    (h,) = memory.habits()
+    assert h["ngay_30"][-2] and not h["hom_nay"] and h["chuoi"] == 1
+    brain.chat("ok")
+    assert "- Đọc sách (hôm nay chưa làm; chuỗi 1 ngày" in client.calls[1]["system"]
+    assert parse_reply(reply(thoi_quen_hom_qua="x")).thoi_quen_hom_qua == []
