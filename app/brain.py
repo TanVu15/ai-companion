@@ -478,7 +478,33 @@ class Brain:
                               viec_nhac=r["viec"])
                 reply.msg_id = self.memory.add_message("assistant", reply.noi, reply.cam_xuc, tu_dong=True)
                 out.append(reply)
+            nudge = self._habit_nudge()
+            if nudge:
+                reply = Reply(noi=nudge, cam_xuc="vui", hanh_dong="nghieng_dau")
+                reply.msg_id = self.memory.add_message("assistant", reply.noi, reply.cam_xuc, tu_dong=True)
+                out.append(reply)
             return out
+
+    def _habit_nudge(self, now: datetime | None = None) -> str:
+        """Từ giờ NHAC_THOI_QUEN tới hết ngày, còn thói quen chưa làm → một câu nhắc nhẹ (mỗi ngày một lần)."""
+        now = now or datetime.now()
+        try:
+            h, m = (int(x) for x in config.NHAC_THOI_QUEN.split(":"))
+        except ValueError:
+            return ""
+        if (now.hour, now.minute) < (h, m) or self.memory.get_kv("nhac_thoi_quen") == now.date().isoformat():
+            return ""
+        habits = self.memory.habits(now.date())
+        if not habits:
+            return ""
+        chua = [x["ten"] for x in habits if not x["hom_nay"]]
+        self.memory.set_kv("nhac_thoi_quen", now.date().isoformat())
+        if not chua:
+            return ""
+        ten = ", ".join(t[:1].lower() + t[1:] for t in chua[:3]) + (" ..." if len(chua) > 3 else "")
+        giu = max((x["chuoi"] for x in habits if not x["hom_nay"]), default=0)
+        tail = f" Đừng để đứt chuỗi {giu} ngày nha!" if giu >= 2 else " Còn kịp đó!"
+        return f"Hôm nay chưa thấy bạn kể {ten}.{tail} Làm rồi thì nhắn Bơ để Bơ tích cho."
 
     def snooze(self, viec: str, minutes: int, now: datetime | None = None) -> str:
         """Nhắc lại việc này sau `minutes` phút (nút "Nhắc lại sau 10 phút"). Trả về giờ sẽ nhắc."""

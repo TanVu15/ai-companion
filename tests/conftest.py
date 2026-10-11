@@ -17,3 +17,9 @@ def _sao_luu_vao_thu_muc_tam(monkeypatch, tmp_path):
 
     monkeypatch.setattr(config, "SAO_LUU_DIR", tmp_path / "sao_luu")
     monkeypatch.setattr(main, "_sao_luu_ngay", None)
+
+
+@pytest.fixture(autouse=True)
+def _tat_nhac_thoi_quen(monkeypatch):
+    # Chạy test buổi tối mà có thói quen thì /api/nhac sẽ có thêm câu nhắc → tắt mặc định, test riêng tự bật.
+    monkeypatch.setattr(config, "NHAC_THOI_QUEN", "")

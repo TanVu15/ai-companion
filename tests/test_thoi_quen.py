@@ -89,3 +89,39 @@ def test_cong_thiet_bi(tmp_path, monkeypatch):
     r = c.get("/api/thiet-bi/thoi-quen?khong_dau=1", headers={"X-Device-Key": "k"}).json()
     assert r == [{"ten": "Doc sach", "hom_nay": False, "chuoi": 0}]
     assert c.get("/api/thiet-bi/thoi-quen", headers={"X-Device-Key": "sai"}).status_code == 401
+
+
+def test_nhac_thoi_quen_buoi_toi(memory, monkeypatch):
+    from datetime import datetime
+
+    from app import config
+
+    monkeypatch.setattr(config, "NHAC_THOI_QUEN", "20:30")
+    brain = Brain(memory, client=FakeClient([]))
+    tối = datetime(2026, 10, 10, 21, 0)
+    assert brain._habit_nudge(tối) == ""  # chưa có thói quen
+    memory.add_habits(["Đọc sách", "Chạy bộ"])
+    hid = memory.habits()[1]["id"]
+    for k in range(1, 4):
+        memory.set_habit_done(hid, True, date(2026, 10, 10) - timedelta(days=k))
+    assert brain._habit_nudge(datetime(2026, 10, 10, 20, 0)) == ""  # chưa tới giờ
+    text = brain._habit_nudge(tối)
+    assert "đọc sách, chạy bộ" in text and "chuỗi 3 ngày" in text
+    assert brain._habit_nudge(tối) == ""  # mỗi ngày một lần
+    memory.set_habit_done(memory.habits()[0]["id"], True, date(2026, 10, 11))
+    memory.set_habit_done(hid, True, date(2026, 10, 11))
+    assert brain._habit_nudge(datetime(2026, 10, 11, 22, 0)) == ""  # làm hết rồi
+    monkeypatch.setattr(config, "NHAC_THOI_QUEN", "")
+    assert brain._habit_nudge(datetime(2026, 10, 12, 22, 0)) == ""
+
+
+def test_nhac_thoi_quen_qua_api(tmp_path, monkeypatch):
+    from app import config, main
+
+    c = make_client(tmp_path, [])
+    monkeypatch.setattr(config, "NHAC_THOI_QUEN", "00:00")
+    assert c.get("/api/nhac").json() == []
+    main._brain.memory.add_habits(["Đọc sách"])
+    r = c.get("/api/nhac").json()
+    assert len(r) == 1 and "đọc sách" in r[0]["noi"]
+    assert c.get("/api/nhac").json() == []

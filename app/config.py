@@ -45,6 +45,9 @@ TU_SAO_LUU = os.getenv("TU_SAO_LUU", "1") == "1"
 SAO_LUU_GIU = int(os.getenv("SAO_LUU_GIU", "7"))
 SAO_LUU_DIR = (ROOT / DB_PATH).resolve().parent / "sao_luu"
 
+# Tối mà còn thói quen chưa làm thì Bơ nhắc nhẹ một lần lúc giờ này (miễn phí, không gọi API). Để trống = tắt.
+NHAC_THOI_QUEN = os.getenv("NHAC_THOI_QUEN", "20:30")
+
 # Giờ yên lặng "23-6": trong khoảng này Bơ không TỰ đọc to (lời nhắc, lời chào); vẫn hiện chữ. Để trống = tắt.
 GIO_YEN_LANG = os.getenv("GIO_YEN_LANG", "23-6")
 

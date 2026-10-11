@@ -661,3 +661,7 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - SU_CO.md thêm 5 sự cố (khôi phục bản tự sao lưu, lịch điện thoại, nhật ký sai, thói quen không tích).
 - 238 test qua hết.
 
+## 2026-10-11 – Giai đoạn 38: nhắc thói quen buổi tối
+- Từ 20:30, nếu web đang mở và còn thói quen chưa làm, Bơ nhắn một câu: "Hôm nay chưa thấy bạn kể đọc sách. Đừng để đứt chuỗi 3 ngày nha!" — mỗi ngày một lần, câu soạn sẵn nên **không tốn tiền API**. Đổi giờ bằng `NHAC_THOI_QUEN` trong `.env` (để trống = tắt).
+- 240 test qua hết.
+
