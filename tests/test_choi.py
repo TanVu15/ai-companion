@@ -272,3 +272,8 @@ def test_be_bo_keo_len():
 def test_boop_mui_va_nung_ma():
     v = node("""console.log(JSON.stringify([[100, 88], [100, 94], [62, 91], [138, 92], [100, 60], [80, 74]].map(([x, y]) => [C.boVungCham(x, y), C.boChiTietDau(x, y)])))""")
     assert v == [["dau", "mui"], ["dau", "mui"], ["dau", "ma_trai"], ["dau", "ma_phai"], ["dau", None], ["dau", None]]  # mũi, má đều nằm trong đầu; trán, mắt thì vẫn là xoa đầu
+
+
+def test_ngap_lay():
+    v = node("""console.log(JSON.stringify(['buồn ngủ quá', 'Bơ ơi mình đi ngủ nha', '😴', 'ngáp hoài', 'ngủ ngon nha Bơ', 'ngủ trưa dậy rồi', 'thương Bơ, buồn ngủ quá', 'tối ăn cá rồi đi ngủ'].map(C.boPhanUngTin)))""")
+    assert v == ["ngap", "ngap", "ngap", "ngap", "ngap", None, "tim", "ca"]  # cá / tim ưu tiên trước

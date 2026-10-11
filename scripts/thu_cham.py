@@ -79,6 +79,8 @@ def thu(pg, ten, w, h):
     kq.append(("giữ phím B (bế)", dang_be and not co("be"))); nghi()
     pg.fill('#input', 'tối nay ăn cá'); pg.keyboard.press('Enter'); pg.wait_for_timeout(300)
     kq.append(("tin có chữ cá", co("liem-mep")))
+    pg.wait_for_timeout(3000); pg.fill('#input', 'buồn ngủ quá'); pg.keyboard.press('Enter'); pg.wait_for_timeout(300)
+    kq.append(("tin buồn ngủ → ngáp lây", co("ngap")))
     return kq
 
 

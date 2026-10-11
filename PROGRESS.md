@@ -5,6 +5,9 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-11 – Giai đoạn 69 (đang làm): Bơ đồng cảm
+- **Ngáp lây**: gửi tin có "buồn ngủ", "ngáp", "đi ngủ", "ngủ ngon" hoặc 😴 → Bơ ngáp theo ngay (trước khi Bơ trả lời, không tốn API). "ngủ trưa dậy rồi" thì không. Máy bật giảm chuyển động thì thôi.
+
 ## 2026-10-11 – Giai đoạn 68 xong: bế Bơ ấm hơn
 - **Bế yên**: bế Bơ lên rồi giữ yên khoảng 2,5 giây → Bơ thả lỏng trên tay, nhắm mắt lim dim, má hồng, rừ rừ "Rừ rừ... cứ bế Bơ vầy hoài nha". Lắc lên xuống thì Bơ mở mắt lại. Ảnh `docs/anh/meo-be-em.png`.
 - Bật "Giọng nói": lần bế đầu tiên trong ngày Bơ đọc to "Ơ ơ, bế Bơ đi đâu đó?", các lần sau chỉ kêu "mrr?"; câu bế yên cũng được đọc to.

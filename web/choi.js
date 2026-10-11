@@ -157,11 +157,13 @@ const BO_MON_AN = {
 };
 // Món hợp lệ (món lạ hay chưa chọn → cá)
 function boMonAn(id) { return Object.prototype.hasOwnProperty.call(BO_MON_AN, id) ? id : 'ca'; }
-// Tin nhắn Tân vừa gửi có nhắc tới cá (không tính "cá nhân", "cá tính"...) → 'ca' (Bơ liếm mép); có tim / thương / yêu → 'tim' (tim bay); không thì null
+// Tin nhắn Tân vừa gửi có nhắc tới cá (không tính "cá nhân", "cá tính"...) → 'ca' (Bơ liếm mép); có tim / thương / yêu → 'tim' (tim bay);
+// buồn ngủ / ngáp / 😴 → 'ngap' (Bơ ngáp lây); không thì null
 function boPhanUngTin(text) {
   const s = String(text || '');
   if (/[🐟🐠🐡🍣]/u.test(s) || /(^|[^\p{L}])cá(?!\s*(nhân|tính|cược|thể|biệt))($|[^\p{L}])/iu.test(s)) return 'ca';
   if (/[❤♥💕💖💗😍🥰😘]/u.test(s) || /(^|[^\p{L}])(thương|yêu)(?!\s*cầu)($|[^\p{L}])/iu.test(s)) return 'tim';
+  if (/[😴🥱💤]/u.test(s) || /(^|[^\p{L}])(buồn ngủ|ngáp|đi ngủ|ngủ ngon)($|[^\p{L}])/iu.test(s)) return 'ngap';  // ngáp lây
   return null;
 }
 // Hướng vuốt trên lưng (dx, dy: px từ chỗ bắt đầu vuốt tới giờ; y hướng xuống). Lông mèo mọc xuôi xuống,
@@ -646,13 +648,14 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boChiTietDau, 
   // ---- Bơ hóng chuyện: đang gõ tin thì nhìn xuống khung chat; ngừng gõ 2 giây thì thôi ----
   const oChat = document.getElementById('input');
   if (oChat && oChat.form) oChat.form.addEventListener('submit', () => svg.classList.remove('hong'));
-  // Bơ để ý tin vừa gửi: nói tới cá thì liếm mép, nói thương/yêu thì tim bay (nghe lúc "bắt" — trước khi app.js xóa ô chữ)
+  // Bơ để ý tin vừa gửi: nói tới cá thì liếm mép, nói thương/yêu thì tim bay, nói buồn ngủ thì ngáp lây (nghe lúc "bắt" — trước khi app.js xóa ô chữ)
   document.addEventListener('submit', ev => {
     if (!oChat || ev.target !== oChat.form) return;
     const kieu = boPhanUngTin(oChat.value);
     if (!kieu || dangDoi()) return;
     setTimeout(() => {
       if (kieu === 'ca') { giu('liem-mep', 1400); return; }
+      if (kieu === 'ngap') { if (window.meo && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) meo.lan('ngap', 2200); return; }
       const r = face.getBoundingClientRect(), k = khung.getBoundingClientRect();
       [[0.3, 0.25], [0.7, 0.2], [0.5, 0.05]].forEach(([fx, fy], i) => setTimeout(() => {
         timCuoi = 0; tim(r.left - k.left + r.width * fx, r.top - k.top + r.height * fy);
