@@ -204,7 +204,7 @@
 
 ## Giai đoạn 39 – Trả lời nhanh không tốn API (chỉ phần mềm, Claude tự thêm)
 - [x] "Mấy giờ rồi?", "hôm nay ngày mấy (âm)?", "còn mấy ngày Tết?", "mình còn việc gì cần làm?" → Bơ tự trả lời (miễn phí, cả khi hết ngân sách)
-- [ ] Mục "Bơ làm được gì?" và SU_CO.md nhắc tới trả lời nhanh; nút "?" → Tình trạng đếm số câu trả lời nhanh tháng này
+- [x] Mục "Bơ làm được gì?" và SU_CO.md nhắc tới trả lời nhanh; nút "?" → Tình trạng đếm số câu trả lời nhanh tháng này
 - [ ] Rà soát code lần 19, sửa lỗi tìm được
 
 ## Sau này

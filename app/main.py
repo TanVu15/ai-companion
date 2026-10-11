@@ -318,6 +318,17 @@ def health():
         ok = gio_phut(config.NHAC_THOI_QUEN) is not None
         add("Nhắc thói quen", ok, f"Tối nhắc lúc {config.NHAC_THOI_QUEN}" if ok else
             f"NHAC_THOI_QUEN={config.NHAC_THOI_QUEN} không đúng dạng giờ (ví dụ 20:30) nên đang tắt", "canh_bao")
+    if not config.DEMO:
+        try:
+            from datetime import date
+
+            n = int(get_brain().memory.get_kv("nhanh_" + date.today().strftime("%Y-%m"), "0") or 0)
+        except Exception:
+            n = 0
+        add("Trả lời nhanh", config.TRA_LOI_NHANH,
+            (f"Bật — tháng này Bơ tự trả lời {n} câu, không tốn API" if n else
+             "Bật — hỏi \"mấy giờ rồi?\", \"còn mấy ngày Tết?\"... Bơ trả lời miễn phí") if config.TRA_LOI_NHANH
+            else "Đang tắt (TRA_LOI_NHANH=0)", "canh_bao")
     add("Mật khẩu web", bool(config.APP_PASSWORD),
         "Đã đặt APP_PASSWORD" if config.APP_PASSWORD else "Chưa đặt APP_PASSWORD (ổn nếu chỉ dùng trong nhà)", "canh_bao")
     add("Ngân sách tháng", config.MONTHLY_USD_LIMIT > 0,

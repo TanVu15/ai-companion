@@ -688,4 +688,4 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - Hỏi ngắn **"mấy giờ rồi?", "hôm nay thứ mấy / ngày mấy âm?", "còn mấy ngày nữa Tết?", "mình còn việc gì cần làm?"** → Bơ trả lời ngay bằng câu soạn sẵn, **không gọi API** (nhanh hơn, không tốn tiền, vẫn trả lời được khi hết ngân sách). Gõ không dấu cũng được.
 - Chỉ áp dụng khi CẢ tin nhắn là câu hỏi đó; câu dài hơn ("mấy giờ rồi mà mình chưa ngủ được") vẫn để AI trả lời tự nhiên. Tắt bằng `TRA_LOI_NHANH=0` trong `.env`.
 - 271 test qua hết.
-
+- Nút "?" → "Bơ làm được gì?" có mục **Hỏi nhanh, miễn phí**; mục **Tình trạng** báo "tháng này Bơ tự trả lời N câu, không tốn API". SU_CO.md thêm cách tắt. 272 test qua hết.

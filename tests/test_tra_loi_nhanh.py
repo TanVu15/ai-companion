@@ -70,3 +70,19 @@ def test_brain_khong_goi_api(memory, monkeypatch):
     monkeypatch.setattr(config, "TRA_LOI_NHANH", False)
     client.replies.append(json.dumps({"noi": "Tầm 7h đó", "cam_xuc": "vui"}))
     assert brain.chat("mấy giờ rồi").noi == "Tầm 7h đó"
+
+
+def test_api_va_tinh_trang(tmp_path, monkeypatch):
+    from tests.test_api import make_client
+
+    c = make_client(tmp_path, [])
+    checks = {k["ten"]: k for k in c.get("/api/suc-khoe").json()["kiem_tra"]}
+    assert "miễn phí" in checks["Trả lời nhanh"]["ghi_chu"]
+    r = c.post("/api/chat", json={"text": "hôm nay thứ mấy?"}).json()
+    assert r["noi"].startswith("Hôm nay là") and r["id"] == 2 and r["id_nguoi_dung"] == 1
+    c.post("/api/chat", json={"text": "may gio roi"})
+    checks = {k["ten"]: k for k in c.get("/api/suc-khoe").json()["kiem_tra"]}
+    assert "tự trả lời 2 câu" in checks["Trả lời nhanh"]["ghi_chu"]
+    monkeypatch.setattr(config, "TRA_LOI_NHANH", False)
+    checks = {k["ten"]: k for k in c.get("/api/suc-khoe").json()["kiem_tra"]}
+    assert checks["Trả lời nhanh"]["muc"] == "canh_bao"

@@ -35,6 +35,7 @@
 | Thêm ngày mới mà lịch điện thoại không có | File lịch là bản chụp lúc tải | Tải lại và mở lại file (điện thoại cập nhật, không nhân đôi) |
 | Bơ ghi nhật ký sai / thừa | AI tóm nhầm | Nút "Nhật ký" → "Sửa" hoặc "Xóa" dòng đó |
 | Kể "đọc sách rồi" mà thói quen không được tích | Tên kể khác xa tên thói quen | Nút "Thói quen" → tự tích ô hôm nay; hoặc đặt tên thói quen ngắn, dễ nhắc |
+| Hỏi "mấy giờ rồi?" mà Bơ trả lời cứng nhắc, hoặc muốn Bơ trả lời bằng AI | Đó là "trả lời nhanh" (miễn phí, câu soạn sẵn) | Hỏi dài hơn một chút ("mấy giờ rồi Bơ, mình buồn ngủ quá") là AI trả lời; hoặc tắt hẳn bằng `TRA_LOI_NHANH=0` trong `.env` |
 | Lỡ đổi màu mặt Bơ | — | Nút "?" → Màu mặt Bơ → chọn "Vàng (mặc định)" |
 | Mới `git pull` mà web vẫn cũ | Cửa sổ `run.bat` cũ còn chạy | Tắt cửa sổ đó, chạy lại `run.bat` (nó tự cài thêm thư viện mới nếu có). Vẫn lỗi thư viện thì xóa thư mục `.venv` rồi chạy lại |
 | Hỏi mật khẩu mãi | Gõ sai `APP_PASSWORD` | Mật khẩu phân biệt hoa/thường, tên đăng nhập gõ gì cũng được |

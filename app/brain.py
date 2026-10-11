@@ -546,6 +546,8 @@ class Brain:
         reply = Reply(noi=noi, cam_xuc=cam_xuc, hanh_dong="gat_dau")
         reply.user_msg_id = self.memory.add_message("user", user_text)
         reply.msg_id = self.memory.add_message("assistant", noi, cam_xuc)
+        key = "nhanh_" + (now or datetime.now()).strftime("%Y-%m")  # đếm để nút "?" báo đã tiết kiệm bao nhiêu câu
+        self.memory.set_kv(key, str(int(self.memory.get_kv(key, "0") or 0) + 1))
         log.info("Trả lời nhanh (%s), không gọi API", loai)
         return reply
 
