@@ -284,6 +284,12 @@
 - [x] Theo giờ: khuya (sau 22h) Bơ lim dim, hay ngáp hơn; sáng sớm mở web thì Bơ vươn vai
 - [x] Rà soát giai đoạn 51, sửa lỗi tìm được
 
+## Giai đoạn 52 – Giọng có cảm xúc, đồ chơi cuộn len (Claude tự thêm, trong hướng mèo/chạm/giọng)
+- [x] Giọng AI đổi nhẹ theo cảm xúc của câu: vui/hào hứng nhanh và cao hơn, buồn chậm và trầm hơn (giọng trình duyệt cũng vậy)
+- [ ] Đang bật "Giọng nói": vài câu chơi (mừng rỡ, ăn cá, dỗi, làm lành) được đọc to bằng giọng AI (câu ngắn, có sẵn → lưu đệm, gần như không tốn mạng)
+- [ ] Đồ chơi cuộn len: bấm giữ nút laser để đổi sang cuộn len; kéo ném cuộn len, nó lăn và nảy, Bơ vồ khi len chạm người
+- [ ] Rà soát giai đoạn 52, sửa lỗi tìm được
+
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):
 - [ ] Xem / xóa "chuyện Bơ định hỏi thăm" trên web (trong "Bơ nhớ gì về mình?"), và báo trong dòng "✓ Bơ đã ghi: sẽ hỏi thăm ..."

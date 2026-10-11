@@ -147,3 +147,19 @@ def test_env_giong_ghi_sai_khong_lam_hong_may_chu(monkeypatch):
     for gt, mong in [("+10%", 10), ("8Hz", 8), (" -5 ", -5), ("abc", 3), ("", 3), ("99", 50), ("-80%", -50)]:
         monkeypatch.setenv("TOC_DO_GIONG", gt)
         assert config._so_giong("TOC_DO_GIONG", 3, -50, 50) == mong, gt
+
+
+def test_giong_theo_cam_xuc(gia, tmp_path):
+    asyncio.run(giong.doc("Vui quá", cam_xuc="hao_hung"))
+    asyncio.run(giong.doc("Buồn ghê", cam_xuc="buon"))
+    asyncio.run(giong.doc("Bình thường", cam_xuc="la_hoac_sai"))
+    assert [g[2:] for g in gia] == [("+10%", "+16Hz"), ("-10%", "+2Hz"), ("+0%", "+8Hz")]
+    # cùng chữ, khác cảm xúc là file khác (không lấy nhầm giọng buồn cho câu vui)
+    asyncio.run(giong.doc("Vui quá", cam_xuc="buon"))
+    assert len(gia) == 4
+    # cài đặt đã ở mức cao nhất thì kẹp lại, không gửi số quá khoảng
+    config.TOC_DO_GIONG, config.CAO_DO_GIONG = 50, 40
+    assert giong.tham_so("hao_hung")[1:] == ("+60%", "+48Hz")
+    assert set(giong.THEO_CAM_XUC) == set(config.EMOTIONS)
+    c = make_client(tmp_path, [])
+    assert c.post("/api/giong", json={"text": "Meo", "cam_xuc": "vui"}).status_code == 200

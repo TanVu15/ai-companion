@@ -161,6 +161,7 @@ def chat(body: ChatIn):
 
 class GiongIn(BaseModel):
     text: str
+    cam_xuc: str = ""  # cảm xúc của câu (mặt mèo đang có) → giọng vui/buồn hơn một chút
 
 
 _giong_da_ap_dung = False
@@ -176,7 +177,7 @@ async def giong_noi(body: GiongIn):
         cai_dat.ap_dung()
         _giong_da_ap_dung = True
     try:
-        mp3 = await giong.doc(body.text)
+        mp3 = await giong.doc(body.text, cam_xuc=body.cam_xuc[:20])
     except giong.GiongLoi as e:
         raise HTTPException(503, str(e))
     return Response(mp3, media_type="audio/mpeg", headers={"Cache-Control": "no-store"})

@@ -73,10 +73,20 @@ def chuan_hoa(text: str) -> str:
     return text[:DAI_TOI_DA]
 
 
-def tham_so() -> tuple[str, str, str]:
-    """(giọng, tốc độ "+10%", cao độ "+8Hz") đang dùng — theo cài đặt trên web hoặc .env."""
+# Giọng đổi nhẹ theo cảm xúc của câu: (cộng thêm tốc độ %, cộng thêm cao độ Hz). Cảm xúc lạ/không có → giữ nguyên.
+THEO_CAM_XUC = {
+    "vui": (5, 4), "hao_hung": (10, 8), "ngac_nhien": (5, 6),
+    "buon": (-10, -6), "thuong": (-5, 2), "suy_nghi": (-5, 0), "binh_thuong": (0, 0),
+}
+
+
+def tham_so(cam_xuc: str = "") -> tuple[str, str, str]:
+    """(giọng, tốc độ "+10%", cao độ "+8Hz") đang dùng — theo cài đặt trên web hoặc .env, chỉnh nhẹ theo cảm xúc."""
     giong = config.GIONG if config.GIONG in GIONG else "vi-VN-HoaiMyNeural"
-    return giong, f"{config.TOC_DO_GIONG:+d}%", f"{config.CAO_DO_GIONG:+d}Hz"
+    them_toc, them_cao = THEO_CAM_XUC.get(cam_xuc or "", (0, 0))
+    toc = max(-50, min(60, config.TOC_DO_GIONG + them_toc))
+    cao = max(-40, min(50, config.CAO_DO_GIONG + them_cao))
+    return giong, f"{toc:+d}%", f"{cao:+d}Hz"
 
 
 def _ten_file(text: str, giong: str, toc_do: str, cao_do: str) -> str:
@@ -93,12 +103,12 @@ def _don_bot(thu_muc: Path, giu: int) -> None:
             pass
 
 
-async def doc(text: str, thu_muc: Path | None = None) -> bytes:
-    """Chữ → mp3 (bytes). Có trong đệm thì lấy ra, không gọi mạng."""
+async def doc(text: str, thu_muc: Path | None = None, cam_xuc: str = "") -> bytes:
+    """Chữ → mp3 (bytes). Có trong đệm thì lấy ra, không gọi mạng. cam_xuc: giọng vui/buồn hơn một chút."""
     text = chuan_hoa(text)
     if not text:
         raise GiongLoi("Không có chữ để đọc")
-    giong, toc_do, cao_do = tham_so()
+    giong, toc_do, cao_do = tham_so(cam_xuc)
     thu_muc = Path(thu_muc or config.AM_THANH_DIR)
     f = thu_muc / _ten_file(text, giong, toc_do, cao_do)
     if f.exists() and f.stat().st_size > 0:

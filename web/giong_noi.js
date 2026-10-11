@@ -74,8 +74,10 @@ function baoNho(msg) {
   statusEl.textContent = msg;
   setTimeout(() => { if (statusEl.textContent === msg) statusEl.textContent = ''; }, 6000);
 }
+// Gửi kèm cảm xúc đang hiện trên mặt mèo (app.js đặt trước khi đọc) → giọng vui/buồn hơn một chút
 function layGiong(t) {
-  return fetch('/api/giong', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: t }) })
+  const camXuc = face.dataset.e && face.dataset.e !== 'ngu' ? face.dataset.e : '';
+  return fetch('/api/giong', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: t, cam_xuc: camXuc }) })
     .then(r => { if (!r.ok) throw new Error('giong ' + r.status); return r.blob(); });
 }
 // Đọc lần lượt từng đoạn; trong lúc đọc đoạn này thì tải sẵn đoạn sau. Lỗi giữa chừng → báo phần còn lại cho giọng trình duyệt
@@ -166,6 +168,8 @@ function speakTrinhDuyet(text, id) {
   speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
   u.lang = 'vi-VN'; u.rate = RATES[rateIdx][1]; const v = viVoice(); if (v) u.voice = v;
+  const e = face.dataset.e;  // giọng trình duyệt cũng vui/buồn nhẹ theo mặt mèo
+  u.pitch = e === 'hao_hung' || e === 'vui' || e === 'ngac_nhien' ? 1.15 : e === 'buon' ? 0.9 : 1;
   u.onstart = () => face.classList.add('talking');
   u.onend = u.onerror = () => xongDoc(id);  // lần đọc cũ bị ngắt thì xongDoc tự bỏ qua
   speaking = true; speechSynthesis.speak(u);
