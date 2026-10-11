@@ -375,3 +375,15 @@ def test_cho_an_luc_om_len_thi_buong_len():
     choi = (config.ROOT / "web" / "choi.js").read_text(encoding="utf-8")
     assert "dangAn = true; doChoi.thaLen();" in choi
     assert "doChoi.thaLen = thaLen;" in (config.ROOT / "web" / "do_choi.js").read_text(encoding="utf-8")
+
+
+def test_laser_truoc_mat():
+    """Chấm laser đứng yên trên sàn trước/cạnh chân Bơ → Bơ rình rồi vồ đè lên, nhấc chân ngó; trên cao hay xa quá thì không."""
+    v = node("""console.log(JSON.stringify([C.boLaserTruocMat(100, 190), C.boLaserTruocMat(50, 180), C.boLaserTruocMat(170, 200),
+      C.boLaserTruocMat(100, 120), C.boLaserTruocMat(195, 190), C.boLaserTruocMat(100, 270)]))""")
+    assert v == [True, True, True, False, False, False]
+    assert "laser_mat" in node("console.log(JSON.stringify(Object.keys(C.BO_CAU_CHOI)))")
+    css = (config.ROOT / "web" / "meo.css").read_text(encoding="utf-8")
+    assert ".laser.bi-de" in css and ".meo.ngo-chan .paw-r" in css
+    js = (config.ROOT / "web" / "do_choi.js").read_text(encoding="utf-8")
+    assert "clearTimeout(laserTat); thoiRinhLaser();" in js  # tắt laser thì thôi rình

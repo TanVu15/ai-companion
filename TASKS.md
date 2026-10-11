@@ -399,7 +399,7 @@
 - [x] Rà soát giai đoạn 73, sửa lỗi tìm được
 
 ## Giai đoạn 74 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
-- [ ] Chấm laser đứng yên trên sàn trước mặt Bơ → Bơ rình rồi vồ đè chân lên chấm, nhấc chân lên ngó "Ủa, đâu mất rồi?"
+- [x] Chấm laser đứng yên trên sàn trước mặt Bơ → Bơ rình rồi vồ đè chân lên chấm, nhấc chân lên ngó "Ủa, đâu mất rồi?"
 - [ ] Rà soát giai đoạn 74, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)

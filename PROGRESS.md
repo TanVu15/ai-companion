@@ -5,6 +5,10 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-11 – Giai đoạn 74 (đang làm): Bơ săn chấm laser
+- **Vồ chấm laser**: bật tia laser, để chấm đỏ dừng yên trên sàn ngay trước/cạnh chân Bơ khoảng 1 giây → Bơ hạ người rình, ngoáy mông, rồi vồ đè chân lên chấm (chấm khuất dưới chân), xong nhấc chân lên ngó "Ủa, đâu mất rồi?". Rê chấm đi chỗ khác thì Bơ thôi rình. Nghỉ 4 giây giữa hai lần. Ảnh `docs/anh/meo-vo-laser.png` (trái: rình, phải: nhấc chân ngó). `scripts/thu_cham.py` thử thêm — đạt hết. 434 test qua hết.
+**Tân cần thử:** bật nút chấm đỏ, rê chấm xuống sàn ngay dưới chân Bơ rồi giữ yên tay.
+
 ## 2026-10-11 – Giai đoạn 73 xong: Bơ ôm cuộn len
 - **Ôm len**: để cuộn len nằm yên sát bên Bơ (ngang tầm chân) khoảng 1,5 giây → Bơ kéo len vào lòng, hai chân trước kẹp len, cúi đầu cắn cắn "Ôm len! Cắn cắn~", khoảng 2 giây sau chân sau đá len văng ra "Đá! Bay xa chưa?". Nghỉ 8 giây giữa hai lần. Đang ôm mà cầm len lên thì Bơ thả ra ngay. Ảnh `docs/anh/meo-om-len.png` (trái: ôm, phải: đá). `scripts/thu_cham.py` thử thêm — đạt hết. 432 test qua hết.
 - Rà soát, sửa: đang ôm len mà bấm cho ăn thì trước đây Bơ vừa ôm vừa ăn (miệng, chân lẫn lộn) → giờ Bơ buông len (len lăn nhẹ ra) rồi ăn. Máy bật giảm chuyển động thì len không trượt/lắc, chỉ đổi tư thế. Ôm len với mèo đen, tam thể (nền tối), mướp vằn trên màn hình thấp: rõ, không vỡ hình (ảnh `docs/anh/om-len-kieu-long.png`). 433 test qua hết.

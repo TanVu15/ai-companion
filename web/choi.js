@@ -39,6 +39,7 @@ const BO_CAU_CHOI = {
   an_pate: ['Pate! Bơ mê pate nhất trần đời~', 'Măm măm, béo ngậy ghê!', 'Pate ngon quá, Bơ béo thêm nữa rồi nè'],
   no: ['Bơ no căng rồi, để dành mai nha~', 'Béo quá rồi, thôi thôi.'],
   len: ['Cuộn len! Của Bơ!', 'Bép! Bơ đập trúng rồi', 'Ném nữa đi, ném nữa đi!', 'Hí hí, lăn đi đâu đó?'],
+  laser_mat: ['Ủa, đâu mất rồi?', 'Bắt được rồi mà... đâu rồi ta?', 'Hửm? Nó trốn đi đâu vậy?'],
   laser: ['Cái chấm đỏ kìa!!', 'Bắt được rồi... ủa đâu?', 'Lần này Bơ bắt được cho coi!'],
   long_vu: ['Lông vũ! Lông vũ!', 'Hụt rồi... lần nữa!', 'Bơ với tới nè!', 'Xuống thấp xíu đi mà~'],
   nguoc: ['Ngược lông rồi á!', 'Ơ kìa, vuốt xuôi cơ mà~', 'Lông Bơ dựng hết rồi nè!', 'Hướng kia mới đúng nha!'],

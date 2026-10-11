@@ -36,6 +36,12 @@ function boLongVuRinh(x, y) {
   return y >= 165 && y <= 250 && Math.abs(x - 100) <= 95;
 }
 
+// Chấm laser đứng yên trên sàn ngay trước/cạnh chân Bơ (tọa độ khung vẽ 200×192)? Đứng yên vậy một lúc thì Bơ rình,
+// vồ đè chân lên chấm, rồi nhấc chân ngó "đâu mất rồi?". (Chấm chạm hẳn vào chân/người thì là vồ thường, chỗ gọi tự loại.)
+function boLaserTruocMat(x, y) {
+  return y >= 176 && y <= 250 && Math.abs(x - 100) <= 80;
+}
+
 // Lông vũ lơ lửng ngang tầm bên hông Bơ (không trên đầu, không sát đất) → Bơ nghiêng người giơ một chân quơ về bên đó.
 // Trả về 'trai' / 'phai' (bên trái/phải của hình) hoặc null
 function boLongVuBenHong(x, y) {
@@ -51,7 +57,7 @@ function boLenGanMeo(x, y) {
   return y >= 150 && y <= 215 && Math.abs(x - 100) <= 115;
 }
 
-if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boLongVuRinh, boLongVuBenHong, boLenGanMeo };
+if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boLongVuRinh, boLongVuBenHong, boLenGanMeo, boLaserTruocMat };
 
 // ---- Phần giao diện ----
 (function () {
@@ -64,6 +70,35 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
   // ---- Tia laser: chấm đỏ theo ngón tay/chuột trong vùng quanh mèo; mèo nhìn theo, chấm tới gần thì vồ ----
   const nutLaser = document.getElementById('doChoi');
   let laserBat = false, cham_ = null, voCuoi = 0, laserTat = null;
+  let lzHen = null, lzRinh = null, lzNgo = null, lzCuoi = 0;  // hẹn rình chấm đứng yên, đang rình (hẹn vồ), đang đè chấm, lần vồ gần nhất
+  // Thôi rình chấm (chấm chạy đi, tắt laser...)
+  function thoiRinhLaser() {
+    clearTimeout(lzHen); lzHen = null;
+    if (lzRinh) { clearTimeout(lzRinh); lzRinh = null; svg.classList.remove('rinh'); }
+  }
+  function ranhRinhLaser() {
+    return laserBat && !document.hidden && !dangDoi() && face.dataset.e !== 'ngu' && !lzNgo && Date.now() - lzCuoi > 4000 &&
+      !['an', 'be', 'lan', 'om-len'].some(c => svg.classList.contains(c));
+  }
+  // Chấm đỏ đứng yên 0,9 giây trước chân Bơ → rình (hạ người, ngoáy mông) 1,2 giây → vồ đè chân lên chấm → nhấc chân ngó
+  function henRinhLaser() {
+    clearTimeout(lzHen);
+    lzHen = setTimeout(() => {
+      lzHen = null;
+      if (!ranhRinhLaser() || lzRinh) return;
+      svg.classList.add('rinh'); conChoi(); noi('rinh');
+      lzRinh = setTimeout(() => {
+        lzRinh = null; svg.classList.remove('rinh');
+        if (!ranhRinhLaser() || !cham_) return;
+        lzCuoi = Date.now(); voCuoi = Date.now(); conChoi(); dem('laser');
+        giu('vo-rinh', 700); cham_.classList.add('bi-de');  // chân đè lên: chấm khuất dưới chân
+        lzNgo = setTimeout(() => {
+          giu('ngo-chan', 1500); noi('laser_mat', true);
+          lzNgo = setTimeout(() => { lzNgo = null; if (cham_) cham_.classList.remove('bi-de'); }, 900);
+        }, 650);
+      }, 1200);
+    }, 900);
+  }
   function batLaser(bat) {
     laserBat = bat;
     nutLaser.setAttribute('aria-pressed', bat);
@@ -79,7 +114,8 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
     } else {
       if (cham_) cham_.remove(); cham_ = null;
       if (nhin) nhin.removeAttribute('transform');
-      clearTimeout(laserTat);
+      clearTimeout(laserTat); thoiRinhLaser();
+      clearTimeout(lzNgo); lzNgo = null;
     }
   }
   function henTatLaser() { clearTimeout(laserTat); laserTat = setTimeout(() => batLaser(false), 15000); }
@@ -94,6 +130,8 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
       const p = new DOMPoint(cx, cy).matrixTransform(m.inverse());
       const dx = p.x - 100, dy = p.y - 74, dai = Math.hypot(dx, dy) || 1;
       nhin.setAttribute('transform', `translate(${(dx / dai * 4).toFixed(1)} ${(dy / dai * 3).toFixed(1)})`);
+      // chấm đỏ dừng trước chân Bơ → hẹn rình; chấm chạy đi chỗ khác → thôi rình
+      if (boLaserTruocMat(p.x, p.y) && !boVungCham(p.x, p.y)) { if (!lzRinh) henRinhLaser(); } else thoiRinhLaser();
       // chấm đỏ chạy vào người mèo → vồ (nghỉ 1,2 giây giữa hai lần)
       if (boVungCham(p.x, p.y) && Date.now() - voCuoi > 1200) {
         voCuoi = Date.now(); giu('vo', 600); dem('laser'); noi('laser');

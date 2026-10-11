@@ -516,3 +516,12 @@ header.dang-long-vu { touch-action: none; position: relative; }
 @keyframes meo-can-mieng { from { transform: scale(1); } to { transform: scale(.55, .4); } }
 @keyframes len-bi-can { from { rotate: -9deg; scale: 1; } to { rotate: 9deg; scale: .94 1.04; } }
 @keyframes meo-da-len { 30% { transform: translateY(-6px) rotate(-3deg); } }
+
+/* Vồ chấm laser rồi nhấc chân ngó: chấm khuất dưới chân; chân phải nhấc lên, đầu nghiêng cúi nhìn xuống, một tai cụp (ngơ ngác) */
+.laser.bi-de { opacity: 0; transition: opacity .15s; }
+.meo.ngo-chan .paw-r { transform: translate(6px, -22px) rotate(-24deg); }
+.meo.ngo-chan .head { transform: translateY(8px) rotate(9deg); }
+.meo.ngo-chan .ear-r { transform: rotate(-14deg); }
+.meo.ngo-chan :is(.mat-cuoi, .mat-nham) { display: none !important; } .meo.ngo-chan .mat-mo { display: inline !important; }
+.meo.ngo-chan .nhin { transform: translate(-1px, 3px); }
+.meo.ngo-chan :is(.mieng-w, .mieng-buon) { display: none !important; } .meo.ngo-chan .mieng-mo { display: inline !important; transform: scale(.55); }
