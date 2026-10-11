@@ -311,7 +311,7 @@
 - [x] Rà soát giai đoạn 55, sửa lỗi tìm được
 
 ## Giai đoạn 56 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
-- [ ] Rà soát toàn bộ choi.js (đã dài ~500 dòng): tách đồ chơi (laser, cuộn len, lông vũ) ra file riêng web/do_choi.js cho dễ sửa, giữ nguyên hành vi, có test
+- [x] Rà soát toàn bộ choi.js (đã dài ~500 dòng): tách đồ chơi (laser, cuộn len, lông vũ) ra file riêng web/do_choi.js cho dễ sửa, giữ nguyên hành vi, có test
 - [x] Đồ chơi dùng được bằng bàn phím: phím mũi tên di chuyển laser/lông vũ, mũi tên hất cuộn len
 - [x] Bơ phản ứng khi Tân nói "Bơ ơi" bằng rảnh tay: nghiêng đầu, bong bóng "Dạ? Bơ nghe nè!" (chỉ chữ, không đọc to để micro khỏi nghe nhầm)
 - [ ] Rà soát giai đoạn 56, sửa lỗi tìm được

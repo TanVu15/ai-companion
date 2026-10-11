@@ -7,7 +7,7 @@ from tests.test_api import make_client
 
 
 def node(code):
-    r = subprocess.run(["node", "-e", "const C = require('./web/choi.js');\n" + code],
+    r = subprocess.run(["node", "-e", "const C = {...require('./web/choi.js'), ...require('./web/do_choi.js')};\n" + code],
                        cwd=config.ROOT, capture_output=True, text=True, timeout=30)
     assert r.returncode == 0, r.stderr
     return json.loads(r.stdout)
@@ -44,7 +44,7 @@ def test_cau_ngau_co_san_cho_moi_loai():
 def test_trang_co_nut_choi(tmp_path):
     html = make_client(tmp_path, []).get("/").text
     assert 'id="choAn"' in html and 'id="doChoi"' in html and 'id="meoBong"' in html
-    assert html.index("/web/meo.js") < html.index("/web/choi.js")
+    assert html.index("/web/meo.js") < html.index("/web/choi.js") < html.index("/web/do_choi.js")
 
 
 def test_mo_ta_choi():
@@ -112,3 +112,15 @@ def test_nut_long_vu_va_dem():
     assert 'id="longVu"' in html and 'id="cuonLen"' in html
     assert "lông vũ" in mo_ta_choi({"long_vu": 2})
     assert node("console.log(JSON.stringify(C.boCauNgau('long_vu', () => 0)))")
+
+
+def test_do_choi_tach_rieng():
+    """Đồ chơi (laser, cuộn len, lông vũ) nằm ở do_choi.js; choi.js chỉ hỏi qua boChoi.doChoi, không đụng biến của đồ chơi."""
+    choi = (config.ROOT / "web" / "choi.js").read_text(encoding="utf-8")
+    do_choi = (config.ROOT / "web" / "do_choi.js").read_text(encoding="utf-8")
+    giao_dien = choi.split("// ---- Phần giao diện")[1]
+    for ten in ("laserBat", "lenKeo", "batLen", "batLongVu", "getElementById('doChoi')", "getElementById('cuonLen')"):
+        assert ten not in giao_dien, ten
+    for ten in ("function batLaser", "function batLen", "function batLongVu", "doChoi.dangChoi =", "doChoi.dieuKhien =", "doChoi.keoLen ="):
+        assert ten in do_choi, ten
+    assert "boBuocLen" not in choi
