@@ -49,6 +49,11 @@ def thu(pg, ten, w, h):
     kq.append(("ngửi tay", co("ngui"))); pg.mouse.move(X(100), Y(150)); nghi()
     pg.mouse.move(X(100), Y(145)); pg.mouse.down(); pg.wait_for_timeout(900); kq.append(("nhấn giữ lăn", co("lan")))
     pg.mouse.up(); pg.wait_for_timeout(3400)
+    pg.mouse.move(X(100), Y(55)); pg.mouse.down(); pg.wait_for_timeout(550)
+    for i in range(1, 9):
+        pg.mouse.move(X(100), Y(55) - 12 * i); pg.wait_for_timeout(30)
+    dang_be = co("be"); pg.mouse.up(); pg.wait_for_timeout(100)
+    kq.append(("bế Bơ lên, thả ra", dang_be and not co("be") and co("roi"))); nghi()
     pg.click('#choAn'); pg.wait_for_timeout(200); kq.append(("cho ăn", co("an"))); pg.wait_for_timeout(4200)
     b = pg.locator('#choAn').bounding_box()
     pg.mouse.move(b['x'] + b['width'] / 2, b['y'] + b['height'] / 2); pg.mouse.down(); pg.wait_for_timeout(700); pg.mouse.up()

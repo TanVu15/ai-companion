@@ -38,6 +38,8 @@ const BO_CAU_CHOI = {
   duoi: ['Đuôi Bơ mà!', 'Ơ, ai đụng đuôi Bơ đó?', 'Đuôi này không phải đồ chơi nha~', 'Hửm? Đuôi Bơ có gì hả?'],
   ngui: ['Hít hít... thơm tay bạn ghê~', 'Cho Bơ ngửi xíu... ừm, quen quen!', 'Hít hít~ Bơ cọ cọ nè'],
   chong_mat: ['Ối ối, chóng mặt quá~', 'Đừng lắc nữa mà, Bơ xoay vòng vòng rồi!', 'Trời đất quay cuồng... meo~'],
+  be: ['Ơ ơ, bế Bơ đi đâu đó?', 'Úi, Bơ bay lên rồi nè!', 'Bơ nặng lắm đó nha~', 'Thả Bơ xuống điii~'],
+  tha: ['Bịch! Về chỗ cũ rồi~', 'Hú hồn, đất đây rồi!', 'Hạ cánh an toàn, meo!'],
   hat_xi: ['Hắt xì!', 'Hắt... xì! Lông vũ nhột mũi quá~', 'Ắt xì! Hí hí'],
   goi: ['Dạ? Bơ nghe nè!', 'Meo? Bạn gọi Bơ hả?', 'Dạaa~ Bơ đây!'],
   dep: ['Bộ lông mới nè, Bơ đẹp hông?', 'Hí, Bơ điệu chưa~', 'Thấy Bơ xinh lên hông?'],
@@ -122,12 +124,18 @@ const BO_GOI_Y = {
   len: 'Bơ thèm chơi cuộn len quá, bấm nút cuộn len đi~',
   long_vu: 'Có cần câu lông vũ đó, đưa lên đầu Bơ thử!',
   chong_mat: 'Lắc điện thoại thử coi, Bơ chóng mặt cho xem!',
+  be: 'Nhấn giữ đầu Bơ rồi kéo lên, bế Bơ đi~',
   an_pate: 'Nhấn giữ nút con cá đi, Bơ thèm pate quá~',
 };
 function boGoiY(daThu, ngayCuoi, homNay, coLac, rnd = Math.random) {
   if (ngayCuoi === homNay) return null;
   const con = Object.keys(BO_GOI_Y).filter(k => !(daThu || []).includes(k) && (coLac || k !== 'chong_mat'));
   return con.length ? con[Math.floor(rnd() * con.length) % con.length] : null;
+}
+// Bế Bơ: đã nhấn giữ đầu, kéo (dx, dy px; y hướng xuống) → độ nhấc 0..1. Phải kéo hẳn lên trên (dọc nhiều hơn ngang, quá 20px)
+function boDoNhac(dx, dy) {
+  if (-dy < 20 || Math.abs(dx) > -dy) return 0;
+  return +Math.min(1, (-dy - 20) / 80).toFixed(2);
 }
 // Món ăn (nhấn giữ nút cá để chọn). Không có thanh đói; chỉ khác hình và câu Bơ nói.
 const BO_MON_AN = {
@@ -159,7 +167,7 @@ function boLucMo(lanTruoc, bayGio, gio) {
   return null;
 }
 
-if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boChamChan, boThongSoMeo, boGanMui, boDoToRuRu, boDoGiat, boLac, boGoiY, BO_GOI_Y, boPhanUngTin, boLucMo, boMonAn, BO_MON_AN, boNhipAn, BO_CAU_CHOI, BO_DOC_TO };
+if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boChamChan, boThongSoMeo, boGanMui, boDoToRuRu, boDoGiat, boLac, boGoiY, BO_GOI_Y, boPhanUngTin, boLucMo, boMonAn, BO_MON_AN, boNhipAn, boDoNhac, BO_CAU_CHOI, BO_DOC_TO };
 
 // ---- Phần giao diện ----
 (function () {
@@ -412,13 +420,31 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
     }
   }
   // Nhấn giữ lên lưng/bụng (không kéo) khoảng 0,7 giây → Bơ lăn qua lăn lại nũng nịu
-  let henLan = null;
+  let henLan = null, henBe = null;
+  function nhac(k) {
+    svg.style.setProperty('--nhac', k);
+    if (!svg.classList.contains('be')) {
+      svg.classList.add('be'); svg.classList.remove('vuot', 'gai-cam', 'lan', 'bep');
+      clearTimeout(vuotTat); vuotDangChay = false; grgr(false);
+      dem('be'); noi('be', true); keu('ngan');
+    }
+  }
+  function thaBe() {
+    if (!svg.classList.contains('be')) return;
+    svg.classList.remove('be'); svg.style.removeProperty('--nhac');
+    giu('roi', 450); setTimeout(() => noi('tha', true), 250);
+    if (typeof scheduleSleep === 'function') scheduleSleep();
+  }
   face.addEventListener('pointerdown', ev => {
     const b = bam = { t: Date.now(), x: ev.clientX, y: ev.clientY, di: 0, ngu: face.dataset.e === 'ngu' };
     viTriTruoc = null; quangVuot = 0;
     try { face.setPointerCapture(ev.pointerId); } catch (e) {}
     clearTimeout(henLan);
     const p = toaDo(ev), vung = p && boVungCham(p.x, p.y);
+    // Nhấn giữ đầu ~0,4 giây (không kéo) → sẵn sàng bế; kéo lên là nhấc Bơ
+    if (!b.ngu && !doChoi.dieuKhien() && vung === 'dau') {
+      henBe = setTimeout(() => { if (bam === b && b.di < 10 && !dangDoi()) b.sanBe = true; }, 400);
+    }
     if (!b.ngu && !doChoi.dieuKhien() && (vung === 'bung' || vung === 'lung')) {
       henLan = setTimeout(() => {
         if (bam !== b || b.di >= 10 || dangDoi() || (typeof speaking !== 'undefined' && speaking)) return;
@@ -429,6 +455,10 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
   face.addEventListener('pointermove', ev => {
     if (doChoi.dieuKhien() || doChoi.keoLen()) return;  // đang kéo cuộn len ngang qua Bơ: không tính là vuốt
     if (bam) bam.di = Math.max(bam.di, Math.hypot(ev.clientX - bam.x, ev.clientY - bam.y));
+    if (bam && bam.sanBe) {  // đang bế: kéo lên cao bao nhiêu thì nhấc bấy nhiêu, không tính là vuốt
+      const k = boDoNhac(ev.clientX - bam.x, ev.clientY - bam.y);
+      if (k > 0 || svg.classList.contains('be')) { nhac(k); return; }
+    }
     // kéo ngón tay, hoặc rê chuột (không cần bấm) trên đầu/lưng/cằm = vuốt ve
     if (!bam && ev.pointerType !== 'mouse') return;
     const p = toaDo(ev); if (!p) return;
@@ -437,14 +467,14 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
   });
   let vuaKeo = false;  // lần bấm vừa rồi là kéo/vuốt hay giữ lâu (không phải chạm nhanh) → hop_thoai.js không bảo Bơ im
   face.addEventListener('pointerup', ev => {
-    const b = bam; bam = null; clearTimeout(henLan);
+    const b = bam; bam = null; clearTimeout(henLan); clearTimeout(henBe); thaBe();
     vuaKeo = !!b && (b.di >= 10 || Date.now() - b.t >= 500);
     if (!b || doChoi.dieuKhien()) return;  // đang chơi laser/lông vũ: chạm là để điều khiển đồ chơi
     if (b.di < 10 && Date.now() - b.t < 500) {
       const p = toaDo(ev); if (p) cham(ev, boVungCham(p.x, p.y), b.ngu);
     }
   });
-  face.addEventListener('pointercancel', () => { bam = null; clearTimeout(henLan); });
+  face.addEventListener('pointercancel', () => { bam = null; clearTimeout(henLan); clearTimeout(henBe); thaBe(); });
   // ---- Ngửi tay: giữ yên ngón tay/chuột trước mũi ~0,9 giây → Bơ rướn đầu ngửi, rồi cọ má vào tay ----
   let henNgui = null, moc = null, nguiCuoi = 0;
   function theoMui(ev) {
@@ -470,9 +500,17 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
 
   // Bàn phím: Tab tới Bơ rồi bấm Enter = xoa đầu, phím cách = gãi cằm (đang ngủ thì Bơ tỉnh)
   face.tabIndex = 0;
-  // T = chạm tai (trái/phải ngẫu nhiên), D = đập tay
+  // T = chạm tai (trái/phải ngẫu nhiên), D = đập tay, B = bế Bơ lên (giữ phím = bế lâu, thả phím = thả Bơ)
+  face.addEventListener('keyup', ev => { if ((ev.key || '').toLowerCase() === 'b') thaBe(); });
+  face.addEventListener('blur', thaBe);
   face.addEventListener('keydown', ev => {
     const k = ev.key.length === 1 ? ev.key.toLowerCase() : ev.key;
+    if (k === 'b' && !ev.ctrlKey && !ev.metaKey && !ev.altKey) {
+      ev.preventDefault();
+      if (ev.repeat || face.dataset.e === 'ngu' || dangDoi() || doChoi.dangChoi()) return;
+      if (typeof boNgungDoc === 'function' && boNgungDoc()) return;
+      nhac(1); return;
+    }
     const vung = { Enter: 'dau', ' ': 'cam', t: Math.random() < 0.5 ? 'tai_trai' : 'tai_phai', d: 'chan' }[k];
     if (!vung || ev.ctrlKey || ev.metaKey || ev.altKey) return;
     ev.preventDefault();

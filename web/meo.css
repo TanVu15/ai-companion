@@ -398,3 +398,22 @@ header.dang-long-vu { touch-action: none; position: relative; }
 @media (prefers-reduced-motion: no-preference) { .meo.voi .body { scale: 1 1.04; } }
 .lac-nhan:not([hidden]) { display: flex; align-items: flex-start; gap: 8px; margin: 0 0 16px; font-size: 14px; line-height: 1.4; }
 .lac-nhan input { margin-top: 2px; flex: none; }
+
+/* Bế Bơ: nhấn giữ đầu rồi kéo lên → cả con nhấc lên (--nhac 0..1), người dài ra, chân lủng lẳng, đuôi thõng */
+.meo.be { translate: 0 calc(var(--nhac, 0) * -16px); }
+.meo.be .body { translate: 0 6px; scale: .94 1.08; }
+.meo.be .chan-sau { transform-origin: 100px 158px; transform: scale(.78, 1.45); }
+.meo.be .paw { transform: translateY(13px) scaleX(.85); }
+.meo.be .tail { animation: none !important; transform: rotate(135deg) scale(.7); }
+.meo.be .tail-ngu { display: none !important; }
+.meo.be .ear-l { transform: rotate(-14deg); } .meo.be .ear-r { transform: rotate(14deg); }
+.meo.be .mat-mo { transform: scale(1.1); }
+.meo.be :is(.mat-cuoi, .mat-nham) { display: none !important; } .meo.be .mat-mo { display: inline !important; }
+.meo.be :is(.mieng-w, .mieng-buon) { display: none !important; } .meo.be .mieng-mo { display: inline !important; transform: scale(.55); }
+/* Thả ra: rơi "bịch", người bẹp xuống một chút rồi về như cũ */
+.meo.roi .body { scale: 1.07 .93; }
+.meo.roi .paw { transform: scaleX(1.12); }
+@media (prefers-reduced-motion: no-preference) {
+  .meo { transition: translate .12s ease-out; }
+  .meo .chan-sau { transition: transform .3s ease; }
+}

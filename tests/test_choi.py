@@ -255,3 +255,12 @@ def test_tieng_an_theo_mon():
         assert [n["t"] for n in ds] == sorted(n["t"] for n in ds)
     w = node("""console.log(JSON.stringify([0, 0.999].map(x => C.boNhipAn('ca', () => x).every(n => n.to > 0 && n.t > 0.3))))""")
     assert w == [True, True]
+
+
+def test_be_bo_keo_len():
+    v = node("""console.log(JSON.stringify([[0, -10], [0, -20], [0, -60], [5, -100], [0, -200], [80, -60], [0, 60], [-30, -50]].map(([x, y]) => C.boDoNhac(x, y))))""")
+    assert v == [0, 0, 0.5, 1, 1, 0, 0, 0.38]  # phải kéo hẳn lên (quá 20px, dọc nhiều hơn ngang); cao tối đa 1
+    choi = (config.ROOT / "web" / "choi.js").read_text(encoding="utf-8")
+    assert "clearTimeout(henBe); thaBe();" in choi  # nhả tay (hay bị hủy) là thả Bơ xuống, không kẹt trên không
+    css = (config.ROOT / "web" / "meo.css").read_text(encoding="utf-8")
+    assert ".meo.be {" in css and ".meo.roi .body" in css

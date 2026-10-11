@@ -7,6 +7,7 @@
 
 ## 2026-10-11 – Giai đoạn 66 (đang làm): tiếng ăn & bế Bơ
 - **Tiếng ăn**: đang bật "Giọng nói" thì lúc Bơ ăn có tiếng: cá nhai **rộp rộp**, pate **chép chép** (trầm, mềm), sữa liếm **lép lép** nhanh. Tạo ngay trong trình duyệt, không file, không mạng; độ to đã đo bằng máy, cỡ tiếng meo. Giờ yên lặng, lúc Bơ đang đọc hay bật rảnh tay thì im.
+- **Bế Bơ**: nhấn giữ đầu Bơ nửa giây rồi kéo lên → Bơ bị nhấc lên, người dài ra, hai chân sau lủng lẳng, đuôi thõng, mắt tròn xoe "Ơ ơ, bế Bơ đi đâu đó?". Thả tay → Bơ rơi "bịch", bẹp xuống một chút "Hú hồn, đất đây rồi!". Vuốt đầu bình thường (không giữ trước) vẫn là vuốt. Bàn phím: giữ phím **B**. Ảnh `docs/anh/meo-be.png`.
 
 ## 2026-10-11 – Giai đoạn 65 xong: lông vũ & bữa ăn
 - **Chọn món**: nhấn giữ nút con cá nửa giây → hiện menu **Cá / Sữa / Pate** (máy tính: chuột phải; bàn phím: mũi tên lên). Bấm thường thì cho món vừa chọn (nhớ trên máy này). Sữa: Bơ dính râu sữa trắng "Râu Bơ dính sữa rồi nè". Pate: tim bay, "Pate! Bơ mê pate nhất trần đời~". Vẫn không có thanh đói. Ảnh `docs/anh/meo-chon-mon.png`.
