@@ -88,3 +88,18 @@ def test_cau_doc_to_deu_co_cau_va_doc_duoc():
     v = node("""console.log(JSON.stringify(C.BO_DOC_TO.map(k => C.BO_CAU_CHOI[k])))""")
     for ds in v:
         assert ds and all(len(c) < 60 for c in ds)
+
+
+def test_cuon_len_roi_nay_roi_nam_yen():
+    v = node("""let s = {x: 100, y: 20, vx: 300, vy: 0}; const vet = [];
+      for (let i = 0; i < 400; i++) { s = C.boBuocLen(s, 0.016, 300, 200); vet.push(s); }
+      const trongKhung = vet.every(q => q.x >= 15 && q.x <= 285 && q.y >= 15 && q.y <= 185);
+      const daNay = vet.some((q, i) => i && q.vy < 0 && vet[i - 1].vy >= 0);
+      console.log(JSON.stringify([trongKhung, daNay, s.yen, s.y]))""")
+    assert v == [True, True, True, 185]  # luôn trong khung, có nảy, cuối cùng nằm yên trên sàn
+
+
+def test_mo_ta_choi_co_cuon_len():
+    from app.brain import mo_ta_choi
+
+    assert "cuộn len" in mo_ta_choi({"len": 3})

@@ -5,6 +5,14 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-11 – Giai đoạn 52: giọng có cảm xúc, cuộn len
+Ảnh: `docs/anh/cuon-len.png`.
+- **Giọng theo cảm xúc**: câu vui/hào hứng Bơ đọc nhanh và cao hơn chút, câu buồn chậm và trầm hơn (giọng AI lẫn giọng trình duyệt).
+- Đang bật "Giọng nói": câu chơi **mừng rỡ, ăn cá, no, dỗi, làm lành, bị đánh thức** được đọc to (câu ngắn có sẵn, lưu đệm). Câu vuốt/chọc chỉ hiện chữ cho đỡ ồn. Giờ yên lặng thì không đọc.
+- **Cuộn len** (nút mới màu hồng, trên nút cá): cuộn len rơi xuống, lăn, nảy. **Kéo rồi ném** nó; len chạm người Bơ là Bơ vồ, đập văng ra. Bật laser thì len cất đi; 20 giây không đụng thì tự cất (Esc cũng cất).
+- Bơ biết "hôm nay bạn chơi cuộn len với Bơ N lần". 398 test qua hết.
+**Tân cần thử:** bật "Giọng nói", cho Bơ ăn cá → nghe Bơ nói "Măm măm"; bấm nút cuộn len, kéo ném vào Bơ.
+
 ## 2026-10-11 – Giai đoạn 51: Bơ sống động hơn (không tốn API)
 Ảnh: `docs/anh/meo-mung.png` (mừng rỡ), `docs/anh/meo-lan.png` (lăn nũng), `docs/anh/meo-nhin-theo.png`, `docs/anh/meo-lim-dim.png`.
 - **Mắt nhìn theo**: rê chuột (máy tính) hoặc kéo ngón tay trên Bơ (điện thoại) → con ngươi liếc theo; đứng yên 3 giây thì nhìn thẳng lại.

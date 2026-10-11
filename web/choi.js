@@ -25,6 +25,7 @@ const BO_CAU_CHOI = {
   lanh: ['Thôi, làm lành nha~', 'Bơ hết giận rồi đó.'],
   an: ['Ngon quá trời~', 'Cá! Cá của Bơ!', 'Măm măm, cảm ơn nha!'],
   no: ['Bơ no căng rồi, để dành mai nha~', 'Béo quá rồi, thôi thôi.'],
+  len: ['Cuộn len! Của Bơ!', 'Bép! Bơ đập trúng rồi', 'Ném nữa đi, ném nữa đi!', 'Hí hí, lăn đi đâu đó?'],
   laser: ['Cái chấm đỏ kìa!!', 'Bắt được rồi... ủa đâu?', 'Lần này Bơ bắt được cho coi!'],
   thuc: ['Ưm... ai gọi Bơ đó?', 'Bơ đâu có ngủ, Bơ nhắm mắt nghĩ thôi.'],
   lan: ['Gãi bụng Bơ đi mà~', 'Bơ lăn nè, thấy dễ thương hông?', 'Nũng xíu thôi hà~'],
@@ -32,7 +33,7 @@ const BO_CAU_CHOI = {
   vuon: ['Ưm... chào buổi sáng~', 'Sáng rồi hả? Bơ vươn vai cái đã.', 'Ngáp... chào bạn buổi sáng nha!'],
 };
 // Những loại câu chơi được đọc to khi bật "Giọng nói" (câu vuốt/chọc lặp nhiều quá nên chỉ hiện chữ)
-const BO_DOC_TO = ['mung', 'vuon', 'an', 'no', 'doi', 'lanh', 'thuc'];
+const BO_DOC_TO = ['mung', 'vuon', 'an', 'no', 'doi', 'lanh', 'thuc'];  // ('len' chỉ hiện chữ: vồ liên tục)
 function boCauNgau(loai, rnd = Math.random) {
   const ds = BO_CAU_CHOI[loai] || [];
   return ds.length ? ds[Math.floor(rnd() * ds.length) % ds.length] : '';
@@ -59,8 +60,27 @@ function boLucMo(lanTruoc, bayGio, gio) {
   if (gio >= 5 && gio < 10 && tieng >= 4) return 'vuon';
   return null;
 }
+// Một bước vật lý của cuộn len trong khung rộng w, cao h (px; gốc ở góc trên trái), dt giây.
+// Rơi theo trọng lực, nảy ở tường/sàn (mất bớt sức), lăn trên sàn chậm dần. Trả về trạng thái mới (không sửa cái cũ).
+function boBuocLen(s, dt, w, h, r = 15) {
+  let { x, y, vx, vy, goc = 0 } = s;
+  vy += 1400 * dt;
+  x += vx * dt; y += vy * dt;
+  if (x < r) { x = r; vx = Math.abs(vx) * 0.7; }
+  if (x > w - r) { x = w - r; vx = -Math.abs(vx) * 0.7; }
+  if (y < r) { y = r; vy = Math.abs(vy) * 0.5; }
+  const sat = y >= h - r;
+  if (sat) {
+    y = h - r;
+    vy = Math.abs(vy) > 120 ? -Math.abs(vy) * 0.55 : 0;  // nảy, nhỏ quá thì nằm yên trên sàn
+    vx *= Math.pow(0.35, dt);                           // ma sát sàn
+    if (Math.abs(vx) < 4) vx = 0;
+  }
+  goc += vx * dt / r * 57.3;                            // lăn: xoay theo quãng đi
+  return { x, y, vx, vy, goc, yen: sat && vx === 0 && vy === 0 };
+}
 
-if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boLucMo, BO_CAU_CHOI, BO_DOC_TO };
+if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boLucMo, boBuocLen, BO_CAU_CHOI, BO_DOC_TO };
 
 // ---- Phần giao diện ----
 (function () {
@@ -219,7 +239,7 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
     }
   });
   face.addEventListener('pointermove', ev => {
-    if (laserBat) return;
+    if (laserBat || (typeof lenKeo !== 'undefined' && lenKeo)) return;  // đang kéo cuộn len ngang qua Bơ: không tính là vuốt
     if (bam) bam.di = Math.max(bam.di, Math.hypot(ev.clientX - bam.x, ev.clientY - bam.y));
     // kéo ngón tay, hoặc rê chuột (không cần bấm) trên đầu/lưng/cằm = vuốt ve
     if (!bam && ev.pointerType !== 'mouse') return;
@@ -272,6 +292,7 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
     nutLaser.setAttribute('aria-pressed', bat);
     header.classList.toggle('dang-laser', bat);
     if (bat) {
+      if (typeof batLen === 'function') batLen(false);
       cham_ = document.createElement('span'); cham_.className = 'laser';
       header.appendChild(cham_);
       const r = header.getBoundingClientRect();
@@ -311,12 +332,81 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
   });
   document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && laserBat) batLaser(false); });
 
+  // ---- Cuộn len: kéo rồi ném; len lăn, nảy; chạm vào người Bơ thì Bơ vồ, đập văng ra. 20 giây không đụng thì cất ----
+  const nutLen = document.getElementById('cuonLen');
+  let len = null, lenS = null, lenVong = 0, lenTruoc = 0, lenKeo = null, lenTat = null, voLen = 0;
+  function henCatLen() { clearTimeout(lenTat); lenTat = setTimeout(() => batLen(false), 20000); }
+  function veLen() { len.style.transform = `translate(${lenS.x.toFixed(1)}px, ${lenS.y.toFixed(1)}px) rotate(${(lenS.goc % 360).toFixed(0)}deg)`; }
+  function chayLen() { if (!lenVong && len) { lenTruoc = 0; lenVong = requestAnimationFrame(buocLen); } }
+  function buocLen(t) {
+    lenVong = 0;
+    if (!len) return;
+    const dt = lenTruoc ? Math.min(0.04, (t - lenTruoc) / 1000) : 0.016; lenTruoc = t;
+    if (!lenKeo) lenS = boBuocLen(lenS, dt, khung.clientWidth, khung.clientHeight);
+    veLen(); lenChamMeo();
+    if (!lenS.yen || lenKeo) lenVong = requestAnimationFrame(buocLen);
+  }
+  // Len chạm người Bơ → vồ: Bơ đập len văng ra xa (nghỉ 0,9 giây giữa hai lần vồ)
+  function lenChamMeo() {
+    const m = svg.getScreenCTM(); if (!m) return;
+    const r = khung.getBoundingClientRect();
+    const p = new DOMPoint(r.left + lenS.x, r.top + lenS.y).matrixTransform(m.inverse());
+    if (nhin && face.dataset.e !== 'ngu') {
+      const [tx, ty] = boHuongNhin(p.x - 100, p.y - 74); nhin.setAttribute('transform', `translate(${tx} ${ty})`);
+    }
+    if (lenKeo || !boVungCham(p.x, p.y) || Date.now() - voLen < 900 || dangDoi() || face.dataset.e === 'ngu') return;
+    voLen = Date.now(); giu('vo', 600); dem('len'); noi('len');
+    const huong = p.x < 100 ? -1 : 1;
+    lenS = { ...lenS, vx: huong * (260 + Math.random() * 200), vy: -380 - Math.random() * 200 };
+  }
+  function batLen(bat) {
+    if (bat === !!len) return;
+    nutLen.setAttribute('aria-pressed', bat);
+    if (bat) {
+      if (laserBat) batLaser(false);
+      len = document.createElement('span'); len.className = 'len'; len.innerHTML = nutLen.innerHTML;
+      khung.appendChild(len);
+      lenS = { x: khung.clientWidth - 30, y: 20, vx: -160, vy: 0, goc: 0 };
+      veLen(); chayLen(); noi('len', true); henCatLen();
+      len.addEventListener('pointerdown', ev => {
+        ev.preventDefault(); ev.stopPropagation();
+        try { len.setPointerCapture(ev.pointerId); } catch (e) {}
+        const r = khung.getBoundingClientRect();
+        lenKeo = { dx: ev.clientX - r.left - lenS.x, dy: ev.clientY - r.top - lenS.y, t: performance.now(), x: lenS.x, y: lenS.y, vx: 0, vy: 0 };
+        chayLen(); henCatLen();
+      });
+      len.addEventListener('pointermove', ev => {
+        if (!lenKeo) return;
+        const r = khung.getBoundingClientRect(), bayGio = performance.now();
+        const x = Math.max(15, Math.min(khung.clientWidth - 15, ev.clientX - r.left - lenKeo.dx));
+        const y = Math.max(15, Math.min(khung.clientHeight - 15, ev.clientY - r.top - lenKeo.dy));
+        const dt = Math.max(0.008, (bayGio - lenKeo.t) / 1000);
+        lenKeo.vx = 0.6 * lenKeo.vx + 0.4 * (x - lenKeo.x) / dt; lenKeo.vy = 0.6 * lenKeo.vy + 0.4 * (y - lenKeo.y) / dt;
+        lenKeo.x = x; lenKeo.y = y; lenKeo.t = bayGio;
+        lenS = { ...lenS, x, y, vx: 0, vy: 0, goc: lenS.goc + (x - lenS.x) / 15 * 57.3 };
+      });
+      const tha = () => {
+        if (!lenKeo) return;
+        const gioiHan = v => Math.max(-1600, Math.min(1600, v || 0));
+        lenS = { ...lenS, vx: gioiHan(lenKeo.vx), vy: gioiHan(lenKeo.vy), yen: false };
+        lenKeo = null; chayLen();
+      };
+      len.addEventListener('pointerup', tha); len.addEventListener('pointercancel', tha);
+    } else {
+      cancelAnimationFrame(lenVong); lenVong = 0; clearTimeout(lenTat);
+      len.remove(); len = null; lenKeo = null;
+      if (nhin) nhin.removeAttribute('transform');
+    }
+  }
+  nutLen.addEventListener('click', ev => { ev.stopPropagation(); batLen(!len); });
+  document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && len) batLen(false); });
+
   // ---- Mắt nhìn theo ngón tay/chuột (ngoài lúc chơi laser); đứng yên 3 giây thì thôi nhìn ----
   let nhinTat = null, nhinCho = false, nhinEv = null;
   function nhinTheo() {
     nhinCho = false;
     const ev = nhinEv;
-    if (!ev || laserBat || !nhin || face.dataset.e === 'ngu' || dangDoi()) return;
+    if (!ev || laserBat || len || !nhin || face.dataset.e === 'ngu' || dangDoi()) return;
     const m = svg.getScreenCTM(); if (!m) return;
     const p = new DOMPoint(ev.clientX, ev.clientY).matrixTransform(m.inverse());
     if (Math.hypot(p.x - 100, p.y - 74) > 600) { nhin.removeAttribute('transform'); return; }  // xa quá: kệ
