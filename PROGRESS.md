@@ -7,6 +7,7 @@
 
 ## 2026-10-11 – Giai đoạn 59 (đang làm): ngửi tay & cọ má
 - **Ngửi tay**: để yên chuột (hoặc giữ ngón tay) ngay trước mũi Bơ khoảng 1 giây → Bơ rướn đầu, nhìn xuống tay, mũi phập phồng; rồi nhắm mắt cọ má, rừ rừ "Hít hít... thơm tay bạn ghê~". Mỗi 8 giây tối đa một lần. Ảnh `docs/anh/meo-ngui-tay.png` (ngửi · cọ má).
+- Bàn phím: Tab tới Bơ rồi bấm **T** = chạm tai, **D** = đập tay (cùng với Enter xoa đầu, phím cách gãi cằm).
 
 ## 2026-10-11 – Giai đoạn 58 xong: đuôi & tiếng meo
 - **Chạm đuôi**: đuôi vụt sang một bên, Bơ quay đầu liếc nhìn "Đuôi Bơ mà!". Ảnh `docs/anh/meo-cham-duoi.png`.

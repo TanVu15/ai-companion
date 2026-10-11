@@ -361,13 +361,17 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
 
   // Bàn phím: Tab tới Bơ rồi bấm Enter = xoa đầu, phím cách = gãi cằm (đang ngủ thì Bơ tỉnh)
   face.tabIndex = 0;
+  // T = chạm tai (trái/phải ngẫu nhiên), D = đập tay
   face.addEventListener('keydown', ev => {
-    if (ev.key !== 'Enter' && ev.key !== ' ') return;
+    const k = ev.key.length === 1 ? ev.key.toLowerCase() : ev.key;
+    const vung = { Enter: 'dau', ' ': 'cam', t: Math.random() < 0.5 ? 'tai_trai' : 'tai_phai', d: 'chan' }[k];
+    if (!vung || ev.ctrlKey || ev.metaKey || ev.altKey) return;
     ev.preventDefault();
     if (ev.repeat) return;
     if (typeof boNgungDoc === 'function' && boNgungDoc()) return;  // đang đọc to: phím = bảo Bơ im, như chạm
     const r = face.getBoundingClientRect(), giua = { clientX: r.left + r.width / 2, clientY: r.top + r.height * 0.3 };
-    cham(giua, ev.key === 'Enter' ? 'dau' : 'cam', face.dataset.e === 'ngu');  // hop_thoai.js tự đánh thức khi có phím bấm
+    if (vung === 'chan') lanChamChan = Date.now();  // D = như chạm nhanh hai lần
+    cham(giua, vung, face.dataset.e === 'ngu');  // hop_thoai.js tự đánh thức khi có phím bấm
   });
   face.addEventListener('pointerleave', () => { if (!bam) { viTriTruoc = null; } });
 

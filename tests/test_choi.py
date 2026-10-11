@@ -172,3 +172,10 @@ def test_gan_mui():
     v = node("""console.log(JSON.stringify([C.boGanMui(100, 88), C.boGanMui(115, 95), C.boGanMui(100, 60), C.boGanMui(140, 90),
       C.boGanMui(100, 140)]))""")
     assert v == [True, True, False, False, False]  # ngay mũi / sát bên mũi / trán / má xa / bụng
+
+
+def test_phim_tat_cho_cham_moi():
+    html = (config.ROOT / "web" / "index.html").read_text(encoding="utf-8")
+    choi = (config.ROOT / "web" / "choi.js").read_text(encoding="utf-8")
+    assert "T chạm tai, D đập tay" in html
+    assert "t: Math.random() < 0.5 ? 'tai_trai' : 'tai_phai', d: 'chan'" in choi
