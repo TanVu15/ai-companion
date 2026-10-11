@@ -239,12 +239,47 @@
 - [x] Gộp trí nhớ: khi dọn "điều Bơ nhớ" thì bỏ luôn việc vặt / chuyện đã qua lỡ ghi vào; AI xóa quá tay thì giữ nguyên bản cũ
 - [x] Rà soát code lần 24, sửa lỗi tìm được
 
-## Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ phần mềm, Claude tự thêm)
+## Giai đoạn 46 – Mèo Bơ ra đời (ƯU TIÊN, xem HUONG_PHAT_TRIEN.md)
+- [ ] Vẽ mèo béo bằng SVG trong file riêng (web/meo.js hoặc web/meo.svg): đầu, 2 tai, mắt, ria, miệng, bụng, 4 chân, đuôi – mỗi bộ phận có id/class để CSS chuyển động riêng. Màu mặc định cam/kem; giữ nút chọn màu cũ (đổi màu lông)
+- [ ] Thay khuôn mặt tròn bằng mèo ở đầu trang (điện thoại: mèo chiếm khoảng 1/3 màn hình, khung chat bên dưới)
+- [ ] Ánh xạ 7 cảm xúc sang mèo: vui (mắt cong ^^, đuôi dựng), hào hứng (nhún nhảy), bình thường, suy nghĩ (nghiêng đầu, tai xoay), ngạc nhiên (mắt tròn, lông xù nhẹ), buồn (tai cụp, đuôi rủ), thương (má hồng, mắt lim dim)
+- [ ] Ánh xạ 6 hành động: gật đầu, lắc đầu, nghiêng đầu, nhảy, vẫy tay (vẫy chân trước), không
+- [ ] "Sống" khi rảnh: thở (bụng phập phồng), đuôi đung đưa, chớp mắt ngẫu nhiên, thỉnh thoảng ngáp/liếm chân
+- [ ] Ngủ gật (đã có, 3 phút) → mèo cuộn tròn ngủ, "zzz" bay lên; chạm là tỉnh, vươn vai
+- [ ] Đang "Bơ đang gõ..." → mèo ngoe nguẩy đuôi nhìn lên; đang đọc to → miệng mấp máy
+- [ ] Chụp ảnh từng cảm xúc (điện thoại + máy tính), tự xem, lưu vào docs/anh/; cập nhật README (ảnh mèo ở đầu)
+
+## Giai đoạn 47 – Chạm & chơi với Bơ (không tốn API)
+- [ ] Vuốt ve: rê chuột / kéo ngón tay trên lưng-đầu → mèo nhắm mắt, kêu "rừ rừ" (âm thanh tạo bằng Web Audio, không cần file), tim bay lên
+- [ ] Chọc bụng → giật mình; chọc liên tục 5 lần → giận dỗi quay lưng vài giây rồi làm lành
+- [ ] Gãi cằm → ngửa cổ sướng; chạm tai → tai giật
+- [ ] Nút "Cho ăn" (con cá): mèo chạy tới ăn, liếm mép. Không có thanh "đói", không bắt buộc cho ăn
+- [ ] Đồ chơi: cuộn len / chấm laser đi theo ngón tay, mèo đuổi theo vồ
+- [ ] Mỗi tương tác thỉnh thoảng có câu ngắn có sẵn ("meo~ thêm chút nữa đi") hiện bong bóng nhỏ, không lưu vào lịch sử chat
+- [ ] Bơ "nhớ" nhẹ: hôm nay được vuốt mấy lần, cho ăn chưa → gửi kèm 1 dòng ngắn cho bộ não để Bơ nhắc tới khi hợp ("hôm nay bạn gãi cằm Bơ 5 lần đó nha")
+- [ ] Chụp ảnh/kiểm tra trên màn hình điện thoại: chạm không bị nhầm với cuộn trang
+
+## Giai đoạn 48 – Bơ nói bằng giọng AI miễn phí (edge-tts)
+- [ ] Thêm `edge-tts` vào requirements. Endpoint `/api/giong` nhận chữ → trả mp3; lưu đệm theo nội dung trong data/am_thanh/ (xóa bớt khi quá 200 file)
+- [ ] Giọng mặc định `vi-VN-HoaiMyNeural`, chỉnh cao độ hơi cao cho dễ thương; chọn được `vi-VN-NamMinhNeural`, tốc độ, cao độ trong Cài đặt
+- [ ] Web phát mp3 thay cho giọng trình duyệt khi bật "Giọng nói"; edge-tts lỗi/không mạng → tự dùng giọng trình duyệt, báo nhỏ một lần
+- [ ] Miệng mèo mấp máy theo âm lượng thật của file đang phát (Web Audio analyser)
+- [ ] Câu dài: tách câu, đọc câu đầu ngay để đỡ chờ
+- [ ] Test giả lập edge-tts (không gọi mạng). Ghi "Tân cần thử" vì máy làm việc của Claude không gọi được Microsoft
+
+## Giai đoạn 49 – Trò chuyện bằng giọng mượt
+- [ ] Nút micro to "bấm giữ để nói" ngay dưới mèo (kiểu bộ đàm), thả ra là gửi
+- [ ] Khi đang nói chuyện bằng giọng: dặn bộ não trả lời ngắn hơn (1–2 câu), không ký hiệu
+- [ ] Mèo nghiêng tai lắng nghe khi micro đang bật
+
+## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
+Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):
 - [ ] Xem / xóa "chuyện Bơ định hỏi thăm" trên web (trong "Bơ nhớ gì về mình?"), và báo trong dòng "✓ Bơ đã ghi: sẽ hỏi thăm ..."
 - [ ] Người dùng bảo bỏ một lời nhắc mà model chép lại chính lời nhắc đó vào "nhac" trong cùng câu → không tạo lại (chặn bằng code, có test)
 - [ ] Mấy ngày liền buồn mà Bơ vẫn chào với vẻ mặt "vui": thử lại bằng API thật 10 lần, siết lời dặn hoặc ép bằng code
 - [ ] Rà soát code lần 25, sửa lỗi tìm được
 
+
 ## Sau này
-- Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định
-- Phần cứng ESP32: micro, loa, màn hình mặt, servo
+- Giọng trả phí (ElevenLabs/OpenAI) – Tân đã chọn edge-tts miễn phí, chỉ cân nhắc lại nếu Tân yêu cầu
+- Phần cứng: mèo robot nhỏ (ESP32 + màn hình mắt + servo đuôi/đầu) dùng chung bộ não

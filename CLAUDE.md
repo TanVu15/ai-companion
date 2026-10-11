@@ -1,7 +1,8 @@
 # Hướng dẫn cho Claude khi làm dự án này
 
 ## Dự án
-Chatbot "người bạn" AI (tên tạm: Bơ). Làm bộ não trước (phần mềm), sau gắn phần cứng.
+Bơ – một con **mèo béo** AI biết trò chuyện, nói bằng giọng thật và phản ứng khi được chạm vào.
+**Đọc HUONG_PHAT_TRIEN.md trước tiên** – đó là hướng Tân đã chốt và là ưu tiên số 1.
 Chủ dự án: Tân (TanVu15). Giao tiếp tiếng Việt, đơn giản, giải thích thuật ngữ.
 
 ## Nguyên tắc
@@ -25,11 +26,17 @@ nên mọi thứ cần biết phải nằm trong repo.
 4. Hết một giai đoạn: viết báo cáo ngắn trong PROGRESS.md (làm gì, Tân cần thử gì),
    rồi làm tiếp giai đoạn sau. Không dừng chờ duyệt.
 5. Nếu Tân góp ý trong file FEEDBACK.md, ưu tiên xử lý góp ý trước việc mới.
-6. Hết việc trong TASKS.md: tự thêm việc từ mục "Sau này" nhưng CHỈ phần mềm.
+6. Chỉ làm việc thuộc hướng trong HUONG_PHAT_TRIEN.md (mèo, chạm & chơi, giọng nói).
+   KHÔNG tự thêm tính năng ngoài hướng đó (Tân đã thấy agent tự thêm quá nhiều thứ: lịch, thói quen, thời tiết...).
+   Hết việc trong TASKS.md: tự thêm việc mới nhưng chỉ để làm mèo/tương tác/giọng hay hơn, hoặc rà soát và sửa lỗi.
    Việc cần phần cứng, cần tiền, cần tài khoản mới hay cần Tân quyết định → ghi vào
    mục "Cần Tân quyết định" trong PROGRESS.md và không làm.
 7. Một phiên bị dừng giữa chừng (hết lượt dùng) là bình thường: phiên sau đọc PROGRESS.md
    và `git status` để làm tiếp. Luôn commit từng bước nhỏ.
+
+## Giao diện
+Mọi thay đổi ở web/: chụp ảnh bằng Playwright (điện thoại 390×800 + máy tính), tự mở ảnh xem, sửa đến khi đẹp,
+lưu ảnh vào docs/anh/. Chi tiết trong HUONG_PHAT_TRIEN.md.
 
 ## Chạy
 - `run.bat` (Windows) hoặc `python -m uvicorn app.main:app --host 0.0.0.0 --port 8000`

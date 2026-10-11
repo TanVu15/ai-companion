@@ -101,6 +101,12 @@ số tiền (giờ nhỏ hơn 10 lần); bấm "?" → Tình trạng xem dòng "
 dòng nhỏ "✓ Bơ đã ghi: ..." dưới câu trả lời; tải lại trang xem dòng đó còn không. Hôm sau mở web xem Bơ hỏi thăm chuyện cũ
 có đúng ngày không.
 
+## 2026-10-11 khuya – ĐỔI HƯỚNG: Bơ thành mèo béo
+- Tân thấy khuôn mặt tròn chán. Chốt: Bơ là **mèo béo**, chạm vào có phản ứng, nói bằng **giọng AI miễn phí (edge-tts)**.
+- Hướng chi tiết ở HUONG_PHAT_TRIEN.md. Việc mới: giai đoạn 46–49 trong TASKS.md.
+- Tạm dừng thêm tính năng ngoài hướng này. persona.md đã thêm phần "Bơ là một con mèo béo".
+- Lưu ý: nếu Tân đã sửa tính cách trên web (data/persona_tu_sua.md) thì bản đó được ưu tiên → bấm "Về mặc định" để dùng persona mới.
+
 ## Cần Tân quyết định
 - **Dùng Bơ ngoài nhà bằng cách nào?** Tailscale (riêng tư, cần tạo tài khoản miễn phí, cài app trên iPhone) hay Cloudflare Tunnel (link công khai, không cần cài trên điện thoại). Hướng dẫn cả hai trong `DUA_LEN_MANG.md`. Claude khuyên Tailscale. Cách nào cũng phải đặt `APP_PASSWORD`.
 - **Ngân sách tháng:** `.env` trên máy Tân đang đặt `MONTHLY_USD_LIMIT=5` (5 đô/tháng). Với giá Haiku 5.5 thật thì 5 đô là khoảng 6.000 câu trả lời — Tân có thể hạ xuống 1–2 đô nếu muốn chặt hơn.
