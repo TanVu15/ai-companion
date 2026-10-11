@@ -438,7 +438,10 @@ class Memory:
             if not viec:
                 continue
             goc = luc.day if lap == "thang" else 0
-            if lap:
+            if lap.startswith("gio_"):
+                # "cứ 2 tiếng nhắc mình": AI hay ghi lần đầu = ngay bây giờ → vừa nhờ xong đã bị nhắc; dời sang 2 tiếng nữa
+                luc = self._next_time(luc, lap, now + timedelta(minutes=5), goc)
+            elif lap:
                 luc = self._next_time(luc, lap, now - timedelta(minutes=1), goc)
             elif luc < now - timedelta(minutes=1):
                 continue

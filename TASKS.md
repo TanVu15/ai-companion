@@ -231,7 +231,13 @@
 - [x] Lời dặn chắc hơn: không bịa số đường dây nóng (chỉ 115), không hứa "đi cùng", nhất định chúc ngày đặc biệt, chuyện hỏi thăm ghi ngày cụ thể, không chép việc vặt vào điều nhớ lâu dài
 - [x] Bộ chấm điểm: kiểm tra chặt hơn (gạch được chuyện hỏi thăm thật, không bịa số điện thoại...), báo số token đã dùng
 - [x] Giảm tiền mỗi câu: gom lời dặn cố định lên đầu để dùng prompt caching (câu thứ hai trở đi trong 5 phút rẻ hơn ~5 lần), đã đo bằng API thật
-- [ ] Rà soát code lần 23 (phần mới của giai đoạn 43), sửa lỗi tìm được
+- [x] Rà soát code lần 23 (phần mới của giai đoạn 43), sửa lỗi tìm được
+
+## Giai đoạn 44 – Tin cậy khi dùng thật (chỉ phần mềm, Claude tự thêm)
+- [ ] Dưới câu trả lời hiện dòng nhỏ "Bơ đã ghi: lời nhắc 20:00 12/10 · việc: Mua sữa..." để Tân biết Bơ ghi thật (model đôi khi hứa nhắc mà không ghi)
+- [ ] Chạy thử bằng API thật các lời Bơ tự mở đầu (hỏi thăm sau 3 giờ, lâu không gặp, tổng kết tuần, chúc lễ 20/10), sửa lời dặn nếu lệch
+- [ ] Gộp trí nhớ: khi dọn "điều Bơ nhớ" thì bỏ luôn việc vặt / chuyện đã qua lỡ ghi vào (bản cũ trước giai đoạn 43 ghi khá nhiều)
+- [ ] Rà soát code lần 24, sửa lỗi tìm được
 
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định

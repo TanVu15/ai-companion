@@ -196,6 +196,27 @@ def test_token_doc_ghi_bo_nho_tam_duoc_quy_doi(memory):
     assert memory.usage_since("2000-01-01") == {"calls": 1, "input_tokens": 700, "output_tokens": 250}
 
 
+def test_nhac_moi_vai_tieng_khong_nhac_ngay_luc_vua_nho(memory, monkeypatch):
+    """Model thật hay ghi lần nhắc đầu = ngay bây giờ ("bắt đầu từ bây giờ luôn") → phải dời sang N tiếng nữa."""
+    from datetime import datetime
+
+    monkeypatch.setattr(config, "GIO_YEN_LANG", "23-6")
+    now = datetime(2026, 10, 11, 15, 10)
+    memory.add_reminders([{"luc": "2026-10-11 15:10", "viec": "Uống nước", "lap": "gio_2"}], now=now)
+    assert memory.pop_due_reminders(datetime(2026, 10, 11, 15, 11)) == []
+    assert memory.upcoming_reminders()[0]["luc"] == "2026-10-11 17:10"
+    # model ghi đúng (2 tiếng nữa) thì giữ nguyên
+    memory.add_reminders([{"luc": "2026-10-11 18:10", "viec": "Đứng dậy đi lại", "lap": "gio_3"}], now=now)
+    assert [r["luc"] for r in memory.upcoming_reminders() if r["viec"] == "Đứng dậy đi lại"] == ["2026-10-11 18:10"]
+    # nhờ lúc 23:10: 2 tiếng nữa là 01:10 rơi vào giờ yên lặng → 6h sáng
+    khuya = datetime(2026, 10, 11, 23, 10)
+    memory.add_reminders([{"luc": "2026-10-11 23:10", "viec": "Nhỏ mắt", "lap": "gio_2"}], now=khuya)
+    assert [r["luc"] for r in memory.upcoming_reminders() if r["viec"] == "Nhỏ mắt"] == ["2026-10-12 06:00"]
+    # nhắc mỗi ngày thì không bị ảnh hưởng: nhờ đúng giờ đó vẫn nhắc ngay
+    memory.add_reminders([{"luc": "2026-10-11 15:10", "viec": "Uống thuốc", "lap": "ngay"}], now=now)
+    assert [r["luc"] for r in memory.upcoming_reminders() if r["viec"] == "Uống thuốc"] == ["2026-10-11 15:10"]
+
+
 def test_gia_theo_model():
     assert config.gia_theo_model("claude-haiku-5-5") == (0.10, 0.50)
     assert config.gia_theo_model("claude-haiku-4-5") == (1.0, 5.0)

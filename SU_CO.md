@@ -39,6 +39,9 @@
 | Hỏi "mấy giờ rồi?" mà Bơ trả lời cứng nhắc, hoặc muốn Bơ trả lời bằng AI | Đó là "trả lời nhanh" (miễn phí, câu soạn sẵn) | Hỏi dài hơn một chút ("mấy giờ rồi Bơ, mình buồn ngủ quá") là AI trả lời; hoặc tắt hẳn bằng `TRA_LOI_NHANH=0` trong `.env` |
 | Nhắc "mỗi 2 tiếng" mà đêm không nhắc | Cố ý: giờ yên lặng (mặc định 23h–6h) Bơ nghỉ, sáng nhắc lại | Đổi giờ yên lặng trong nút "?" → Cài đặt. Muốn dừng hẳn: "Bơ nhớ gì về mình?" → xóa lời nhắc đó |
 | Lỡ đổi màu mặt Bơ | — | Nút "?" → Màu mặt Bơ → chọn "Vàng (mặc định)" |
+| "Chi phí" hiện số tiền cao gấp nhiều lần console.anthropic.com | `.env` còn ghi giá cũ (`PRICE_INPUT_PER_MTOK=1`, `PRICE_OUTPUT_PER_MTOK=5`) | Nút "?" → Tình trạng → dòng "Giá tính chi phí" sẽ báo. Xóa số sau hai dòng đó trong `.env` (để trống), chạy lại `run.bat` — Bơ tự lấy giá theo model |
+| "Câu này Bơ không trả lời được" | Model AI từ chối câu đó vì lý do an toàn | Nói chuyện khác, hoặc hỏi lại bằng cách khác |
+| "Bơ bị khựng, không nói ra được câu nào" | Model trả về rỗng (hiếm) | Bấm gửi lại. Bị hoài thì gửi `data/loi.log` vào `FEEDBACK.md` |
 | Mới `git pull` mà web vẫn cũ | Cửa sổ `run.bat` cũ còn chạy | Tắt cửa sổ đó, chạy lại `run.bat` (nó tự cài thêm thư viện mới nếu có). Vẫn lỗi thư viện thì xóa thư mục `.venv` rồi chạy lại |
 | Hỏi mật khẩu mãi | Gõ sai `APP_PASSWORD` | Mật khẩu phân biệt hoa/thường, tên đăng nhập gõ gì cũng được |
 

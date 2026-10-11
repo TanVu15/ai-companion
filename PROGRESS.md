@@ -65,6 +65,11 @@ Chạy `python -m app.thu_tinh_cach` (29 tình huống) và một cuộc trò ch
   Đo thật: câu đầu ~7.500 token quy đổi, các câu sau ~1.000 (trước đây câu nào cũng ~6.000). Chấm 29 tình huống
   giờ tốn 0,006 đô thay vì 0,021; điểm 99%. Số token trong "Chi phí" là số đã quy đổi về giá thường.
   Lưu ý khi sửa `build_system_prompt`: đừng đưa thứ gì thay đổi (giờ, tên, trí nhớ) lên trước dòng "## Tình hình lúc này".
+- **Rà soát lần 23** (xong giai đoạn 43, 355 test qua hết): "cứ 2 tiếng nhắc mình..." model hay ghi lần đầu = ngay bây giờ
+  nên vừa nhờ xong đã bị nhắc → giờ lần đầu luôn là N tiếng nữa (rơi vào giờ yên lặng thì dời tới sáng); kiểu lặp của
+  lời nhắc nằm trong khuôn JSON nên model không ghi sai kiểu được; model không nhận một tham số thì ghi vào `loi.log`;
+  SU_CO.md thêm 3 dòng (chi phí hiện cao, "Bơ không trả lời được", "Bơ bị khựng").
+- Việc tiếp theo đã ghi trong TASKS.md (giai đoạn 44).
 - Bài học cho phiên tự chạy: máy của Tân gọi được API thật. Khi sửa lời dặn (prompt), chạy `python -m app.thu_tinh_cach`
   để xem model thật phản ứng ra sao; test giả chỉ kiểm tra được phần code.
 

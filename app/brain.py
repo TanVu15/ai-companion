@@ -49,7 +49,7 @@ Chỉ trả về MỘT đối tượng JSON, không viết gì ngoài JSON:
   Chỉ ghi lời nhắc MỚI nhờ trong tin nhắn vừa rồi; lời nhắc đã có trong phần "Lời nhắc đang có" thì KHÔNG chép lại.
   "lap": "ngay" nếu nhắc mỗi ngày, "ngay_thuong" nếu chỉ thứ 2 đến thứ 6 ("ngày đi làm"), "tuan" nếu mỗi tuần,
   "thang" nếu mỗi tháng (ví dụ "ngày 5 hằng tháng đóng tiền nhà"), "gio_2" nếu cứ 2 tiếng một lần
-  (gio_1 đến gio_12, ví dụ "cứ 2 tiếng nhắc mình uống nước", "luc" là lần đầu), "" nếu chỉ nhắc một lần.
+  (gio_1 đến gio_12, ví dụ "cứ 2 tiếng nhắc mình uống nước", "luc" là lần đầu = bây giờ cộng thêm N tiếng), "" nếu chỉ nhắc một lần.
 - "huy_nhac": người dùng bảo thôi/khỏi/đừng nhắc một việc nữa ("thôi khỏi nhắc uống nước nữa") thì chép tên việc
   y nguyên CẢ DÒNG (kể cả phần trong ngoặc) từ phần "Lời nhắc đang có", để bỏ đúng cái người dùng muốn
   (nhiều lời nhắc cùng tên: chỉ chép dòng đúng; muốn bỏ hết thì chép từng dòng). Đổi giờ thì vừa "huy_nhac" việc cũ vừa thêm "nhac" mới. Không có thì [].
@@ -100,7 +100,9 @@ REPLY_SCHEMA = {
         "quen": _LIST,
         "hoi_tham": _LIST,
         "da_hoi": _LIST,
-        "nhac": _objs(luc={"type": "string"}, viec={"type": "string"}, lap={"type": "string"}),
+        "nhac": _objs(luc={"type": "string"}, viec={"type": "string"},
+                      lap={"type": "string", "enum": ["", "ngay", "ngay_thuong", "tuan", "thang",
+                                                      *(f"gio_{n}" for n in range(1, 13))]}),
         "huy_nhac": _LIST,
         "ngay_dac_biet": _objs(ngay={"type": "string"}, viec={"type": "string"}, am_lich={"type": "boolean"}),
         "viec_can_lam": _LIST,
@@ -560,7 +562,7 @@ class Brain:
         # Tắt "suy nghĩ" (adaptive thinking) của model: Bơ chỉ cần trả lời ngắn, suy nghĩ vừa tốn tiền
         # vừa ăn hết max_tokens làm câu trả lời rỗng ("..."). Model nào không cho tắt thì bỏ tham số này.
         kwargs.setdefault("thinking", {"type": "disabled"})
-        for p in self._rejected_params:
+        for p in tuple(self._rejected_params):  # tuple: việc nền (tóm tắt) có thể đang thêm vào tập này
             kwargs.pop(p, None)
         for attempt in range(retries + 1):
             try:
@@ -572,7 +574,7 @@ class Brain:
                         p = _rejected_param(e, kwargs)
                         if not p:
                             raise
-                        log.info("Model không nhận tham số %s, gọi lại không có tham số này", p)
+                        log.warning("Model không nhận tham số %s (%s), gọi lại không có tham số này", p, str(e)[:200])
                         self._rejected_params.add(p)
                         kwargs.pop(p)
                 with self._lock:
