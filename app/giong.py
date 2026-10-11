@@ -1,0 +1,96 @@
+"""Giọng nói AI miễn phí cho Bơ: edge-tts (giọng tiếng Việt của Microsoft Edge, không cần tài khoản).
+
+Chạy trên máy chủ (máy của Tân), web nhận file mp3 để phát. Mỗi câu tạo một lần rồi lưu đệm trong
+data/am_thanh/ (tên file = mã băm của chữ + giọng), quá AM_THANH_GIU file thì xóa bớt file cũ nhất.
+Lỗi (không có mạng, Microsoft đổi gì đó) → báo GiongLoi để web tự quay về giọng của trình duyệt.
+"""
+import asyncio
+import hashlib
+import os
+import re
+import tempfile
+from pathlib import Path
+
+from . import config
+from .nhat_ky import log
+
+GIONG = {"vi-VN-HoaiMyNeural": "Hoài My (nữ)", "vi-VN-NamMinhNeural": "Nam Minh (nam)"}
+DAI_TOI_DA = 600  # chữ; câu dài hơn thì web tự tách câu rồi gửi từng đoạn
+
+
+class GiongLoi(Exception):
+    pass
+
+
+async def _edge_tts(text: str, giong: str, toc_do: str, cao_do: str) -> bytes:
+    """Gọi edge-tts thật (cần mạng). Test thay hàm này bằng hàm giả, không gọi mạng."""
+    import edge_tts
+
+    out = bytearray()
+    async for chunk in edge_tts.Communicate(text, giong, rate=toc_do, pitch=cao_do).stream():
+        if chunk.get("type") == "audio":
+            out += chunk["data"]
+    return bytes(out)
+
+
+tong_hop = _edge_tts  # chỗ để test cắm hàm giả
+
+
+def chuan_hoa(text: str) -> str:
+    """Gọn khoảng trắng, cắt độ dài. Chữ rỗng → ''."""
+    text = re.sub(r"\s+", " ", text or "").strip()
+    return text[:DAI_TOI_DA]
+
+
+def tham_so() -> tuple[str, str, str]:
+    """(giọng, tốc độ "+10%", cao độ "+8Hz") đang dùng — theo cài đặt trên web hoặc .env."""
+    giong = config.GIONG if config.GIONG in GIONG else "vi-VN-HoaiMyNeural"
+    return giong, f"{config.TOC_DO_GIONG:+d}%", f"{config.CAO_DO_GIONG:+d}Hz"
+
+
+def _ten_file(text: str, giong: str, toc_do: str, cao_do: str) -> str:
+    return hashlib.sha1(f"{giong}|{toc_do}|{cao_do}|{text}".encode("utf-8")).hexdigest()[:24] + ".mp3"
+
+
+def _don_bot(thu_muc: Path, giu: int) -> None:
+    """Quá `giu` file thì xóa file lâu không dùng nhất (dùng lại một file sẽ làm mới giờ của nó)."""
+    files = sorted(thu_muc.glob("*.mp3"), key=lambda f: f.stat().st_mtime)
+    for f in files[: max(0, len(files) - giu)]:
+        try:
+            f.unlink()
+        except OSError:
+            pass
+
+
+async def doc(text: str, thu_muc: Path | None = None) -> bytes:
+    """Chữ → mp3 (bytes). Có trong đệm thì lấy ra, không gọi mạng."""
+    text = chuan_hoa(text)
+    if not text:
+        raise GiongLoi("Không có chữ để đọc")
+    giong, toc_do, cao_do = tham_so()
+    thu_muc = Path(thu_muc or config.AM_THANH_DIR)
+    f = thu_muc / _ten_file(text, giong, toc_do, cao_do)
+    if f.exists() and f.stat().st_size > 0:
+        try:
+            os.utime(f)
+        except OSError:
+            pass
+        return f.read_bytes()
+    try:
+        mp3 = await asyncio.wait_for(tong_hop(text, giong, toc_do, cao_do), timeout=20)
+    except asyncio.TimeoutError:
+        raise GiongLoi("Giọng AI phản hồi chậm quá") from None
+    except Exception as e:  # không có mạng, edge-tts chưa cài, Microsoft từ chối...
+        log.warning("edge-tts lỗi: %s: %s", type(e).__name__, e)
+        raise GiongLoi("Không tạo được giọng AI (cần mạng)") from e
+    if not mp3:
+        raise GiongLoi("Giọng AI không trả về âm thanh")
+    try:
+        thu_muc.mkdir(parents=True, exist_ok=True)
+        with tempfile.NamedTemporaryFile(dir=thu_muc, suffix=".tmp", delete=False) as t:
+            t.write(mp3)
+        os.replace(t.name, f)  # ghi xong mới đổi tên: hai yêu cầu cùng lúc không làm hỏng file
+        _don_bot(thu_muc, config.AM_THANH_GIU)
+    except OSError as e:
+        log.warning("Không lưu đệm được giọng: %s", e)
+    return mp3

@@ -49,6 +49,12 @@ SAO_LUU_DIR = (ROOT / DB_PATH).resolve().parent / "sao_luu"
 
 # Tối mà còn thói quen chưa làm thì Bơ nhắc nhẹ một lần lúc giờ này (miễn phí, không gọi API). Để trống = tắt.
 NHAC_THOI_QUEN = os.getenv("NHAC_THOI_QUEN", "20:30")
+# Giọng AI miễn phí (edge-tts, giọng Microsoft Edge, không cần tài khoản). Chỉnh được trên web (nút "?" → Cài đặt)
+GIONG = os.getenv("GIONG", "vi-VN-HoaiMyNeural")
+TOC_DO_GIONG = int(os.getenv("TOC_DO_GIONG", "0") or 0)  # phần trăm, -50..50
+CAO_DO_GIONG = int(os.getenv("CAO_DO_GIONG", "8") or 0)  # Hz, -30..40; hơi cao cho dễ thương
+AM_THANH_DIR = (ROOT / DB_PATH).resolve().parent / "am_thanh"
+AM_THANH_GIU = 200  # giữ tối đa bấy nhiêu file mp3 đệm
 
 # Câu hỏi ngắn (mấy giờ rồi, hôm nay ngày mấy âm, còn mấy ngày Tết, việc cần làm) Bơ tự trả lời, không tốn API. 0 = tắt.
 TRA_LOI_NHANH = os.getenv("TRA_LOI_NHANH", "1") == "1"

@@ -16,9 +16,14 @@ MAC_DINH = {
     "tong_ket_tuan": config.WEEKLY_RECAP,
     "chuc_le": config.CHUC_LE,
     "nhac_thoi_quen": config.NHAC_THOI_QUEN,
+    "giong": config.GIONG,
+    "toc_do_giong": config.TOC_DO_GIONG,
+    "cao_do_giong": config.CAO_DO_GIONG,
 }
 _THUOC_TINH = {"thanh_pho": "THANH_PHO", "gio_yen_lang": "GIO_YEN_LANG", "tong_ket_tuan": "WEEKLY_RECAP", "chuc_le": "CHUC_LE",
-               "nhac_thoi_quen": "NHAC_THOI_QUEN"}
+               "nhac_thoi_quen": "NHAC_THOI_QUEN", "giong": "GIONG", "toc_do_giong": "TOC_DO_GIONG",
+               "cao_do_giong": "CAO_DO_GIONG"}
+_KHOANG = {"toc_do_giong": (-50, 50, "Tốc độ giọng"), "cao_do_giong": (-30, 40, "Cao độ giọng")}
 
 
 def kiem_tra(key: str, value):
@@ -51,6 +56,19 @@ def kiem_tra(key: str, value):
         if hm is None:
             raise ValueError("Giờ nhắc thói quen phải dạng 20:30 hoặc 20h30 (để trống = tắt)")
         return f"{hm[0]:02d}:{hm[1]:02d}"
+    if key == "giong":
+        from .giong import GIONG
+
+        if value not in GIONG:
+            raise ValueError("Chưa có giọng này")
+        return value
+    if key in _KHOANG:
+        lo, hi, ten = _KHOANG[key]
+        if isinstance(value, str) and re.fullmatch(r"\s*[+-]?\d+\s*", value):
+            value = int(value)
+        if isinstance(value, bool) or not isinstance(value, int) or not lo <= value <= hi:
+            raise ValueError(f"{ten} phải là số từ {lo} đến {hi}")
+        return value
     if key in ("tong_ket_tuan", "chuc_le"):
         if not isinstance(value, bool):
             raise ValueError("Mục này chỉ bật hoặc tắt")

@@ -158,6 +158,29 @@ def chat(body: ChatIn):
     return {**reply.to_dict(), "id": reply.msg_id, "id_nguoi_dung": reply.user_msg_id, "da_ghi": reply.da_ghi}
 
 
+class GiongIn(BaseModel):
+    text: str
+
+
+_giong_da_ap_dung = False
+
+
+@app.post("/api/giong")
+async def giong_noi(body: GiongIn):
+    """Chữ → mp3 giọng AI miễn phí (edge-tts). Lỗi trả 503: web tự dùng giọng của trình duyệt."""
+    global _giong_da_ap_dung
+    from . import giong
+
+    if not _giong_da_ap_dung:  # cài đặt giọng chỉnh trên web (mở web mà chưa nhắn câu nào)
+        cai_dat.ap_dung()
+        _giong_da_ap_dung = True
+    try:
+        mp3 = await giong.doc(body.text)
+    except giong.GiongLoi as e:
+        raise HTTPException(503, str(e))
+    return Response(mp3, media_type="audio/mpeg", headers={"Cache-Control": "no-store"})
+
+
 @app.post("/api/chao")
 def greet(chi_dip: int = 0):
     """Gọi khi mở web: Bơ chủ động hỏi thăm chuyện cũ nếu có. Không có thì trả {"noi": null}."""
