@@ -68,3 +68,13 @@ def test_api_va_sao_luu(tmp_path):
     assert c.get("/api/thoi-quen").json() == []
     assert c.post("/api/khoi-phuc", json=backup).status_code == 200
     assert c.get("/api/thoi-quen").json()[0]["hom_nay"] is True
+
+
+def test_ten_co_ngoac(memory):
+    memory.add_habits(["Uống nước (2 lít)", "Chạy bộ"])
+    memory.done_habits(["Uống nước (2 lít) (hôm nay chưa làm; chuỗi 0 ngày liền; 0/7 ngày qua)", "Chạy bộ (2 lít)"])
+    hs = {h["ten"]: h["hom_nay"] for h in memory.habits()}
+    assert hs == {"Uống nước (2 lít)": True, "Chạy bộ": True}
+    memory.add_habits(["Đọc sách"])
+    memory.done_habits(["Uống nước"])  # tên khác thì không đánh nhầm
+    assert {h["ten"]: h["hom_nay"] for h in memory.habits()}["Đọc sách"] is False

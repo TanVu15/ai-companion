@@ -922,7 +922,10 @@ class Memory:
 
     def done_habits(self, items: list[str], day: date | None = None) -> None:
         """Đánh dấu hôm nay đã làm theo tên (Bơ chép lại y nguyên tên thói quen)."""
-        keys = {self._key(re.sub(r"\s*\(.*\)\s*$", "", str(t))) for t in items}
+        keys = set()
+        for t in items:  # Bơ có thể chép cả ghi chú "(hôm nay chưa làm; ...)" → so cả tên gốc lẫn tên bỏ ghi chú cuối
+            keys.add(self._key(str(t)))
+            keys.add(self._key(re.sub(r"\s*\([^()]*\)\s*$", "", str(t))))
         for h in self.habits(day):
             if self._key(h["ten"]) in keys:
                 self.set_habit_done(h["id"], True, day)

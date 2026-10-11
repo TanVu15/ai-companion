@@ -649,3 +649,9 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - Nút **"Thói quen"**: ô vuông đánh dấu hôm nay, "chuỗi 5 ngày · 6/7 ngày", thêm/xóa. Có trong bản sao lưu.
 - 236 test qua hết.
 
+## 2026-10-11 – Giai đoạn 37 xong: rà soát lần 17
+- Sửa lỗi: thói quen có dấu ngoặc trong tên ("Uống nước (2 lít)") thì Bơ không đánh dấu được. Sao lưu/khôi phục thói quen đã kiểm tra kỹ.
+- 237 test qua hết.
+
+**Tân cần thử (giai đoạn 37):** "theo dõi giúp mình thói quen uống 2 lít nước" → "uống đủ nước rồi nè" → bấm "Thói quen" xem đã tích chưa.
+
