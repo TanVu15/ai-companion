@@ -206,6 +206,8 @@ header.dang-laser { touch-action: none; cursor: crosshair; position: relative; }
 .meo.chong-mat :is(.mat-mo, .mat-cuoi, .mat-nham) { display: none !important; }
 .meo.chong-mat :is(.mieng-w, .mieng-mo) { display: none !important; } .meo.chong-mat .mieng-buon { display: inline !important; }
 .meo.chong-mat .ear-l { transform: rotate(-20deg); } .meo.chong-mat .ear-r { transform: rotate(20deg); }
+/* Gợi ý trò chơi: nghiêng đầu tinh nghịch */
+.meo.nghieng .head { transform: rotate(-10deg); } .meo.nghieng .ear-r { transform: rotate(10deg); }
 /* Gãi cằm: ngửa cổ */
 .meo.gai-cam .head { transform: translateY(-6px) rotate(-6deg); }
 /* Chạm tai: tai giật */

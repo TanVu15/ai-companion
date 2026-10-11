@@ -348,7 +348,7 @@
 
 ## Giai đoạn 63 – Dễ khám phá (Claude tự thêm, trong hướng mèo/chạm)
 - [x] Hộp "Bơ làm được gì?": cập nhật danh sách chạm & chơi (ngược lông, đập tay, ngửi tay, chạm đuôi, lắc, phím T/D)
-- [ ] Tối đa 1 lần/ngày, lúc rảnh Bơ gợi ý một trò chạm Tân chưa thử ("Thử chạm hai lần vào chân Bơ xem~") – dựa trên bộ đếm trên máy, không gọi API, không nhắc lại trò đã thử
+- [x] Tối đa 1 lần/ngày, lúc rảnh Bơ gợi ý một trò chạm Tân chưa thử ("Thử chạm hai lần vào chân Bơ xem~") – dựa trên bộ đếm trên máy, không gọi API, không nhắc lại trò đã thử
 - [ ] Rà soát giai đoạn 63, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)

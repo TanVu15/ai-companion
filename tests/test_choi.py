@@ -206,3 +206,15 @@ def test_vuot_luc_dang_doc_khong_bao_im():
     assert "vuaKeo = !!b && (b.di >= 10 || Date.now() - b.t >= 500)" in choi
     assert "boChoi.vuaKeo()) return; stopSpeaking()" in hop
     assert "'chong_mat', 'ngui'" in choi  # câu chóng mặt, ngửi tay được đọc to khi bật Giọng nói
+
+
+def test_goi_y_tro_chua_thu():
+    v = node("""const tat = Object.keys(C.BO_GOI_Y);
+      console.log(JSON.stringify([
+        C.boGoiY([], '2026-10-10', '2026-10-11', true, () => 0),
+        C.boGoiY([], '2026-10-11', '2026-10-11', true, () => 0),
+        C.boGoiY(tat.filter(k => k !== 'ngui'), '', '2026-10-11', true, () => 0.99),
+        C.boGoiY(tat.filter(k => k !== 'chong_mat'), '', '2026-10-11', false),
+        C.boGoiY(tat, '', '2026-10-11', true),
+        Object.values(C.BO_GOI_Y).every(c => c.length < 70)]))""")
+    assert v == ["dap_tay", None, "ngui", None, None, True]  # 1 lần/ngày; chỉ trò chưa thử; máy không lắc được thì khỏi gợi ý lắc

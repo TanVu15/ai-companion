@@ -94,6 +94,22 @@ function boLac(moc, bayGio, doGiat) {
   const m = (doGiat >= 22 ? moc.concat(bayGio) : moc).filter(t => bayGio - t <= 1000);
   return { moc: m, lac: m.length >= 4 };
 }
+// Gợi ý trò chạm chưa thử (tối đa 1 lần/ngày). daThu: các loại đã từng chơi; ngayCuoi: ngày gợi ý gần nhất; coLac: máy lắc được
+const BO_GOI_Y = {
+  dap_tay: 'Psst... chạm nhanh hai lần vào chân Bơ thử xem~',
+  ngui: 'Để yên tay trước mũi Bơ một xíu đi, Bơ ngửi cho~',
+  lan: 'Nhấn giữ bụng Bơ một giây xem Bơ lăn nè~',
+  duoi: 'Đuôi Bơ cũng biết giật nha, chạm thử coi~',
+  nguoc: 'Bí mật nè: vuốt ngược lông lên là Bơ xù đó!',
+  len: 'Bơ thèm chơi cuộn len quá, bấm nút cuộn len đi~',
+  long_vu: 'Có cần câu lông vũ đó, đưa lên đầu Bơ thử!',
+  chong_mat: 'Lắc điện thoại thử coi, Bơ chóng mặt cho xem!',
+};
+function boGoiY(daThu, ngayCuoi, homNay, coLac, rnd = Math.random) {
+  if (ngayCuoi === homNay) return null;
+  const con = Object.keys(BO_GOI_Y).filter(k => !(daThu || []).includes(k) && (coLac || k !== 'chong_mat'));
+  return con.length ? con[Math.floor(rnd() * con.length) % con.length] : null;
+}
 // Hướng vuốt trên lưng (dx, dy: px từ chỗ bắt đầu vuốt tới giờ; y hướng xuống). Lông mèo mọc xuôi xuống,
 // nên vuốt hẳn lên trên (dọc nhiều hơn ngang) là 'nguoc'; còn lại là 'xuoi'.
 function boHuongVuot(dx, dy) {
@@ -109,7 +125,7 @@ function boLucMo(lanTruoc, bayGio, gio) {
   return null;
 }
 
-if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boChamChan, boThongSoMeo, boGanMui, boDoToRuRu, boDoGiat, boLac, boLucMo, BO_CAU_CHOI, BO_DOC_TO };
+if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boChamChan, boThongSoMeo, boGanMui, boDoToRuRu, boDoGiat, boLac, boGoiY, BO_GOI_Y, boLucMo, BO_CAU_CHOI, BO_DOC_TO };
 
 // ---- Phần giao diện ----
 (function () {
@@ -133,20 +149,31 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
 
   // Bong bóng câu nói nhỏ, không lưu vào lịch sử
   let bongTimer = null, lanNoiCuoi = 0;
+  // Nhớ các trò đã từng chơi (trên máy này) để gợi ý trò chưa thử
+  function docDaThu() { try { const d = JSON.parse(localStorage.getItem('bo_da_thu') || '[]'); return Array.isArray(d) ? d : []; } catch (e) { return []; } }
+  function ghiDaThu(loai) {
+    if (!(loai in BO_GOI_Y)) return;
+    const d = docDaThu();
+    if (!d.includes(loai)) { d.push(loai); try { localStorage.setItem('bo_da_thu', JSON.stringify(d)); } catch (e) {} }
+  }
+  function hienBong(cau, ms) {
+    bong.textContent = cau; bong.hidden = false;
+    bong.classList.remove('hien'); void bong.offsetWidth; bong.classList.add('hien');
+    clearTimeout(bongTimer);
+    bongTimer = setTimeout(() => { bong.hidden = true; }, ms);
+  }
   function noi(loai, batBuoc, docThem) {
+    ghiDaThu(loai);
     const now = Date.now();
     if (!batBuoc && (now - lanNoiCuoi < 3500 || Math.random() < 0.45)) return;
     lanNoiCuoi = now;
     const cau = boCauNgau(loai);
-    bong.textContent = cau; bong.hidden = false;
+    hienBong(cau, 2600);
     // Đang bật "Giọng nói": vài câu chơi được đọc to (không cắt ngang khi Bơ đang đọc câu trả lời; giờ yên lặng thì thôi)
     // (đợi một chút: cú chạm vừa rồi còn sự kiện "click" — chạm Bơ lúc đang đọc là bảo Bơ im — kẻo câu vừa đọc bị tắt ngay)
     if (BO_DOC_TO.includes(loai) || docThem) setTimeout(() => {
       if (typeof speakAuto === 'function' && typeof speaking !== 'undefined' && !speaking) speakAuto(cau);
     }, 80);
-    bong.classList.remove('hien'); void bong.offsetWidth; bong.classList.add('hien');
-    clearTimeout(bongTimer);
-    bongTimer = setTimeout(() => { bong.hidden = true; }, 2600);
   }
 
   // Trạng thái tạm trên mèo: bật rồi tự tắt sau ms (gọi lại thì kéo dài)
@@ -482,6 +509,19 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
       }).catch(() => { lacBat.checked = false; });
     });
   }
+
+  // ---- Gợi ý trò chưa thử: mở web khoảng 40 giây, Bơ đang rảnh thì nói một câu gợi ý (tối đa 1 lần/ngày, chỉ chữ) ----
+  setTimeout(function goiY() {
+    const ban = face.dataset.e === 'ngu' || dangDoi() || doChoi.dangChoi() || document.hidden ||
+      (typeof speaking !== 'undefined' && speaking) || (document.getElementById('input') || {}).value ||
+      document.querySelector('dialog[open]') || !bong.hidden;
+    if (ban) { setTimeout(goiY, 30000); return; }  // đang bận: lát nữa thử lại
+    let ngay = ''; try { ngay = localStorage.getItem('bo_goi_y_ngay') || ''; } catch (e) {}
+    const k = boGoiY(docDaThu(), ngay, homNay(), !!(lacBat && lacBat.checked));
+    if (!k) return;
+    try { localStorage.setItem('bo_goi_y_ngay', homNay()); } catch (e) {}
+    giu('nghieng', 1200); hienBong(BO_GOI_Y[k], 6000);
+  }, 40000);
 
   // ---- Mở web / quay lại tab: lâu rồi mới gặp thì mừng rỡ, sáng sớm thì vươn vai (không gọi API) ----
   const docMoc = () => { try { return +localStorage.getItem('bo_lan_gap') || 0; } catch (e) { return 0; } };
