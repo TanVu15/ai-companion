@@ -74,6 +74,9 @@ def thu(pg, ten, w, h):
     pg.keyboard.press('Escape'); pg.wait_for_timeout(100)
     kq.append(("Esc cất đồ chơi", pg.evaluate("!document.querySelector('.long-vu, .len, .laser')")))
     pg.focus('#face'); pg.keyboard.press('d'); pg.wait_for_timeout(60); kq.append(("phím D", co("dap-tay"))); nghi()
+    pg.keyboard.press('n'); pg.wait_for_timeout(60); kq.append(("phím N (boop)", co("boop"))); nghi()
+    pg.keyboard.down('b'); pg.wait_for_timeout(100); dang_be = co("be"); pg.keyboard.up('b'); pg.wait_for_timeout(60)
+    kq.append(("giữ phím B (bế)", dang_be and not co("be"))); nghi()
     pg.fill('#input', 'tối nay ăn cá'); pg.keyboard.press('Enter'); pg.wait_for_timeout(300)
     kq.append(("tin có chữ cá", co("liem-mep")))
     return kq

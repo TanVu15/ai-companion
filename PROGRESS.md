@@ -5,9 +5,11 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
-## 2026-10-11 – Giai đoạn 67 (đang làm): boop mũi & nựng má
+## 2026-10-11 – Giai đoạn 67 xong: boop mũi & nựng má
 - **Boop mũi**: chạm nhanh đúng chóp mũi hồng → Bơ nhắm tịt mắt, mũi chun lại, ria vểnh, chữ "Boop!" bật ra, "Hí, nhột mũi!".
 - **Nựng má**: chạm vào má → Bơ nghiêng đầu dụi về bên đó, má hồng đậm, mắt cười, rừ rừ một chút. Chạm trán/đỉnh đầu vẫn là xoa đầu như cũ. Ảnh `docs/anh/meo-boop-nung-ma.png`.
+- Rà soát: bàn phím thêm **N** = boop mũi; chữ "Boop!" có viền cho dễ đọc trên lông cam. Chụp boop · nựng má · bế · râu sữa với mèo đen, tam thể, mướp vằn ở nền tối: đều rõ, không vỡ hình (ảnh `docs/anh/tu-the-66-67-kieu-long-toi.png`). `scripts/thu_cham.py` thử thêm boop, nựng má, phím N, phím B — đạt hết. 420 test qua hết.
+**Tân cần thử:** chạm nhẹ chóp mũi Bơ, rồi chạm má.
 
 ## 2026-10-11 – Giai đoạn 66 xong: tiếng ăn & bế Bơ
 - **Tiếng ăn**: đang bật "Giọng nói" thì lúc Bơ ăn có tiếng: cá nhai **rộp rộp**, pate **chép chép** (trầm, mềm), sữa liếm **lép lép** nhanh. Tạo ngay trong trình duyệt, không file, không mạng; độ to đã đo bằng máy, cỡ tiếng meo. Giờ yên lặng, lúc Bơ đang đọc hay bật rảnh tay thì im.

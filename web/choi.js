@@ -519,7 +519,7 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boChiTietDau, 
 
   // Bàn phím: Tab tới Bơ rồi bấm Enter = xoa đầu, phím cách = gãi cằm (đang ngủ thì Bơ tỉnh)
   face.tabIndex = 0;
-  // T = chạm tai (trái/phải ngẫu nhiên), D = đập tay, B = bế Bơ lên (giữ phím = bế lâu, thả phím = thả Bơ)
+  // T = chạm tai (trái/phải ngẫu nhiên), D = đập tay, N = boop mũi, B = bế Bơ lên (giữ phím = bế lâu, thả phím = thả Bơ)
   face.addEventListener('keyup', ev => { if ((ev.key || '').toLowerCase() === 'b') thaBe(); });
   face.addEventListener('blur', thaBe);
   face.addEventListener('keydown', ev => {
@@ -530,12 +530,14 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boChiTietDau, 
       if (typeof boNgungDoc === 'function' && boNgungDoc()) return;
       nhac(1); return;
     }
-    const vung = { Enter: 'dau', ' ': 'cam', t: Math.random() < 0.5 ? 'tai_trai' : 'tai_phai', d: 'chan' }[k];
+    const vung = { Enter: 'dau', ' ': 'cam', t: Math.random() < 0.5 ? 'tai_trai' : 'tai_phai', d: 'chan', n: 'dau' }[k];
     if (!vung || ev.ctrlKey || ev.metaKey || ev.altKey) return;
     ev.preventDefault();
     if (ev.repeat) return;
     if (typeof boNgungDoc === 'function' && boNgungDoc()) return;  // đang đọc to: phím = bảo Bơ im, như chạm
-    const r = face.getBoundingClientRect(), giua = { clientX: r.left + r.width / 2, clientY: r.top + r.height * 0.3 };
+    const r = face.getBoundingClientRect(), m = svg.getScreenCTM();
+    // N = boop mũi: "chạm" đúng chóp mũi (khung vẽ 100,88); các phím khác chạm giữa đầu như cũ
+    const giua = k === 'n' && m ? (q => ({ clientX: q.x, clientY: q.y }))(new DOMPoint(100, 88).matrixTransform(m)) : { clientX: r.left + r.width / 2, clientY: r.top + r.height * 0.3 };
     if (vung === 'chan') lanChamChan = Date.now();  // D = như chạm nhanh hai lần
     cham(giua, vung, face.dataset.e === 'ngu');  // hop_thoai.js tự đánh thức khi có phím bấm
   });

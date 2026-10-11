@@ -369,7 +369,7 @@
 ## Giai đoạn 67 – Boop mũi & nựng má (Claude tự thêm, trong hướng mèo/chạm)
 - [x] Chạm nhanh vào mũi → "boop": Bơ nhắm tịt mắt, chun mũi, ria vểnh, chữ "Boop!" bật ra
 - [x] Chạm má → Bơ nghiêng đầu dụi vào bên đó, má hồng đậm, mắt cười, rừ rừ ngắn
-- [ ] Rà soát giai đoạn 67 (bàn phím, nền tối, kiểu lông), sửa lỗi tìm được
+- [x] Rà soát giai đoạn 67 (bàn phím, nền tối, kiểu lông), sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):
