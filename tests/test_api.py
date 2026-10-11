@@ -24,7 +24,7 @@ def test_chat_endpoint(tmp_path):
     c = make_client(tmp_path, [json.dumps({"noi": "Hello!", "cam_xuc": "vui", "hanh_dong": "gat_dau"})])
     r = c.post("/api/chat", json={"text": "hi"})
     assert r.status_code == 200
-    assert r.json() == {"noi": "Hello!", "cam_xuc": "vui", "hanh_dong": "gat_dau", "id": 2, "id_nguoi_dung": 1}
+    assert r.json() == {"noi": "Hello!", "cam_xuc": "vui", "hanh_dong": "gat_dau", "id": 2, "id_nguoi_dung": 1, "da_ghi": []}
     assert len(c.get("/api/history").json()) == 2
 
 

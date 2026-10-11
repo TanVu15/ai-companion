@@ -18,6 +18,7 @@
 | Bấm micro báo "chưa cho dùng micro" | Đã bấm "Chặn" lúc trình duyệt hỏi | Bấm biểu tượng ổ khóa cạnh địa chỉ web → cho phép Micro |
 | Bơ đọc giọng không phải tiếng Việt | Máy chưa có giọng tiếng Việt | Windows: Cài đặt → Thời gian & ngôn ngữ → Giọng nói → thêm Tiếng Việt |
 | Lời nhắc không kêu | Lúc đó web không mở, hoặc máy tính tắt/ngủ | Để trang Bơ mở. Nhắc trễ thì Bơ vẫn báo khi mở lại web |
+| Bơ nói "để Bơ nhắc nha" nhưng tới giờ không nhắc | AI hứa mà không ghi lời nhắc (không có dòng "✓ Bơ đã ghi: nhắc ..." dưới câu đó) | Nhờ lại kèm giờ rõ ràng ("8h tối nay nhắc mình gọi mẹ"), thấy dòng "✓ Bơ đã ghi" là chắc. Xem mọi lời nhắc trong "Bơ nhớ gì về mình?" |
 | Bơ nhớ sai điều gì đó | AI ghi nhầm | "Bơ nhớ gì về mình?" → Sửa hoặc Xóa dòng sai (lỡ xóa thì bấm "Hoàn tác"). Hoặc nhắn Bơ "không phải, mình…" |
 | Sửa tính cách xong Bơ nói chuyện lạ | Bản tự sửa thiếu ý | Nút "Tính cách" → "Về mặc định". Bản cũ hơn nằm ở `data/persona_tu_sua.<ngày giờ>.md` |
 | Bơ không biết thời tiết | Chưa đặt hoặc gõ sai `THANH_PHO` | Thêm `THANH_PHO=Da Nang` vào `.env`, chạy lại. Nút "?" → Tình trạng báo "không tìm thấy thành phố" thì thử tên tiếng Anh (Hanoi, Ho Chi Minh City) |

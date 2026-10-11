@@ -116,6 +116,8 @@ class Memory:
             self.conn.execute("ALTER TABLE special_days ADD COLUMN am INTEGER NOT NULL DEFAULT 0")
         if "tam_trang" not in cols:  # tâm trạng người dùng lúc gửi tin (vui, buon, met...), Bơ đoán
             self.conn.execute("ALTER TABLE messages ADD COLUMN tam_trang TEXT")
+        if "da_ghi" not in cols:  # những gì Bơ ĐÃ GHI THẬT sau câu này (lời nhắc, việc...), mỗi dòng một mục
+            self.conn.execute("ALTER TABLE messages ADD COLUMN da_ghi TEXT")
         self.conn.commit()
 
     # --- Tin nhắn ---
@@ -140,13 +142,20 @@ class Memory:
     def history_page(self, limit: int = 50, before_id: int | None = None) -> list[dict]:
         """Tin nhắn cho giao diện (có id và giờ), cũ → mới. `before_id` để tải thêm tin cũ hơn."""
         rows = self.conn.execute(
-            "SELECT id, role, content, created_at, cam_xuc, ghim FROM messages WHERE id < ? ORDER BY id DESC LIMIT ?",
+            "SELECT id, role, content, created_at, cam_xuc, ghim, da_ghi FROM messages WHERE id < ? ORDER BY id DESC LIMIT ?",
             (before_id if before_id else 2**62, limit),
         ).fetchall()
         return [
-            {"id": i, "role": r, "content": c, "created_at": t, "cam_xuc": e, "ghim": bool(g)}
-            for i, r, c, t, e, g in reversed(rows)
+            {"id": i, "role": r, "content": c, "created_at": t, "cam_xuc": e, "ghim": bool(g),
+             "da_ghi": [x for x in str(n or "").split("\n") if x.strip()]}
+            for i, r, c, t, e, g, n in reversed(rows)
         ]
+
+    def set_note(self, msg_id: int, lines: list[str]) -> None:
+        """Ghi kèm tin của Bơ những gì đã ghi thật sau câu đó (để mở lại web vẫn thấy dòng "Bơ đã ghi")."""
+        text = "\n".join(re.sub(r"\s+", " ", str(x)).strip() for x in lines if str(x).strip())
+        self.conn.execute("UPDATE messages SET da_ghi = ? WHERE id = ? AND role = 'assistant'", (text or None, msg_id))
+        self.conn.commit()
 
     def set_pinned(self, msg_id: int, pinned: bool) -> bool:
         """Ghim / bỏ ghim một tin. Trả False nếu không có tin đó."""
@@ -1021,7 +1030,7 @@ class Memory:
 
     # --- Sao lưu / khôi phục ---
     _BACKUP_TABLES = {
-        "messages": ("role", "content", "created_at", "cam_xuc", "tu_dong", "ghim", "tam_trang"),
+        "messages": ("role", "content", "created_at", "cam_xuc", "tu_dong", "ghim", "tam_trang", "da_ghi"),
         "summaries": ("content", "upto_id", "created_at"),
         "followups": ("content", "done", "created_at"),
         "facts": ("content", "created_at"),

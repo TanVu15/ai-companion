@@ -32,6 +32,7 @@ Chatbot trò chuyện có tính cách, có trí nhớ và có khuôn mặt biể
 
 Nhắn kiểu "8h tối nhắc mình gọi mẹ" hoặc "30 phút nữa nhắc mình tắt bếp". Tới giờ Bơ nhắn (và đọc to nếu bật giọng nói).
 Nhắc lặp lại cũng được: "mỗi ngày 7h sáng nhắc mình uống nước", "tối thứ Hai hằng tuần 8h nhắc mình họp nhóm".
+Bơ ghi được thì dưới câu trả lời có dòng nhỏ "✓ Bơ đã ghi: nhắc 20:00 12/10: Gọi mẹ" (việc cần làm, thói quen, điều nhớ, nhật ký cũng báo như vậy). Không thấy dòng đó nghĩa là Bơ chưa ghi, nhờ lại cho rõ giờ.
 Dưới lời nhắc có nút "Nhắc lại sau 10 phút".
 Chỉ nhắc được khi **máy tính đang chạy Bơ và trang web đang mở**. Xem/xóa lời nhắc trong "Bơ nhớ gì về mình?".
 

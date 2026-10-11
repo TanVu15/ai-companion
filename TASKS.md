@@ -234,7 +234,7 @@
 - [x] Rà soát code lần 23 (phần mới của giai đoạn 43), sửa lỗi tìm được
 
 ## Giai đoạn 44 – Tin cậy khi dùng thật (chỉ phần mềm, Claude tự thêm)
-- [ ] Dưới câu trả lời hiện dòng nhỏ "Bơ đã ghi: lời nhắc 20:00 12/10 · việc: Mua sữa..." để Tân biết Bơ ghi thật (model đôi khi hứa nhắc mà không ghi)
+- [x] Dưới câu trả lời hiện dòng nhỏ "✓ Bơ đã ghi: nhắc 20:00 12/10: Gọi mẹ · việc cần làm: Mua sữa..." để Tân biết Bơ ghi thật (model đôi khi hứa nhắc mà không ghi); mở lại web vẫn thấy, có trong sao lưu
 - [ ] Chạy thử bằng API thật các lời Bơ tự mở đầu (hỏi thăm sau 3 giờ, lâu không gặp, tổng kết tuần, chúc lễ 20/10), sửa lời dặn nếu lệch
 - [ ] Gộp trí nhớ: khi dọn "điều Bơ nhớ" thì bỏ luôn việc vặt / chuyện đã qua lỡ ghi vào (bản cũ trước giai đoạn 43 ghi khá nhiều)
 - [ ] Rà soát code lần 24, sửa lỗi tìm được

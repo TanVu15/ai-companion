@@ -38,21 +38,30 @@ function makeMsgs(role, text, t, id, pinned) {
     return d;
   });
 }
-function add(role, text, t, id, pinned) {
-  const ds = makeMsgs(role, text, t, id, pinned);
-  ds.forEach(d => log.appendChild(d)); log.scrollTop = log.scrollHeight;
+// Dòng nhỏ dưới câu của Bơ: những gì Bơ đã ghi THẬT (lời nhắc, việc, điều nhớ...) do máy chủ báo, không phải lời Bơ nói
+function makeNote(items) {
+  if (!Array.isArray(items) || !items.length) return null;
+  const d = document.createElement('div');
+  d.className = 'ghi'; d.textContent = '✓ Bơ đã ghi: ' + items.join(' · ');
+  return d;
+}
+function add(role, text, t, id, pinned, ghi) {
+  const ds = makeMsgs(role, text, t, id, pinned), note = makeNote(ghi);
+  ds.forEach(d => log.appendChild(d));
+  if (note) log.appendChild(note);
+  log.scrollTop = log.scrollHeight;
   return ds[ds.length - 1];
 }
 const wait = ms => new Promise(r => setTimeout(r, ms));
 // Bơ "gõ" từng bong bóng một, có dấu ba chấm ở giữa
 // Mọi lời của Bơ xếp hàng: lời nhắc/lời chào/câu trả lời không chen vào giữa các bong bóng của nhau
 let boQueue = Promise.resolve();
-function addBo(text, id) {
-  boQueue = boQueue.then(() => addBoNow(text, id)).catch(() => {});
+function addBo(text, id, ghi) {
+  boQueue = boQueue.then(() => addBoNow(text, id, ghi)).catch(() => {});
   return boQueue;
 }
-async function addBoNow(text, id) {
-  const bubbles = makeMsgs('assistant', text, null, id);
+async function addBoNow(text, id, ghi) {
+  const bubbles = makeMsgs('assistant', text, null, id), note = makeNote(ghi);
   for (let i = 0; i < bubbles.length; i++) {
     if (i > 0) {
       const dots = document.createElement('div');
@@ -64,6 +73,7 @@ async function addBoNow(text, id) {
     }
     log.appendChild(bubbles[i]); log.scrollTop = log.scrollHeight;
   }
+  if (note) { log.appendChild(note); log.scrollTop = log.scrollHeight; }
 }
 function express(emotion, action) {
   face.dataset.e = emotion || 'binh_thuong';
@@ -78,7 +88,7 @@ async function loadHistory() {
     const r = await fetch('/api/history');
     if (!r.ok) return;
     const list = await r.json();
-    list.forEach(m => add(m.role, m.content, m.created_at, m.id, m.ghim));
+    list.forEach(m => add(m.role, m.content, m.created_at, m.id, m.ghim, m.da_ghi));
     const lastBo = list.filter(m => m.role === 'assistant' && m.cam_xuc).pop();
     if (lastBo) express(lastBo.cam_xuc);  // mở lại web: Bơ giữ vẻ mặt lúc nói câu cuối
     if (list.length) oldestId = list[0].id; else { noMore = true; showChips(); }
@@ -112,7 +122,10 @@ async function loadOlder() {
     if (list.length) {
       oldestId = list[0].id;
       const before = log.scrollHeight, frag = document.createDocumentFragment();
-      list.forEach(m => makeMsgs(m.role, m.content, m.created_at, m.id, m.ghim).forEach(d => frag.appendChild(d)));
+      list.forEach(m => {
+        makeMsgs(m.role, m.content, m.created_at, m.id, m.ghim).forEach(d => frag.appendChild(d));
+        const note = makeNote(m.da_ghi); if (note) frag.appendChild(note);
+      });
       log.prepend(frag);
       log.scrollTop += log.scrollHeight - before;  // giữ nguyên chỗ đang đọc
     }
@@ -139,7 +152,7 @@ async function sendText(text, userBubble) {
     if (!r.ok) throw new Error(data.detail || 'Máy chủ trả lỗi ' + r.status);
     if (userBubble && data.id_nguoi_dung) userBubble.dataset.id = data.id_nguoi_dung;
     try { if (localStorage.getItem('bo_nhap') === text && !input.value) localStorage.removeItem('bo_nhap'); } catch (x) {}
-    express(data.cam_xuc, data.hanh_dong); speak(data.noi); await addBo(data.noi, data.id);
+    express(data.cam_xuc, data.hanh_dong); speak(data.noi); await addBo(data.noi, data.id, data.da_ghi);
   } catch (e) {
     const msg = e.name === 'AbortError' ? 'Bơ nghĩ lâu quá, thử lại nha.'
       : e instanceof TypeError ? 'Không kết nối được máy chủ. Máy chủ còn chạy không?' : e.message;

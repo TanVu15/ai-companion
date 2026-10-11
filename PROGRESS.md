@@ -76,6 +76,12 @@ Chạy `python -m app.thu_tinh_cach` (29 tình huống) và một cuộc trò ch
 **Tân cần thử (giai đoạn 43):** tắt cửa sổ `run.bat` đang chạy rồi mở lại (để nạp code mới); nhắn vài câu, bấm "Chi phí" xem
 số tiền (giờ nhỏ hơn 10 lần); bấm "?" → Tình trạng xem dòng "Giá tính chi phí".
 
+## 2026-10-11 đêm – Giai đoạn 44: tin cậy khi dùng thật
+- **Dòng "✓ Bơ đã ghi: ..."** dưới câu trả lời: nhắc 20:00 12/10: Gọi mẹ · việc cần làm: Mua sữa · nhớ: ... · nhật ký: ...
+  (cả bỏ nhắc, xong việc, tích thói quen, quên điều cũ). Lấy từ so sánh trí nhớ trước/sau câu trả lời, không lấy từ lời Bơ
+  nói — nên Bơ hứa "để Bơ nhắc" mà không ghi thì không có dòng này. Lưu kèm tin nhắn (mở lại web vẫn thấy, có trong sao lưu).
+  Cổng thiết bị không đổi (vẫn chỉ `noi`, `cam_xuc`, `hanh_dong`). Đã thử trên web với API thật. 364 test qua hết.
+
 ## Cần Tân quyết định
 - **Dùng Bơ ngoài nhà bằng cách nào?** Tailscale (riêng tư, cần tạo tài khoản miễn phí, cài app trên iPhone) hay Cloudflare Tunnel (link công khai, không cần cài trên điện thoại). Hướng dẫn cả hai trong `DUA_LEN_MANG.md`. Claude khuyên Tailscale. Cách nào cũng phải đặt `APP_PASSWORD`.
 - **Ngân sách tháng:** `.env` trên máy Tân đang đặt `MONTHLY_USD_LIMIT=5` (5 đô/tháng). Với giá Haiku 5.5 thật thì 5 đô là khoảng 6.000 câu trả lời — Tân có thể hạ xuống 1–2 đô nếu muốn chặt hơn.

@@ -137,6 +137,7 @@ class Reply:
     thoi_quen_xong: list[str] = field(default_factory=list)
     thoi_quen_hom_qua: list[str] = field(default_factory=list)
     tam_trang: str = ""  # tâm trạng người dùng Bơ đoán được (nội bộ, giao diện không dùng)
+    da_ghi: list[str] = field(default_factory=list)  # những gì đã ghi THẬT vào trí nhớ sau câu này (web hiện dòng nhỏ)
     loai: str = "nhac"  # với tin tự gửi theo giờ: "nhac" (lời nhắc) hoặc "thoi_quen" (nhắc nhẹ buổi tối)
     viec_nhac: str = ""  # với lời nhắc tới giờ: việc gốc (để bấm "nhắc lại sau")
     msg_id: int = 0  # số thứ tự tin của Bơ trong lịch sử (để ghim)
@@ -301,11 +302,9 @@ def build_system_prompt(
         out += (f"\n## Ngày đặc biệt sắp tới\n{items}\n"
                 "(Dùng khi người dùng hỏi \"còn mấy ngày\" hoặc khi hợp chuyện; đừng tự nhắc mãi.)\n")
     if reminders:
-        ten_lap = {"ngay": "mỗi ngày", "ngay_thuong": "thứ 2–6", "tuan": "mỗi tuần", "thang": "mỗi tháng"}
         lines = []
         for r in reminders[:15]:
-            lap = r.get("lap") or ""
-            kieu = ten_lap.get(lap) or (f"mỗi {lap[4:]} tiếng" if lap.startswith("gio_") else "một lần")
+            kieu = kieu_lap(r.get("lap")) or "một lần"
             lines.append(f"- {r['viec']} ({kieu}, lần tới {r['luc'][11:16]} {r['luc'][8:10]}/{r['luc'][5:7]})")
         out += "\n## Lời nhắc đang có\n" + "\n".join(lines) + "\n"
     if todos:
@@ -352,6 +351,45 @@ def build_system_prompt(
             "Chưa biết hôm nay họ thế nào thì \"cam_xuc\" nên là \"thuong\" hoặc \"binh_thuong\", đừng hớn hở.\n"
         )
     return out
+
+
+TEN_LAP = {"ngay": "mỗi ngày", "ngay_thuong": "thứ 2–6", "tuan": "mỗi tuần", "thang": "mỗi tháng"}
+
+
+def kieu_lap(lap: str) -> str:
+    """ "ngay" → "mỗi ngày", "gio_2" → "mỗi 2 tiếng", "" (nhắc một lần) → ""."""
+    lap = lap or ""
+    return TEN_LAP.get(lap) or (f"mỗi {lap[4:]} tiếng" if lap.startswith("gio_") else "")
+
+
+def mo_ta_thay_doi(truoc: dict, sau: dict, toi_da: int = 8) -> list[str]:
+    """So trí nhớ trước và sau một câu trả lời (xem Brain._snapshot) → những gì Bơ ĐÃ GHI THẬT, mỗi mục một dòng ngắn.
+    Dựa vào dữ liệu đã lưu chứ không dựa vào lời Bơ nói, nên Bơ hứa "để Bơ nhắc" mà không ghi thì ở đây không có."""
+    out: list[str] = []
+
+    def moi(ten: str) -> list:
+        return [v for k, v in sau[ten].items() if k not in truoc[ten]]
+
+    for r in moi("nhac"):
+        lap = kieu_lap(r.get("lap"))
+        out.append(f"nhắc {r['luc'][11:16]} {r['luc'][8:10]}/{r['luc'][5:7]}: {r['viec']}" + (f" ({lap})" if lap else ""))
+    out += [f"bỏ nhắc: {r['viec']}" for k, r in truoc["nhac"].items() if k not in sau["nhac"]]
+    out += [f"việc cần làm: {t['viec']}" for t in moi("viec") if not t["xong"]]
+    out += [f"xong việc: {t['viec']}" for k, t in sau["viec"].items()
+            if t["xong"] and not truoc["viec"].get(k, {"xong": False})["xong"]]
+    out += [f"theo dõi thói quen: {h['ten']}" for h in moi("thoi_quen")]
+    for k, h in sau["thoi_quen"].items():
+        cu = truoc["thoi_quen"].get(k, {"hom_nay": False, "hom_qua": False})
+        if h["hom_nay"] and not cu["hom_nay"]:
+            out.append(f"tích hôm nay: {h['ten']}")
+        if h["hom_qua"] and not cu["hom_qua"]:
+            out.append(f"tích bù hôm qua: {h['ten']}")
+    out += [f"ngày đặc biệt {d['ngay']}{' âm lịch' if d.get('am_lich') else ''}: {d['viec']}" for d in moi("ngay")]
+    out += [f"nhớ: {f}" for f in sau["nho"] if f not in truoc["nho"]]
+    out += [f"quên: {f}" for f in truoc["nho"] if f not in sau["nho"]]
+    out += [f"nhật ký: {d}" for d in moi("nhat_ky")]
+    out = [x if len(x) <= 90 else x[:89] + "…" for x in out]
+    return out[:toi_da] + ([f"và {len(out) - toi_da} mục khác"] if len(out) > toi_da else [])
 
 
 def cache_blocks(system: str) -> list[dict]:
@@ -852,6 +890,24 @@ class Brain:
         except Exception:
             return []
 
+    def _snapshot(self, today) -> dict | None:
+        """Chụp những thứ Bơ có thể ghi (lời nhắc, việc, thói quen, ngày đặc biệt, điều nhớ, nhật ký) để so
+        trước/sau một câu trả lời — xem mo_ta_thay_doi. Lỗi thì trả None (bỏ dòng "Bơ đã ghi", không hỏng câu trả lời)."""
+        try:
+            m = self.memory
+            return {
+                "nhac": {r["id"]: r for r in m.upcoming_reminders()},
+                "viec": {t["id"]: t for t in m.todos()},
+                "thoi_quen": {h["id"]: {"ten": h["ten"], "hom_nay": h["hom_nay"], "hom_qua": h["ngay_30"][-2]}
+                              for h in m.habits(today)},
+                "ngay": {d["id"]: d for d in m.special_days()},
+                "nho": m.all_facts(),
+                "nhat_ky": {d["id"]: d["noi_dung"] for d in m.diary_recent(today, days=2)},
+            }
+        except Exception as e:
+            log.warning("Không chụp được trí nhớ: %s", type(e).__name__)
+            return None
+
     def _ask(self, history: list[dict], followups: list[dict], from_user: bool = True) -> Reply:
         summary, _ = self.memory.latest_summary()
         from datetime import date
@@ -889,6 +945,7 @@ class Brain:
         reply = parse_reply(text)
 
         reply.msg_id = self.memory.add_message("assistant", reply.noi, reply.cam_xuc)
+        truoc = self._snapshot(today)
         self.memory.forget_facts(reply.quen)
         self.memory.add_facts(reply.ghi_nho)
         self.memory.done_followups(reply.da_hoi)
@@ -910,6 +967,13 @@ class Brain:
         # Người dùng vừa kể một ngày đặc biệt rơi vào ngày mai → Bơ đã biết, khỏi nhắc trước nữa
         new_eve = [d["id"] for d in self.memory.special_days_tomorrow(today) if d["id"] not in eve_before]
         self.memory.mark_eve_reminded(new_eve, today + timedelta(days=1))
+        if truoc is not None:
+            try:
+                reply.da_ghi = mo_ta_thay_doi(truoc, self._snapshot(today) or truoc)
+                if reply.da_ghi:
+                    self.memory.set_note(reply.msg_id, reply.da_ghi)
+            except Exception as e:  # dòng "Bơ đã ghi" chỉ là phụ, lỗi thì bỏ qua
+                log.warning("Không tạo được dòng 'Bơ đã ghi': %s", type(e).__name__)
         if self._background:
             threading.Thread(target=self._housekeeping, daemon=True).start()
         else:

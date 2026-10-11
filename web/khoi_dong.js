@@ -27,7 +27,7 @@ async function greet() {
   try {
     const r = await fetch('/api/chao', { method: 'POST' });
     const data = await r.json();
-    if (r.ok && data.noi) { express(data.cam_xuc, data.hanh_dong); speakAuto(data.noi); await addBo(data.noi, data.id); }
+    if (r.ok && data.noi) { express(data.cam_xuc, data.hanh_dong); speakAuto(data.noi); await addBo(data.noi, data.id, data.da_ghi); }
   } catch (e) {}
 }
 // ---- Lời nhắc: hỏi máy chủ mỗi 30 giây (chỉ khi web đang mở) ----
@@ -50,7 +50,7 @@ setInterval(async () => {
   try {
     const r = await fetch('/api/chao?chi_dip=1', { method: 'POST' });
     const data = await r.json();
-    if (r.ok && data.noi) { express(data.cam_xuc, data.hanh_dong); speakAuto(data.noi); await addBo(data.noi, data.id); }
+    if (r.ok && data.noi) { express(data.cam_xuc, data.hanh_dong); speakAuto(data.noi); await addBo(data.noi, data.id, data.da_ghi); }
   } catch (e) {}
 }, 10 * 60 * 1000);
 // Nút "Nhắc lại sau 10 phút" ngay dưới lời nhắc vừa tới

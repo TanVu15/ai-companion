@@ -153,8 +153,8 @@ def chat(body: ChatIn):
         log.exception("Trả lời lỗi: %s", friendly_error(e))
         raise HTTPException(502, friendly_error(e))
     _tu_sao_luu()
-    # id: để web ghim được tin vừa nói (giao diện khác bỏ qua cũng không sao)
-    return {**reply.to_dict(), "id": reply.msg_id, "id_nguoi_dung": reply.user_msg_id}
+    # id: để web ghim được tin vừa nói; da_ghi: những gì Bơ đã ghi thật sau câu này (giao diện khác bỏ qua cũng không sao)
+    return {**reply.to_dict(), "id": reply.msg_id, "id_nguoi_dung": reply.user_msg_id, "da_ghi": reply.da_ghi}
 
 
 @app.post("/api/chao")
@@ -168,7 +168,7 @@ def greet(chi_dip: int = 0):
         log.warning("Mở lời lỗi: %s", type(e).__name__)
         reply = None  # mở lời không được thì thôi, không báo lỗi làm phiền
     _tu_sao_luu()
-    return {**reply.to_dict(), "id": reply.msg_id} if reply else {"noi": None}
+    return {**reply.to_dict(), "id": reply.msg_id, "da_ghi": reply.da_ghi} if reply else {"noi": None}
 
 
 @app.get("/api/chi-phi")
