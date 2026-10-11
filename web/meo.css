@@ -301,3 +301,19 @@ header.dang-laser { touch-action: none; cursor: crosshair; position: relative; }
 }
 @keyframes meo-tro { 30% { transform: rotate(-4deg) scale(1.03, .97); } 60% { transform: rotate(3deg); } }
 @keyframes meo-tai-noi { 50% { transform: rotate(-6deg); } }
+
+/* Cần câu lông vũ (choi.js): lông treo bằng sợi dây từ trên xuống, theo ngón tay */
+.nut-meo#longVu[aria-pressed="true"] { border-color: #3a8a78; box-shadow: 0 0 0 2px rgba(58,138,120,.3); }
+.long-vu { position: absolute; left: 0; top: 0; width: 34px; height: 34px; margin: -6px 0 0 -17px; z-index: 3;
+  pointer-events: none; transform-origin: 50% 0; }
+.long-vu::before { content: ""; position: absolute; left: 16px; bottom: 100%; width: 1.5px; height: 400px;
+  background: var(--muted); opacity: .7; }
+.long-vu svg { width: 100%; height: 100%; display: block; }
+header.dang-long-vu { touch-action: none; position: relative; }
+/* Bơ đứng lên vồ lông vũ bằng hai chân trước */
+.meo.voi .paw-l { transform: translate(12px, -154px) rotate(-25deg); }
+.meo.voi .paw-r { transform: translate(-12px, -154px) rotate(25deg); }
+.meo.voi .head { transform: translateY(-6px); } .meo.voi .con-nguoi { transform: translate(0, -3px); }
+.meo.voi .ear-l { transform: rotate(8deg); } .meo.voi .ear-r { transform: rotate(-8deg); }
+.meo.voi .mat-mo { transform: scale(1.15); }
+@media (prefers-reduced-motion: no-preference) { .meo.voi .body { scale: 1 1.04; } }

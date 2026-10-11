@@ -103,3 +103,12 @@ def test_mo_ta_choi_co_cuon_len():
     from app.brain import mo_ta_choi
 
     assert "cuộn len" in mo_ta_choi({"len": 3})
+
+
+def test_nut_long_vu_va_dem():
+    from app.brain import mo_ta_choi
+
+    html = (config.ROOT / "web" / "index.html").read_text(encoding="utf-8")
+    assert 'id="longVu"' in html and 'id="cuonLen"' in html
+    assert "lông vũ" in mo_ta_choi({"long_vu": 2})
+    assert node("console.log(JSON.stringify(C.boCauNgau('long_vu', () => 0)))")

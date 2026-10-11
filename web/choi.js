@@ -27,6 +27,7 @@ const BO_CAU_CHOI = {
   no: ['Bơ no căng rồi, để dành mai nha~', 'Béo quá rồi, thôi thôi.'],
   len: ['Cuộn len! Của Bơ!', 'Bép! Bơ đập trúng rồi', 'Ném nữa đi, ném nữa đi!', 'Hí hí, lăn đi đâu đó?'],
   laser: ['Cái chấm đỏ kìa!!', 'Bắt được rồi... ủa đâu?', 'Lần này Bơ bắt được cho coi!'],
+  long_vu: ['Lông vũ! Lông vũ!', 'Hụt rồi... lần nữa!', 'Bơ với tới nè!', 'Xuống thấp xíu đi mà~'],
   dep: ['Bộ lông mới nè, Bơ đẹp hông?', 'Hí, Bơ điệu chưa~', 'Thấy Bơ xinh lên hông?'],
   khuya: ['Khuya rồi nè, bạn ngủ sớm nha~', 'Rừ rừ... Bơ buồn ngủ quá, bạn cũng ngủ đi nha', 'Vuốt xíu nữa rồi mình đi ngủ ha~'],
   thuc: ['Ưm... ai gọi Bơ đó?', 'Bơ đâu có ngủ, Bơ nhắm mắt nghĩ thôi.'],
@@ -245,7 +246,7 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
     }
   });
   face.addEventListener('pointermove', ev => {
-    if (laserBat || (typeof lenKeo !== 'undefined' && lenKeo)) return;  // đang kéo cuộn len ngang qua Bơ: không tính là vuốt
+    if (laserBat || lenKeo || lv) return;  // đang kéo cuộn len ngang qua Bơ: không tính là vuốt
     if (bam) bam.di = Math.max(bam.di, Math.hypot(ev.clientX - bam.x, ev.clientY - bam.y));
     // kéo ngón tay, hoặc rê chuột (không cần bấm) trên đầu/lưng/cằm = vuốt ve
     if (!bam && ev.pointerType !== 'mouse') return;
@@ -255,7 +256,7 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
   });
   face.addEventListener('pointerup', ev => {
     const b = bam; bam = null; clearTimeout(henLan);
-    if (!b || laserBat) return;
+    if (!b || laserBat || lv) return;  // đang chơi laser/lông vũ: chạm là để điều khiển đồ chơi
     if (b.di < 10 && Date.now() - b.t < 500) {
       const p = toaDo(ev); if (p) cham(ev, boVungCham(p.x, p.y), b.ngu);
     }
@@ -299,6 +300,7 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
     header.classList.toggle('dang-laser', bat);
     if (bat) {
       if (typeof batLen === 'function') batLen(false);
+      if (typeof batLongVu === 'function') batLongVu(false);
       cham_ = document.createElement('span'); cham_.className = 'laser';
       header.appendChild(cham_);
       const r = header.getBoundingClientRect();
@@ -372,6 +374,7 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
     nutLen.setAttribute('aria-pressed', bat);
     if (bat) {
       if (laserBat) batLaser(false);
+      if (typeof batLongVu === 'function') batLongVu(false);
       len = document.createElement('span'); len.className = 'len'; len.innerHTML = nutLen.innerHTML;
       khung.appendChild(len);
       lenS = { x: khung.clientWidth - 30, y: 20, vx: -160, vy: 0, goc: 0 };
@@ -409,6 +412,61 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
   nutLen.addEventListener('click', ev => { ev.stopPropagation(); batLen(!len); });
   document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && len) batLen(false); });
 
+  // ---- Cần câu lông vũ: lông treo dây, lắc lư theo ngón tay/chuột trong vùng quanh Bơ; lông ở trên đầu thì Bơ đứng lên vồ ----
+  const nutLongVu = document.getElementById('longVu');
+  let lv = null, lvPos = null, lvDich = null, lvVong = 0, lvTat = null, lvNoi = 0;
+  function henTatLongVu() { clearTimeout(lvTat); lvTat = setTimeout(() => batLongVu(false), 15000); }
+  function buocLongVu() {
+    lvVong = 0;
+    if (!lv) return;
+    const vx = (lvDich.x - lvPos.x) * 0.14, vy = (lvDich.y - lvPos.y) * 0.14;
+    lvPos = { x: lvPos.x + vx, y: lvPos.y + vy };
+    lv.style.transform = `translate(${lvPos.x.toFixed(1)}px, ${lvPos.y.toFixed(1)}px) rotate(${Math.max(-35, Math.min(35, -vx * 3)).toFixed(1)}deg)`;
+    const m = svg.getScreenCTM();
+    if (m) {
+      const r = header.getBoundingClientRect();
+      const p = new DOMPoint(r.left + lvPos.x, r.top + lvPos.y + 20).matrixTransform(m.inverse());
+      if (nhin && face.dataset.e !== 'ngu') { const [tx, ty] = boHuongNhin(p.x - 100, p.y - 74); nhin.setAttribute('transform', `translate(${tx} ${ty})`); }
+      // lông ở phía trên đầu, ngang tầm với của chân → đứng lên vồ
+      if (p.y > -30 && p.y < 45 && Math.abs(p.x - 100) < 65 && !dangDoi() && face.dataset.e !== 'ngu') {
+        giu('voi', 500); conChoi();
+        if (Date.now() - lvNoi > 1500) { lvNoi = Date.now(); dem('long_vu'); noi('long_vu'); }
+      }
+    }
+    if (Math.abs(vx) + Math.abs(vy) > 0.05) lvVong = requestAnimationFrame(buocLongVu);
+  }
+  function chayLongVu() { if (!lvVong && lv) lvVong = requestAnimationFrame(buocLongVu); }
+  function batLongVu(bat) {
+    if (bat === !!lv) return;
+    nutLongVu.setAttribute('aria-pressed', bat);
+    header.classList.toggle('dang-long-vu', bat);
+    if (bat) {
+      if (laserBat) batLaser(false);
+      batLen(false);
+      lv = document.createElement('span'); lv.className = 'long-vu';
+      lv.innerHTML = '<svg viewBox="0 0 24 24"><path d="M12,2 C6,6 6,16 12,23 C18,16 18,6 12,2 Z" fill="#6cc3b0" stroke="#3a8a78" stroke-width="1.2"/><path d="M12,4 L12,22 M12,9 L8,7 M12,9 L16,7 M12,14 L7.5,12 M12,14 L16.5,12" fill="none" stroke="#3a8a78" stroke-width=".9" stroke-linecap="round"/></svg>';
+      header.appendChild(lv);
+      const fr = face.getBoundingClientRect(), r = header.getBoundingClientRect();
+      lvPos = { x: fr.left - r.left + fr.width * 0.85, y: 6 };
+      lvDich = { x: fr.left - r.left + fr.width * 0.6, y: fr.top - r.top + 4 };
+      chayLongVu(); noi('long_vu', true); henTatLongVu();
+    } else {
+      cancelAnimationFrame(lvVong); lvVong = 0; clearTimeout(lvTat);
+      lv.remove(); lv = null;
+      if (nhin) nhin.removeAttribute('transform');
+    }
+  }
+  function dichLongVu(ev) {
+    if (!lv || ev.target.closest('button')) return;
+    const r = header.getBoundingClientRect();
+    lvDich = { x: ev.clientX - r.left, y: ev.clientY - r.top - 30 };  // lông treo cao hơn ngón tay một chút cho khỏi che
+    chayLongVu(); henTatLongVu();
+  }
+  nutLongVu.addEventListener('click', ev => { ev.stopPropagation(); batLongVu(!lv); });
+  header.addEventListener('pointermove', dichLongVu);
+  header.addEventListener('pointerdown', dichLongVu);
+  document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && lv) batLongVu(false); });
+
   // ---- Bơ hóng chuyện: đang gõ tin thì nhìn xuống khung chat; ngừng gõ 2 giây thì thôi ----
   const oChat = document.getElementById('input');
   if (oChat && oChat.form) oChat.form.addEventListener('submit', () => svg.classList.remove('hong'));
@@ -422,7 +480,7 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
   function nhinTheo() {
     nhinCho = false;
     const ev = nhinEv;
-    if (!ev || laserBat || len || !nhin || face.dataset.e === 'ngu' || dangDoi()) return;
+    if (!ev || laserBat || len || lv || !nhin || face.dataset.e === 'ngu' || dangDoi()) return;
     const m = svg.getScreenCTM(); if (!m) return;
     const p = new DOMPoint(ev.clientX, ev.clientY).matrixTransform(m.inverse());
     if (Math.hypot(p.x - 100, p.y - 74) > 600) { nhin.removeAttribute('transform'); return; }  // xa quá: kệ

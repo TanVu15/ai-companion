@@ -307,7 +307,7 @@
 ## Giai đoạn 55 – Thêm chút sống động (Claude tự thêm, trong hướng mèo/chạm/giọng)
 - [x] Ngủ say thì thỉnh thoảng Bơ giật tai trong mơ hoặc trở mình
 - [x] Bơ đang đọc to thì đuôi vẫy nhanh hơn, tai động nhẹ
-- [ ] Đồ chơi cần câu lông vũ: lông vũ lơ lửng trên đầu Bơ theo ngón tay, Bơ đứng lên vồ bằng hai chân trước
+- [x] Đồ chơi cần câu lông vũ: lông vũ lơ lửng trên đầu Bơ theo ngón tay, Bơ đứng lên vồ bằng hai chân trước
 - [ ] Rà soát giai đoạn 55, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)

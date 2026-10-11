@@ -7,6 +7,7 @@
 
 ## 2026-10-11 – Giai đoạn 55 (đang làm): thêm chút sống động
 - Ngủ say: Bơ thỉnh thoảng giật tai trong mơ hoặc trở mình. Đang đọc to: đuôi vẫy nhanh hơn, tai động nhẹ.
+- **Cần câu lông vũ** (nút xanh, trên nút laser): lông vũ treo dây, lắc lư theo ngón tay/chuột; đưa lên trên đầu Bơ là Bơ giơ hai chân trước vồ. Ảnh `docs/anh/long-vu.png`. Mỗi lúc chỉ một đồ chơi (bật cái này thì cất cái kia).
 - Sửa: mỗi câu giọng AI trước đây để lại một "nút âm thanh" trong trình duyệt → nói chuyện bằng giọng rất lâu sẽ nặng dần; giờ ngắt sau mỗi câu.
 
 ## 2026-10-11 – Giai đoạn 54: tư thế & bộ lông
