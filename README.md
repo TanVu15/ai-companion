@@ -11,7 +11,7 @@ Mèo vẽ bằng SVG (`web/meo.js`, `web/meo.css`), đọc JSON cảm xúc từ 
 
 | | |
 |---|---|
-| **Vuốt** đầu/lưng → nhắm mắt, kêu rừ rừ, tim bay | **Gãi cằm** → ngửa cổ sướng · **Chạm tai** → tai giật |
+| **Vuốt** đầu/lưng → nhắm mắt, kêu rừ rừ, tim bay; vuốt lâu → Bơ nhồi bột | **Gãi cằm** → ngửa cổ sướng · **Chạm tai** → tai giật |
 | **Chọc bụng** → giật mình; chọc 5 lần liền → dỗi quay lưng | **Nhấn giữ bụng/lưng ~1 giây** → lăn qua lăn lại nũng nịu |
 | **Nút cá** → Bơ ăn, liếm mép (nhấn giữ: chọn cá / sữa / pate) | **Nút cuộn len** → kéo ném, len lăn, nảy, Bơ vồ |
 | **Nút chấm đỏ** → tia laser theo ngón tay, Bơ nhìn theo và vồ | **Nút lông vũ** → cần câu lông vũ, đưa lên đầu Bơ là Bơ giơ chân vồ |

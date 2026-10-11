@@ -27,6 +27,7 @@ function boDemChoc(moc, bayGio, cuaSo = 4000) {
   return moc.concat(bayGio).filter(t => bayGio - t <= cuaSo);
 }
 const BO_CAU_CHOI = {
+  nhoi: ['Nhồi nhồi... Bơ nhồi bột nè~', 'Sướng quá, chân Bơ tự dẫm luôn á', 'Rừ rừ... nhồi nhồi~'],
   vuot: ['rừ rừ~', 'meo~ thêm chút nữa đi', 'sướng ghê á', 'đúng chỗ đó đó!', 'Bơ tan chảy rồi nè'],
   gai_cam: ['ư ư~ gãi nữa đi', 'chỗ này nè, chỗ này!', 'mèo béo thích lắm luôn'],
   tai: ['nhột á!', 'ơ, tai Bơ mà', 'hửm?'],
@@ -117,6 +118,10 @@ function boGanMui(x, y) {
 function boDoToRuRu(giay) {
   return +Math.min(0.5, 0.18 + Math.max(0, giay) * 0.05).toFixed(3);
 }
+// Vuốt lưng/đầu liền một mạch bao nhiêu giây thì Bơ sướng quá bắt đầu nhồi bột (hai chân trước dẫm luân phiên)
+function boNhoiBot(giayVuot) {
+  return giayVuot >= 6;
+}
 // Lắc điện thoại: độ "giật" giữa hai lần đo gia tốc (m/s², có cả trọng lực) = tổng chênh lệch ba trục
 function boDoGiat(a, b) {
   if (!a || !b) return 0;
@@ -185,7 +190,7 @@ function boLucMo(lanTruoc, bayGio, gio) {
   return null;
 }
 
-if (typeof module !== 'undefined') module.exports = { boVungCham, boChiTietDau, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boChamChan, boThongSoMeo, boGanMui, boDoToRuRu, boDoGiat, boLac, boGoiY, BO_GOI_Y, boPhanUngTin, boLucMo, boMonAn, BO_MON_AN, boNhipAn, boDoNhac, BO_CAU_CHOI, BO_DOC_TO };
+if (typeof module !== 'undefined') module.exports = { boVungCham, boChiTietDau, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boChamChan, boThongSoMeo, boGanMui, boDoToRuRu, boNhoiBot, boDoGiat, boLac, boGoiY, BO_GOI_Y, boPhanUngTin, boLucMo, boMonAn, BO_MON_AN, boNhipAn, boDoNhac, BO_CAU_CHOI, BO_DOC_TO };
 
 // ---- Phần giao diện ----
 (function () {
@@ -360,7 +365,7 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boChiTietDau, 
   const dangDoi = () => svg.classList.contains('doi');
   // Đồ chơi (do_choi.js) điền các hàm này: đang bật đồ chơi nào không, chạm có đang dùng để điều khiển đồ chơi không
   const doChoi = { dangChoi: () => false, dieuKhien: () => false, keoLen: () => false };
-  let dauVuot = null, lanNguoc = 0;
+  let dauVuot = null, lanNguoc = 0, vuotBatDau = 0, daNoiNhoi = false;
   function vuot(ev, vung) {
     if (dangDoi()) return;
     const pos = viTriKhung(ev);
@@ -376,12 +381,17 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boChiTietDau, 
     if (face.dataset.e !== 'ngu' && typeof scheduleSleep === 'function') scheduleSleep();
     const loai = vung === 'cam' ? 'gai_cam' : 'vuot';
     if (!vuotDangChay) {
-      vuotDangChay = loai; dem(loai);
+      vuotDangChay = loai; dem(loai); vuotBatDau = Date.now(); daNoiNhoi = false;
       const h = new Date().getHours();
       noi(loai === 'vuot' && (h >= 22 || h < 5) && Math.random() < 0.5 ? 'khuya' : loai);
     }
     giu(loai === 'gai_cam' ? 'gai-cam' : 'vuot', 700);
     if (loai === 'vuot') tim(pos.x, pos.y - 10);
+    // vuốt lâu liền một mạch → Bơ nhồi bột (dẫm sữa) như mèo con, mắt lim dim
+    if (loai === 'vuot' && face.dataset.e !== 'ngu' && boNhoiBot((Date.now() - vuotBatDau) / 1000)) {
+      giu('nhoi', 900);
+      if (!daNoiNhoi) { daNoiNhoi = true; dem('nhoi'); noi('nhoi', true); }
+    }
     grgr(true);
     clearTimeout(vuotTat);
     vuotTat = setTimeout(() => { vuotDangChay = false; quangVuot = 0; viTriTruoc = null; grgr(false); }, 700);

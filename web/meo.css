@@ -461,3 +461,12 @@ header.dang-long-vu { touch-action: none; position: relative; }
 @keyframes meo-ngoay-duoi { from { transform: rotate(10deg); } to { transform: rotate(26deg); } }
 @keyframes meo-vo-rinh { 0% { transform: translateY(6px) scale(1.04, .9); } 35% { transform: translateY(-8px) scale(1.03); }
   65% { transform: translateY(6px) scale(1.07, .9); } 100% { transform: none; } }
+
+/* Nhồi bột (vuốt lâu): hai chân trước dẫm luân phiên lên xuống, mắt lim dim, má hồng */
+.meo.nhoi .paw-l { transform: translateY(-5px); }
+.meo.nhoi .ma { opacity: .8; }
+@media (prefers-reduced-motion: no-preference) {
+  .meo.nhoi .paw-l { animation: meo-nhoi .5s ease-in-out infinite alternate; }
+  .meo.nhoi .paw-r { animation: meo-nhoi .5s ease-in-out -.5s infinite alternate; }
+}
+@keyframes meo-nhoi { from { transform: translateY(0) scaleX(1); } to { transform: translateY(-7px) scaleX(.92); } }

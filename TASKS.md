@@ -381,6 +381,11 @@
 - [x] Lông vũ đưa xuống sát đất trước mặt Bơ → Bơ hạ người, mông ngoáy ngoáy chuẩn bị vồ (kiểu mèo rình), rồi nhảy vồ
 - [x] Rà soát giai đoạn 69, sửa lỗi tìm được
 
+## Giai đoạn 70 – Bơ sướng & săn giỏi (Claude tự thêm, trong hướng mèo/chạm/giọng)
+- [x] Nhồi bột: vuốt lưng/đầu liền khoảng 6 giây → hai chân trước Bơ dẫm luân phiên, mắt lim dim, "Nhồi nhồi... Bơ nhồi bột nè~"
+- [ ] Bật "Giọng nói": lần vồ lông vũ (rình rồi vồ) đầu tiên trong ngày được đọc to, các lần sau chỉ hiện chữ
+- [ ] Rà soát giai đoạn 70, sửa lỗi tìm được
+
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):
 - [ ] Xem / xóa "chuyện Bơ định hỏi thăm" trên web (trong "Bơ nhớ gì về mình?"), và báo trong dòng "✓ Bơ đã ghi: sẽ hỏi thăm ..."

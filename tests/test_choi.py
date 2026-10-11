@@ -301,3 +301,11 @@ def test_ngap_lay_khong_buon_ngu():
     v = node("""console.log(JSON.stringify(['mình không buồn ngủ', 'chưa buồn ngủ gì hết', 'hết buồn ngủ rồi',
       'Bơ không buồn ngủ hả, mình buồn ngủ quá'].map(C.boPhanUngTin)))""")
     assert v == [None, None, None, "ngap"]
+
+
+def test_nhoi_bot():
+    """Vuốt liền 6 giây trở lên thì Bơ nhồi bột; có câu và kiểu dáng riêng."""
+    v = node("console.log(JSON.stringify([C.boNhoiBot(0), C.boNhoiBot(5.9), C.boNhoiBot(6), C.boNhoiBot(20), C.BO_CAU_CHOI.nhoi.length]))")
+    assert v == [False, False, True, True, 3]
+    css = (config.ROOT / "web" / "meo.css").read_text(encoding="utf-8")
+    assert ".meo.nhoi .paw-l" in css and "meo-nhoi" in css
