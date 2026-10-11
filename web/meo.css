@@ -168,6 +168,13 @@ header.dang-laser { touch-action: none; cursor: crosshair; position: relative; }
 .meo.nguoc-long .ear-l { transform: rotate(-32deg) scaleY(.85); } .meo.nguoc-long .ear-r { transform: rotate(32deg) scaleY(.85); }
 .meo.nguoc-long .body { scale: 1.03; }
 .meo.nguoc-long .tail { transform: rotate(10deg); }
+/* Chạm chân: rụt chân; chạm hai lần: giơ chân phải đập tay, mắt cười */
+.meo.rut-chan .paw { transform: translateY(3px) scale(.96); }
+.meo.dap-tay .paw-r { transform: translate(82px, -79px) rotate(170deg); }  /* giơ lên cạnh má, lòng bàn chân hướng ra */
+.meo.dap-tay .ma { opacity: .7; } .meo.dap-tay .tail { transform: rotate(-14deg); }
+.meo.dap-tay :is(.mat-mo, .mat-nham) { display: none !important; } .meo.dap-tay .mat-cuoi { display: inline !important; }
+.meo.dap-tay :is(.mieng-w, .mieng-buon) { display: none !important; } .meo.dap-tay .mieng-mo { display: inline !important; }
+.tim.bop { color: #e0703a; font: 800 15px system-ui, sans-serif; }
 /* Gãi cằm: ngửa cổ */
 .meo.gai-cam .head { transform: translateY(-6px) rotate(-6deg); }
 /* Chạm tai: tai giật */

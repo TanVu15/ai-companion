@@ -318,7 +318,7 @@
 
 ## Giai đoạn 57 – Chạm tinh tế hơn (Claude tự thêm, trong hướng mèo/chạm)
 - [x] Vuốt ngược lông (từ đuôi lên đầu, hướng ngược) → Bơ nhăn mặt, lông dựng nhẹ, "Ngược lông rồi á!"; vuốt xuôi mới rừ rừ (hàm tính hướng vuốt có test)
-- [ ] Chạm nhanh hai lần lên chân trước → Bơ giơ chân "đập tay" (high five), bong bóng "Đập tay nè!"
+- [x] Chạm nhanh hai lần lên chân trước → Bơ giơ chân "đập tay" (high five), bong bóng "Đập tay nè!"
 - [ ] Rảnh lâu (trước khi nằm bẹp), thỉnh thoảng Bơ tự rửa mặt bằng chân hoặc ngó quanh (không gọi API, tôn trọng giảm chuyển động)
 - [ ] Rà soát giai đoạn 57, sửa lỗi tìm được
 

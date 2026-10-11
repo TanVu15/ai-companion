@@ -18,6 +18,7 @@ def test_vung_cham():
       C.boVungCham(52, 25), C.boVungCham(148, 25), C.boVungCham(100, 60), C.boVungCham(100, 112),
       C.boVungCham(100, 145), C.boVungCham(45, 140), C.boVungCham(5, 5), C.boVungCham(198, 190)]))""")
     assert v == ["tai_trai", "tai_phai", "dau", "cam", "bung", "lung", None, None]
+    assert node("console.log(JSON.stringify([C.boVungCham(82, 176), C.boVungCham(118, 172), C.boVungCham(100, 150)]))") == ["chan", "chan", "bung"]
 
 
 def test_dem_choc_trong_4_giay():
@@ -143,3 +144,11 @@ def test_meo_co_long_dung_khi_vuot_nguoc():
     meo = (config.ROOT / "web" / "meo.js").read_text(encoding="utf-8")
     css = (config.ROOT / "web" / "meo.css").read_text(encoding="utf-8")
     assert 'class="long-dung"' in meo and ".meo.nguoc-long .long-dung" in css
+
+
+def test_cham_chan_hai_lan_la_dap_tay():
+    v = node("""console.log(JSON.stringify([C.boChamChan(0, 5000), C.boChamChan(4700, 5000), C.boChamChan(4000, 5000),
+      C.boChamChan(5200, 5000)]))""")
+    assert v == ["chan", "dap_tay", "chan", "chan"]
+    from app.brain import mo_ta_choi
+    assert "đập tay với Bơ 2 lần" in mo_ta_choi({"dap_tay": 2})  # lần đầu / hai lần nhanh / cách xa / giờ máy lùi

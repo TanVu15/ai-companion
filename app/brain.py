@@ -267,7 +267,7 @@ def _le_sap_toi(today) -> str:
 
 CHOI_TEN = {"vuot": "vuốt ve Bơ", "gai_cam": "gãi cằm Bơ", "cho_an": "cho Bơ ăn cá", "choc": "chọc bụng Bơ",
             "laser": "chơi tia laser với Bơ", "len": "chơi cuộn len với Bơ",
-            "long_vu": "chơi cần câu lông vũ với Bơ"}
+            "long_vu": "chơi cần câu lông vũ với Bơ", "dap_tay": "đập tay với Bơ"}
 
 
 def mo_ta_choi(dem: dict | None) -> str:
