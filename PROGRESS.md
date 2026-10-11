@@ -715,3 +715,8 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 
 **Tân cần thử (giai đoạn 40):** nút "Thói quen" → bấm một ô ngày hôm qua để tích bù; nhắn "hôm qua mình có đọc sách mà quên báo"; hỏi "thói quen hôm nay?".
 
+## 2026-10-11 – Giai đoạn 41: hỏi nhanh thời tiết, tổng kết thói quen
+- Hỏi **"hôm nay trời thế nào?", "mai có mưa không?", "bây giờ bao nhiêu độ?"** → Bơ đọc ngay dự báo đã lấy sẵn, không tốn API. Chưa đặt thành phố thì Bơ chỉ cách đặt trong Cài đặt.
+- Tối Chủ nhật Bơ tổng kết tuần giờ khen/động viên thêm về thói quen.
+- 313 test qua hết.
+

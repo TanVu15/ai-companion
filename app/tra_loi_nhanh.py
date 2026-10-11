@@ -52,6 +52,13 @@ _MAU = {
         r"(?:(?:minh|to|tui|toi|em)\s+)?(?:con|co)\s+(?:con\s+)?(?:nhung\s+)?viec\s+(?:gi|nao)\s+(?:can|phai|chua)\s+(?:lam|xong)(?:\s+(?:khong|ko|k|nua|chua|hom nay|nua khong))?",
         r"(?:danh sach\s+)?viec can lam(?:\s+(?:hom nay|cua\s+(?:minh|to|tui|toi|em)|(?:minh|to|tui|toi|em)))?(?:\s+(?:co gi|la gi|gom gi|con gi))?",
     ],
+    "thoi_tiet": [
+        r"(?:thoi tiet|troi)\s+(?:hom nay|bay gio|nay|ngay mai|mai)\s+(?:the nao|ra sao|sao|nhu the nao|co mua khong|co mua ko|co mua k|mua khong|nong khong|lanh khong)",
+        r"(?:hom nay|bay gio|nay|ngay mai|mai)\s+(?:troi|thoi tiet)\s+(?:the nao|ra sao|sao|nhu the nao|co mua khong|co mua ko|co mua k|nong khong|lanh khong)",
+        r"(?:hom nay|bay gio|nay|ngay mai|mai)\s+(?:troi\s+)?co mua\s+(?:khong|ko|k)",
+        r"thoi tiet(?:\s+(?:hom nay|ngay mai|mai|bay gio))?",
+        r"(?:bay gio|ngoai troi|hom nay|troi)\s+(?:dang\s+)?(?:may|bao nhieu)\s+do(?:\s+(?:c|roi))?",
+    ],
     "thoi_quen": [
         r"(?:(?:danh sach|cac)\s+)?thoi quen(?:\s+(?:hom nay|cua\s+(?:minh|to|tui|toi|em)|(?:minh|to|tui|toi|em)))?(?:\s+(?:sao roi|the nao|co gi|toi dau roi))?",
         r"(?:hom nay\s+)?(?:(?:minh|to|tui|toi|em)\s+)?(?:con|co)\s+thoi quen\s+(?:nao|gi)\s+(?:chua lam|chua)(?:\s+(?:khong|ko|k|hom nay))?",
@@ -92,8 +99,16 @@ def _am(now: datetime) -> str:
         return ""
 
 
-def tra_loi(loai: str, now: datetime, memory=None) -> tuple[str, str]:
-    """(câu Bơ nói, cảm xúc). Câu rỗng = không trả lời nhanh được (để AI làm)."""
+def tra_loi(loai: str, now: datetime, memory=None, thoi_tiet: str | None = None, co_thanh_pho: bool = False) -> tuple[str, str]:
+    """(câu Bơ nói, cảm xúc). Câu rỗng = không trả lời nhanh được (để AI làm).
+    thoi_tiet: dòng thời tiết đã lấy sẵn (thoi_tiet.py), co_thanh_pho: đã đặt thành phố chưa."""
+    if loai == "thoi_tiet":
+        if thoi_tiet:
+            return f"{thoi_tiet} Ra ngoài nhớ để ý nha!", "vui"
+        if not co_thanh_pho:
+            return ('Bơ chưa biết bạn ở thành phố nào nên chưa xem thời tiết được. Bấm nút "?" → Cài đặt → '
+                    'gõ thành phố (ví dụ Da Nang) là Bơ xem được nè!'), "suy_nghi"
+        return "Bơ chưa lấy được thời tiết (chắc mạng chập chờn), lát hỏi lại Bơ nha!", "buon"
     if loai == "gio":
         h, m = now.hour, now.minute
         return f"Bây giờ là {h} giờ {m:02d} phút nè ({now.strftime('%H:%M')}).", "vui"

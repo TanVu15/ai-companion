@@ -118,7 +118,8 @@ HOLIDAY_TRIGGER = (
 )
 WEEK_TRIGGER = (
     "(Tin nhắn hệ thống, không phải người dùng nói: tối Chủ nhật rồi. Hãy chủ động điểm lại tuần qua của người dùng "
-    "thật ấm áp, như bạn thân: nhắc 2-3 chuyện đáng nhớ, khen điều họ làm được, hỏi tuần tới có dự định gì. "
+    "thật ấm áp, như bạn thân: nhắc 2-3 chuyện đáng nhớ, khen điều họ làm được (có thói quen đang theo dõi thì khen/động viên một câu theo số ngày đã làm), "
+    "hỏi tuần tới có dự định gì. "
     "Ngắn gọn, đừng liệt kê khô khan. Những gì người dùng đã kể trong tuần:\n{items})"
 )
 MOC_TRIGGER = (
@@ -549,7 +550,8 @@ class Brain:
         if not loai:
             return None
         try:
-            noi, cam_xuc = tra_loi(loai, now or datetime.now(), self.memory)
+            noi, cam_xuc = tra_loi(loai, now or datetime.now(), self.memory, thoi_tiet=self._weather_text,
+                                   co_thanh_pho=bool(getattr(self.weather, "thanh_pho", "")))
         except Exception as e:  # lỗi thì để AI trả lời như thường
             log.warning("Trả lời nhanh lỗi: %s", type(e).__name__)
             return None

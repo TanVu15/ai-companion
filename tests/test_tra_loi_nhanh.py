@@ -27,6 +27,8 @@ def memory(tmp_path):
     ("có việc gì cần làm không", "viec"), ("việc cần làm hôm nay", "viec"),
     ("thói quen hôm nay", "thoi_quen"), ("Bơ ơi thói quen của mình sao rồi?", "thoi_quen"),
     ("hôm nay mình còn thói quen nào chưa làm", "thoi_quen"),
+    ("hôm nay trời thế nào?", "thoi_tiet"), ("mai có mưa không Bơ", "thoi_tiet"), ("thời tiết hôm nay", "thoi_tiet"),
+    ("trời hôm nay sao vậy", "thoi_tiet"), ("bây giờ bao nhiêu độ", "thoi_tiet"),
 ])
 def test_nhan_dien(text, loai):
     assert nhan_dien(text) == loai
@@ -40,6 +42,7 @@ def test_nhan_dien(text, loai):
     "tui việc gì phải làm vậy", "việc gì phải làm thế", "em việc gì phải làm", "mình gì phải làm", "mình nào chưa xong",
     "hôm nay ngày gì vậy", "thói quen xấu của mình là thức khuya", "theo dõi giúp mình thói quen đọc sách",
     "Thói quen là gì?", "bơ ơi thói quen của em là gì vậy",
+    "trời ơi mệt quá", "may đồ", "mấy độ", "thời tiết thế này chỉ muốn ngủ", "mai mình đi Đà Lạt, trời có lạnh không",
 ])
 def test_khong_nhan_nham(text):
     assert nhan_dien(text) == ""
@@ -117,3 +120,18 @@ def test_thoi_quen(memory):
     assert noi.startswith("Hôm nay xong Đọc sách rồi. Còn chưa làm: Chạy bộ (đang chuỗi 2 ngày).")
     memory.set_habit_done(b["id"], True, date(2026, 10, 11))
     assert "làm đủ hết 2 thói quen" in tra_loi("thoi_quen", now, memory)[0]
+
+
+def test_thoi_tiet(memory):
+    class W:
+        thanh_pho = "Da Nang"
+
+        def hien_tai(self):
+            return "Thời tiết ở Đà Nẵng: bây giờ 28°C, nắng."
+
+    now = datetime(2026, 10, 11, 9, 0)
+    assert "Cài đặt" in tra_loi("thoi_tiet", now)[0]
+    assert "chưa lấy được" in tra_loi("thoi_tiet", now, co_thanh_pho=True)[0]
+    client = FakeClient([])
+    brain = Brain(memory, client=client, weather=W())
+    assert brain.chat("hôm nay trời thế nào?").noi.startswith("Thời tiết ở Đà Nẵng: bây giờ 28°C") and client.calls == []
