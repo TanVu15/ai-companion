@@ -382,6 +382,9 @@ def test_len_lan_qua():
     # vồ len thì thôi quay đầu liền (khỏi lẫn tư thế); cất len, ôm len cũng thôi
     assert "thoiTheoLen(); giu('vo', 600)" in js and "thoiTheoLen(); svg.classList.add('om-len')" in js
     assert "len.remove(); len = null; lenKeo = null; thoiTheoLen();" in js
+    # đang được vuốt, gãi cằm, boop... thì khỏi quay đầu theo len (không đè tư thế đầu khác)
+    for c in ["'vuot'", "'gai-cam'", "'boop'", "'khoe'", "'nhoi'", "'em'"]:
+        assert c in js.split("const TU_THE_KHAC")[1].split("];")[0]
 
 
 def test_cho_an_luc_om_len_thi_buong_len():

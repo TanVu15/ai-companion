@@ -5,8 +5,9 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
-## 2026-10-11 – Giai đoạn 77 (đang làm): Bơ dõi theo cuộn len
+## 2026-10-11 – Giai đoạn 77 xong: Bơ dõi theo cuộn len
 - **Nhìn theo len**: ném/lăn cuộn len ngang sàn qua trước mặt Bơ → Bơ nghiêng đầu quay theo len (len bên trái thì quay trái, bên phải thì quay phải), mắt mở to dán vào len, tai dỏng, đuôi giật giật háo hức. Len dừng, bay cao hay lăn xa thì nửa giây sau Bơ thôi. Len lăn trúng chân thì Bơ vồ như cũ (thôi quay đầu ngay cho khỏi lẫn tư thế). Ảnh `docs/anh/meo-theo-len.png` (len bên trái, bên phải, máy tính). `scripts/thu_cham.py` thử thêm — đạt hết. 436 test qua hết.
+- Rà soát, sửa: đang được vuốt, gãi cằm, boop, nựng má, khoe, nhồi bột, bế... mà len lăn qua thì trước đây đầu Bơ bị kéo quay theo len, đè mất tư thế đó → giờ Bơ lo tư thế đang làm, không quay đầu. Mèo đen (màn hình thấp, nền tối), mướp vằn, tam thể (giảm chuyển động): không vỡ hình (ảnh `docs/anh/theo-len-kieu-long.png`). 436 test qua hết, `scripts/thu_cham.py` đạt hết.
 **Tân cần thử:** bật nút cuộn len, kéo len xuống sát sàn ở mép trái rồi đẩy nhẹ sang phải.
 
 ## 2026-10-11 – Giai đoạn 76 xong: giọng cho trò ôm len

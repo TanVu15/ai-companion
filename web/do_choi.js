@@ -198,10 +198,14 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
   }
   // Len lăn ngang qua trước mặt (không chạm) → đầu Bơ quay theo len, đuôi giật giật; len dừng/đi xa 0,5 giây thì thôi
   let theoLenTat = null;
+  // Bơ đang làm tư thế khác (được vuốt, gãi cằm, boop, vồ, ăn, bế...) thì khỏi quay đầu theo len
+  const TU_THE_KHAC = ['be', 'em', 'an', 'lan', 'vo', 'om-len', 'da-len', 'rinh', 'vo-rinh', 'ngo-chan', 'vuot', 'nguoc-long', 'giat',
+    'giat-duoi', 'ngui', 'co-ma', 'nghieng', 'gai-cam', 'hong', 'khoe', 'boop', 'nhoi', 'chong-mat', 'roi', 'dap-tay', 'ngap',
+    'hat-xi', 'nung-ma-trai', 'nung-ma-phai', 'liem-mep', 'dinh-sua', 'chop-cham'];
   function thoiTheoLen() { clearTimeout(theoLenTat); theoLenTat = null; svg.classList.remove('theo-len'); }
   function theoLen(p) {
     // đang vồ, ôm, ăn, bế, ngủ, dỗi... → thôi liền cho khỏi lẫn tư thế
-    if (dangDoi() || face.dataset.e === 'ngu' || ['be', 'an', 'lan', 'vo', 'om-len', 'da-len', 'rinh'].some(c => svg.classList.contains(c))) {
+    if (dangDoi() || face.dataset.e === 'ngu' || TU_THE_KHAC.some(c => svg.classList.contains(c))) {
       thoiTheoLen(); return;
     }
     const h = lenKeo || lenS.yen || boVungCham(p.x, p.y) ? null : boLenLanQua(p.x, p.y, lenS.vx);

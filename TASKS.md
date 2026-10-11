@@ -412,7 +412,11 @@
 
 ## Giai đoạn 77 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
 - [x] Cuộn len lăn ngang qua trước mặt Bơ (không chạm) → đầu và mắt Bơ quay theo, đuôi giật giật háo hức
-- [ ] Rà soát giai đoạn 77, sửa lỗi tìm được
+- [x] Rà soát giai đoạn 77, sửa lỗi tìm được
+
+## Giai đoạn 78 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
+- [ ] Lông vũ đung đưa trên đầu mà Bơ đang nằm lăn ngửa → Bơ giơ cả bốn chân lên quào quào
+- [ ] Rà soát giai đoạn 78, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):
