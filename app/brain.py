@@ -45,7 +45,8 @@ Chỉ trả về MỘT đối tượng JSON, không viết gì ngoài JSON:
 - Nếu có phần "Chuyện nên hỏi thăm", hãy hỏi thăm TỰ NHIÊN một chuyện khi hợp lúc (không hỏi dồn),
   rồi chép chuyện đó vào "da_hoi". Không có thì để [].
 - "nhac": CHỈ khi người dùng nhờ nhắc việc vào một giờ cụ thể ("8h tối nhắc mình gọi mẹ").
-  Tính giờ theo "Bây giờ là..." ở trên, ghi đủ ngày giờ (lần nhắc đầu tiên). Không có thì để []. Đừng tự hứa nhắc nếu không ghi vào đây.
+  Tính giờ theo "Bây giờ là..." ở phần "Tình hình lúc này", ghi đủ ngày giờ (lần nhắc đầu tiên). Không có thì để []. Đừng tự hứa nhắc nếu không ghi vào đây.
+  Chỉ ghi lời nhắc MỚI nhờ trong tin nhắn vừa rồi; lời nhắc đã có trong phần "Lời nhắc đang có" thì KHÔNG chép lại.
   "lap": "ngay" nếu nhắc mỗi ngày, "ngay_thuong" nếu chỉ thứ 2 đến thứ 6 ("ngày đi làm"), "tuan" nếu mỗi tuần,
   "thang" nếu mỗi tháng (ví dụ "ngày 5 hằng tháng đóng tiền nhà"), "gio_2" nếu cứ 2 tiếng một lần
   (gio_1 đến gio_12, ví dụ "cứ 2 tiếng nhắc mình uống nước", "luc" là lần đầu), "" nếu chỉ nhắc một lần.
@@ -75,6 +76,9 @@ Chỉ trả về MỘT đối tượng JSON, không viết gì ngoài JSON:
 - Người dùng nói tới chuyện chán sống / tự làm hại mình: lắng nghe nhẹ nhàng, không đùa, khuyên tìm người thân hoặc
   bác sĩ, chuyên gia tâm lý; nếu nguy hiểm ngay lúc này thì bảo gọi cấp cứu 115. Không đưa số điện thoại nào khác.
 """
+
+# Từ dòng này trở xuống trong lời dặn là phần thay đổi theo từng tin nhắn (giờ, trí nhớ, việc cần làm...)
+DYNAMIC_MARK = "\n## Tình hình lúc này (dùng để trả lời, thay đổi theo từng tin nhắn)\n"
 
 _LIST = {"type": "array", "items": {"type": "string"}}
 
@@ -267,7 +271,10 @@ def build_system_prompt(
 ) -> str:
     now = now or datetime.now()
     known = "\n".join(f"- {f}" for f in facts) if facts else "- (chưa biết gì)"
-    out = f"{persona.strip()}\n\nBây giờ là {now.strftime('%H:%M')} ({buoi(now)}), {THU[now.weekday()]} ngày {now.strftime('%d/%m/%Y')}.\n"
+    # Phần cố định (tính cách + cách trả lời) đứng trước, phần thay đổi theo từng tin đứng sau DYNAMIC_MARK:
+    # API chỉ tính rẻ ("prompt caching") cho đoạn đầu giống hệt lần gọi trước — xem cache_blocks().
+    out = f"{persona.strip()}\n{OUTPUT_RULES}{DYNAMIC_MARK}"
+    out += f"Bây giờ là {now.strftime('%H:%M')} ({buoi(now)}), {THU[now.weekday()]} ngày {now.strftime('%d/%m/%Y')}.\n"
     out += _am_lich_va_le(now.date())
     if weather:
         out += f"{weather} (Chỉ nhắc tới thời tiết khi hợp chuyện, ví dụ trời mưa mà người dùng sắp ra ngoài.)\n"
@@ -342,7 +349,28 @@ def build_system_prompt(
             "có thể hỏi han một chút khi hợp lúc, nhưng đừng gặng hỏi, đừng nhắc mãi, đừng giảng giải. "
             "Chưa biết hôm nay họ thế nào thì \"cam_xuc\" nên là \"thuong\" hoặc \"binh_thuong\", đừng hớn hở.\n"
         )
-    return out + OUTPUT_RULES
+    return out
+
+
+def cache_blocks(system: str) -> list[dict]:
+    """Tách lời dặn thành 2 khối cho API: khối cố định có mốc "cache_control" (các lần gọi sau trong 5 phút
+    chỉ tốn 1/10 tiền cho khối này), khối thay đổi (giờ, trí nhớ...) tính tiền như thường."""
+    co_dinh, mark, thay_doi = system.partition(DYNAMIC_MARK)
+    if not mark:
+        return [{"type": "text", "text": system}]
+    return [{"type": "text", "text": co_dinh, "cache_control": {"type": "ephemeral"}},
+            {"type": "text", "text": (mark + thay_doi).lstrip("\n")}]
+
+
+def quy_doi_token(usage) -> tuple[int, int]:
+    """Số token (vào, ra) của một lần gọi, phần vào đã quy về giá thường: ghi khối cố định vào bộ nhớ tạm
+    của API đắt 1,25 lần, đọc lại từ đó chỉ tốn 0,1 lần."""
+    def so(ten: str) -> int:
+        v = getattr(usage, ten, 0)
+        return int(v) if isinstance(v, (int, float)) else 0
+
+    vao = so("input_tokens") + round(so("cache_creation_input_tokens") * 1.25 + so("cache_read_input_tokens") * 0.1)
+    return vao, so("output_tokens")
 
 
 def clean_history(history: list[dict]) -> list[dict]:
@@ -501,8 +529,10 @@ def reminder_text(viec: str, luc: str = "", now: datetime | None = None) -> str:
 
 
 class Brain:
-    def __init__(self, memory, client=None, sleep=time.sleep, background: bool = False, weather=None):
+    def __init__(self, memory, client=None, sleep=time.sleep, background: bool = False, weather=None,
+                 cache_prompt: bool = False):
         self.memory = memory
+        self._cache_prompt = cache_prompt  # True: gửi lời dặn thành 2 khối để API tính rẻ khối cố định (cache_blocks)
         self.weather = weather  # đối tượng có .hien_tai() → chữ hoặc None (xem thoi_tiet.py)
         self._weather_text = None
         if client is None:
@@ -545,13 +575,8 @@ class Brain:
                         log.info("Model không nhận tham số %s, gọi lại không có tham số này", p)
                         self._rejected_params.add(p)
                         kwargs.pop(p)
-                usage = getattr(resp, "usage", None)
                 with self._lock:
-                    self.memory.add_usage(
-                        kind,
-                        int(getattr(usage, "input_tokens", 0) or 0),
-                        int(getattr(usage, "output_tokens", 0) or 0),
-                    )
+                    self.memory.add_usage(kind, *quy_doi_token(getattr(resp, "usage", None)))
                 return resp
             except Exception as e:
                 if attempt >= retries or not is_transient(e):
@@ -844,7 +869,7 @@ class Brain:
         resp = self._create(
             model=config.MODEL,
             max_tokens=config.MAX_TOKENS,
-            system=system,
+            system=cache_blocks(system) if self._cache_prompt else system,
             messages=history,
             output_config={"format": {"type": "json_schema", "schema": REPLY_SCHEMA}},
         )

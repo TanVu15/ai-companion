@@ -121,7 +121,7 @@ def test_hoi_tham_xong_thi_lan_sau_khong_hoi_lai(memory):
     brain.chat("Chào Bơ")
     assert "- Chiều nay đi tập chân (kể hôm qua)" in client.calls[0]["system"]
     brain.chat("Mệt nhưng vui")
-    assert "Chuyện nên hỏi thăm" not in client.calls[1]["system"].split("## Cách trả lời")[0]
+    assert "## Chuyện nên hỏi thăm" not in client.calls[1]["system"]
 
 
 def test_cham_diem_hoi_tham_phai_gach_duoc_that():
@@ -151,6 +151,49 @@ def test_ngay_dac_biet_co_loi_dan_bat_buoc_ngay_ben_duoi():
     system = build_system_prompt("Bạn là Bơ.", [], special=[{"viec": "Sinh nhật Tân"}])
     muc = system.split("## Hôm nay là ngày đặc biệt")[1].split("##")[0]
     assert "- Sinh nhật Tân" in muc and "BẮT BUỘC" in muc
+
+
+def test_loi_dan_phan_co_dinh_dung_truoc_phan_thay_doi():
+    """Prompt caching chỉ tính rẻ cho đoạn ĐẦU giống hệt lần trước → giờ, trí nhớ... phải nằm sau phần cố định."""
+    from datetime import datetime
+
+    from app.brain import DYNAMIC_MARK, cache_blocks
+
+    a = build_system_prompt("Bạn là Bơ.", ["Tên là Tân"], now=datetime(2026, 10, 11, 22, 0))
+    b = build_system_prompt("Bạn là Bơ.", ["Tên là Tân", "Thích phở"], now=datetime(2026, 10, 12, 7, 30),
+                            todos=["Mua sữa"], weather="Trời mưa.")
+    co_dinh_a, co_dinh_b = a.split(DYNAMIC_MARK)[0], b.split(DYNAMIC_MARK)[0]
+    assert co_dinh_a == co_dinh_b and "## Cách trả lời" in co_dinh_a and "## Giới hạn" in co_dinh_a
+    assert "Bây giờ là 22:00" not in co_dinh_a and "Tên là Tân" not in co_dinh_a
+    khoi = cache_blocks(b)
+    assert [k["type"] for k in khoi] == ["text", "text"]
+    assert khoi[0] == {"type": "text", "text": co_dinh_b, "cache_control": {"type": "ephemeral"}}
+    assert "cache_control" not in khoi[1] and khoi[1]["text"].startswith("## Tình hình lúc này")
+    assert "Bây giờ là 07:30" in khoi[1]["text"] and "- Mua sữa" in khoi[1]["text"]
+    assert cache_blocks("không có mốc") == [{"type": "text", "text": "không có mốc"}]
+
+
+def test_bat_cache_thi_gui_loi_dan_thanh_hai_khoi(memory):
+    client = ScriptedClient([_ok(), _ok()])
+    Brain(memory, client=client, cache_prompt=True).chat("hi")
+    assert isinstance(client.calls[0]["system"], list) and "cache_control" in client.calls[0]["system"][0]
+    Brain(memory, client=client).chat("hi")  # mặc định (test, demo): một chuỗi như cũ
+    assert isinstance(client.calls[1]["system"], str)
+
+
+def test_token_doc_ghi_bo_nho_tam_duoc_quy_doi(memory):
+    from app.brain import quy_doi_token
+
+    u = SimpleNamespace(input_tokens=300, output_tokens=250, cache_creation_input_tokens=4000, cache_read_input_tokens=0)
+    assert quy_doi_token(u) == (5300, 250)  # ghi vào bộ nhớ tạm đắt 1,25 lần
+    u = SimpleNamespace(input_tokens=300, output_tokens=250, cache_creation_input_tokens=0, cache_read_input_tokens=4000)
+    assert quy_doi_token(u) == (700, 250)  # đọc lại chỉ tốn 0,1 lần
+    assert quy_doi_token(SimpleNamespace(input_tokens=10, output_tokens=5)) == (10, 5)
+    assert quy_doi_token(None) == (0, 0)
+    r = _ok()
+    r.usage = u
+    Brain(memory, client=ScriptedClient([r])).chat("hi")
+    assert memory.usage_since("2000-01-01") == {"calls": 1, "input_tokens": 700, "output_tokens": 250}
 
 
 def test_gia_theo_model():

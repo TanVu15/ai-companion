@@ -99,7 +99,7 @@ def get_brain() -> Brain:
             return _brain
         if not config.ANTHROPIC_API_KEY:
             raise HTTPException(500, "Chưa có ANTHROPIC_API_KEY trong file .env")
-        _brain = Brain(Memory(config.DB_PATH), background=True, weather=_weather())
+        _brain = Brain(Memory(config.DB_PATH), background=True, weather=_weather(), cache_prompt=True)
     return _brain
 
 

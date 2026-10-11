@@ -230,7 +230,7 @@
 - [x] Sửa lỗi Bơ hỏi lại mãi một chuyện (model chép cả ghi chú "(kể hôm qua)" nên không gạch được chuyện đã hỏi thăm)
 - [x] Lời dặn chắc hơn: không bịa số đường dây nóng (chỉ 115), không hứa "đi cùng", nhất định chúc ngày đặc biệt, chuyện hỏi thăm ghi ngày cụ thể, không chép việc vặt vào điều nhớ lâu dài
 - [x] Bộ chấm điểm: kiểm tra chặt hơn (gạch được chuyện hỏi thăm thật, không bịa số điện thoại...), báo số token đã dùng
-- [ ] Giảm token mỗi câu (lời dặn đang ~5.700 token): gom lời dặn cố định lên đầu để dùng prompt caching, đo lại bằng API thật
+- [x] Giảm tiền mỗi câu: gom lời dặn cố định lên đầu để dùng prompt caching (câu thứ hai trở đi trong 5 phút rẻ hơn ~5 lần), đã đo bằng API thật
 - [ ] Rà soát code lần 23 (phần mới của giai đoạn 43), sửa lỗi tìm được
 
 ## Sau này

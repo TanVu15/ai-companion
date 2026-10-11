@@ -60,6 +60,11 @@ Chạy `python -m app.thu_tinh_cach` (29 tình huống) và một cuộc trò ch
   (không nằm trong tính cách tự sửa được): không bịa số điện thoại, nguy hiểm thì chỉ bảo gọi 115, không hứa đi cùng.
 - Lời dặn chắc hơn: đúng ngày đặc biệt thì bắt buộc chúc (trước đây 1/4 lần Bơ quên mà vẫn bị tính là đã chúc);
   việc nhờ nhắc / việc cần làm không bị chép thêm vào "điều Bơ nhớ" nữa (trí nhớ đỡ phình).
+- **Rẻ hơn nữa nhờ "prompt caching"** (API tính 1/10 tiền cho đoạn lời dặn giống hệt lần gọi trước, trong 5 phút):
+  lời dặn giờ xếp phần cố định (tính cách + cách trả lời, ~5.800 token) lên trước, phần thay đổi (giờ, trí nhớ...) ra sau.
+  Đo thật: câu đầu ~7.500 token quy đổi, các câu sau ~1.000 (trước đây câu nào cũng ~6.000). Chấm 29 tình huống
+  giờ tốn 0,006 đô thay vì 0,021; điểm 99%. Số token trong "Chi phí" là số đã quy đổi về giá thường.
+  Lưu ý khi sửa `build_system_prompt`: đừng đưa thứ gì thay đổi (giờ, tên, trí nhớ) lên trước dòng "## Tình hình lúc này".
 - Bài học cho phiên tự chạy: máy của Tân gọi được API thật. Khi sửa lời dặn (prompt), chạy `python -m app.thu_tinh_cach`
   để xem model thật phản ứng ra sao; test giả chỉ kiểm tra được phần code.
 

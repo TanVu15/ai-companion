@@ -15,7 +15,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from . import config
-from .brain import Brain
+from .brain import Brain, quy_doi_token
 from .memory import Memory
 
 TINH_HUONG_PATH = config.ROOT / "tinh_huong.json"
@@ -48,9 +48,9 @@ class _GhiLaiClient:
     def create(self, **kwargs):
         resp = self._client.messages.create(**kwargs)
         self.chu_cuoi = "".join(b.text for b in resp.content if getattr(b, "type", "") == "text")
-        usage = getattr(resp, "usage", None)
-        for k in self.token:
-            self.token[k] += int(getattr(usage, k, 0) or 0)
+        vao, ra = quy_doi_token(getattr(resp, "usage", None))
+        self.token["input_tokens"] += vao
+        self.token["output_tokens"] += ra
         return resp
 
 
@@ -129,19 +129,20 @@ def cham(th: dict, chu_goc: str, reply, viec_con_lai: int = 0) -> KetQua:
     return kq
 
 
-def chay(client, tinh_huong: list[dict] | None = None) -> list[KetQua]:
+def chay(client, tinh_huong: list[dict] | None = None, cache_prompt: bool = False) -> list[KetQua]:
+    """cache_prompt=True (khi chấm bằng API thật): gửi lời dặn như máy chủ web gửi, phần cố định được tính rẻ."""
     if tinh_huong is None:
         tinh_huong = json.loads(TINH_HUONG_PATH.read_text(encoding="utf-8"))
     ket_qua = []
     nhanh_cu = config.TRA_LOI_NHANH
     config.TRA_LOI_NHANH = False  # chấm câu trả lời của AI, không chấm câu soạn sẵn ("mấy giờ rồi"...)
     try:
-        return _chay(client, tinh_huong, ket_qua)
+        return _chay(client, tinh_huong, ket_qua, cache_prompt)
     finally:
         config.TRA_LOI_NHANH = nhanh_cu
 
 
-def _chay(client, tinh_huong: list[dict], ket_qua: list) -> list[KetQua]:
+def _chay(client, tinh_huong: list[dict], ket_qua: list, cache_prompt: bool = False) -> list[KetQua]:
     with tempfile.TemporaryDirectory() as tmp:
         for i, th in enumerate(tinh_huong):
             memory = Memory(Path(tmp) / f"th{i}.db")
@@ -174,7 +175,7 @@ def _chay(client, tinh_huong: list[dict], ket_qua: list) -> list[KetQua]:
                 memory.conn.commit()
             ghi = _GhiLaiClient(client)
             try:
-                reply = Brain(memory, client=ghi).chat(th["tin_nhan"])
+                reply = Brain(memory, client=ghi, cache_prompt=cache_prompt).chat(th["tin_nhan"])
                 cu = set(th.get("viec_dang_co", []))  # việc có sẵn từ trước mà vẫn chưa được gạch
                 con_lai = sum(t["viec"] in cu for t in memory.todos(include_done=False))
                 cho = {f["content"] for f in memory.pending_followups(min_hours=0)}
@@ -214,9 +215,9 @@ def main() -> int:
     from .brain import cost_usd
 
     _GhiLaiClient.token = {"input_tokens": 0, "output_tokens": 0}
-    print(in_bao_cao(chay(anthropic.Anthropic(api_key=config.ANTHROPIC_API_KEY))))
+    print(in_bao_cao(chay(anthropic.Anthropic(api_key=config.ANTHROPIC_API_KEY), cache_prompt=True)))
     t = _GhiLaiClient.token
-    print(f"Đã dùng {t['input_tokens']} token vào, {t['output_tokens']} token ra ≈ {cost_usd(t):.3f} đô "
+    print(f"Đã dùng {t['input_tokens']} token vào (đã quy đổi), {t['output_tokens']} token ra ≈ {cost_usd(t):.3f} đô "
           "(không tính vào ngân sách tháng của Bơ).")
     return 0
 
