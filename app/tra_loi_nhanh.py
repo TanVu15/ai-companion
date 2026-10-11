@@ -12,39 +12,45 @@ from .memory import khong_dau
 
 THU = ["thứ Hai", "thứ Ba", "thứ Tư", "thứ Năm", "thứ Sáu", "thứ Bảy", "Chủ nhật"]
 
-# Lời gọi ở đầu và từ đệm ở cuối câu, bỏ đi trước khi so (đã bỏ dấu)
+# Lời gọi ở đầu và từ đệm ở cuối câu, bỏ đi trước khi so (đã bỏ dấu). Cố ý KHÔNG có "đi", "nha", "nhé", "đó":
+# "mấy giờ đi?", "mấy giờ nhé" là hỏi hẹn giờ, không phải hỏi giờ hiện tại.
 _DAU = r"^(?:(?:bo|be|ban|cau)\s+(?:oi|a)\s+|(?:bo|oi|e|ne|cho\s+(?:minh|to|tui|toi)\s+hoi)\s+)*"
-_CUOI = r"(?:\s+(?:vay|the|nhi|nhe|nha|a|ha|ho|ne|day|do|di|khong|ko|k|bo|oi|ban|cau|the nhi|vay ta))*$"
+_CUOI = r"(?:\s+(?:vay|the|nhi|a|ha|ho|ne|ta|bo|oi|ban|cau|vay ta|the nhi))*$"
+_GIO = r"(?:gio|h)"
+_ROI = r"(?:roi|r)"
+_NAY = r"(?:hom nay|nay)\s+(?:la\s+)?"
 
 _MAU = {
-    "gio": [
-        r"(?:bay gio|gio|hien tai|hien gio)?\s*(?:la\s+)?may gio(?:\s+roi)?",
-        r"may gio roi",
+    "gio": [  # phải có "rồi" hoặc "bây giờ/hiện tại": "mấy giờ?" trơn có thể là hỏi giờ hẹn
+        rf"(?:bay gio|hien tai|hien gio|gio)\s+(?:la\s+)?may {_GIO}(?:\s+{_ROI})?",
+        rf"may {_GIO}\s+{_ROI}",
     ],
     "thu": [
-        r"(?:hom nay|nay)\s+(?:la\s+)?thu may",
+        rf"{_NAY}thu may(?:\s+roi)?",
+        rf"thu may\s+{_ROI}",
     ],
     "am": [
-        r"(?:hom nay|nay)\s+(?:la\s+)?(?:ngay\s+)?(?:may|bao nhieu)\s+(?:am|am lich)",
-        r"(?:hom nay|nay)\s+(?:la\s+)?(?:ngay\s+)?am lich\s+(?:may|bao nhieu|ngay may|ngay bao nhieu)",
+        rf"{_NAY}(?:ngay\s+|mung\s+)?(?:may|bao nhieu)\s+(?:am|am lich)",
+        rf"{_NAY}(?:ngay\s+)?am lich\s+(?:may|bao nhieu|ngay may|ngay bao nhieu|mung may)",
         r"am lich\s+(?:hom nay|nay)(?:\s+(?:la\s+)?(?:ngay\s+)?(?:may|bao nhieu))?",
         r"ngay am\s+(?:hom nay|nay)(?:\s+(?:la\s+)?(?:may|bao nhieu))?",
     ],
-    "ngay": [
-        r"(?:hom nay|nay)\s+(?:la\s+)?ngay\s+(?:may|bao nhieu|gi)(?:\s+(?:roi|thang may))?",
-        r"(?:hom nay|nay)\s+(?:la\s+)?mung may",
+    "ngay": [  # "ngày gì" thường hỏi dịp lễ → để AI trả lời
+        rf"{_NAY}ngay\s+(?:may|bao nhieu)(?:\s+(?:roi|thang may))?",
+        rf"{_NAY}mung may",
+        rf"{_NAY}thu may\s+ngay\s+(?:may|bao nhieu)",
     ],
     "tet": [
         r"(?:con\s+)?(?:may|bao nhieu)\s+ngay\s+(?:nua\s+)?(?:la\s+|thi\s+|toi\s+|den\s+|moi\s+toi\s+)?tet(?:\s+(?:nua|roi))?",
+        r"(?:con\s+)?bao lau\s+(?:nua\s+)?(?:la\s+|thi\s+|toi\s+|den\s+)?tet(?:\s+nua)?",
         r"tet\s+con\s+(?:may|bao nhieu)\s+ngay(?:\s+nua)?",
         r"bao gio\s+(?:thi\s+|moi\s+)?(?:toi\s+|den\s+|la\s+)?tet",
         r"(?:khi nao|bao gio)\s+(?:thi\s+)?tet(?:\s+(?:toi|den|nua))?",
         r"tet\s+(?:la\s+)?(?:ngay nao|ngay may|khi nao|bao gio)",
     ],
-    "viec": [
-        r"(?:minh|to|tui|toi|em)\s+(?:con\s+)?(?:co\s+)?(?:nhung\s+)?(?:viec\s+)?(?:gi|nao)\s+(?:can|phai|chua)\s+(?:lam|xong)(?:\s+(?:khong|ko|nua|chua))?",
-        r"(?:danh sach\s+)?viec can lam(?:\s+(?:cua\s+)?(?:minh|to|tui|toi|em))?(?:\s+(?:co gi|la gi|gom gi|con gi))?",
-        r"(?:con\s+)?viec gi\s+(?:can|phai|chua)\s+(?:lam|xong)(?:\s+(?:khong|ko|nua|chua))?",
+    "viec": [  # phải có "còn/có ... việc": "việc gì phải làm" trơn là câu than ("việc gì phải làm thế")
+        r"(?:(?:minh|to|tui|toi|em)\s+)?(?:con|co)\s+(?:con\s+)?(?:nhung\s+)?viec\s+(?:gi|nao)\s+(?:can|phai|chua)\s+(?:lam|xong)(?:\s+(?:khong|ko|k|nua|chua|hom nay|nua khong))?",
+        r"(?:danh sach\s+)?viec can lam(?:\s+(?:hom nay|cua\s+(?:minh|to|tui|toi|em)|(?:minh|to|tui|toi|em)))?(?:\s+(?:co gi|la gi|gom gi|con gi))?",
     ],
 }
 _RE = {k: [re.compile(_DAU + m + _CUOI) for m in v] for k, v in _MAU.items()}
@@ -89,7 +95,14 @@ def tra_loi(loai: str, now: datetime, memory=None) -> tuple[str, str]:
         return f"Bây giờ là {h} giờ {m:02d} phút nè ({now.strftime('%H:%M')}).", "vui"
     if loai in ("thu", "ngay"):
         am = _am(now)
-        return f"Hôm nay là {_ngay(now)}" + (f", âm lịch {am}" if am else "") + " nha!", "vui"
+        try:
+            from .am_lich import ngay_le
+
+            le = ngay_le(now.date())
+        except Exception:
+            le = []
+        return (f"Hôm nay là {_ngay(now)}" + (f", âm lịch {am}" if am else "")
+                + (f". Hôm nay còn là {', '.join(le)} nữa đó!" if le else " nha!")), "vui"
     if loai == "am":
         am = _am(now)
         return (f"Hôm nay âm lịch là {am} ({_ngay(now)}) nè!", "vui") if am else ("", "")
@@ -102,6 +115,16 @@ def tra_loi(loai: str, now: datetime, memory=None) -> tuple[str, str]:
             tet = None
         if not tet:
             return "", ""
+        try:
+            from .am_lich import duong_sang_am
+
+            d_am, t_am, _, nhuan = duong_sang_am(now.date())
+        except Exception:
+            d_am = t_am = 0
+            nhuan = True
+        if t_am == 1 and not nhuan and 2 <= d_am <= 10:
+            return (f"Đang mùng {d_am} Tết mà, vẫn còn không khí Tết nè! Còn {tet['con_ngay']} ngày nữa mới tới Tết năm sau.",
+                    "hao_hung")
         n, ngay = tet["con_ngay"], tet["ngay"].strftime("%d/%m/%Y")
         if n == 0:
             return "Hôm nay là mùng 1 Tết rồi đó! Chúc mừng năm mới, năm nay thật nhiều niềm vui nha!", "hao_hung"

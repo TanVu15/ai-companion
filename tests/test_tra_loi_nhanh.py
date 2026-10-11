@@ -22,6 +22,9 @@ def memory(tmp_path):
     ("hôm nay ngày mấy âm?", "am"), ("âm lịch hôm nay", "am"), ("hom nay bao nhieu am lich", "am"),
     ("còn mấy ngày nữa Tết?", "tet"), ("con bao nhieu ngay nua toi tet", "tet"), ("Tết còn mấy ngày nữa nhỉ", "tet"),
     ("bao giờ thì Tết", "tet"), ("mình còn việc gì cần làm không?", "viec"), ("việc cần làm của mình", "viec"),
+    ("mấy h rồi", "gio"), ("mấy giờ r", "gio"), ("mấy giờ rồi ta", "gio"), ("thứ mấy rồi", "thu"),
+    ("hôm nay thứ mấy ngày mấy", "ngay"), ("hôm nay mùng mấy âm", "am"), ("còn bao lâu nữa tết", "tet"),
+    ("có việc gì cần làm không", "viec"), ("việc cần làm hôm nay", "viec"),
 ])
 def test_nhan_dien(text, loai):
     assert nhan_dien(text) == loai
@@ -31,6 +34,9 @@ def test_nhan_dien(text, loai):
     "mấy giờ rồi mà mình vẫn chưa ngủ được", "Tết này mình về quê", "hôm nay mình buồn quá",
     "nhớ giúp mình việc cần làm là mua sữa", "hôm nay ngày gì mà vui vậy ta, mình được tăng lương nè Bơ ơi", "", "???",
     "mấy giờ thì mình nên đi ngủ", "còn mấy ngày nữa sinh nhật mình",
+    "mấy giờ?", "mấy giờ đi?", "mấy giờ vậy bạn", "mấy giờ nhé", "mấy giờ ạ",  # hỏi giờ hẹn, không phải giờ hiện tại
+    "tui việc gì phải làm vậy", "việc gì phải làm thế", "em việc gì phải làm", "mình gì phải làm", "mình nào chưa xong",
+    "hôm nay ngày gì vậy",
 ])
 def test_khong_nhan_nham(text):
     assert nhan_dien(text) == ""
@@ -45,6 +51,8 @@ def test_cau_tra_loi(memory):
     assert "Còn 118 ngày nữa là Tết" in tra_loi("tet", now)[0] and "thứ Bảy, 06/02/2027" in tra_loi("tet", now)[0]
     assert "Mai là mùng 1 Tết" in tra_loi("tet", datetime(2027, 2, 5))[0]
     assert "Hôm nay là mùng 1 Tết" in tra_loi("tet", datetime(2027, 2, 6))[0]
+    assert "Ngày Phụ nữ Việt Nam" in tra_loi("ngay", datetime(2026, 10, 20))[0]
+    assert "Đang mùng 2 Tết" in tra_loi("tet", datetime(2027, 2, 7))[0]
     assert "trống trơn" in tra_loi("viec", now, memory)[0]
     memory.add_todos([f"Việc {i}" for i in range(7)])
     noi = tra_loi("viec", now, memory)[0]
@@ -65,7 +73,11 @@ def test_brain_khong_goi_api(memory, monkeypatch):
     memory.add_usage("chat", 10_000, 10_000)
     assert "Tết" in brain.chat("còn mấy ngày nữa tết").noi
     assert "ngân sách" in brain.chat("kể chuyện đi").noi
+    # Câu miễn phí không tính vào DAILY_LIMIT
+    monkeypatch.setattr(config, "DAILY_LIMIT", 1)
+    assert brain._ai_replies_today() == 1
     # Tắt thì gửi cho AI
+    monkeypatch.setattr(config, "DAILY_LIMIT", 300)
     monkeypatch.setattr(config, "MONTHLY_USD_LIMIT", 0)
     monkeypatch.setattr(config, "TRA_LOI_NHANH", False)
     client.replies.append(json.dumps({"noi": "Tầm 7h đó", "cam_xuc": "vui"}))

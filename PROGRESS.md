@@ -689,3 +689,13 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - Chỉ áp dụng khi CẢ tin nhắn là câu hỏi đó; câu dài hơn ("mấy giờ rồi mà mình chưa ngủ được") vẫn để AI trả lời tự nhiên. Tắt bằng `TRA_LOI_NHANH=0` trong `.env`.
 - 271 test qua hết.
 - Nút "?" → "Bơ làm được gì?" có mục **Hỏi nhanh, miễn phí**; mục **Tình trạng** báo "tháng này Bơ tự trả lời N câu, không tốn API". SU_CO.md thêm cách tắt. 272 test qua hết.
+
+## 2026-10-11 – Giai đoạn 39 xong: rà soát lần 19
+- Sửa lỗi nhận nhầm: "mấy giờ?", "mấy giờ đi?" (hỏi giờ hẹn) giờ để AI trả lời; chỉ "mấy giờ rồi", "bây giờ mấy giờ" mới trả lời nhanh. Câu than "việc gì phải làm thế" không còn bị hiểu thành hỏi danh sách việc.
+- "Hôm nay ngày gì?" (thường hỏi dịp lễ) để AI trả lời; hỏi "hôm nay ngày mấy" vào ngày lễ thì Bơ nói luôn lễ gì. Mùng 2–10 Tết hỏi "còn mấy ngày Tết" → "Đang mùng 2 Tết mà!".
+- Hiểu thêm "mấy h rồi", "mấy giờ r", "thứ mấy rồi", "còn bao lâu nữa Tết", "có việc gì cần làm không".
+- Câu trả lời nhanh không tính vào giới hạn `DAILY_LIMIT` nữa (vì miễn phí).
+- 292 test qua hết.
+
+**Tân cần thử (giai đoạn 39):** hỏi Bơ "mấy giờ rồi?", "hôm nay ngày mấy âm?", "còn mấy ngày nữa Tết?" — trả lời ngay lập tức; bấm "?" → Tình trạng xem dòng "Trả lời nhanh".
+

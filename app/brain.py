@@ -527,6 +527,11 @@ class Brain:
             self.memory.add_reminders([{"luc": luc, "viec": viec}], now=now)
         return luc
 
+    def _ai_replies_today(self) -> int:
+        """Số câu trả lời hôm nay có gọi AI (trừ câu trả lời nhanh miễn phí)."""
+        nhanh = int(self.memory.get_kv("nhanh_ngay_" + date.today().isoformat(), "0") or 0)
+        return max(0, self.memory.replies_today() - nhanh)
+
     def _quick(self, user_text: str, now: datetime | None = None) -> Reply | None:
         """Câu hỏi ngắn trả lời được bằng câu soạn sẵn → không gọi API (vẫn lưu vào lịch sử)."""
         if not config.TRA_LOI_NHANH:
@@ -548,6 +553,8 @@ class Brain:
         reply.msg_id = self.memory.add_message("assistant", noi, cam_xuc)
         key = "nhanh_" + (now or datetime.now()).strftime("%Y-%m")  # đếm để nút "?" báo đã tiết kiệm bao nhiêu câu
         self.memory.set_kv(key, str(int(self.memory.get_kv(key, "0") or 0) + 1))
+        key = "nhanh_ngay_" + (now or datetime.now()).date().isoformat()  # để câu miễn phí không tính vào DAILY_LIMIT
+        self.memory.set_kv(key, str(int(self.memory.get_kv(key, "0") or 0) + 1))
         log.info("Trả lời nhanh (%s), không gọi API", loai)
         return reply
 
@@ -555,7 +562,7 @@ class Brain:
         quick = self._quick(user_text)  # miễn phí nên vẫn trả lời khi đã hết lượt / hết ngân sách
         if quick:
             return quick
-        if self.memory.replies_today() >= config.DAILY_LIMIT:
+        if self._ai_replies_today() >= config.DAILY_LIMIT:
             return Reply(noi="Hôm nay mình nói nhiều quá rồi, mai nói tiếp nha!", cam_xuc="thuong")
         if self.over_budget():
             return Reply(
@@ -581,7 +588,7 @@ class Brain:
         """Bơ chủ động mở lời khi người dùng quay lại sau một thời gian và có chuyện nên hỏi thăm,
         hoặc đã lâu (GREET_MISS_DAYS ngày) không nói chuyện.
         Không có gì để hỏi hoặc vừa mới nói chuyện xong thì trả về None (không tốn câu API nào)."""
-        if self.memory.replies_today() >= config.DAILY_LIMIT or self.over_budget():
+        if self._ai_replies_today() >= config.DAILY_LIMIT or self.over_budget():
             return None
         last = self.memory.last_message_time()
         followups = self.memory.pending_followups(config.FOLLOWUP_MIN_HOURS)
