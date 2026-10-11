@@ -334,7 +334,7 @@
 
 ## Giai đoạn 60 – Đẹp đều mọi bộ lông, rừ rừ ấm hơn (Claude tự thêm, trong hướng mèo/chạm/giọng)
 - [x] Chụp các tư thế mới (ngược lông, đập tay, rửa mặt, ngửi, chạm đuôi) với lông tam thể / mèo đen / chế độ tối; sửa chỗ khó nhìn
-- [ ] Vuốt lâu thì tiếng rừ rừ to dần lên (vuốt ngắn thì nhỏ); điện thoại có rung thì rung rất nhẹ lúc bắt đầu rừ rừ (máy bật giảm chuyển động thì không rung)
+- [x] Vuốt lâu thì tiếng rừ rừ to dần lên (vuốt ngắn thì nhỏ); điện thoại có rung thì rung rất nhẹ lúc bắt đầu rừ rừ (máy bật giảm chuyển động thì không rung)
 - [ ] Rà soát giai đoạn 60, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)

@@ -7,6 +7,7 @@
 
 ## 2026-10-11 – Giai đoạn 60 (đang làm): đẹp đều mọi bộ lông
 - Chụp 6 tư thế mới (ngược lông · đập tay · rửa mặt · ngửi · cọ má · chạm đuôi) với 4 kiểu lông (thường, tam thể, mèo đen, mướp vằn), cả nền sáng và tối: đều rõ, không vỡ hình. Ảnh `docs/anh/tu-the-moi-kieu-long.png`, `docs/anh/tu-the-moi-kieu-long-toi.png`.
+- **Rừ rừ ấm hơn**: mới vuốt thì rừ rừ nhỏ, vuốt liền vài giây thì to dần (tối đa vừa phải). Điện thoại Android có rung thì rung rất nhẹ ba nhịp lúc Bơ bắt đầu rừ rừ (iPhone không hỗ trợ rung từ web; máy bật giảm chuyển động thì không rung).
 
 ## 2026-10-11 – Giai đoạn 59 xong: ngửi tay & cọ má
 - **Ngửi tay**: để yên chuột (hoặc giữ ngón tay) ngay trước mũi Bơ khoảng 1 giây → Bơ rướn đầu, nhìn xuống tay, mũi phập phồng; rồi nhắm mắt cọ má, rừ rừ "Hít hít... thơm tay bạn ghê~". Mỗi 8 giây tối đa một lần. Ảnh `docs/anh/meo-ngui-tay.png` (ngửi · cọ má).

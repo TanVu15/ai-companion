@@ -79,6 +79,10 @@ function boThongSoMeo(kieu) {
 function boGanMui(x, y) {
   return ((x - 100) / 24) ** 2 + ((y - 90) / 16) ** 2 <= 1;
 }
+// Độ to tiếng rừ rừ theo số giây đã vuốt liền: mới vuốt thì nhỏ, vuốt lâu to dần, tối đa 0,5
+function boDoToRuRu(giay) {
+  return +Math.min(0.5, 0.18 + Math.max(0, giay) * 0.05).toFixed(3);
+}
 // Hướng vuốt trên lưng (dx, dy: px từ chỗ bắt đầu vuốt tới giờ; y hướng xuống). Lông mèo mọc xuôi xuống,
 // nên vuốt hẳn lên trên (dọc nhiều hơn ngang) là 'nguoc'; còn lại là 'xuoi'.
 function boHuongVuot(dx, dy) {
@@ -94,7 +98,7 @@ function boLucMo(lanTruoc, bayGio, gio) {
   return null;
 }
 
-if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boChamChan, boThongSoMeo, boGanMui, boLucMo, BO_CAU_CHOI, BO_DOC_TO };
+if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boChamChan, boThongSoMeo, boGanMui, boDoToRuRu, boLucMo, BO_CAU_CHOI, BO_DOC_TO };
 
 // ---- Phần giao diện ----
 (function () {
@@ -156,11 +160,14 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
   }
 
   // ---- Tiếng rừ rừ: tạo bằng Web Audio (tiếng ồn trầm, nhấp nhô ~24 lần/giây), không cần file ----
-  let ac = null, rr = null;
+  let ac = null, rr = null, rrBatDau = 0;
   function grgr(bat) {
     try {
       if (bat) {
-        if (rr) return;
+        if (rr) {  // đang rừ rừ: vuốt càng lâu càng to
+          rr.tong.gain.setTargetAtTime(boDoToRuRu((Date.now() - rrBatDau) / 1000), ac.currentTime, 0.4);
+          return;
+        }
         ac = ac || new (window.AudioContext || window.webkitAudioContext)();
         if (ac.state === 'suspended') ac.resume();
         const buf = ac.createBuffer(1, ac.sampleRate * 2, ac.sampleRate), d = buf.getChannelData(0);
@@ -172,7 +179,10 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
         const lfo = ac.createOscillator(); lfo.frequency.value = 24;
         const sau = ac.createGain(); sau.gain.value = 0.5; lfo.connect(sau); sau.connect(nhip.gain);
         const tong = ac.createGain(); tong.gain.value = 0;
-        tong.gain.linearRampToValueAtTime(0.35, ac.currentTime + 0.3);
+        tong.gain.linearRampToValueAtTime(boDoToRuRu(0), ac.currentTime + 0.3);
+        rrBatDau = Date.now();
+        // điện thoại có rung: rung rất nhẹ vài nhịp lúc Bơ bắt đầu rừ rừ (máy bật giảm chuyển động thì thôi)
+        if (navigator.vibrate && !yenLang()) { try { navigator.vibrate([12, 50, 12, 50, 12]); } catch (e) {} }
         src.connect(loc); loc.connect(nhip); nhip.connect(tong); tong.connect(ac.destination);
         src.start(); lfo.start();
         rr = { src, lfo, tong };

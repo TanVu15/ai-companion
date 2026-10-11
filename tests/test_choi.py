@@ -179,3 +179,8 @@ def test_phim_tat_cho_cham_moi():
     choi = (config.ROOT / "web" / "choi.js").read_text(encoding="utf-8")
     assert "T chạm tai, D đập tay" in html
     assert "t: Math.random() < 0.5 ? 'tai_trai' : 'tai_phai', d: 'chan'" in choi
+
+
+def test_ru_ru_to_dan():
+    v = node("""console.log(JSON.stringify([0, 1, 3, 10, 100, -5].map(C.boDoToRuRu)))""")
+    assert v[0] < v[1] < v[2] < v[3] and v[3] == v[4] == 0.5 and v[5] == v[0]
