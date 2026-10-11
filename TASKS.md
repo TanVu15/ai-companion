@@ -353,7 +353,7 @@
 
 ## Giai đoạn 64 – Bơ để ý tin nhắn & rà soát (Claude tự thêm, trong hướng mèo/tương tác)
 - [x] Gửi tin có "cá"/🐟 → Bơ liếm mép; có ❤/"thương"/"yêu" → tim bay quanh Bơ (phản ứng ngay lúc gửi, trước khi bộ não trả lời; không gọi API thêm; hàm nhận biết có test)
-- [ ] Rà soát toàn bộ web/choi.js, do_choi.js, meo.js: bộ hẹn giờ chồng nhau, trạng thái kẹt, chạy lúc tab ẩn; sửa lỗi tìm được
+- [x] Rà soát toàn bộ web/choi.js, do_choi.js, meo.js: bộ hẹn giờ chồng nhau, trạng thái kẹt, chạy lúc tab ẩn; sửa lỗi tìm được
 - [ ] Rà soát giai đoạn 64, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)

@@ -7,6 +7,8 @@
 
 ## 2026-10-11 – Giai đoạn 64 (đang làm): Bơ để ý tin nhắn
 - Gửi tin có **"cá"** hoặc 🐟 → Bơ liếm mép ngay; có **"thương"/"yêu"**/❤ → tim bay quanh Bơ, Bơ nhắm mắt sướng (trước cả khi Bơ trả lời, không tốn API). "các", "cám ơn", "yêu cầu" không bị nhận nhầm.
+- Rà soát chạm & chơi, sửa: đang chơi đồ chơi thì Bơ không tự ngáp/ngó quanh (trước đây mắt bị kéo khỏi đồ chơi); việc vặt gọi chồng nhau không còn tắt sớm.
+- Thêm `scripts/thu_cham.py`: bấm thử 15 trò chạm & chơi trên trình duyệt thật (điện thoại + máy tính), in ĐẠT/LỖI — hiện đạt hết.
 
 ## 2026-10-11 – Giai đoạn 63 xong: dễ khám phá
 - Hộp "Bơ làm được gì?" ghi đủ các trò chạm & đồ chơi mới, phím tắt. Ảnh `docs/anh/hop-choi-voi-bo.png`.

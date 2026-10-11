@@ -84,9 +84,11 @@ if (typeof module !== 'undefined') module.exports = { boViecVat };
   const yenLang = () => window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   const dangNgu = () => face.dataset.e === 'ngu';
   // Bật một trạng thái ngắn trên mèo (chớp mắt, ngáp...) rồi tự tắt
-  function lan(cls, ms) {
+  const henLan = {};
+  function lan(cls, ms) {  // gọi lại khi đang có thì kéo dài (không để hẹn giờ cũ tắt sớm)
     svg.classList.add(cls);
-    setTimeout(() => svg.classList.remove(cls), ms);
+    clearTimeout(henLan[cls]);
+    henLan[cls] = setTimeout(() => svg.classList.remove(cls), ms);
   }
   // Chớp mắt ngẫu nhiên (không theo nhịp đều cho giống thật), thỉnh thoảng chớp hai cái liền
   function chopMat() {
@@ -103,7 +105,8 @@ if (typeof module !== 'undefined') module.exports = { boViecVat };
   function capNhatKhuya() { svg.classList.toggle('lim-dim', khuya()); }
   capNhatKhuya(); setInterval(capNhatKhuya, 60000);
   function viecVat() {
-    const ban = dangNgu() || face.classList.contains('talking') || svg.classList.contains('cho') || document.hidden;
+    const ban = dangNgu() || face.classList.contains('talking') || svg.classList.contains('cho') || document.hidden ||
+      (window.boChoi && boChoi.doChoi.dangChoi());  // đang chơi đồ chơi thì Bơ mải nhìn đồ chơi, khỏi ngáp/ngó quanh
     const k = khuya();
     if (!ban && !yenLang()) lan(...boViecVat(Math.random(), k, svg.classList.contains('bep')));
     setTimeout(viecVat, (k ? 15000 : 25000) + Math.random() * (k ? 15000 : 30000));

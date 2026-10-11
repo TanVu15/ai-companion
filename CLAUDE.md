@@ -37,6 +37,7 @@ nên mọi thứ cần biết phải nằm trong repo.
 ## Giao diện
 Mọi thay đổi ở web/: chụp ảnh bằng Playwright (điện thoại 390×800 + máy tính), tự mở ảnh xem, sửa đến khi đẹp,
 lưu ảnh vào docs/anh/. Chi tiết trong HUONG_PHAT_TRIEN.md.
+Sửa chạm & chơi (choi.js, do_choi.js, meo.js) xong thì chạy `python scripts/thu_cham.py` (bấm thử mọi trò trên trình duyệt thật, phải ĐẠT hết).
 
 ## Chạy
 - `run.bat` (Windows) hoặc `python -m uvicorn app.main:app --host 0.0.0.0 --port 8000`
