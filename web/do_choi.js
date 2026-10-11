@@ -41,7 +41,7 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
 // ---- Phần giao diện ----
 (function () {
   if (typeof document === 'undefined' || !window.boChoi) return;
-  const { face, khung, svg, nhin, header, giu, noi, dem, dangDoi, conChoi, doChoi } = window.boChoi;
+  const { face, khung, svg, nhin, header, giu, noi, dem, keu, dangDoi, conChoi, doChoi } = window.boChoi;
   const { boVungCham, boHuongNhin, boGanMui } = window;
   const boLongVuRinh_ = typeof boLongVuRinh === 'function' ? boLongVuRinh : () => false;
 
@@ -190,7 +190,10 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
     lvRinh = setTimeout(() => {
       lvRinh = null; svg.classList.remove('rinh');
       if (!lv || dangDoi() || face.dataset.e === 'ngu' || document.hidden) return;
-      lvVoRinh = Date.now(); giu('vo-rinh', 700); conChoi(); dem('rinh'); noi('vo_rinh', true);
+      lvVoRinh = Date.now(); giu('vo-rinh', 700); conChoi();
+      // lần vồ đầu tiên trong ngày: đọc to (khi bật Giọng nói); các lần sau chỉ hiện chữ và kêu "meo"
+      const dauTien = dem('rinh').rinh === 1;
+      noi('vo_rinh', true, dauTien); if (!dauTien && keu) keu('vui');
       if (navigator.vibrate && !matchMedia('(prefers-reduced-motion: reduce)').matches) { try { navigator.vibrate(18); } catch (e) {} }
     }, 1400);
   }

@@ -309,3 +309,11 @@ def test_nhoi_bot():
     assert v == [False, False, True, True, 3]
     css = (config.ROOT / "web" / "meo.css").read_text(encoding="utf-8")
     assert ".meo.nhoi .paw-l" in css and "meo-nhoi" in css
+
+
+def test_vo_rinh_doc_to_lan_dau():
+    """Lần vồ lông vũ đầu tiên trong ngày được đọc to; các lần sau chỉ kêu meo (không đọc lặp)."""
+    do_choi = (config.ROOT / "web" / "do_choi.js").read_text(encoding="utf-8")
+    assert "dem('rinh').rinh === 1" in do_choi
+    assert "noi('vo_rinh', true, dauTien)" in do_choi
+    assert "vo_rinh" not in node("console.log(JSON.stringify(C.BO_DOC_TO))")

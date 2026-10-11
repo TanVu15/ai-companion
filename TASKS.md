@@ -383,7 +383,7 @@
 
 ## Giai đoạn 70 – Bơ sướng & săn giỏi (Claude tự thêm, trong hướng mèo/chạm/giọng)
 - [x] Nhồi bột: vuốt lưng/đầu liền khoảng 6 giây → hai chân trước Bơ dẫm luân phiên, mắt lim dim, "Nhồi nhồi... Bơ nhồi bột nè~"
-- [ ] Bật "Giọng nói": lần vồ lông vũ (rình rồi vồ) đầu tiên trong ngày được đọc to, các lần sau chỉ hiện chữ
+- [x] Bật "Giọng nói": lần vồ lông vũ (rình rồi vồ) đầu tiên trong ngày được đọc to, các lần sau chỉ hiện chữ
 - [ ] Rà soát giai đoạn 70, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
