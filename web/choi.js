@@ -442,7 +442,7 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boChiTietDau, 
   // Nhấn giữ lên lưng/bụng (không kéo) khoảng 0,7 giây → Bơ lăn qua lăn lại nũng nịu
   let henLan = null, henBe = null;
   // Bế yên một lúc (không lắc lên xuống) → Bơ thả lỏng trên tay: lim dim, rừ rừ
-  let henEm = null, nhacCuoi = 0;
+  let henEm = null, nhacCuoi = 0, keyB = false;
   function choEm() {
     clearTimeout(henEm);
     if (svg.classList.contains('em')) { svg.classList.remove('em'); grgr(false); }
@@ -509,6 +509,10 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boChiTietDau, 
     }
   });
   face.addEventListener('pointercancel', () => { bam = null; clearTimeout(henLan); clearTimeout(henBe); thaBe(); });
+  // Mất ngón tay giữa chừng (chuyển tab, cuộc gọi đến, trình duyệt giành lại cú chạm): thả Bơ xuống, không để kẹt trên không
+  face.addEventListener('lostpointercapture', () => { if (svg.classList.contains('be') && !keyB) { bam = null; clearTimeout(henBe); thaBe(); } });
+  document.addEventListener('visibilitychange', () => { if (document.hidden) { keyB = false; thaBe(); } });
+  window.addEventListener('blur', () => { keyB = false; thaBe(); });
   // ---- Ngửi tay: giữ yên ngón tay/chuột trước mũi ~0,9 giây → Bơ rướn đầu ngửi, rồi cọ má vào tay ----
   let henNgui = null, moc = null, nguiCuoi = 0;
   function theoMui(ev) {
@@ -535,15 +539,15 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boChiTietDau, 
   // Bàn phím: Tab tới Bơ rồi bấm Enter = xoa đầu, phím cách = gãi cằm (đang ngủ thì Bơ tỉnh)
   face.tabIndex = 0;
   // T = chạm tai (trái/phải ngẫu nhiên), D = đập tay, N = boop mũi, B = bế Bơ lên (giữ phím = bế lâu, thả phím = thả Bơ)
-  face.addEventListener('keyup', ev => { if ((ev.key || '').toLowerCase() === 'b') thaBe(); });
-  face.addEventListener('blur', thaBe);
+  face.addEventListener('keyup', ev => { if ((ev.key || '').toLowerCase() === 'b') { keyB = false; thaBe(); } });
+  face.addEventListener('blur', () => { keyB = false; thaBe(); });
   face.addEventListener('keydown', ev => {
     const k = ev.key.length === 1 ? ev.key.toLowerCase() : ev.key;
     if (k === 'b' && !ev.ctrlKey && !ev.metaKey && !ev.altKey) {
       ev.preventDefault();
       if (ev.repeat || face.dataset.e === 'ngu' || dangDoi() || doChoi.dangChoi()) return;
       if (typeof boNgungDoc === 'function' && boNgungDoc()) return;
-      nhac(1); return;
+      keyB = true; nhac(1); return;
     }
     const vung = { Enter: 'dau', ' ': 'cam', t: Math.random() < 0.5 ? 'tai_trai' : 'tai_phai', d: 'chan', n: 'dau' }[k];
     if (!vung || ev.ctrlKey || ev.metaKey || ev.altKey) return;
