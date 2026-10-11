@@ -37,6 +37,14 @@ Gặp lỗi: xem `SU_CO.md`, gửi mấy dòng cuối `data/loi.log` vào `FEEDB
 ## Tóm tắt lần chạy trước (18:44–19:21 UTC)
 Xong giai đoạn 3 → 12: hỏi thăm chuyện cũ, nhắc việc, giọng nói + rảnh tay, chi phí + ngân sách, iPhone màn hình chính.
 
+## 2026-10-11 tối – SỬA LỖI: Bơ chỉ trả lời "..."
+- Tân chạy với API thật: mọi câu trả lời đều là "...".
+- Nguyên nhân: Haiku 5.5 có chế độ "suy nghĩ" (adaptive thinking), ăn hết giới hạn 500 token → không còn chữ nào.
+- Sửa: tắt suy nghĩ (`thinking: disabled`, model không cho tắt thì tự bỏ tham số), tăng `MAX_TOKENS` lên 4000,
+  câu trả lời rỗng thì báo lỗi rõ (kèm stop_reason) thay vì hiện "..." và không lưu "..." vào trí nhớ.
+- Bài học cho các phiên tự chạy: test bằng bộ não giả KHÔNG bắt được lỗi kiểu này. Khi đổi cách gọi API,
+  luôn giả lập phản hồi giống API thật (có khối thinking, stop_reason) như tests/test_tra_loi_rong.py.
+
 ## Cần Tân quyết định
 - **Dùng Bơ ngoài nhà bằng cách nào?** Tailscale (riêng tư, cần tạo tài khoản miễn phí, cài app trên iPhone) hay Cloudflare Tunnel (link công khai, không cần cài trên điện thoại). Hướng dẫn cả hai trong `DUA_LEN_MANG.md`. Claude khuyên Tailscale. Cách nào cũng phải đặt `APP_PASSWORD`.
 - **Ngân sách tháng:** `.env.example` đặt sẵn `MONTHLY_USD_LIMIT=5` (5 đô/tháng). File `.env` cũ của Tân chưa có dòng này nên đang không giới hạn. Tân tự chọn mức và thêm vào `.env`.

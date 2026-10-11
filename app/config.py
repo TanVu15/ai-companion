@@ -10,6 +10,8 @@ load_dotenv(ROOT / ".env")
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
 MODEL = os.getenv("MODEL", "claude-haiku-5-5")
 DEMO = os.getenv("DEMO", "0") == "1"
+# Giới hạn độ dài mỗi lần gọi API. Câu trả lời JSON của Bơ có nhiều mục, đặt thấp quá sẽ bị cắt mất chữ.
+MAX_TOKENS = int(os.getenv("MAX_TOKENS", "4000"))
 DB_PATH = Path(os.getenv("DB_PATH", ROOT / "data" / "companion.db"))
 PERSONA_PATH = ROOT / "persona.md"
 # Tính cách Tân tự sửa trên web (nằm trong data/ nên git pull không đè, không bị đưa lên GitHub)

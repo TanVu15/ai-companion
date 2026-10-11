@@ -367,6 +367,15 @@ def parse_reply(text: str) -> Reply:
 _TRANSIENT_NAMES = {"APIConnectionError", "APITimeoutError", "RateLimitError", "InternalServerError", "OverloadedError"}
 
 
+class EmptyReplyError(RuntimeError):
+    """Model trả về không có chữ nào."""
+
+
+def _rejects_thinking_param(e: Exception) -> bool:
+    """API báo lỗi 400 vì không nhận tham số "thinking" (model không cho tắt suy nghĩ)."""
+    return getattr(e, "status_code", None) == 400 and "thinking" in str(e).lower()
+
+
 def is_transient(e: Exception) -> bool:
     """Lỗi tạm thời (mất mạng, máy chủ bận) thì đáng thử lại; lỗi sai key, hết tiền thì không."""
     if type(e).__name__ in _TRANSIENT_NAMES or isinstance(e, (ConnectionError, TimeoutError)):
@@ -377,6 +386,8 @@ def is_transient(e: Exception) -> bool:
 
 def friendly_error(e: Exception) -> str:
     """Đổi lỗi kỹ thuật thành câu dễ hiểu cho người dùng."""
+    if isinstance(e, EmptyReplyError):
+        return str(e)
     status = getattr(e, "status_code", None)
     text = str(e).lower()
     if status in (401, 403) or type(e).__name__ in {"AuthenticationError", "PermissionDeniedError"}:
@@ -447,6 +458,7 @@ class Brain:
         # để lịch sử không bị xen lẫn và SQLite không bị ghi chồng.
         self._lock = threading.RLock()
         self._hk_lock = threading.Lock()
+        self._thinking_param_rejected = False
         # background=True (máy chủ web): tóm tắt/gộp trí nhớ chạy sau khi đã trả lời, người dùng không phải chờ
         self._background = background
         self._merged_at = 0  # số điều đáng nhớ còn lại sau lần gộp gần nhất
@@ -455,9 +467,22 @@ class Brain:
         """Gọi API, gặp lỗi tạm thời thì chờ 1s, 2s, 4s... rồi thử lại (mặc định API_RETRIES lần).
         Mỗi lần thành công thì ghi lại số token để theo dõi chi phí."""
         retries = config.API_RETRIES if retries is None else retries
+        # Tắt "suy nghĩ" (adaptive thinking) của model: Bơ chỉ cần trả lời ngắn, suy nghĩ vừa tốn tiền
+        # vừa ăn hết max_tokens làm câu trả lời rỗng ("..."). Model nào không cho tắt thì bỏ tham số này.
+        if not self._thinking_param_rejected:
+            kwargs.setdefault("thinking", {"type": "disabled"})
         for attempt in range(retries + 1):
             try:
-                resp = self.client.messages.create(**kwargs)
+                try:
+                    resp = self.client.messages.create(**kwargs)
+                except Exception as e:
+                    if "thinking" in kwargs and _rejects_thinking_param(e):
+                        log.info("Model không nhận thinking=disabled, gọi lại không có tham số này")
+                        self._thinking_param_rejected = True
+                        kwargs.pop("thinking")
+                        resp = self.client.messages.create(**kwargs)
+                    else:
+                        raise
                 usage = getattr(resp, "usage", None)
                 with self._lock:
                     self.memory.add_usage(
@@ -756,11 +781,17 @@ class Brain:
         )
         resp = self._create(
             model=config.MODEL,
-            max_tokens=500,
+            max_tokens=config.MAX_TOKENS,
             system=system,
             messages=history,
         )
         text = "".join(b.text for b in resp.content if getattr(b, "type", "") == "text")
+        if not text.strip():
+            # Không có chữ nào (thường do hết max_tokens khi model "suy nghĩ"): báo lỗi rõ, không lưu "..."
+            kinds = [getattr(b, "type", "?") for b in resp.content]
+            reason = getattr(resp, "stop_reason", "?")
+            log.warning("Câu trả lời rỗng: stop_reason=%s, các khối=%s", reason, kinds)
+            raise EmptyReplyError(f"Bơ bị khựng, không nói ra được câu nào (stop_reason={reason}). Nhắn lại giúp Bơ nha.")
         reply = parse_reply(text)
 
         reply.msg_id = self.memory.add_message("assistant", reply.noi, reply.cam_xuc)
@@ -816,7 +847,7 @@ class Brain:
                 retries=0,  # việc phụ: lỗi thì lần sau làm, không bắt người dùng chờ
                 kind="tom_tat",
                 model=config.MODEL,
-                max_tokens=400,
+                max_tokens=config.MAX_TOKENS,
                 system=SUMMARY_PROMPT,
                 messages=[{"role": "user", "content": prompt}],
             )
@@ -841,7 +872,7 @@ class Brain:
                 retries=0,
                 kind="gop",
                 model=config.MODEL,
-                max_tokens=800,
+                max_tokens=config.MAX_TOKENS,
                 system=MERGE_PROMPT,
                 messages=[{"role": "user", "content": listing}],
             )
