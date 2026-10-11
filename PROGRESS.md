@@ -5,9 +5,10 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
-## 2026-10-11 – Giai đoạn 63 (đang làm): dễ khám phá
+## 2026-10-11 – Giai đoạn 63 xong: dễ khám phá
 - Hộp "Bơ làm được gì?" ghi đủ các trò chạm & đồ chơi mới, phím tắt. Ảnh `docs/anh/hop-choi-voi-bo.png`.
 - **Bơ gợi ý trò chưa thử**: mở web khoảng 40 giây mà Bơ đang rảnh (không gõ, không chơi, không mở hộp nào) → Bơ nghiêng đầu, bong bóng gợi ý một trò Tân chưa từng thử ("Psst... chạm nhanh hai lần vào chân Bơ thử xem~"). Tối đa 1 lần/ngày, chỉ hiện chữ; thử hết các trò rồi thì Bơ thôi gợi ý. Ảnh `docs/anh/bo-goi-y.png`.
+- Rà soát: đang gõ, đang chơi, đang mở hộp thoại thì Bơ chờ lát nữa mới gợi ý. 414 test qua hết.
 
 ## 2026-10-11 – Giai đoạn 62 xong: giọng nói chơi đùa
 - Đang bật "Giọng nói": câu **chóng mặt**, **ngửi tay** và **lần đập tay đầu tiên trong ngày** được đọc to (các lần đập tay sau chỉ kêu "meo~"). Giờ yên lặng thì vẫn chỉ hiện chữ.

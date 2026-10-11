@@ -349,7 +349,12 @@
 ## Giai đoạn 63 – Dễ khám phá (Claude tự thêm, trong hướng mèo/chạm)
 - [x] Hộp "Bơ làm được gì?": cập nhật danh sách chạm & chơi (ngược lông, đập tay, ngửi tay, chạm đuôi, lắc, phím T/D)
 - [x] Tối đa 1 lần/ngày, lúc rảnh Bơ gợi ý một trò chạm Tân chưa thử ("Thử chạm hai lần vào chân Bơ xem~") – dựa trên bộ đếm trên máy, không gọi API, không nhắc lại trò đã thử
-- [ ] Rà soát giai đoạn 63, sửa lỗi tìm được
+- [x] Rà soát giai đoạn 63, sửa lỗi tìm được
+
+## Giai đoạn 64 – Bơ để ý tin nhắn & rà soát (Claude tự thêm, trong hướng mèo/tương tác)
+- [ ] Gửi tin có "cá"/🐟 → Bơ liếm mép; có ❤/"thương"/"yêu" → tim bay quanh Bơ (phản ứng ngay lúc gửi, trước khi bộ não trả lời; không gọi API thêm; hàm nhận biết có test)
+- [ ] Rà soát toàn bộ web/choi.js, do_choi.js, meo.js: bộ hẹn giờ chồng nhau, trạng thái kẹt, chạy lúc tab ẩn; sửa lỗi tìm được
+- [ ] Rà soát giai đoạn 64, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):
