@@ -221,7 +221,7 @@
 
 ## Giai đoạn 42 – Nhắc mỗi vài tiếng (chỉ phần mềm, Claude tự thêm)
 - [x] "Cứ 2 tiếng nhắc mình uống nước" → nhắc mỗi N tiếng (1–12), tự nghỉ trong giờ yên lặng; sửa được trên web; không đưa vào lịch .ics
-- [ ] Nói "thôi khỏi nhắc uống nước nữa" → Bơ xóa lời nhắc đó (huy_nhac)
+- [x] Nói "thôi khỏi nhắc uống nước nữa" → Bơ xóa lời nhắc đó (huy_nhac); chấm điểm thêm tình huống (29)
 - [ ] Rà soát code lần 22, sửa lỗi tìm được
 
 ## Sau này

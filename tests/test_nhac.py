@@ -370,3 +370,22 @@ def test_nhac_moi_vai_tieng_bo_qua_dem(tmp_path, monkeypatch):
     assert "Uống nước" not in tao_ics([], m.upcoming_reminders())
     assert m.add_reminders([{"luc": "2026-10-11 20:30", "viec": "X", "lap": "gio_13"}], now=now) == 1
     assert [x["lap"] for x in m.upcoming_reminders() if x["viec"] == "X"] == [""]
+
+
+def test_huy_nhac_qua_tro_chuyen(tmp_path):
+    import json as _j
+    from datetime import datetime as dt, timedelta as td
+
+    from app.brain import Brain
+    from app.memory import Memory
+    from tests.test_brain import FakeClient
+
+    m = Memory(tmp_path / "h.db")
+    luc = (dt.now() + td(hours=1)).strftime("%Y-%m-%d %H:%M")
+    m.add_reminders([{"luc": luc, "viec": "Uống nước", "lap": "gio_2"}, {"luc": luc, "viec": "Gọi mẹ"}])
+    client = FakeClient([_j.dumps({"noi": "Ok, Bơ thôi nhắc nha", "cam_xuc": "vui", "huy_nhac": ["uống nước (mỗi 2 tiếng)"]})])
+    Brain(m, client=client).chat("thôi khỏi nhắc uống nước nữa")
+    sys_p = client.calls[0]["system"]
+    assert "## Lời nhắc đang có" in sys_p and "- Uống nước (mỗi 2 tiếng, lần tới" in sys_p and "- Gọi mẹ (một lần" in sys_p
+    assert [r["viec"] for r in m.upcoming_reminders()] == ["Gọi mẹ"]
+    assert m.cancel_reminders(["", "không có"]) == 0

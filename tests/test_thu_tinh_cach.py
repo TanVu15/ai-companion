@@ -7,7 +7,7 @@ from tests.test_brain import FakeClient
 
 def test_file_tinh_huong_hop_le():
     ds = json.loads(t.TINH_HUONG_PATH.read_text(encoding="utf-8"))
-    assert len(ds) == 28
+    assert len(ds) == 29
     for th in ds:
         assert th["ten"] and th["tin_nhan"]
 
@@ -131,3 +131,12 @@ def test_tich_hom_qua_va_khong_tra_loi_nhanh():
     c = FakeClient([json.dumps({"noi": "7h nè", "cam_xuc": "vui"})])
     [kq] = t.chay(c, [{"ten": "Giờ", "tin_nhan": "mấy giờ rồi"}])
     assert kq.noi == "7h nè" and len(c.calls) == 1 and config.TRA_LOI_NHANH is True
+
+
+def test_cham_huy_nhac():
+    th = {"ten": "Huỷ", "tin_nhan": "thôi khỏi nhắc uống nước", "phai_huy_nhac": "Uống nước",
+          "nhac_dang_co": [{"viec": "Uống nước", "lap": "gio_2"}, {"viec": "Gọi mẹ", "lap": "ngay"}]}
+    ok = FakeClient([json.dumps({"noi": "Ok nha", "cam_xuc": "vui", "huy_nhac": ["Uống nước"]})])
+    sai = FakeClient([json.dumps({"noi": "Ok nha", "cam_xuc": "vui", "huy_nhac": ["Uống nước", "Gọi mẹ"]})])
+    assert t.chay(ok, [th])[0].kiem_tra[-1] == ("Bỏ đúng lời nhắc (Uống nước)", True)
+    assert t.chay(sai, [th])[0].kiem_tra[-1][1] is False

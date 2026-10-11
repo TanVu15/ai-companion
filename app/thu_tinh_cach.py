@@ -106,6 +106,8 @@ def cham(th: dict, chu_goc: str, reply, viec_con_lai: int = 0) -> KetQua:
         kq.kiem_tra.append(("Gạch việc đã xong", bool(reply.xong_viec) and viec_con_lai == 0))
     if th.get("phai_thoi_quen_moi"):
         kq.kiem_tra.append(("Thêm thói quen để theo dõi", bool(reply.thoi_quen_moi)))
+    if th.get("phai_huy_nhac"):
+        kq.kiem_tra.append((f"Bỏ đúng lời nhắc ({th['phai_huy_nhac']})", getattr(reply, "huy_nhac_dung", False)))
     if th.get("phai_tich_hom_qua"):
         kq.kiem_tra.append(("Tích thói quen vào hôm qua (không phải hôm nay)", getattr(reply, "tich_hom_qua_dung", False)))
     if th.get("phai_ghi_nhat_ky"):
@@ -148,6 +150,11 @@ def _chay(client, tinh_huong: list[dict], ket_qua: list) -> list[KetQua]:
                 memory.add_special_days([{"ngay": today, "viec": v} for v in th["hom_nay_dac_biet"]])
             memory.add_todos(th.get("viec_dang_co", []))
             memory.add_habits(th.get("thoi_quen_dang_co", []))
+            if th.get("nhac_dang_co"):  # [{"viec", "lap"}] — lần nhắc tới là 1 giờ sau
+                from datetime import datetime, timedelta
+
+                luc = (datetime.now() + timedelta(hours=1)).strftime("%Y-%m-%d %H:%M")
+                memory.add_reminders([{"luc": luc, **x} for x in th["nhac_dang_co"]])
             if th.get("buon_may_ngay"):  # giả vờ hôm qua và hôm kia người dùng buồn
                 for d in (1, 2):
                     mid = memory.add_message("user", "Chán quá")
@@ -161,6 +168,9 @@ def _chay(client, tinh_huong: list[dict], ket_qua: list) -> list[KetQua]:
                 reply = Brain(memory, client=ghi).chat(th["tin_nhan"])
                 cu = set(th.get("viec_dang_co", []))  # việc có sẵn từ trước mà vẫn chưa được gạch
                 con_lai = sum(t["viec"] in cu for t in memory.todos(include_done=False))
+                if th.get("phai_huy_nhac"):  # đúng: bỏ việc này, giữ các lời nhắc khác
+                    con = [r["viec"] for r in memory.upcoming_reminders()]
+                    reply.huy_nhac_dung = th["phai_huy_nhac"] not in con and len(con) == len(th["nhac_dang_co"]) - 1
                 if th.get("phai_tich_hom_qua"):  # đúng: tích hôm qua, KHÔNG tích hôm nay
                     hs = memory.habits()
                     reply.tich_hom_qua_dung = bool(hs) and all(h["ngay_30"][-2] and not h["hom_nay"] for h in hs)

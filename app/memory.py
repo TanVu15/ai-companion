@@ -528,6 +528,19 @@ class Memory:
         self.conn.commit()
         return cur.rowcount > 0
 
+    def cancel_reminders(self, items: list[str]) -> int:
+        """Bỏ lời nhắc chưa nhắc theo tên việc (Bơ chép lại; bỏ qua hoa/thường, ghi chú "(...)" cuối)."""
+        keys = set()
+        for t in items:
+            keys.add(self._key(str(t)))
+            keys.add(self._key(re.sub(r"\s*\([^()]*\)\s*$", "", str(t))))
+        keys.discard("")
+        ids = [r["id"] for r in self.upcoming_reminders() if self._key(r["viec"]) in keys]
+        for i in ids:
+            self.conn.execute("DELETE FROM reminders WHERE id = ?", (i,))
+        self.conn.commit()
+        return len(ids)
+
     def delete_reminder(self, reminder_id: int) -> None:
         self.conn.execute("DELETE FROM reminders WHERE id = ?", (reminder_id,))
         self.conn.commit()

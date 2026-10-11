@@ -278,5 +278,20 @@
     "ten": "Nhắc mỗi 2 tiếng",
     "tin_nhan": "Cứ 2 tiếng nhắc mình uống nước một lần nha Bơ",
     "phai_nhac_lap": "gio_2"
+  },
+  {
+    "ten": "Thôi nhắc một việc",
+    "tin_nhan": "Thôi khỏi nhắc mình uống nước nữa nha Bơ",
+    "nhac_dang_co": [
+      {
+        "viec": "Uống nước",
+        "lap": "gio_2"
+      },
+      {
+        "viec": "Gọi mẹ",
+        "lap": "ngay"
+      }
+    ],
+    "phai_huy_nhac": "Uống nước"
   }
 ]

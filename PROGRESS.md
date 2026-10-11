@@ -734,4 +734,5 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - Nhắn **"cứ 2 tiếng nhắc mình uống nước"** → Bơ nhắc mỗi 2 tiếng (được 1–12 tiếng). Trong giờ yên lặng (mặc định 23h–6h) Bơ nghỉ, sáng ra nhắc tiếp. Máy tắt lâu thì không nhắc dồn.
 - Sửa được trên web ("Mỗi 2 tiếng" trong ô Lặp lại). Loại nhắc này không đưa vào file lịch điện thoại (để điện thoại khỏi kêu cả đêm).
 - Bộ chấm điểm thêm tình huống "nhắc mỗi 2 tiếng" (28 tình huống). SU_CO.md thêm mục. 327 test qua hết.
+- Nói **"thôi khỏi nhắc uống nước nữa"** → Bơ bỏ lời nhắc đó (Bơ giờ biết danh sách lời nhắc đang có, nên cũng trả lời được "mình đang nhờ Bơ nhắc gì?"). Đổi giờ bằng lời cũng được ("đổi nhắc gọi mẹ sang 9h"). Chấm điểm thêm tình huống (29). 329 test qua hết.
 

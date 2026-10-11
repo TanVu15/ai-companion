@@ -21,6 +21,7 @@ Chỉ trả về MỘT đối tượng JSON, không viết gì ngoài JSON:
   "hoi_tham": ["chuyện sắp diễn ra mà lần sau nên hỏi lại, ví dụ 'Chiều nay đi tập chân'"],
   "da_hoi": ["chuyện trong phần 'Chuyện nên hỏi thăm' mà bạn vừa hỏi hoặc người dùng đã kể, chép y nguyên"],
   "nhac": [{{"luc": "YYYY-MM-DD HH:MM", "viec": "việc cần nhắc", "lap": ""}}],
+  "huy_nhac": ["lời nhắc trong phần 'Lời nhắc đang có' mà người dùng muốn bỏ, chép y nguyên tên việc"],
   "ngay_dac_biet": [{{"ngay": "DD/MM", "viec": "ví dụ Sinh nhật Tân", "am_lich": false}}],
   "viec_can_lam": ["việc người dùng nhờ ghi vào danh sách việc cần làm, ví dụ 'Mua sữa'"],
   "xong_viec": ["việc trong phần 'Việc cần làm' mà người dùng nói đã làm xong, chép y nguyên"],
@@ -44,6 +45,8 @@ Chỉ trả về MỘT đối tượng JSON, không viết gì ngoài JSON:
   "lap": "ngay" nếu nhắc mỗi ngày, "ngay_thuong" nếu chỉ thứ 2 đến thứ 6 ("ngày đi làm"), "tuan" nếu mỗi tuần,
   "thang" nếu mỗi tháng (ví dụ "ngày 5 hằng tháng đóng tiền nhà"), "gio_2" nếu cứ 2 tiếng một lần
   (gio_1 đến gio_12, ví dụ "cứ 2 tiếng nhắc mình uống nước", "luc" là lần đầu), "" nếu chỉ nhắc một lần.
+- "huy_nhac": người dùng bảo thôi/khỏi/đừng nhắc một việc nữa ("thôi khỏi nhắc uống nước nữa") thì chép tên việc
+  y nguyên từ phần "Lời nhắc đang có". Đổi giờ thì vừa "huy_nhac" việc cũ vừa thêm "nhac" mới. Không có thì [].
 - "ngay_dac_biet": ngày lặp lại mỗi năm mà người dùng kể (sinh nhật mình/người thân, ngày kỷ niệm...),
   chỉ khi biết rõ ngày và tháng. Không có thì để []. Ngày theo âm lịch (giỗ, "sinh nhật âm", "15/7 âm") thì "am_lich": true.
 - Nếu có phần "Hôm nay là ngày đặc biệt", hãy chúc mừng thật vui ngay trong câu này.
@@ -73,6 +76,7 @@ class Reply:
     hoi_tham: list[str] = field(default_factory=list)
     da_hoi: list[str] = field(default_factory=list)
     nhac: list[dict] = field(default_factory=list)
+    huy_nhac: list[str] = field(default_factory=list)
     ngay_dac_biet: list[dict] = field(default_factory=list)
     viec_can_lam: list[str] = field(default_factory=list)
     xong_viec: list[str] = field(default_factory=list)
@@ -213,6 +217,7 @@ def build_system_prompt(
     upcoming: list[dict] | None = None,
     diary: list[dict] | None = None,
     habits: list[dict] | None = None,
+    reminders: list[dict] | None = None,
 ) -> str:
     now = now or datetime.now()
     known = "\n".join(f"- {f}" for f in facts) if facts else "- (chưa biết gì)"
@@ -236,6 +241,14 @@ def build_system_prompt(
             for d in soon)
         out += (f"\n## Ngày đặc biệt sắp tới\n{items}\n"
                 "(Dùng khi người dùng hỏi \"còn mấy ngày\" hoặc khi hợp chuyện; đừng tự nhắc mãi.)\n")
+    if reminders:
+        ten_lap = {"ngay": "mỗi ngày", "ngay_thuong": "thứ 2–6", "tuan": "mỗi tuần", "thang": "mỗi tháng"}
+        lines = []
+        for r in reminders[:15]:
+            lap = r.get("lap") or ""
+            kieu = ten_lap.get(lap) or (f"mỗi {lap[4:]} tiếng" if lap.startswith("gio_") else "một lần")
+            lines.append(f"- {r['viec']} ({kieu}, lần tới {r['luc'][11:16]} {r['luc'][8:10]}/{r['luc'][5:7]})")
+        out += "\n## Lời nhắc đang có\n" + "\n".join(lines) + "\n"
     if todos:
         lines, old = [], False
         for t in todos:
@@ -327,6 +340,7 @@ def parse_reply(text: str) -> Reply:
                     hoi_tham=_str_list(data.get("hoi_tham") or []),
                     da_hoi=_str_list(data.get("da_hoi") or []),
                     nhac=_dict_list(data.get("nhac")),
+                    huy_nhac=_str_list(data.get("huy_nhac") or []),
                     ngay_dac_biet=_dict_list(data.get("ngay_dac_biet")),
                     viec_can_lam=_str_list(data.get("viec_can_lam") or []),
                     xong_viec=_str_list(data.get("xong_viec") or []),
@@ -737,6 +751,7 @@ class Brain:
             upcoming=self._upcoming(today),
             diary=self.memory.diary_recent(today, days=3),
             habits=self.memory.habits(today),
+            reminders=self.memory.upcoming_reminders(),
         )
         resp = self._create(
             model=config.MODEL,
@@ -752,6 +767,7 @@ class Brain:
         self.memory.add_facts(reply.ghi_nho)
         self.memory.done_followups(reply.da_hoi)
         self.memory.add_followups(reply.hoi_tham)
+        self.memory.cancel_reminders(reply.huy_nhac)
         self.memory.add_reminders(reply.nhac)
         self.memory.done_todos(reply.xong_viec)
         self.memory.add_todos(reply.viec_can_lam)
