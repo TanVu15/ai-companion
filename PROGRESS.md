@@ -5,7 +5,7 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
-## 2026-10-11 – Giai đoạn 76 (đang làm): giọng cho trò ôm len
+## 2026-10-11 – Giai đoạn 76 xong: giọng cho trò ôm len
 - Bật "Giọng nói": lần ôm cuộn len đầu tiên trong ngày Bơ đọc to "Ôm len! Cắn cắn~"; các lần sau chỉ hiện chữ (đã thử trên trình duyệt: lần 2 không đọc). 435 test qua hết.
 **Tân cần thử:** bật Giọng nói, để cuộn len nằm yên sát chân Bơ.
 

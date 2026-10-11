@@ -408,7 +408,11 @@
 
 ## Giai đoạn 76 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
 - [x] Bật "Giọng nói": lần ôm len đầu tiên trong ngày Bơ đọc to câu ôm len; các lần sau chỉ hiện chữ
-- [ ] Rà soát giai đoạn 76, sửa lỗi tìm được
+- [x] Rà soát giai đoạn 76, sửa lỗi tìm được
+
+## Giai đoạn 77 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
+- [ ] Cuộn len lăn ngang qua trước mặt Bơ (không chạm) → đầu và mắt Bơ quay theo, đuôi giật giật háo hức
+- [ ] Rà soát giai đoạn 77, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):
