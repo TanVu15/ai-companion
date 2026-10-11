@@ -371,6 +371,11 @@
 - [x] Chạm má → Bơ nghiêng đầu dụi vào bên đó, má hồng đậm, mắt cười, rừ rừ ngắn
 - [x] Rà soát giai đoạn 67 (bàn phím, nền tối, kiểu lông), sửa lỗi tìm được
 
+## Giai đoạn 68 – Bế Bơ ấm hơn (Claude tự thêm, trong hướng mèo/chạm/giọng)
+- [x] Bế yên 2,5 giây (không lắc lên xuống) → Bơ thả lỏng trên tay: lim dim, má hồng, rừ rừ "Bế Bơ êm ghê~" (câu này đọc to khi bật Giọng nói)
+- [x] Lần bế đầu tiên trong ngày được đọc to; các lần sau chỉ kêu "mrr?"
+- [ ] Rà soát giai đoạn 68: bế khi đang ăn / đang dỗi / đang đọc / tab ẩn, sửa lỗi tìm được
+
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):
 - [ ] Xem / xóa "chuyện Bơ định hỏi thăm" trên web (trong "Bơ nhớ gì về mình?"), và báo trong dòng "✓ Bơ đã ghi: sẽ hỏi thăm ..."

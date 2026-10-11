@@ -49,6 +49,7 @@ const BO_CAU_CHOI = {
   boop: ['Boop! Mũi Bơ đó nha~', 'Hí, nhột mũi!', 'Ơ... Bơ bị boop rồi!', 'Mũi Bơ hồng hông?'],
   ma: ['Nựng má Bơ hả~', 'Má Bơ phúng phính chưa?', 'Hí hí, cọ cọ nè', 'Thêm bên này nữa nha~'],
   be: ['Ơ ơ, bế Bơ đi đâu đó?', 'Úi, Bơ bay lên rồi nè!', 'Bơ nặng lắm đó nha~', 'Thả Bơ xuống điii~'],
+  em: ['Bế Bơ êm ghê~', 'Rừ rừ... cứ bế Bơ vầy hoài nha', 'Bơ ngủ trên tay bạn luôn á~'],
   tha: ['Bịch! Về chỗ cũ rồi~', 'Hú hồn, đất đây rồi!', 'Hạ cánh an toàn, meo!'],
   hat_xi: ['Hắt xì!', 'Hắt... xì! Lông vũ nhột mũi quá~', 'Ắt xì! Hí hí'],
   goi: ['Dạ? Bơ nghe nè!', 'Meo? Bạn gọi Bơ hả?', 'Dạaa~ Bơ đây!'],
@@ -60,7 +61,7 @@ const BO_CAU_CHOI = {
   vuon: ['Ưm... chào buổi sáng~', 'Sáng rồi hả? Bơ vươn vai cái đã.', 'Ngáp... chào bạn buổi sáng nha!'],
 };
 // Những loại câu chơi được đọc to khi bật "Giọng nói" (câu vuốt/chọc lặp nhiều quá nên chỉ hiện chữ)
-const BO_DOC_TO = ['mung', 'vuon', 'an', 'an_sua', 'an_pate', 'no', 'doi', 'lanh', 'thuc', 'dep', 'chong_mat', 'ngui'];  // (đập tay: chỉ lần đầu trong ngày)  // ('len' chỉ hiện chữ: vồ liên tục)
+const BO_DOC_TO = ['mung', 'vuon', 'an', 'an_sua', 'an_pate', 'em', 'no', 'doi', 'lanh', 'thuc', 'dep', 'chong_mat', 'ngui'];  // (đập tay: chỉ lần đầu trong ngày)  // ('len' chỉ hiện chữ: vồ liên tục)
 function boCauNgau(loai, rnd = Math.random) {
   const ds = BO_CAU_CHOI[loai] || [];
   return ds.length ? ds[Math.floor(rnd() * ds.length) % ds.length] : '';
@@ -440,15 +441,29 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boChiTietDau, 
   }
   // Nhấn giữ lên lưng/bụng (không kéo) khoảng 0,7 giây → Bơ lăn qua lăn lại nũng nịu
   let henLan = null, henBe = null;
+  // Bế yên một lúc (không lắc lên xuống) → Bơ thả lỏng trên tay: lim dim, rừ rừ
+  let henEm = null, nhacCuoi = 0;
+  function choEm() {
+    clearTimeout(henEm);
+    if (svg.classList.contains('em')) { svg.classList.remove('em'); grgr(false); }
+    henEm = setTimeout(() => {
+      if (!svg.classList.contains('be')) return;
+      svg.classList.add('em'); grgr(true); noi('em', true);
+    }, 2500);
+  }
   function nhac(k) {
     svg.style.setProperty('--nhac', k);
     if (!svg.classList.contains('be')) {
       svg.classList.add('be'); svg.classList.remove('vuot', 'gai-cam', 'lan', 'bep');
       clearTimeout(vuotTat); vuotDangChay = false; grgr(false);
-      dem('be'); noi('be', true); keu('ngan');
-    }
+      const dauTien = dem('be').be === 1;  // lần bế đầu tiên trong ngày: đọc to; các lần sau chỉ kêu "mrr?"
+      noi('be', true, dauTien); if (!dauTien) keu('ngan');
+      nhacCuoi = k; choEm();
+    } else if (Math.abs(k - nhacCuoi) > 0.15) { nhacCuoi = k; choEm(); }  // lắc lên xuống: Bơ chưa yên tâm
   }
   function thaBe() {
+    clearTimeout(henEm);
+    if (svg.classList.contains('em')) { svg.classList.remove('em'); grgr(false); }
     if (!svg.classList.contains('be')) return;
     svg.classList.remove('be'); svg.style.removeProperty('--nhac');
     giu('roi', 450); setTimeout(() => noi('tha', true), 250);

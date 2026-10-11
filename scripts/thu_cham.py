@@ -52,8 +52,8 @@ def thu(pg, ten, w, h):
     pg.mouse.move(X(100), Y(55)); pg.mouse.down(); pg.wait_for_timeout(550)
     for i in range(1, 9):
         pg.mouse.move(X(100), Y(55) - 12 * i); pg.wait_for_timeout(30)
-    dang_be = co("be"); pg.mouse.up(); pg.wait_for_timeout(100)
-    kq.append(("bế Bơ lên, thả ra", dang_be and not co("be") and co("roi"))); nghi()
+    dang_be = co("be"); pg.wait_for_timeout(2700); em = co("em"); pg.mouse.up(); pg.wait_for_timeout(100)
+    kq.append(("bế Bơ lên, bế yên thì lim dim, thả ra", dang_be and em and not co("be") and not co("em") and co("roi"))); nghi()
     pg.mouse.click(X(100), Y(88)); pg.wait_for_timeout(150); kq.append(("boop mũi", co("boop"))); nghi()
     pg.mouse.click(X(138), Y(92)); pg.wait_for_timeout(150); kq.append(("nựng má", co("nung-ma-phai"))); nghi()
     pg.mouse.move(X(5), Y(5))

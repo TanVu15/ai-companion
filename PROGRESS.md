@@ -5,6 +5,10 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-11 – Giai đoạn 68 (đang làm): bế Bơ ấm hơn
+- **Bế yên**: bế Bơ lên rồi giữ yên khoảng 2,5 giây → Bơ thả lỏng trên tay, nhắm mắt lim dim, má hồng, rừ rừ "Rừ rừ... cứ bế Bơ vầy hoài nha". Lắc lên xuống thì Bơ mở mắt lại. Ảnh `docs/anh/meo-be-em.png`.
+- Bật "Giọng nói": lần bế đầu tiên trong ngày Bơ đọc to "Ơ ơ, bế Bơ đi đâu đó?", các lần sau chỉ kêu "mrr?"; câu bế yên cũng được đọc to.
+
 ## 2026-10-11 – Giai đoạn 67 xong: boop mũi & nựng má
 - **Boop mũi**: chạm nhanh đúng chóp mũi hồng → Bơ nhắm tịt mắt, mũi chun lại, ria vểnh, chữ "Boop!" bật ra, "Hí, nhột mũi!".
 - **Nựng má**: chạm vào má → Bơ nghiêng đầu dụi về bên đó, má hồng đậm, mắt cười, rừ rừ một chút. Chạm trán/đỉnh đầu vẫn là xoa đầu như cũ. Ảnh `docs/anh/meo-boop-nung-ma.png`.

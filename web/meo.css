@@ -411,6 +411,12 @@ header.dang-long-vu { touch-action: none; position: relative; }
 .meo.be .mat-mo { transform: scale(1.1); }
 .meo.be :is(.mat-cuoi, .mat-nham) { display: none !important; } .meo.be .mat-mo { display: inline !important; }
 .meo.be :is(.mieng-w, .mieng-buon) { display: none !important; } .meo.be .mieng-mo { display: inline !important; transform: scale(.55); }
+/* Bế yên một lúc: thả lỏng, lim dim, má hồng, miệng cười */
+.meo.be.em .mat-mo, .meo.be.em .mat-cuoi { display: none !important; } .meo.be.em .mat-nham { display: inline !important; }
+.meo.be.em .mieng-mo { display: none !important; } .meo.be.em .mieng-w { display: inline !important; }
+.meo.be.em .ma { opacity: .75; }
+.meo.be.em .ear-l { transform: rotate(-6deg); } .meo.be.em .ear-r { transform: rotate(6deg); }
+.meo.be.em .tail { transform: rotate(150deg) scale(.7); }
 /* Thả ra: rơi "bịch", người bẹp xuống một chút rồi về như cũ */
 .meo.roi .body { scale: 1.07 .93; }
 .meo.roi .paw { transform: scaleX(1.12); }

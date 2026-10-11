@@ -263,7 +263,10 @@ def test_be_bo_keo_len():
     choi = (config.ROOT / "web" / "choi.js").read_text(encoding="utf-8")
     assert "clearTimeout(henBe); thaBe();" in choi  # nhả tay (hay bị hủy) là thả Bơ xuống, không kẹt trên không
     css = (config.ROOT / "web" / "meo.css").read_text(encoding="utf-8")
-    assert ".meo.be {" in css and ".meo.roi .body" in css
+    assert ".meo.be {" in css and ".meo.roi .body" in css and ".meo.be.em" in css
+    assert "dem('be').be === 1" in choi  # lần bế đầu trong ngày mới đọc to
+    v = node("console.log(JSON.stringify([C.BO_DOC_TO.includes('em'), C.BO_DOC_TO.includes('be'), C.BO_CAU_CHOI.em.length]))")
+    assert v == [True, False, 3]  # bế yên: "Bế Bơ êm ghê~" được đọc to; câu bế thì chỉ lần đầu
 
 
 def test_boop_mui_va_nung_ma():
