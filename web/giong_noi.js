@@ -65,7 +65,7 @@ function speak(text, batBuoc) {
     if (id !== speakSeq) return;
     if (e && e.name === 'NotAllowedError') { xongDoc(id); return; }  // máy chặn tự phát tiếng khi chưa chạm trang: không phải lỗi giọng AI
     aiLoiDen = Date.now() + 5 * 60 * 1000;  // 5 phút sau mới thử lại giọng AI
-    if (!daBaoLoi) { daBaoLoi = true; baoNho('Giọng AI chưa dùng được (cần mạng), Bơ tạm dùng giọng của trình duyệt.'); }
+    if (!daBaoLoi) { daBaoLoi = true; baoNho('Giọng AI chưa dùng được (cần mạng), Bơ tạm dùng giọng của trình duyệt. Xem lý do ở "Bơ làm được gì? · Cài đặt" → Tình trạng.'); }
     speakTrinhDuyet(e && e.conLai ? e.conLai : text, id);
   });
 }

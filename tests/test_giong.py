@@ -16,6 +16,7 @@ def gia(monkeypatch, tmp_path):
         return b"ID3" + text.encode("utf-8")
 
     monkeypatch.setattr(giong, "tong_hop", tong_hop)
+    monkeypatch.setattr(giong, "trang_thai", {"luc": None, "ok": None, "loi": ""})
     monkeypatch.setattr(config, "AM_THANH_DIR", tmp_path / "am_thanh")
     monkeypatch.setattr(config, "CAI_DAT_PATH", tmp_path / "cai_dat.json")
     monkeypatch.setattr(config, "GIONG", "vi-VN-HoaiMyNeural")
@@ -98,3 +99,45 @@ def test_noi_bang_giong_thi_dan_tra_loi_ngan(tmp_path):
     calls = main._brain.client.calls
     he_thong = lambda call: call["system"] if isinstance(call["system"], str) else "".join(b["text"] for b in call["system"])
     assert "1–2 câu" in he_thong(calls[0]) and "1–2 câu" not in he_thong(calls[1])
+
+
+def _muc_giong(c):
+    return next(k for k in c.get("/api/suc-khoe").json()["kiem_tra"] if k["ten"] == "Giọng AI")
+
+
+def test_tinh_trang_giong_chua_thu_roi_ok_roi_loi(gia, tmp_path, monkeypatch):
+    c = make_client(tmp_path, [])
+    k = _muc_giong(c)
+    assert k["ok"] and "Chưa đọc câu nào" in k["ghi_chu"]
+    assert c.post("/api/giong", json={"text": "Meo"}).status_code == 200
+    k = _muc_giong(c)
+    assert k["ok"] and "Dùng được" in k["ghi_chu"]
+
+    async def hong(*a):
+        raise OSError("không có mạng")
+
+    monkeypatch.setattr(giong, "tong_hop", hong)
+    assert c.post("/api/giong", json={"text": "câu mới"}).status_code == 503
+    k = _muc_giong(c)
+    assert not k["ok"] and k["muc"] == "canh_bao" and "kiểm tra mạng" in k["ghi_chu"] and "Lỗi lúc" in k["ghi_chu"]
+    # lấy câu cũ trong đệm không làm đổi tình trạng (không gọi Microsoft)
+    assert c.post("/api/giong", json={"text": "Meo"}).status_code == 200
+    assert not _muc_giong(c)["ok"]
+
+
+def test_tinh_trang_chua_cai_edge_tts(gia, monkeypatch):
+    monkeypatch.setattr(giong, "tong_hop", giong._edge_tts)
+    monkeypatch.setattr(giong, "da_cai", lambda: False)
+    ok, ghi_chu = giong.tinh_trang()
+    assert not ok and "run.bat" in ghi_chu
+
+
+def test_cham_qua_ghi_loi(gia, monkeypatch):
+    async def cham(*a):
+        raise asyncio.TimeoutError
+
+    monkeypatch.setattr(giong, "tong_hop", cham)
+    with pytest.raises(giong.GiongLoi):
+        asyncio.run(giong.doc("xin chào"))
+    ok, ghi_chu = giong.tinh_trang()
+    assert not ok and "chậm" in ghi_chu

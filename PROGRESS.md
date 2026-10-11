@@ -5,6 +5,11 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-11 18:00 UTC – Giai đoạn 50: Tình trạng báo giọng AI
+- "Bơ làm được gì? · Cài đặt" → **Tình trạng** có dòng **Giọng AI**: chưa thử / "Dùng được — đọc thành công lần gần nhất lúc 18:02" /
+  "Lỗi lúc 18:05: không gọi được máy chủ giọng — kiểm tra mạng" / "Chưa cài edge-tts — chạy lại run.bat". Ảnh: `docs/anh/tinh-trang-giong.png`.
+- Thông báo nhỏ "Giọng AI chưa dùng được" giờ chỉ luôn chỗ xem lý do. SU_CO.md thêm dòng cho lỗi này. 391 test qua hết.
+
 ## 2026-10-11 17:45 UTC – Giai đoạn 50 (đang làm): đầu trang gọn
 - Các nút chữ (Bơ nhớ gì, Việc cần làm, Nhật ký, Thói quen, Tìm, Chi phí, Tính cách, "?") gom vào nút **"☰ Thêm"**;
   đầu trang chỉ còn mèo, nút "Giữ để nói", Giọng nói, Rảnh tay → khung chat trên điện thoại rộng gần gấp đôi.

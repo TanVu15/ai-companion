@@ -354,6 +354,10 @@ def health():
             (f"Bật — tháng này Bơ tự trả lời {n} câu, không tốn API" if n else
              "Bật — hỏi \"mấy giờ rồi?\", \"còn mấy ngày Tết?\"... Bơ trả lời miễn phí") if config.TRA_LOI_NHANH
             else "Đang tắt (TRA_LOI_NHANH=0)", "canh_bao")
+    from . import giong
+
+    g_ok, g_ghi_chu = giong.tinh_trang()
+    add("Giọng AI", g_ok, g_ghi_chu, "canh_bao")
     add("Mật khẩu web", bool(config.APP_PASSWORD),
         "Đã đặt APP_PASSWORD" if config.APP_PASSWORD else "Chưa đặt APP_PASSWORD (ổn nếu chỉ dùng trong nhà)", "canh_bao")
     add("Ngân sách tháng", config.MONTHLY_USD_LIMIT > 0,

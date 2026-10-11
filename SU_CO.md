@@ -16,6 +16,7 @@
 | iPhone không vào được `http://192.168…:8000` | Khác Wi-Fi, hoặc Windows Firewall chặn | Cùng Wi-Fi; khi Windows hỏi thì cho phép Python. Gõ `ipconfig` để xem IP đúng |
 | Không thấy nút micro | Trình duyệt chỉ cho dùng micro ở `localhost` hoặc `https` | Dùng trên máy tính, hoặc link https ở DUA_LEN_MANG.md |
 | Bấm micro báo "chưa cho dùng micro" | Đã bấm "Chặn" lúc trình duyệt hỏi | Bấm biểu tượng ổ khóa cạnh địa chỉ web → cho phép Micro |
+| Hiện "Giọng AI chưa dùng được" | Máy không có mạng, hoặc chưa cài `edge-tts` | "Bơ làm được gì? · Cài đặt" → Tình trạng → dòng "Giọng AI" ghi rõ lỗi. Chưa cài thì chạy lại `run.bat`; lỗi mạng thì kiểm tra Wi-Fi. Gửi mấy dòng cuối `data/loi.log` vào `FEEDBACK.md` nếu vẫn lỗi |
 | Bơ đọc giọng không phải tiếng Việt | Máy chưa có giọng tiếng Việt | Windows: Cài đặt → Thời gian & ngôn ngữ → Giọng nói → thêm Tiếng Việt |
 | Lời nhắc không kêu | Lúc đó web không mở, hoặc máy tính tắt/ngủ | Để trang Bơ mở. Nhắc trễ thì Bơ vẫn báo khi mở lại web |
 | Bơ nói "để Bơ nhắc nha" nhưng tới giờ không nhắc | AI hứa mà không ghi lời nhắc (không có dòng "✓ Bơ đã ghi: nhắc ..." dưới câu đó) | Nhờ lại kèm giờ rõ ràng ("8h tối nay nhắc mình gọi mẹ"), thấy dòng "✓ Bơ đã ghi" là chắc. Xem mọi lời nhắc trong "Bơ nhớ gì về mình?" |

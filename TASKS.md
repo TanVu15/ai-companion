@@ -274,7 +274,7 @@
 
 ## Giai đoạn 50 – Gọn & chắc (Claude tự thêm, trong hướng mèo/chạm/giọng)
 - [x] Gọn đầu trang trên điện thoại: gom các nút chữ (nhớ, việc, nhật ký, thói quen, tìm, chi phí, tính cách...) vào nút "☰ Thêm", chỉ để lại Giọng nói / Rảnh tay → mèo + khung chat rộng hơn
-- [ ] Nút "?" → Tình trạng: báo giọng AI dùng được không (đã thử gần nhất lúc nào, lỗi gì)
+- [x] Nút "?" → Tình trạng: báo giọng AI dùng được không (đã thử gần nhất lúc nào, lỗi gì)
 - [ ] Rà soát code giai đoạn 46–49 (mèo, chạm & chơi, giọng AI, giữ để nói), sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
