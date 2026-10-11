@@ -389,3 +389,37 @@ def test_huy_nhac_qua_tro_chuyen(tmp_path):
     assert "## Lời nhắc đang có" in sys_p and "- Uống nước (mỗi 2 tiếng, lần tới" in sys_p and "- Gọi mẹ (một lần" in sys_p
     assert [r["viec"] for r in m.upcoming_reminders()] == ["Gọi mẹ"]
     assert m.cancel_reminders(["", "không có"]) == 0
+
+
+def test_huy_nhac_trung_ten_chi_bo_dung_dong(memory):
+    now = datetime(2026, 10, 11, 7, 0)
+    memory.add_reminders([{"luc": "2026-10-11 08:00", "viec": "Uống thuốc", "lap": "ngay"},
+                          {"luc": "2026-10-11 20:00", "viec": "Uống thuốc", "lap": "ngay"}], now=now)
+    # chỉ có tên mà trùng 2 lời nhắc → không xóa nhầm cái nào
+    assert memory.cancel_reminders(["Uống thuốc"]) == 0
+    assert memory.cancel_reminders(["- Uống thuốc (mỗi ngày, lần tới 20:00 11/10)"]) == 1
+    assert [r["luc"][11:16] for r in memory.upcoming_reminders()] == ["08:00"]
+    # chỉ còn một → tên là đủ
+    assert memory.cancel_reminders(["uống thuốc"]) == 1
+
+
+def test_huy_nhac_ten_co_ngoac(memory):
+    now = datetime(2026, 10, 11, 7, 0)
+    memory.add_reminders([{"luc": "2026-10-11 09:00", "viec": "Họp (online)"},
+                          {"luc": "2026-10-11 10:00", "viec": "Họp"}], now=now)
+    assert memory.cancel_reminders(["Họp (online)"]) == 1
+    assert [r["viec"] for r in memory.upcoming_reminders()] == ["Họp"]
+    assert memory.cancel_reminders(["Họp (một lần, lần tới 10:00 11/10)"]) == 1
+
+
+def test_nhac_moi_vai_tieng_khong_keu_trong_gio_yen_lang(memory, monkeypatch):
+    monkeypatch.setattr(config, "GIO_YEN_LANG", "23-6")
+    memory.add_reminders([{"luc": "2026-10-11 22:30", "viec": "Uống nước", "lap": "gio_2"}],
+                         now=datetime(2026, 10, 11, 21, 0))
+    memory.add_reminders([{"luc": "2026-10-11 22:40", "viec": "Gọi mẹ"}], now=datetime(2026, 10, 11, 21, 0))
+    # trang mở lại lúc 2h sáng: nhắc một lần vẫn báo, nhắc mỗi 2 tiếng để tới 6h
+    assert [r["viec"] for r in memory.pop_due_reminders(datetime(2026, 10, 12, 2, 0))] == ["Gọi mẹ"]
+    assert [r["luc"] for r in memory.upcoming_reminders()] == ["2026-10-12 06:00"]
+    assert [r["viec"] for r in memory.pop_due_reminders(datetime(2026, 10, 12, 6, 0))] == ["Uống nước"]
+    assert [r["luc"] for r in memory.upcoming_reminders()] == ["2026-10-12 08:00"]
+

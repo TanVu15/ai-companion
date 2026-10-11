@@ -479,6 +479,11 @@ class Memory:
         now = now or datetime.now()
         now_s = now.strftime("%Y-%m-%d %H:%M")
         due = [r for r in self.upcoming_reminders() if r["luc"] <= now_s]
+        het = self._yen_lang(now)
+        if het:  # nhắc mỗi vài tiếng tới giờ trong lúc yên lặng (máy/trang tắt rồi mở lại) → để tới sáng
+            for r in [r for r in due if r["lap"].startswith("gio_")]:
+                self.conn.execute("UPDATE reminders SET due_at = ? WHERE id = ?", (het.strftime("%Y-%m-%d %H:%M"), r["id"]))
+                due.remove(r)
         for r in due:
             if r["lap"] in self._LAP:
                 try:
@@ -529,17 +534,34 @@ class Memory:
         return cur.rowcount > 0
 
     def cancel_reminders(self, items: list[str]) -> int:
-        """Bỏ lời nhắc chưa nhắc theo tên việc (Bơ chép lại; bỏ qua hoa/thường, ghi chú "(...)" cuối)."""
-        keys = set()
+        """Bỏ lời nhắc chưa nhắc theo tên việc Bơ chép lại (bỏ qua hoa/thường).
+        Chép cả ghi chú "(..., lần tới 20:00 11/10)" thì chỉ bỏ đúng lời nhắc đó.
+        Chỉ có tên mà nhiều lời nhắc trùng tên thì không bỏ cái nào (tránh xóa nhầm)."""
+        con = self.upcoming_reminders()
+        xoa: set[int] = set()
         for t in items:
-            keys.add(self._key(str(t)))
-            keys.add(self._key(re.sub(r"\s*\([^()]*\)\s*$", "", str(t))))
-        keys.discard("")
-        ids = [r["id"] for r in self.upcoming_reminders() if self._key(r["viec"]) in keys]
-        for i in ids:
+            t = re.sub(r"^\s*[-•]\s*", "", str(t))  # lỡ chép cả gạch đầu dòng
+            ghi_chu = None
+            cands = [r for r in con if r["id"] not in xoa and self._key(r["viec"]) == self._key(t)]
+            if not cands:  # thử bỏ ghi chú "(...)" ở cuối
+                m = re.search(r"\s*\(([^()]*)\)\s*$", t)
+                if m:
+                    ghi_chu = m.group(1)
+                    k = self._key(t[:m.start()])
+                    cands = [r for r in con if r["id"] not in xoa and k and self._key(r["viec"]) == k]
+            if len(cands) > 1:
+                g = re.search(r"lần tới\s*(\d{1,2}):(\d{2})\s*(\d{1,2})/(\d{1,2})", ghi_chu or "")
+                if g:
+                    h, mi, d, mo = (int(x) for x in g.groups())
+                    cands = [r for r in cands if r["luc"][11:16] == f"{h:02d}:{mi:02d}"
+                             and int(r["luc"][8:10]) == d and int(r["luc"][5:7]) == mo]
+                if len(cands) != 1:
+                    cands = []
+            xoa.update(r["id"] for r in cands)
+        for i in xoa:
             self.conn.execute("DELETE FROM reminders WHERE id = ?", (i,))
         self.conn.commit()
-        return len(ids)
+        return len(xoa)
 
     def delete_reminder(self, reminder_id: int) -> None:
         self.conn.execute("DELETE FROM reminders WHERE id = ?", (reminder_id,))

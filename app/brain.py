@@ -21,7 +21,7 @@ Chỉ trả về MỘT đối tượng JSON, không viết gì ngoài JSON:
   "hoi_tham": ["chuyện sắp diễn ra mà lần sau nên hỏi lại, ví dụ 'Chiều nay đi tập chân'"],
   "da_hoi": ["chuyện trong phần 'Chuyện nên hỏi thăm' mà bạn vừa hỏi hoặc người dùng đã kể, chép y nguyên"],
   "nhac": [{{"luc": "YYYY-MM-DD HH:MM", "viec": "việc cần nhắc", "lap": ""}}],
-  "huy_nhac": ["lời nhắc trong phần 'Lời nhắc đang có' mà người dùng muốn bỏ, chép y nguyên tên việc"],
+  "huy_nhac": ["lời nhắc trong phần 'Lời nhắc đang có' mà người dùng muốn bỏ, chép y nguyên cả dòng kể cả phần trong ngoặc"],
   "ngay_dac_biet": [{{"ngay": "DD/MM", "viec": "ví dụ Sinh nhật Tân", "am_lich": false}}],
   "viec_can_lam": ["việc người dùng nhờ ghi vào danh sách việc cần làm, ví dụ 'Mua sữa'"],
   "xong_viec": ["việc trong phần 'Việc cần làm' mà người dùng nói đã làm xong, chép y nguyên"],
@@ -46,7 +46,8 @@ Chỉ trả về MỘT đối tượng JSON, không viết gì ngoài JSON:
   "thang" nếu mỗi tháng (ví dụ "ngày 5 hằng tháng đóng tiền nhà"), "gio_2" nếu cứ 2 tiếng một lần
   (gio_1 đến gio_12, ví dụ "cứ 2 tiếng nhắc mình uống nước", "luc" là lần đầu), "" nếu chỉ nhắc một lần.
 - "huy_nhac": người dùng bảo thôi/khỏi/đừng nhắc một việc nữa ("thôi khỏi nhắc uống nước nữa") thì chép tên việc
-  y nguyên từ phần "Lời nhắc đang có". Đổi giờ thì vừa "huy_nhac" việc cũ vừa thêm "nhac" mới. Không có thì [].
+  y nguyên CẢ DÒNG (kể cả phần trong ngoặc) từ phần "Lời nhắc đang có", để bỏ đúng cái người dùng muốn
+  (nhiều lời nhắc cùng tên: chỉ chép dòng đúng; muốn bỏ hết thì chép từng dòng). Đổi giờ thì vừa "huy_nhac" việc cũ vừa thêm "nhac" mới. Không có thì [].
 - "ngay_dac_biet": ngày lặp lại mỗi năm mà người dùng kể (sinh nhật mình/người thân, ngày kỷ niệm...),
   chỉ khi biết rõ ngày và tháng. Không có thì để []. Ngày theo âm lịch (giỗ, "sinh nhật âm", "15/7 âm") thì "am_lich": true.
 - Nếu có phần "Hôm nay là ngày đặc biệt", hãy chúc mừng thật vui ngay trong câu này.

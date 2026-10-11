@@ -736,3 +736,12 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - Bộ chấm điểm thêm tình huống "nhắc mỗi 2 tiếng" (28 tình huống). SU_CO.md thêm mục. 327 test qua hết.
 - Nói **"thôi khỏi nhắc uống nước nữa"** → Bơ bỏ lời nhắc đó (Bơ giờ biết danh sách lời nhắc đang có, nên cũng trả lời được "mình đang nhờ Bơ nhắc gì?"). Đổi giờ bằng lời cũng được ("đổi nhắc gọi mẹ sang 9h"). Chấm điểm thêm tình huống (29). 329 test qua hết.
 
+## 2026-10-11 – Giai đoạn 42 xong: rà soát lần 22
+- Sửa lỗi: có 2 lời nhắc cùng tên ("Uống thuốc" 8h và 20h), nói "thôi nhắc uống thuốc buổi tối" thì Bơ xóa luôn cả hai → giờ Bơ chép cả dòng có giờ "lần tới" nên chỉ bỏ đúng cái tối; nếu không rõ cái nào thì không xóa nhầm.
+- Lời nhắc có ngoặc trong tên ("Họp (online)") không làm xóa nhầm lời nhắc "Họp".
+- Nhắc mỗi vài tiếng: mở lại trang lúc 2h sáng (giờ yên lặng) thì Bơ không báo nữa mà để tới hết giờ yên lặng.
+- Giữ nguyên: nhắn lại "cứ 2 tiếng nhắc uống nước" với giờ khác vẫn coi là trùng (để Bơ khỏi tạo lời nhắc đôi); muốn đổi giờ thì Bơ bỏ cái cũ rồi thêm cái mới.
+- 332 test qua hết.
+
+**Tân cần thử (giai đoạn 42):** "cứ 2 tiếng nhắc mình uống nước" → "thôi khỏi nhắc uống nước nữa"; thử 2 lời nhắc cùng tên khác giờ rồi bỏ một cái.
+
