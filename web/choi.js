@@ -577,8 +577,8 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
     menuAn.addEventListener('keydown', ev => {
       const ds = [...menuAn.querySelectorAll('button')], i = ds.indexOf(document.activeElement);
       if (ev.key === 'Escape') { ev.preventDefault(); ev.stopPropagation(); dongMenuAn(true); }
-      else if (ev.key === 'ArrowDown' || ev.key === 'ArrowUp') {
-        ev.preventDefault(); ds[(i + (ev.key === 'ArrowDown' ? 1 : ds.length - 1)) % ds.length].focus();
+      else if (/^Arrow(Down|Up|Left|Right)$/.test(ev.key)) {  // menu dọc (thường) hay ngang (màn hình thấp): mũi tên nào cũng đi được
+        ev.preventDefault(); ds[(i + (ev.key === 'ArrowDown' || ev.key === 'ArrowRight' ? 1 : ds.length - 1)) % ds.length].focus();
       } else if (ev.key === 'Tab') dongMenuAn(false);
     });
     document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && !menuAn.hidden) dongMenuAn(menuAn.contains(document.activeElement)); });
