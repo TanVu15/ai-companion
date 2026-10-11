@@ -338,7 +338,7 @@
 - [x] Rà soát giai đoạn 60, sửa lỗi tìm được
 
 ## Giai đoạn 61 – Lắc điện thoại (Claude tự thêm, trong hướng mèo/chạm)
-- [ ] Lắc điện thoại → Bơ chóng mặt: mắt xoáy, người lắc lư, "Ối ối, chóng mặt quá~" (hàm nhận biết cú lắc có test; Android chạy luôn; iPhone cần cho phép: chỉ hỏi khi Tân bật trong Cài đặt)
+- [x] Lắc điện thoại → Bơ chóng mặt: mắt xoáy, người lắc lư, "Ối ối, chóng mặt quá~" (hàm nhận biết cú lắc có test; Android chạy luôn; iPhone cần cho phép: chỉ hỏi khi Tân bật trong Cài đặt)
 - [ ] Rà soát giai đoạn 61, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)

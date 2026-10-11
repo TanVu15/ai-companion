@@ -184,3 +184,16 @@ def test_phim_tat_cho_cham_moi():
 def test_ru_ru_to_dan():
     v = node("""console.log(JSON.stringify([0, 1, 3, 10, 100, -5].map(C.boDoToRuRu)))""")
     assert v[0] < v[1] < v[2] < v[3] and v[3] == v[4] == 0.5 and v[5] == v[0]
+
+
+def test_nhan_biet_lac_dien_thoai():
+    v = node("""const a = {x: 0, y: 9.8, z: 0}, b = {x: 15, y: -5, z: 3};
+      let s = {moc: []}; const ra = [];
+      for (const [t, g] of [[0, 30], [200, 30], [400, 5], [500, 30], [700, 30]]) { s = C.boLac(s.moc, t, g); ra.push(s.lac); }
+      const cham = [0, 1500, 3000, 4500, 6000].reduce((q, t) => C.boLac(q.moc, t, 30), {moc: []});
+      console.log(JSON.stringify([C.boDoGiat(a, b), C.boDoGiat(null, b), ra, cham.lac]))""")
+    assert v[0] == 32.8 and v[1] == 0
+    assert v[2] == [False, False, False, False, True]  # đủ 4 cú giật mạnh trong 1 giây mới tính là lắc
+    assert v[3] is False  # giật lẻ tẻ cách xa nhau (đi bộ, đặt máy xuống) không tính
+    html = (config.ROOT / "web" / "index.html").read_text(encoding="utf-8")
+    assert 'id="lacBat"' in html

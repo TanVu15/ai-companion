@@ -200,6 +200,12 @@ header.dang-laser { touch-action: none; cursor: crosshair; position: relative; }
 .meo.co-ma .ma { opacity: .8; }
 .meo.co-ma .ear-l { transform: rotate(-12deg); } .meo.co-ma .ear-r { transform: rotate(10deg); }
 .meo.co-ma :is(.mat-mo, .mat-cuoi) { display: none !important; } .meo.co-ma .mat-nham { display: inline !important; }
+/* Lắc điện thoại: chóng mặt, mắt xoáy @_@, người lắc lư */
+.meo .mat-xoay { fill: none; stroke: var(--muc); stroke-width: 2; stroke-linecap: round; display: none; }
+.meo.chong-mat .mat-xoay { display: inline; }
+.meo.chong-mat :is(.mat-mo, .mat-cuoi, .mat-nham) { display: none !important; }
+.meo.chong-mat :is(.mieng-w, .mieng-mo) { display: none !important; } .meo.chong-mat .mieng-buon { display: inline !important; }
+.meo.chong-mat .ear-l { transform: rotate(-20deg); } .meo.chong-mat .ear-r { transform: rotate(20deg); }
 /* Gãi cằm: ngửa cổ */
 .meo.gai-cam .head { transform: translateY(-6px) rotate(-6deg); }
 /* Chạm tai: tai giật */
@@ -245,6 +251,7 @@ header.dang-laser { touch-action: none; cursor: crosshair; position: relative; }
   .meo.mung .tail { animation: meo-ngoe .4s ease-in-out infinite; }
   .meo.doi { transition: transform .3s; }
   .meo.giat { animation: meo-giat .45s ease-out; }
+  .meo.chong-mat { animation: meo-lac-lu .45s ease-in-out infinite alternate; }
   .meo.ngui .mui { animation: meo-hit .3s ease-in-out infinite alternate; }
   .meo.co-ma .head { animation: meo-co-ma .5s ease-in-out infinite alternate; }
   .meo.giat-duoi .tail { animation: meo-vut-duoi .5s ease-out; }
@@ -267,6 +274,7 @@ header.dang-laser { touch-action: none; cursor: crosshair; position: relative; }
 @keyframes meo-vut-duoi { 0% { transform: none; } 35% { transform: rotate(28deg); } 70% { transform: rotate(8deg); } }
 @keyframes meo-hit { to { transform: scale(1.18, .85); } }
 @keyframes meo-co-ma { from { transform: translateY(3px) rotate(-9deg); } to { transform: translateY(3px) rotate(-3deg); } }
+@keyframes meo-lac-lu { from { transform: rotate(-6deg); } to { transform: rotate(6deg); } }
 @keyframes meo-dung { from { opacity: 0; } }
 @keyframes meo-bong { from { transform: scale(.7); opacity: 0; } }
 
@@ -367,3 +375,5 @@ header.dang-long-vu { touch-action: none; position: relative; }
 .meo.voi .ear-l { transform: rotate(8deg); } .meo.voi .ear-r { transform: rotate(-8deg); }
 .meo.voi .mat-mo { transform: scale(1.15); }
 @media (prefers-reduced-motion: no-preference) { .meo.voi .body { scale: 1 1.04; } }
+.lac-nhan:not([hidden]) { display: flex; align-items: flex-start; gap: 8px; margin: 0 0 16px; font-size: 14px; line-height: 1.4; }
+.lac-nhan input { margin-top: 2px; flex: none; }

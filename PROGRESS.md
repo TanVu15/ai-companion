@@ -5,6 +5,10 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-11 – Giai đoạn 61 (đang làm): lắc điện thoại
+- **Lắc điện thoại** mạnh vài cái → Bơ chóng mặt: mắt xoáy @_@, người lắc lư, "Ối ối, chóng mặt quá~". Đi bộ hay đặt máy xuống không tính (phải 4 cú giật mạnh trong 1 giây). Ảnh `docs/anh/meo-chong-mat.png`.
+- Trong "Bơ làm được gì? · Cài đặt" (chỉ hiện trên điện thoại) có ô **"Lắc điện thoại để trêu Bơ"** (ảnh `docs/anh/cai-dat-lac.png`). Android: bật sẵn. iPhone: phải tick ô này, máy hỏi cho phép thì bấm "Cho phép".
+
 ## 2026-10-11 – Giai đoạn 60 xong: đẹp đều mọi bộ lông, rừ rừ ấm hơn
 - Chụp 6 tư thế mới (ngược lông · đập tay · rửa mặt · ngửi · cọ má · chạm đuôi) với 4 kiểu lông (thường, tam thể, mèo đen, mướp vằn), cả nền sáng và tối: đều rõ, không vỡ hình. Ảnh `docs/anh/tu-the-moi-kieu-long.png`, `docs/anh/tu-the-moi-kieu-long-toi.png`.
 - **Rừ rừ ấm hơn**: mới vuốt thì rừ rừ nhỏ, vuốt liền vài giây thì to dần (tối đa vừa phải). Điện thoại Android có rung thì rung rất nhẹ ba nhịp lúc Bơ bắt đầu rừ rừ (iPhone không hỗ trợ rung từ web; máy bật giảm chuyển động thì không rung).

@@ -35,6 +35,7 @@ const BO_CAU_CHOI = {
   dap_tay: ['Đập tay nè!', 'Bốp! Tuyệt vời!', 'Hi-five với Bơ nè!', 'Một, hai, bốp!'],
   duoi: ['Đuôi Bơ mà!', 'Ơ, ai đụng đuôi Bơ đó?', 'Đuôi này không phải đồ chơi nha~', 'Hửm? Đuôi Bơ có gì hả?'],
   ngui: ['Hít hít... thơm tay bạn ghê~', 'Cho Bơ ngửi xíu... ừm, quen quen!', 'Hít hít~ Bơ cọ cọ nè'],
+  chong_mat: ['Ối ối, chóng mặt quá~', 'Đừng lắc nữa mà, Bơ xoay vòng vòng rồi!', 'Trời đất quay cuồng... meo~'],
   goi: ['Dạ? Bơ nghe nè!', 'Meo? Bạn gọi Bơ hả?', 'Dạaa~ Bơ đây!'],
   dep: ['Bộ lông mới nè, Bơ đẹp hông?', 'Hí, Bơ điệu chưa~', 'Thấy Bơ xinh lên hông?'],
   khuya: ['Khuya rồi nè, bạn ngủ sớm nha~', 'Rừ rừ... Bơ buồn ngủ quá, bạn cũng ngủ đi nha', 'Vuốt xíu nữa rồi mình đi ngủ ha~'],
@@ -83,6 +84,16 @@ function boGanMui(x, y) {
 function boDoToRuRu(giay) {
   return +Math.min(0.5, 0.18 + Math.max(0, giay) * 0.05).toFixed(3);
 }
+// Lắc điện thoại: độ "giật" giữa hai lần đo gia tốc (m/s², có cả trọng lực) = tổng chênh lệch ba trục
+function boDoGiat(a, b) {
+  if (!a || !b) return 0;
+  return Math.abs((a.x || 0) - (b.x || 0)) + Math.abs((a.y || 0) - (b.y || 0)) + Math.abs((a.z || 0) - (b.z || 0));
+}
+// Giữ mốc các cú giật mạnh (từ 22 trở lên) trong 1 giây gần nhất; đủ 4 cú là đang lắc thật (đi bộ, bỏ túi không tới mức này)
+function boLac(moc, bayGio, doGiat) {
+  const m = (doGiat >= 22 ? moc.concat(bayGio) : moc).filter(t => bayGio - t <= 1000);
+  return { moc: m, lac: m.length >= 4 };
+}
 // Hướng vuốt trên lưng (dx, dy: px từ chỗ bắt đầu vuốt tới giờ; y hướng xuống). Lông mèo mọc xuôi xuống,
 // nên vuốt hẳn lên trên (dọc nhiều hơn ngang) là 'nguoc'; còn lại là 'xuoi'.
 function boHuongVuot(dx, dy) {
@@ -98,7 +109,7 @@ function boLucMo(lanTruoc, bayGio, gio) {
   return null;
 }
 
-if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boChamChan, boThongSoMeo, boGanMui, boDoToRuRu, boLucMo, BO_CAU_CHOI, BO_DOC_TO };
+if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boChamChan, boThongSoMeo, boGanMui, boDoToRuRu, boDoGiat, boLac, boLucMo, BO_CAU_CHOI, BO_DOC_TO };
 
 // ---- Phần giao diện ----
 (function () {
@@ -429,6 +440,41 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
     nhinEv = ev;
     if (!nhinCho) { nhinCho = true; requestAnimationFrame(nhinTheo); }
   }, { passive: true });
+
+  // ---- Lắc điện thoại → Bơ chóng mặt. Android: chạy luôn (tắt được trong Cài đặt). iPhone: phải bấm bật trong Cài đặt để máy hỏi cho phép ----
+  const lacNhan = document.getElementById('lacNhan'), lacBat = document.getElementById('lacBat');
+  const canHoi = window.DeviceMotionEvent && typeof DeviceMotionEvent.requestPermission === 'function';
+  let lacMoc = [], lacTruoc = null, lacCuoi = 0, dangNgheLac = false;
+  function khiLac(ev) {
+    const a = ev.accelerationIncludingGravity; if (!a) return;
+    const kq = boLac(lacMoc, Date.now(), boDoGiat(lacTruoc, a));
+    lacTruoc = { x: a.x, y: a.y, z: a.z }; lacMoc = kq.moc;
+    if (!kq.lac || Date.now() - lacCuoi < 5000 || document.hidden) return;
+    lacMoc = []; lacCuoi = Date.now();
+    if (face.dataset.e === 'ngu' || dangDoi()) return;
+    conChoi(); svg.classList.remove('lan'); giu('chong-mat', 2600); noi('chong_mat', true);
+  }
+  function ngheLac(bat) {
+    if (bat === dangNgheLac) return;
+    dangNgheLac = bat; lacTruoc = null; lacMoc = [];
+    bat ? window.addEventListener('devicemotion', khiLac) : window.removeEventListener('devicemotion', khiLac);
+  }
+  if (window.DeviceMotionEvent && lacNhan && lacBat && ('ontouchstart' in window || navigator.maxTouchPoints > 0)) {
+    let luu = null; try { luu = localStorage.getItem('bo_lac'); } catch (e) {}
+    lacNhan.hidden = false;
+    lacBat.checked = canHoi ? luu === '1' : luu !== '0';  // iPhone: quyền cấp theo lần mở trang, nên đã bật thì thử nghe luôn
+    if (lacBat.checked) ngheLac(true);
+    lacBat.addEventListener('change', () => {
+      const bat = lacBat.checked;
+      try { localStorage.setItem('bo_lac', bat ? '1' : '0'); } catch (e) {}
+      if (!bat) { ngheLac(false); return; }
+      if (!canHoi) { ngheLac(true); return; }
+      DeviceMotionEvent.requestPermission().then(kq => {
+        if (kq === 'granted') ngheLac(true);
+        else { lacBat.checked = false; try { localStorage.setItem('bo_lac', '0'); } catch (e) {} }
+      }).catch(() => { lacBat.checked = false; });
+    });
+  }
 
   // ---- Mở web / quay lại tab: lâu rồi mới gặp thì mừng rỡ, sáng sớm thì vươn vai (không gọi API) ----
   const docMoc = () => { try { return +localStorage.getItem('bo_lan_gap') || 0; } catch (e) { return 0; } };
