@@ -5,6 +5,10 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-11 – Giai đoạn 79 (đang làm): giọng cho trò ke ke
+- Bật "Giọng nói": lần "ke ke ke" đầu tiên trong ngày Bơ đọc to; các lần sau chỉ hiện chữ (đã thử trên trình duyệt: lần 2 không đọc). 437 test qua hết.
+**Tân cần thử:** bật Giọng nói, để chấm laser đứng yên ngay trên đầu Bơ.
+
 ## 2026-10-11 – Giai đoạn 78 xong: Bơ "ke ke ke"
 - **Ke ke ke**: bật tia laser, để chấm đỏ đứng yên trên cao phía trên đầu Bơ khoảng 1 giây → Bơ ngửa đầu nhìn lên, tai dỏng, mắt mở to, miệng hé run run, đuôi giật "Ke ke ke... cao quá, với không tới!" (mèo thật hay kêu vậy khi thấy chim ngoài cửa sổ). Kéo chấm đi thì thôi. Nghỉ 6 giây giữa hai lần. Ảnh `docs/anh/meo-ke-ke.png` (điện thoại, máy tính, mèo đen màn hình thấp, tam thể nền tối). `scripts/thu_cham.py` thử thêm — đạt hết. 437 test qua hết.
 - Rà soát, sửa: đang "ke ke" mà bấm cho ăn thì trước đây miệng Bơ vẫn run run lẫn với miệng đang ăn → giờ Bơ thôi ke ke, ăn luôn (đã thử trên trình duyệt). Chấm phải đứng yên mới tính (còn rê là đếm lại). `scripts/thu_cham.py` đạt hết, 437 test qua hết.

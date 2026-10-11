@@ -126,7 +126,8 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
       kkHen = null;
       if (!ranhRinhLaser() || Date.now() - kkCuoi < 6000 || svg.classList.contains('rinh')) return;
       kkCuoi = Date.now(); conChoi();
-      svg.classList.add('ke-ke'); noi('ke_ke', true); keu('ngan');
+      svg.classList.add('ke-ke'); keu('ngan');
+      noi('ke_ke', true, dem('ke_ke').ke_ke === 1);  // lần ke ke đầu tiên trong ngày: đọc to (khi bật Giọng nói)
       kkTat = setTimeout(() => { kkTat = null; svg.classList.remove('ke-ke'); }, 1800);
     }, 1200);
   }

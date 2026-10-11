@@ -398,6 +398,7 @@ def test_laser_tren_cao_ke_ke():
     # phải đứng yên mới tính (chấm còn chạy thì đếm lại); tắt laser thì thôi; nghỉ 6 giây giữa hai lần
     assert "clearTimeout(kkHen);        // chấm còn di chuyển" in js
     assert "thoiRinhLaser(); thoiKeKe();" in js and "Date.now() - kkCuoi < 6000" in js
+    assert "noi('ke_ke', true, dem('ke_ke').ke_ke === 1);" in js  # lần ke ke đầu tiên trong ngày đọc to
     # đang ke ke mà cho ăn → thôi ke ke (không vừa ăn vừa run miệng)
     assert "doChoi.thaLen = () => { thaLen(); thoiRinhLaser(); thoiKeKe(); thoiTheoLen(); };" in js
 
