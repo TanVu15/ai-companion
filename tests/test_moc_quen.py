@@ -41,22 +41,46 @@ def test_moc_quen(memory, monkeypatch):
     client = FakeClient([json.dumps({"noi": "Tròn 100 ngày rồi nè!", "cam_xuc": "vui"})])
     brain = Brain(memory, client=client)
     morning = datetime.combine(date.today(), datetime.min.time()).replace(hour=9)
-    assert brain._moc_quen(morning) == 100
-    assert brain._moc_quen(morning.replace(hour=6)) == 0
+    assert brain._moc_quen(morning) == "100 ngày"
+    assert brain._moc_quen(morning.replace(hour=6)) == ""
     monkeypatch.setattr("app.brain.datetime", type("D", (datetime,), {"now": classmethod(lambda c, tz=None: morning)}))
     r = brain.greet()
     assert r.noi == "Tròn 100 ngày rồi nè!"
     assert "tròn 100 ngày" in client.calls[0]["messages"][-1]["content"]
-    assert brain._moc_quen(morning) == 0  # đã nhắc rồi
+    assert brain._moc_quen(morning) == ""  # đã nhắc rồi
 
 
 def test_khong_phai_moc(memory):
     msg_on(memory, date.today() - timedelta(days=40))
     brain = Brain(memory, client=FakeClient([]))
-    assert brain._moc_quen(datetime.now().replace(hour=12)) == 0
+    assert brain._moc_quen(datetime.now().replace(hour=12)) == ""
+
+
+def test_moc_nam_dung_ngay(memory):
+    msg_on(memory, date(2025, 10, 11))
+    brain = Brain(memory, client=FakeClient([]))
+    assert brain._moc_quen(datetime(2026, 10, 10, 12)) == ""  # chưa tròn năm (ngày thứ 365)
+    assert brain._moc_quen(datetime(2026, 10, 11, 12)) == "1 năm"
+    assert brain._moc_quen(datetime(2028, 10, 11, 12)) == "3 năm"  # qua năm nhuận vẫn đúng ngày
     memory.conn.execute("DELETE FROM messages")
-    msg_on(memory, date.today() - timedelta(days=729))  # tròn 2 năm
-    assert brain._moc_quen(datetime.now().replace(hour=12)) == 730
+    msg_on(memory, date(2024, 2, 29))
+    assert brain._moc_quen(datetime(2025, 2, 28, 12)) == "1 năm"
+
+
+def test_le_trung_moc_gop_mot_cau(memory, monkeypatch):
+    from app import config
+
+    monkeypatch.setattr(config, "CHUC_LE", True)
+    msg_on(memory, date(2026, 7, 13))  # 20/10/2026 là ngày thứ 100
+    noon = datetime(2026, 10, 20, 12)
+    monkeypatch.setattr("app.brain.datetime", type("D", (datetime,), {"now": classmethod(lambda c, tz=None: noon)}))
+    client = FakeClient([json.dumps({"noi": "Chúc mừng 20/10 và 100 ngày!", "cam_xuc": "vui"})])
+    brain = Brain(memory, client=client)
+    monkeypatch.setattr(brain, "_holiday_today", lambda now: ["Ngày Phụ nữ Việt Nam 20/10"])
+    brain.greet(only_occasion=True)
+    trig = client.calls[0]["messages"][-1]["content"]
+    assert "20/10" in trig and "tròn 100 ngày" in trig and trig.endswith(")")
+    assert brain._moc_quen(noon) == ""
 
 
 def test_tim_ca_nhat_ky(tmp_path):
@@ -68,3 +92,4 @@ def test_tim_ca_nhat_ky(tmp_path):
     res = c.get("/api/tim?q=da bong").json()
     assert res[0]["role"] == "nhat_ky" and res[0]["content"] == "Đá bóng thắng 3-1"
     assert any(r["role"] == "user" for r in res)
+    assert len(c.get("/api/tim?q=da bong&limit=1").json()) == 1

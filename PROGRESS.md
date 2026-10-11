@@ -636,3 +636,11 @@ Một lượt review độc lập phần mới (tìm, ngày đặc biệt, lời
 - **"Tìm"** giờ tìm cả trong nhật ký (dòng nhật ký hiện đầu, ghi "Nhật ký · Hôm qua, 09/10").
 - 231 test qua hết.
 
+## 2026-10-11 – Giai đoạn 36 xong: rà soát lần 16
+- Sửa lỗi: kỷ niệm tròn năm bị nhắc sớm 1 ngày (năm nhuận sớm 2 ngày) → giờ đúng ngày tháng quen nhau, Bơ nói "tròn 1 năm".
+- Ngày lễ / tối Chủ nhật trùng mốc quen nhau → gộp vào MỘT câu thay vì Bơ tự nhắn 2–3 lần liền (đỡ tốn tiền).
+- "Tìm" không trả quá số dòng yêu cầu.
+- 233 test qua hết.
+
+**Tân cần thử (giai đoạn 36):** bấm "?" xem "Chuỗi N ngày liền trò chuyện"; "Tìm" gõ một chữ có trong nhật ký.
+

@@ -188,7 +188,7 @@
 - [x] Chuỗi ngày liền trò chuyện trong nút "?"
 - [x] Tròn mốc quen nhau (7, 30, 100 ngày, mỗi năm...) Bơ chủ động nhắc (1 câu API mỗi mốc)
 - [x] "Tìm" tìm cả trong nhật ký
-- [ ] Rà soát code lần 16, sửa lỗi tìm được
+- [x] Rà soát code lần 16, sửa lỗi tìm được
 
 ## Sau này
 - Giọng nói tự nhiên hơn (dịch vụ đọc/nghe trả phí) – cần Tân quyết định

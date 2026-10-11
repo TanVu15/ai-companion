@@ -111,10 +111,11 @@ WEEK_TRIGGER = (
     "Ngắn gọn, đừng liệt kê khô khan. Những gì người dùng đã kể trong tuần:\n{items})"
 )
 MOC_TRIGGER = (
-    "(Tin nhắn hệ thống, không phải người dùng nói: hôm nay tròn {n} ngày bạn và người dùng quen nhau "
+    "(Tin nhắn hệ thống, không phải người dùng nói: hôm nay tròn {n} bạn và người dùng quen nhau "
     "(từ {tu}). Hãy chủ động nhắc dịp này thật dễ thương, ngắn gọn, có thể nhắc một kỷ niệm vui nếu biết.)"
 )
-MOC_QUEN = {7, 30, 50, 100, 200, 300, 500, 1000}  # cộng thêm mỗi tròn năm (365, 730...)
+MOC_QUEN = {7, 30, 50, 100, 200, 300, 500, 1000}  # cộng thêm mỗi tròn năm (đúng ngày tháng quen nhau)
+MOC_THEM = " Ngoài ra hôm nay còn tròn {n} hai bạn quen nhau, nhắc luôn một câu thật dễ thương.)"
 MISS_TRIGGER = (
     "(Tin nhắn hệ thống, không phải người dùng nói: người dùng vừa quay lại sau {days} ngày không nói chuyện. "
     "Hãy chủ động chào kiểu bạn thân lâu không gặp, ngắn gọn, có thể nhắc nhẹ chuyện cũ nếu biết.)"
@@ -519,8 +520,14 @@ class Brain:
             trigger = EVE_TRIGGER.format(items="; ".join(d["viec"] for d in eve))
         elif holiday:
             trigger, wish_holiday = HOLIDAY_TRIGGER.format(items=", ".join(holiday)), True
+            if moc:  # cùng ngày thì gộp, khỏi gửi thêm một câu riêng
+                trigger, wish_moc = trigger[:-1] + MOC_THEM.format(n=moc), True
         elif moc:
             trigger, wish_moc = MOC_TRIGGER.format(n=moc, tu=self.memory.stats(now.date())["quen_tu"]), True
+            if week:  # tối Chủ nhật trùng mốc: điểm lại tuần luôn trong câu này
+                trigger = trigger[:-1] + " Sau đó điểm lại tuần qua thật ngắn. Những gì người dùng đã kể trong tuần:\n" \
+                    + self._week_items(now) + ")"
+                recap = True
         elif week:
             trigger, recap = WEEK_TRIGGER.format(items=self._week_items(now)), True
         elif only_occasion:
@@ -537,7 +544,7 @@ class Brain:
         history.append({"role": "user", "content": trigger})  # chỉ gửi đi, không lưu
         reply = self._ask(clean_history(history), followups, from_user=False)
         if wish_moc:
-            self.memory.set_kv("moc_quen", str(moc))  # mốc này đã nhắc rồi
+            self.memory.set_kv("moc_quen", f"{moc}|{self.memory.stats(now.date())['quen_tu']}")  # mốc này đã nhắc rồi
         if recap:
             self.memory.set_kv("tong_ket_tuan", week)  # tuần này đã điểm lại rồi
         if wish_holiday:
@@ -573,14 +580,29 @@ class Brain:
         except Exception:
             return []
 
-    def _moc_quen(self, now: datetime) -> int:
-        """Hôm nay tròn mốc quen nhau (7, 30, 100 ngày, mỗi năm...) mà chưa nhắc → số ngày; không thì 0."""
+    def _moc_quen(self, now: datetime) -> str:
+        """Hôm nay tròn mốc quen nhau mà chưa nhắc → chữ mô tả ("100 ngày", "1 năm"); không thì "".
+        Mốc ngày: ngày quen đầu tiên là ngày 1. Mốc năm: đúng ngày tháng quen nhau (29/02 thì 28/02 năm thường)."""
         if now.hour < 7:
-            return 0
-        n = self.memory.stats(now.date())["so_ngay_quen"]
-        if n <= 1 or (n not in MOC_QUEN and n % 365) or self.memory.get_kv("moc_quen") == str(n):
-            return 0
-        return n
+            return ""
+        st = self.memory.stats(now.date())
+        if not st["quen_tu"]:
+            return ""
+        first = datetime.strptime(st["quen_tu"], "%d/%m/%Y").date()
+        today, moc = now.date(), ""
+        if st["so_ngay_quen"] in MOC_QUEN:
+            moc = f"{st['so_ngay_quen']} ngày"
+        years = today.year - first.year
+        if years > 0:
+            try:
+                ky_niem = first.replace(year=today.year)
+            except ValueError:  # quen ngày 29/02
+                ky_niem = first.replace(year=today.year, day=28)
+            if ky_niem == today:
+                moc = f"{years} năm"
+        if not moc or self.memory.get_kv("moc_quen") == f"{moc}|{st['quen_tu']}":
+            return ""
+        return moc
 
     def _recap_week(self, now: datetime | None = None) -> str:
         """Tối Chủ nhật, tuần này chưa điểm lại, và trong tuần có nói chuyện (≥5 tin) → trả mã tuần ("2026-W41")."""

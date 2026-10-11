@@ -706,8 +706,8 @@ def search(q: str = "", limit: int = 30):
     brain = get_brain()
     with brain._lock:
         limit = min(max(limit, 1), 100)
-        msgs = brain.memory.search_messages(q[:100], limit)
-        diary = brain.memory.search_diary(q[:100], 10)  # nhật ký: vài dòng đầu danh sách
+        diary = brain.memory.search_diary(q[:100], min(10, limit))  # nhật ký: vài dòng đầu danh sách
+        msgs = brain.memory.search_messages(q[:100], limit - len(diary)) if limit > len(diary) else []
     return diary + msgs
 
 
