@@ -191,6 +191,15 @@ header.dang-laser { touch-action: none; cursor: crosshair; position: relative; }
 .meo.giat-duoi .nhin { transform: translate(4px, 1px); }
 .meo.giat-duoi .ear-r { transform: rotate(14deg); }
 .meo.giat-duoi .tail { transform: rotate(16deg); }
+/* Ngửi tay: rướn đầu tới, mắt nhìn xuống tay, mũi phập phồng; rồi cọ má: nghiêng đầu, nhắm mắt, má hồng */
+.meo .mui { transform-origin: 100px 88px; }
+.meo.ngui .head { transform: translateY(5px) scale(1.04); }
+.meo.ngui .nhin { transform: translate(0, 2.5px); }
+.meo.ngui .ear-l { transform: rotate(6deg); } .meo.ngui .ear-r { transform: rotate(-6deg); }
+.meo.co-ma .head { transform: translateY(3px) rotate(-9deg); }
+.meo.co-ma .ma { opacity: .8; }
+.meo.co-ma .ear-l { transform: rotate(-12deg); } .meo.co-ma .ear-r { transform: rotate(10deg); }
+.meo.co-ma :is(.mat-mo, .mat-cuoi) { display: none !important; } .meo.co-ma .mat-nham { display: inline !important; }
 /* Gãi cằm: ngửa cổ */
 .meo.gai-cam .head { transform: translateY(-6px) rotate(-6deg); }
 /* Chạm tai: tai giật */
@@ -236,6 +245,8 @@ header.dang-laser { touch-action: none; cursor: crosshair; position: relative; }
   .meo.mung .tail { animation: meo-ngoe .4s ease-in-out infinite; }
   .meo.doi { transition: transform .3s; }
   .meo.giat { animation: meo-giat .45s ease-out; }
+  .meo.ngui .mui { animation: meo-hit .3s ease-in-out infinite alternate; }
+  .meo.co-ma .head { animation: meo-co-ma .5s ease-in-out infinite alternate; }
   .meo.giat-duoi .tail { animation: meo-vut-duoi .5s ease-out; }
   .meo.nguoc-long .long-dung { animation: meo-dung .35s ease-out; }
   .meo.vo { animation: meo-vo .6s ease-out; }
@@ -254,6 +265,8 @@ header.dang-laser { touch-action: none; cursor: crosshair; position: relative; }
 @keyframes meo-ca { 0% { transform: translateY(-80px); opacity: 0; } 15% { transform: none; opacity: 1; } 70% { transform: scale(.7); opacity: 1; } 100% { transform: scale(0); opacity: 0; } }
 @keyframes meo-lan { 0%, 100% { transform: rotate(-9deg); } 50% { transform: rotate(9deg); } }
 @keyframes meo-vut-duoi { 0% { transform: none; } 35% { transform: rotate(28deg); } 70% { transform: rotate(8deg); } }
+@keyframes meo-hit { to { transform: scale(1.18, .85); } }
+@keyframes meo-co-ma { from { transform: translateY(3px) rotate(-9deg); } to { transform: translateY(3px) rotate(-3deg); } }
 @keyframes meo-dung { from { opacity: 0; } }
 @keyframes meo-bong { from { transform: scale(.7); opacity: 0; } }
 

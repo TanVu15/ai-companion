@@ -34,6 +34,7 @@ const BO_CAU_CHOI = {
   chan: ['Chân Bơ đó nha~', 'Hí, nhột chân!', 'Hửm? Muốn nắm tay Bơ hả?'],
   dap_tay: ['Đập tay nè!', 'Bốp! Tuyệt vời!', 'Hi-five với Bơ nè!', 'Một, hai, bốp!'],
   duoi: ['Đuôi Bơ mà!', 'Ơ, ai đụng đuôi Bơ đó?', 'Đuôi này không phải đồ chơi nha~', 'Hửm? Đuôi Bơ có gì hả?'],
+  ngui: ['Hít hít... thơm tay bạn ghê~', 'Cho Bơ ngửi xíu... ừm, quen quen!', 'Hít hít~ Bơ cọ cọ nè'],
   goi: ['Dạ? Bơ nghe nè!', 'Meo? Bạn gọi Bơ hả?', 'Dạaa~ Bơ đây!'],
   dep: ['Bộ lông mới nè, Bơ đẹp hông?', 'Hí, Bơ điệu chưa~', 'Thấy Bơ xinh lên hông?'],
   khuya: ['Khuya rồi nè, bạn ngủ sớm nha~', 'Rừ rừ... Bơ buồn ngủ quá, bạn cũng ngủ đi nha', 'Vuốt xíu nữa rồi mình đi ngủ ha~'],
@@ -74,6 +75,10 @@ function boThongSoMeo(kieu) {
   };
   return ds[kieu] || ds.ngan;
 }
+// Ngón tay/chuột ở ngay trước mũi Bơ (khung vẽ 200×192, mũi ở 100,88)? Giữ yên ở đây ~1 giây thì Bơ ngửi
+function boGanMui(x, y) {
+  return ((x - 100) / 24) ** 2 + ((y - 90) / 16) ** 2 <= 1;
+}
 // Hướng vuốt trên lưng (dx, dy: px từ chỗ bắt đầu vuốt tới giờ; y hướng xuống). Lông mèo mọc xuôi xuống,
 // nên vuốt hẳn lên trên (dọc nhiều hơn ngang) là 'nguoc'; còn lại là 'xuoi'.
 function boHuongVuot(dx, dy) {
@@ -89,7 +94,7 @@ function boLucMo(lanTruoc, bayGio, gio) {
   return null;
 }
 
-if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boChamChan, boThongSoMeo, boLucMo, BO_CAU_CHOI, BO_DOC_TO };
+if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boChamChan, boThongSoMeo, boGanMui, boLucMo, BO_CAU_CHOI, BO_DOC_TO };
 
 // ---- Phần giao diện ----
 (function () {
@@ -331,6 +336,29 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
     }
   });
   face.addEventListener('pointercancel', () => { bam = null; clearTimeout(henLan); });
+  // ---- Ngửi tay: giữ yên ngón tay/chuột trước mũi ~0,9 giây → Bơ rướn đầu ngửi, rồi cọ má vào tay ----
+  let henNgui = null, moc = null, nguiCuoi = 0;
+  function theoMui(ev) {
+    const p = toaDo(ev);
+    if (!p || !boGanMui(p.x, p.y)) { clearTimeout(henNgui); moc = null; return; }
+    if (moc && Math.hypot(p.x - moc.x, p.y - moc.y) < 8) return;  // vẫn đang giữ yên: để hẹn giờ chạy tiếp
+    moc = p; clearTimeout(henNgui);
+    henNgui = setTimeout(nguiTay, 900);
+  }
+  function nguiTay() {
+    moc = null;
+    if (Date.now() - nguiCuoi < 8000 || face.dataset.e === 'ngu' || dangDoi() || doChoi.dangChoi() ||
+        (typeof speaking !== 'undefined' && speaking) || svg.classList.contains('lan')) return;
+    nguiCuoi = Date.now(); conChoi();
+    giu('ngui', 1300);
+    setTimeout(() => { if (!dangDoi()) { giu('co-ma', 1600); grgr(true); setTimeout(() => grgr(false), 1500); noi('ngui', true); } }, 1200);
+  }
+  face.addEventListener('pointerdown', theoMui);
+  face.addEventListener('pointermove', ev => { if (bam || ev.pointerType === 'mouse') theoMui(ev); });
+  face.addEventListener('pointerup', ev => { if (ev.pointerType !== 'mouse') { clearTimeout(henNgui); moc = null; } });
+  face.addEventListener('pointerleave', () => { clearTimeout(henNgui); moc = null; });
+  face.addEventListener('pointercancel', () => { clearTimeout(henNgui); moc = null; });
+
   // Bàn phím: Tab tới Bơ rồi bấm Enter = xoa đầu, phím cách = gãi cằm (đang ngủ thì Bơ tỉnh)
   face.tabIndex = 0;
   face.addEventListener('keydown', ev => {

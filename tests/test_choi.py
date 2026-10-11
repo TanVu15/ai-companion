@@ -166,3 +166,9 @@ def test_thong_so_tieng_meo():
     ham = choi.split("function keu(")[1].split("\n  }\n")[0]
     for dk in ("voiceOn", "speaking", "handsFree", "boGioYenLang"):  # chỉ kêu khi bật giọng, không lúc đang đọc/nghe/giờ yên lặng
         assert dk in ham, dk
+
+
+def test_gan_mui():
+    v = node("""console.log(JSON.stringify([C.boGanMui(100, 88), C.boGanMui(115, 95), C.boGanMui(100, 60), C.boGanMui(140, 90),
+      C.boGanMui(100, 140)]))""")
+    assert v == [True, True, False, False, False]  # ngay mũi / sát bên mũi / trán / má xa / bụng

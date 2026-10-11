@@ -5,6 +5,9 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-11 – Giai đoạn 59 (đang làm): ngửi tay & cọ má
+- **Ngửi tay**: để yên chuột (hoặc giữ ngón tay) ngay trước mũi Bơ khoảng 1 giây → Bơ rướn đầu, nhìn xuống tay, mũi phập phồng; rồi nhắm mắt cọ má, rừ rừ "Hít hít... thơm tay bạn ghê~". Mỗi 8 giây tối đa một lần. Ảnh `docs/anh/meo-ngui-tay.png` (ngửi · cọ má).
+
 ## 2026-10-11 – Giai đoạn 58 xong: đuôi & tiếng meo
 - **Chạm đuôi**: đuôi vụt sang một bên, Bơ quay đầu liếc nhìn "Đuôi Bơ mà!". Ảnh `docs/anh/meo-cham-duoi.png`.
 - **Tiếng meo**: đang bật "Giọng nói" thì chạm tai/đuôi Bơ kêu "mrr?" ngắn, đập tay thì "meo~" cao dần. Tiếng tạo ngay trong trình duyệt (không file, không mạng). Không kêu trong giờ yên lặng, lúc Bơ đang đọc hay đang bật rảnh tay.
