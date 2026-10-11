@@ -146,6 +146,8 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
     if (viTriTruoc) quangVuot += Math.hypot(pos.x - viTriTruoc.x, pos.y - viTriTruoc.y);
     viTriTruoc = pos;
     if (quangVuot < 40) return;
+    // rê chuột vuốt ve cũng là đang chơi: Bơ đang thức thì đừng ngủ gật giữa chừng (đang ngủ thì rừ rừ trong mơ)
+    if (face.dataset.e !== 'ngu' && typeof scheduleSleep === 'function') scheduleSleep();
     const loai = vung === 'cam' ? 'gai_cam' : 'vuot';
     if (!vuotDangChay) { vuotDangChay = loai; dem(loai); noi(loai); }
     giu(loai === 'gai_cam' ? 'gai-cam' : 'vuot', 700);
@@ -196,6 +198,16 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
     }
   });
   face.addEventListener('pointercancel', () => { bam = null; });
+  // Bàn phím: Tab tới Bơ rồi bấm Enter = xoa đầu, phím cách = gãi cằm (đang ngủ thì Bơ tỉnh)
+  face.tabIndex = 0;
+  face.addEventListener('keydown', ev => {
+    if (ev.key !== 'Enter' && ev.key !== ' ') return;
+    ev.preventDefault();
+    if (ev.repeat) return;
+    if (typeof boNgungDoc === 'function' && boNgungDoc()) return;  // đang đọc to: phím = bảo Bơ im, như chạm
+    const r = face.getBoundingClientRect(), giua = { clientX: r.left + r.width / 2, clientY: r.top + r.height * 0.3 };
+    cham(giua, ev.key === 'Enter' ? 'dau' : 'cam', face.dataset.e === 'ngu');  // hop_thoai.js tự đánh thức khi có phím bấm
+  });
   face.addEventListener('pointerleave', () => { if (!bam) { viTriTruoc = null; } });
 
   // ---- Cho ăn: không có thanh "đói", cho bao nhiêu cũng được; ăn nhiều quá thì Bơ bảo no ----

@@ -108,9 +108,16 @@ function phat(blob, id) {
     a.play().then(() => {
       if (id !== speakSeq) { a._dung(); return; }
       face.classList.add('talking'); theoMieng(a);
-      // phòng khi trình duyệt quên báo "phát xong"
+      // phòng khi trình duyệt quên báo "phát xong": quá giờ mà âm thanh không chạy tiếp nữa thì coi như xong
+      // (không cắt ngang khi file chưa biết độ dài và đọc lâu hơn 20 giây)
       const giay = isFinite(a.duration) ? a.duration / a.playbackRate : 20;
-      setTimeout(() => ket(), (giay + 3) * 1000);
+      let viTri = -1;
+      const canh = () => {
+        if (xong) return;
+        if (a.paused || a.ended || a.currentTime === viTri) { ket(); return; }
+        viTri = a.currentTime; setTimeout(canh, 2000);
+      };
+      setTimeout(canh, (giay + 3) * 1000);
     }).catch(ket);
   });
 }
@@ -223,15 +230,18 @@ if (Rec && window.isSecureContext) {
   };
   // Nút to "giữ để nói" dưới mèo (kiểu bộ đàm): giữ là nghe, thả ra là gửi
   let giuLuc = 0;
+  function batGiu(loiNhac) {
+    boNgungDoc();
+    if (listening) rec.abort();
+    giuLuc = Date.now(); input.value = ''; micSession = true;
+    giuBtn.classList.add('on'); statusEl.textContent = loiNhac;
+    startRec();
+  }
   giuBtn.addEventListener('pointerdown', ev => {
     if (handsFree || send.disabled) return;
     ev.preventDefault();
     try { giuBtn.setPointerCapture(ev.pointerId); } catch (e) {}
-    boNgungDoc();
-    if (listening) rec.abort();
-    giuLuc = Date.now(); input.value = ''; micSession = true;
-    giuBtn.classList.add('on'); statusEl.textContent = 'Bơ đang nghe... thả tay ra là gửi';
-    startRec();
+    batGiu('Bơ đang nghe... thả tay ra là gửi');
   });
   const thaGiu = () => {
     if (!giuLuc) return;
@@ -247,6 +257,15 @@ if (Rec && window.isSecureContext) {
   giuBtn.addEventListener('pointerup', thaGiu);
   giuBtn.addEventListener('pointercancel', thaGiu);
   giuBtn.addEventListener('contextmenu', ev => ev.preventDefault());  // giữ lâu trên điện thoại không hiện menu
+  // Bàn phím: giữ phím cách (hoặc Enter) khi đang chọn nút = giữ để nói
+  giuBtn.addEventListener('keydown', ev => {
+    if ((ev.key !== ' ' && ev.key !== 'Enter') || ev.repeat) { if (ev.repeat) ev.preventDefault(); return; }
+    ev.preventDefault();
+    if (giuLuc || handsFree || send.disabled) return;
+    batGiu('Bơ đang nghe... thả phím ra là gửi');
+  });
+  giuBtn.addEventListener('keyup', ev => { if (ev.key === ' ' || ev.key === 'Enter') { ev.preventDefault(); thaGiu(); } });
+  giuBtn.addEventListener('blur', thaGiu);
   handsBtn.onclick = () => {
     handsFree = !handsFree; paused = false; awaitUntil = 0; micSession = false; showHands();
     micBtn.disabled = handsFree;
