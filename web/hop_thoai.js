@@ -163,7 +163,8 @@ scheduleSleep();
 
 // Chạm vào mặt Bơ khi đang đọc to → Bơ im ngay
 function stopSpeaking() { return boNgungDoc(); }
-face.addEventListener('click', stopSpeaking);
+// chạm nhanh vào Bơ = bảo Bơ im; còn vuốt ve (kéo) hay nhấn giữ thì Bơ vẫn đọc tiếp, mắt lim dim sướng
+face.addEventListener('click', () => { if (window.boChoi && boChoi.vuaKeo()) return; stopSpeaking(); });
 
 // ---- Tìm trong chuyện cũ ----
 const searchDlg = document.getElementById('search'), searchInput = document.getElementById('searchInput');

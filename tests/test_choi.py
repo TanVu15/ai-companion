@@ -197,3 +197,12 @@ def test_nhan_biet_lac_dien_thoai():
     assert v[3] is False  # giật lẻ tẻ cách xa nhau (đi bộ, đặt máy xuống) không tính
     html = (config.ROOT / "web" / "index.html").read_text(encoding="utf-8")
     assert 'id="lacBat"' in html
+
+
+def test_vuot_luc_dang_doc_khong_bao_im():
+    # chạm nhanh = bảo Bơ im; vuốt (kéo) hay nhấn giữ thì không — choi.js báo qua boChoi.vuaKeo()
+    choi = (config.ROOT / "web" / "choi.js").read_text(encoding="utf-8")
+    hop = (config.ROOT / "web" / "hop_thoai.js").read_text(encoding="utf-8")
+    assert "vuaKeo = !!b && (b.di >= 10 || Date.now() - b.t >= 500)" in choi
+    assert "boChoi.vuaKeo()) return; stopSpeaking()" in hop
+    assert "'chong_mat', 'ngui'" in choi  # câu chóng mặt, ngửi tay được đọc to khi bật Giọng nói

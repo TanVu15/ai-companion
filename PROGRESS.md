@@ -5,6 +5,10 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-11 – Giai đoạn 62 (đang làm): giọng nói chơi đùa
+- Đang bật "Giọng nói": câu **chóng mặt**, **ngửi tay** và **lần đập tay đầu tiên trong ngày** được đọc to (các lần đập tay sau chỉ kêu "meo~"). Giờ yên lặng thì vẫn chỉ hiện chữ.
+- Sửa: Bơ đang đọc to mà Tân **vuốt** Bơ thì trước đây Bơ im bặt (vì nhả tay ra bị tính là một cú chạm). Giờ chỉ **chạm nhanh** mới bảo Bơ im; vuốt hay nhấn giữ thì Bơ vẫn đọc tiếp, mắt lim dim sướng.
+
 ## 2026-10-11 – Giai đoạn 61 xong: lắc điện thoại
 - **Lắc điện thoại** mạnh vài cái → Bơ chóng mặt: mắt xoáy @_@, người lắc lư, "Ối ối, chóng mặt quá~". Đi bộ hay đặt máy xuống không tính (phải 4 cú giật mạnh trong 1 giây). Ảnh `docs/anh/meo-chong-mat.png`.
 - Trong "Bơ làm được gì? · Cài đặt" (chỉ hiện trên điện thoại) có ô **"Lắc điện thoại để trêu Bơ"** (ảnh `docs/anh/cai-dat-lac.png`). Android: bật sẵn. iPhone: phải tick ô này, máy hỏi cho phép thì bấm "Cho phép".

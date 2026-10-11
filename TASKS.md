@@ -342,8 +342,8 @@
 - [x] Rà soát giai đoạn 61, sửa lỗi tìm được
 
 ## Giai đoạn 62 – Giọng nói chơi đùa (Claude tự thêm, trong hướng mèo/giọng)
-- [ ] Đang bật "Giọng nói": vài câu chơi mới được đọc to (chóng mặt, đập tay đầu tiên trong ngày, ngửi tay) – không đọc lặp liên tục, giờ yên lặng thì im
-- [ ] Bơ đang đọc to mà bị vuốt → vẫn đọc tiếp nhưng mắt lim dim sướng (hiện giờ chạm = bảo im; vuốt thì không nên bảo im) – kiểm tra và sửa nếu cần
+- [x] Đang bật "Giọng nói": vài câu chơi mới được đọc to (chóng mặt, đập tay đầu tiên trong ngày, ngửi tay) – không đọc lặp liên tục, giờ yên lặng thì im
+- [x] Bơ đang đọc to mà bị vuốt → vẫn đọc tiếp nhưng mắt lim dim sướng (hiện giờ chạm = bảo im; vuốt thì không nên bảo im) – kiểm tra và sửa nếu cần
 - [ ] Rà soát giai đoạn 62, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)

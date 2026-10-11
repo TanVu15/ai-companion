@@ -45,7 +45,7 @@ const BO_CAU_CHOI = {
   vuon: ['Ưm... chào buổi sáng~', 'Sáng rồi hả? Bơ vươn vai cái đã.', 'Ngáp... chào bạn buổi sáng nha!'],
 };
 // Những loại câu chơi được đọc to khi bật "Giọng nói" (câu vuốt/chọc lặp nhiều quá nên chỉ hiện chữ)
-const BO_DOC_TO = ['mung', 'vuon', 'an', 'no', 'doi', 'lanh', 'thuc', 'dep'];  // ('len' chỉ hiện chữ: vồ liên tục)
+const BO_DOC_TO = ['mung', 'vuon', 'an', 'no', 'doi', 'lanh', 'thuc', 'dep', 'chong_mat', 'ngui'];  // (đập tay: chỉ lần đầu trong ngày)  // ('len' chỉ hiện chữ: vồ liên tục)
 function boCauNgau(loai, rnd = Math.random) {
   const ds = BO_CAU_CHOI[loai] || [];
   return ds.length ? ds[Math.floor(rnd() * ds.length) % ds.length] : '';
@@ -133,7 +133,7 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
 
   // Bong bóng câu nói nhỏ, không lưu vào lịch sử
   let bongTimer = null, lanNoiCuoi = 0;
-  function noi(loai, batBuoc) {
+  function noi(loai, batBuoc, docThem) {
     const now = Date.now();
     if (!batBuoc && (now - lanNoiCuoi < 3500 || Math.random() < 0.45)) return;
     lanNoiCuoi = now;
@@ -141,7 +141,7 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
     bong.textContent = cau; bong.hidden = false;
     // Đang bật "Giọng nói": vài câu chơi được đọc to (không cắt ngang khi Bơ đang đọc câu trả lời; giờ yên lặng thì thôi)
     // (đợi một chút: cú chạm vừa rồi còn sự kiện "click" — chạm Bơ lúc đang đọc là bảo Bơ im — kẻo câu vừa đọc bị tắt ngay)
-    if (BO_DOC_TO.includes(loai)) setTimeout(() => {
+    if (BO_DOC_TO.includes(loai) || docThem) setTimeout(() => {
       if (typeof speakAuto === 'function' && typeof speaking !== 'undefined' && !speaking) speakAuto(cau);
     }, 80);
     bong.classList.remove('hien'); void bong.offsetWidth; bong.classList.add('hien');
@@ -310,7 +310,8 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
     } else if (vung === 'chan') {
       const kieu = boChamChan(lanChamChan, Date.now());
       if (kieu === 'dap_tay') {
-        lanChamChan = 0; svg.classList.remove('rut-chan'); giu('dap-tay', 1100); noi('dap_tay', true); dem('dap_tay'); keu('vui');
+        lanChamChan = 0; svg.classList.remove('rut-chan'); giu('dap-tay', 1100); const dauTien = dem('dap_tay').dap_tay === 1;  /* lần đập tay đầu tiên trong ngày: đọc to; các lần sau chỉ kêu meo */
+        noi('dap_tay', true, dauTien); if (!dauTien) keu('vui');
         setTimeout(() => {  // chữ "Bốp!" ngay trên bàn chân vừa giơ (khung vẽ 182,66)
           const m = svg.getScreenCTM(), r = khung.getBoundingClientRect(); if (!m) return;
           const q = new DOMPoint(182, 66).matrixTransform(m); bop(q.x - r.left, q.y - r.top);
@@ -349,8 +350,10 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
     const vung = boVungCham(p.x, p.y);
     if (vung === 'dau' || vung === 'lung' || vung === 'cam') vuot(ev, vung);
   });
+  let vuaKeo = false;  // lần bấm vừa rồi là kéo/vuốt hay giữ lâu (không phải chạm nhanh) → hop_thoai.js không bảo Bơ im
   face.addEventListener('pointerup', ev => {
     const b = bam; bam = null; clearTimeout(henLan);
+    vuaKeo = !!b && (b.di >= 10 || Date.now() - b.t >= 500);
     if (!b || doChoi.dieuKhien()) return;  // đang chơi laser/lông vũ: chạm là để điều khiển đồ chơi
     if (b.di < 10 && Date.now() - b.t < 500) {
       const p = toaDo(ev); if (p) cham(ev, boVungCham(p.x, p.y), b.ngu);
@@ -498,5 +501,5 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
 
   const conChoi = () => { if (typeof scheduleSleep === 'function') scheduleSleep(); };  // đang chơi: đừng nằm bẹp/ngủ gật
   // Cho do_choi.js (và các file khác) dùng chung
-  window.boChoi = { dem, lucMo, noi, keu, giu, dangDoi, conChoi, doChoi, face, khung, svg, nhin, header: khung.closest('header') || khung };
+  window.boChoi = { dem, lucMo, noi, keu, vuaKeo: () => vuaKeo, giu, dangDoi, conChoi, doChoi, face, khung, svg, nhin, header: khung.closest('header') || khung };
 })();
