@@ -5,9 +5,11 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
-## 2026-10-11 – Giai đoạn 70 (đang làm): Bơ sướng & săn giỏi
+## 2026-10-11 – Giai đoạn 70 xong: Bơ sướng & săn giỏi
 - **Nhồi bột**: vuốt lưng hay đầu Bơ liền một mạch khoảng 6 giây → Bơ sướng quá, hai chân trước dẫm luân phiên lên xuống (kiểu mèo con "nhồi bột"), mắt lim dim, má hồng, "Nhồi nhồi... Bơ nhồi bột nè~". Ảnh `docs/anh/meo-nhoi-bot.png`. `scripts/thu_cham.py` thử thêm — đạt hết.
 - Bật "Giọng nói": lần đầu trong ngày Bơ rình rồi vồ trúng lông vũ, Bơ đọc to "Phập! Bắt được rồi!"; các lần sau chỉ hiện chữ và kêu "meo" (cho khỏi lặp).
+- Rà soát, sửa: đang nhồi bột mà bế Bơ lên hoặc vuốt ngược lông thì trước đây chân Bơ vẫn dẫm lủng lẳng → giờ thôi nhồi ngay. Nhồi bột với 4 kiểu lông, nền sáng/tối: rõ (ảnh `docs/anh/nhoi-kieu-long.png`). 427 test qua hết, `scripts/thu_cham.py` đạt hết.
+**Tân cần thử:** vuốt lưng Bơ liền tay khoảng 6 giây; bật Giọng nói rồi cho Bơ rình vồ lông vũ.
 
 ## 2026-10-11 – Giai đoạn 69 xong: Bơ đồng cảm
 - **Ngáp lây**: gửi tin có "buồn ngủ", "ngáp", "đi ngủ", "ngủ ngon" hoặc 😴 → Bơ ngáp theo ngay (trước khi Bơ trả lời, không tốn API). "ngủ trưa dậy rồi" thì không. Máy bật giảm chuyển động thì thôi.

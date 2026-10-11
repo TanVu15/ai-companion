@@ -398,7 +398,7 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boChiTietDau, 
   }
   function nguocLong() {
     clearTimeout(vuotTat); vuotDangChay = false; quangVuot = 0; viTriTruoc = null; grgr(false);
-    svg.classList.remove('vuot', 'gai-cam');
+    svg.classList.remove('vuot', 'gai-cam', 'nhoi');
     giu('nguoc-long', 1100);
     if (Date.now() - lanNguoc > 4000) { lanNguoc = Date.now(); noi('nguoc', true); }
   }
@@ -470,7 +470,7 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boChiTietDau, 
   function nhac(k) {
     svg.style.setProperty('--nhac', k);
     if (!svg.classList.contains('be')) {
-      svg.classList.add('be'); svg.classList.remove('vuot', 'gai-cam', 'lan', 'bep');
+      svg.classList.add('be'); svg.classList.remove('vuot', 'gai-cam', 'lan', 'bep', 'nhoi');
       clearTimeout(vuotTat); vuotDangChay = false; grgr(false);
       const dauTien = dem('be').be === 1;  // lần bế đầu tiên trong ngày: đọc to; các lần sau chỉ kêu "mrr?"
       noi('be', true, dauTien); if (!dauTien) keu('ngan');

@@ -317,3 +317,10 @@ def test_vo_rinh_doc_to_lan_dau():
     assert "dem('rinh').rinh === 1" in do_choi
     assert "noi('vo_rinh', true, dauTien)" in do_choi
     assert "vo_rinh" not in node("console.log(JSON.stringify(C.BO_DOC_TO))")
+
+
+def test_be_va_nguoc_long_tat_nhoi_bot():
+    """Đang nhồi bột mà bế Bơ / vuốt ngược lông thì thôi nhồi (kẻo chân vẫn dẫm khi đang lủng lẳng)."""
+    choi = (config.ROOT / "web" / "choi.js").read_text(encoding="utf-8")
+    assert "svg.classList.add('be'); svg.classList.remove('vuot', 'gai-cam', 'lan', 'bep', 'nhoi');" in choi
+    assert "svg.classList.remove('vuot', 'gai-cam', 'nhoi');\n    giu('nguoc-long'" in choi
