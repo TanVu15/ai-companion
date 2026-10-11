@@ -416,7 +416,11 @@
 
 ## Giai đoạn 78 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
 - [x] Chấm laser đứng yên trên cao, phía trên đầu Bơ → Bơ ngửa nhìn, miệng run run "ke ke ke" như mèo thấy chim (đổi từ ý "lăn ngửa quào lông vũ": đang bật lông vũ thì không nhấn giữ cho Bơ lăn được)
-- [ ] Rà soát giai đoạn 78, sửa lỗi tìm được
+- [x] Rà soát giai đoạn 78, sửa lỗi tìm được
+
+## Giai đoạn 79 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
+- [ ] Bật "Giọng nói": lần "ke ke ke" đầu tiên trong ngày Bơ đọc to; các lần sau chỉ hiện chữ
+- [ ] Rà soát giai đoạn 79, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):

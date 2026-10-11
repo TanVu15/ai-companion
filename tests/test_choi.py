@@ -398,13 +398,15 @@ def test_laser_tren_cao_ke_ke():
     # phải đứng yên mới tính (chấm còn chạy thì đếm lại); tắt laser thì thôi; nghỉ 6 giây giữa hai lần
     assert "clearTimeout(kkHen);        // chấm còn di chuyển" in js
     assert "thoiRinhLaser(); thoiKeKe();" in js and "Date.now() - kkCuoi < 6000" in js
+    # đang ke ke mà cho ăn → thôi ke ke (không vừa ăn vừa run miệng)
+    assert "doChoi.thaLen = () => { thaLen(); thoiRinhLaser(); thoiKeKe(); thoiTheoLen(); };" in js
 
 
 def test_cho_an_luc_om_len_thi_buong_len():
     """Đang ôm cuộn len mà cho ăn → Bơ buông len ra (không vừa ôm vừa ăn)."""
     choi = (config.ROOT / "web" / "choi.js").read_text(encoding="utf-8")
     assert "dangAn = true; doChoi.thaLen();" in choi
-    assert "doChoi.thaLen = () => { thaLen(); thoiRinhLaser(); };" in (config.ROOT / "web" / "do_choi.js").read_text(encoding="utf-8")
+    assert "doChoi.thaLen = () => { thaLen(); thoiRinhLaser();" in (config.ROOT / "web" / "do_choi.js").read_text(encoding="utf-8")
 
 
 def test_laser_truoc_mat():
