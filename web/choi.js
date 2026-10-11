@@ -468,6 +468,26 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDemChoc, boC
   header.addEventListener('pointerdown', dichLongVu);
   document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && lv) batLongVu(false); });
 
+  // ---- Đồ chơi bằng bàn phím: mũi tên di chuyển chấm laser / lông vũ, hoặc hất cuộn len (khi không đang gõ chữ) ----
+  document.addEventListener('keydown', ev => {
+    const huong = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[ev.key];
+    if (!huong || !(laserBat || len || lv) || ev.target.closest('input, textarea, select, dialog')) return;
+    ev.preventDefault();
+    const [dx, dy] = huong, r = header.getBoundingClientRect();
+    if (laserBat && cham_) {
+      const x = parseFloat(cham_.style.left) || 0, y = parseFloat(cham_.style.top) || 0;
+      datLaser(r.left + Math.max(0, Math.min(r.width, x + dx * 24)), r.top + Math.max(0, Math.min(r.height, y + dy * 24)));
+      henTatLaser();
+    } else if (lv) {
+      lvDich = { x: Math.max(0, Math.min(r.width, lvDich.x + dx * 24)), y: Math.max(-20, Math.min(r.height, lvDich.y + dy * 24)) };
+      chayLongVu(); henTatLongVu();
+    } else if (len && !lenKeo) {
+      const giua = khung.clientWidth / 2;
+      lenS = { ...lenS, vx: dx ? dx * 450 : (giua - lenS.x) * 2, vy: dy < 0 ? -750 : dy > 0 ? 300 : -250, yen: false };
+      chayLen(); henCatLen();
+    }
+  });
+
   // ---- Bơ hóng chuyện: đang gõ tin thì nhìn xuống khung chat; ngừng gõ 2 giây thì thôi ----
   const oChat = document.getElementById('input');
   if (oChat && oChat.form) oChat.form.addEventListener('submit', () => svg.classList.remove('hong'));

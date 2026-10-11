@@ -6,6 +6,7 @@
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
 ## 2026-10-11 – Giai đoạn 56 (đang làm)
+- Đồ chơi dùng được bằng **bàn phím**: bật laser/lông vũ rồi bấm phím mũi tên để di chuyển; cuộn len thì mũi tên để hất (lên = tung cao).
 - Rảnh tay: chỉ gọi "Bơ ơi" → Bơ nghiêng đầu, bong bóng "Dạ? Bơ nghe nè!" rồi chờ 8 giây nghe tiếp.
 
 ## 2026-10-11 – Giai đoạn 55 xong: thêm chút sống động
