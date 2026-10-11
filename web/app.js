@@ -144,6 +144,7 @@ function addError(text, retry) {
 async function sendText(text, userBubble) {
   send.disabled = true;
   statusEl.textContent = 'Bơ đang nghĩ...'; express('suy_nghi');
+  if (window.meo) meo.cho(true);  // mèo ngoe nguẩy đuôi, nhìn lên trong lúc chờ
   const ctrl = new AbortController(), timer = setTimeout(() => ctrl.abort(), 150000);
   try {
     const r = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text }), signal: ctrl.signal });
@@ -160,7 +161,7 @@ async function sendText(text, userBubble) {
     // Gửi lỗi: giữ tin vào bản nháp, lỡ tải lại trang thì tin vẫn nằm trong ô nhập để gửi lại
     try { if (!input.value) localStorage.setItem('bo_nhap', text); } catch (x) {}
   } finally {
-    clearTimeout(timer);
+    clearTimeout(timer); if (window.meo) meo.cho(false);
     send.disabled = false; statusEl.textContent = ''; input.focus();
     if (handsFree) resumeListening();
   }

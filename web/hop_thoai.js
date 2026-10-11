@@ -389,9 +389,9 @@ document.getElementById('resetPersona').onclick = async () => {
   await fetch('/api/tinh-cach', { method: 'DELETE' }); loadPersona();
 };
 
-// ---- Màu mặt Bơ (lưu trên máy này) ----
-const FACE_COLORS = [['', 'Vàng (mặc định)'], ['#a8d672', 'Xanh bơ'], ['#ffb3c1', 'Hồng'], ['#9fd3ff', 'Xanh dương'],
-  ['#ffb26b', 'Cam'], ['#d3b8ff', 'Tím']];
+// ---- Màu lông mèo Bơ (lưu trên máy này) ----
+const FACE_COLORS = [['', 'Cam (mặc định)'], ['#ffd36e', 'Vàng'], ['#c9c3bb', 'Xám'], ['#fff1dc', 'Trắng kem'],
+  ['#8a6a55', 'Nâu'], ['#a8d672', 'Xanh bơ'], ['#ffb3c1', 'Hồng'], ['#9fd3ff', 'Xanh dương'], ['#d3b8ff', 'Tím']];
 function applyFaceColor(c) {
   if (c) document.documentElement.style.setProperty('--face', c);
   else document.documentElement.style.removeProperty('--face');
@@ -407,7 +407,7 @@ function renderColors() {
     const b = document.createElement('button');
     b.type = 'button'; b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', c === faceColor);
     b.setAttribute('aria-label', name); b.title = name;
-    b.style.background = c || '#ffd36e';
+    b.style.background = c || '#f7a95c';
     b.onclick = () => {
       faceColor = c; applyFaceColor(c); renderColors();
       try { localStorage.setItem('bo_mau', c); } catch (e) {}

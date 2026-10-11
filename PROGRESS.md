@@ -5,6 +5,22 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-11 17:00 UTC – Giai đoạn 46 xong: Mèo Bơ ra đời 🐱
+Khuôn mặt tròn đã thành **mèo béo màu cam** (vẽ bằng SVG, không dùng ảnh ngoài). 374 test qua hết.
+- **Xem ngay trên GitHub (không cần chạy):** `docs/anh/meo-tat-ca.png` (mọi cảm xúc), `docs/anh/trang-dien-thoai.png`,
+  `docs/anh/trang-may-tinh.png`, `docs/anh/trang-toi-vay-tay.png` (chế độ tối, mèo vẫy chân).
+- 7 cảm xúc: vui (mắt ^^, đuôi dựng), hào hứng (há miệng, nhún nhảy), suy nghĩ (nghiêng đầu, tai xoay, nhìn lên),
+  ngạc nhiên (mắt to, tai dựng, đuôi xù), buồn (tai cụp, đuôi quấn, miệng mếu), thương (má hồng, lim dim), bình thường.
+- 6 hành động: gật/lắc/nghiêng đầu, nhảy, vẫy chân trước.
+- "Sống": bụng phập phồng thở, đuôi đung đưa, chớp mắt ngẫu nhiên, 25–55 giây ngáp hoặc liếm chân một lần.
+- Ngủ gật (3 phút): mèo cuộn đuôi, mắt nhắm, "zzz" bay; chạm là tỉnh và **vươn vai**.
+- Lúc chờ trả lời: ngoe nguẩy đuôi nhìn lên. Lúc đọc to: miệng mấp máy.
+- Nút "?" → **Màu lông Bơ**: cam (mặc định), vàng, xám, trắng kem, nâu, xanh bơ, hồng, xanh dương, tím.
+- Máy bật "giảm chuyển động" thì mèo vẫn đổi tư thế nhưng không lắc lư.
+- Công cụ mới: `python scripts/chup_meo.py` tự chụp mọi tư thế vào `docs/anh/`.
+**Tân cần thử:** `git pull`, chạy `run.bat`, mở trên điện thoại; nhắn vài câu xem mèo đổi tư thế; để yên 3 phút xem mèo ngủ.
+Thấy chỗ nào chưa dễ thương (mặt, màu, cỡ) thì ghi vào `FEEDBACK.md`.
+
 ## Tóm tắt nhanh lần chạy 2026-10-10 23:31 → 2026-10-11 00:10 UTC
 Xong giai đoạn 31 → 38 (244 test qua hết, 8 lượt rà soát độc lập đã sửa lỗi). Đáng thử nhất:
 1. **Nhật ký:** kể chuyện trong ngày → nút "Nhật ký"; hỏi "hôm qua mình làm gì nhỉ?". Tự ghi/sửa/tải .txt được.

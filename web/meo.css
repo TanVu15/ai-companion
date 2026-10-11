@@ -1,0 +1,130 @@
+/* Mèo Bơ: hình dáng, 7 cảm xúc (data-e trên #face), 6 hành động (class a-...), trạng thái nhỏ trên svg
+   (chop = chớp mắt, ngap, liem = liếm chân, vuon = vươn vai, cho = đang chờ trả lời). Màu lông = biến --face. */
+.face { width: 220px; height: 211px; position: relative; cursor: pointer; -webkit-tap-highlight-color: transparent;
+  --vien: color-mix(in srgb, var(--face) 45%, #4a2a10); --kem: #fff4e2; --hong: #f4919f; --muc: #2b2018; }
+.meo { width: 100%; height: 100%; overflow: visible; display: block; transform-origin: 50% 100%; }
+.meo * { transform-box: view-box; }
+.meo .da { fill: var(--face); stroke: var(--vien); stroke-width: 3; stroke-linejoin: round; }
+.meo .bung { fill: var(--kem); }
+.meo .soc { fill: none; stroke: var(--vien); stroke-width: 3; stroke-linecap: round; opacity: .55; }
+.meo .tai-trong { fill: var(--hong); opacity: .75; }
+.meo .vien { fill: none; stroke: var(--vien); stroke-width: 20; stroke-linecap: round; }
+.meo .long { fill: none; stroke: var(--face); stroke-width: 14; stroke-linecap: round; }
+.meo .ngon { stroke: var(--vien); stroke-width: 2; stroke-linecap: round; }
+.meo .den { fill: var(--muc); } .meo .sang { fill: #fff; }
+.meo .net { fill: none; stroke: var(--muc); stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
+.meo .mui { fill: var(--hong); stroke: var(--vien); stroke-width: 1.5; stroke-linejoin: round; }
+.meo .ma { fill: var(--hong); opacity: 0; transition: opacity .3s; }
+.meo .ria { stroke: var(--vien); stroke-width: 2; stroke-linecap: round; opacity: .7; }
+.meo .trong-mieng { fill: #8c3a3e; stroke: var(--muc); stroke-width: 2.5; } .meo .luoi { fill: var(--hong); }
+.meo .luoi-liem { fill: var(--hong); stroke: var(--muc); stroke-width: 1.5; display: none; }
+.meo .zzz { display: none; fill: var(--muted); font: 700 16px system-ui, sans-serif; }
+
+/* Gốc xoay của từng bộ phận (tọa độ trong khung 200×192) */
+.meo .head { transform-origin: 100px 118px; transition: transform .35s ease; }
+.meo .ear-l { transform-origin: 66px 50px; transition: transform .3s; }
+.meo .ear-r { transform-origin: 134px 50px; transition: transform .3s; }
+.meo .tail { transform-origin: 150px 152px; transition: transform .4s; }
+.meo .body { transform-origin: 100px 180px; }
+.meo .paw { transform-origin: 100px 174px; transition: transform .3s; }
+.meo .mat-mo { transform-origin: 100px 74px; transition: transform .2s; }
+.meo .con-nguoi { transition: transform .3s; }
+.meo .mieng-mo { transform-origin: 100px 96px; }
+
+/* Mặc định: mắt mở, miệng chữ w */
+.meo .mat-cuoi, .meo .mat-nham, .meo .mieng-buon, .meo .mieng-mo, .meo .tail-ngu { display: none; }
+.meo.chop .mat-mo { transform: scaleY(.1); }
+
+/* ---- 7 cảm xúc ---- */
+/* vui: mắt cong ^^, đuôi dựng, má hồng nhạt */
+.face[data-e="vui"] .mat-mo { display: none; } .face[data-e="vui"] .mat-cuoi { display: inline; }
+.face[data-e="vui"] .tail { transform: rotate(-14deg); } .face[data-e="vui"] .ma { opacity: .4; }
+/* hào hứng: mắt cong, miệng mở, nhún nhảy */
+.face[data-e="hao_hung"] .mat-mo { display: none; } .face[data-e="hao_hung"] .mat-cuoi { display: inline; }
+.face[data-e="hao_hung"] .mieng-w { display: none; } .face[data-e="hao_hung"] .mieng-mo { display: inline; }
+.face[data-e="hao_hung"] .tail { transform: rotate(-18deg); } .face[data-e="hao_hung"] .ma { opacity: .5; }
+/* suy nghĩ: nghiêng đầu, một tai xoay, mắt nhìn lên */
+.face[data-e="suy_nghi"] .head { transform: rotate(-9deg); }
+.face[data-e="suy_nghi"] .ear-r { transform: rotate(16deg); }
+.face[data-e="suy_nghi"] .con-nguoi { transform: translate(-2px, -3px); }
+.face[data-e="suy_nghi"] .mat-mo .den { transform: translateY(-2px); }
+/* ngạc nhiên: mắt tròn to, miệng chữ o, lông xù nhẹ, tai dựng */
+.face[data-e="ngac_nhien"] .mat-mo { transform: scale(1.3); }
+.face[data-e="ngac_nhien"] .mieng-w { display: none; } .face[data-e="ngac_nhien"] .mieng-mo { display: inline; }
+.face[data-e="ngac_nhien"] .mieng-mo { transform: scale(.75); } .face[data-e="ngac_nhien"] .luoi { display: none; }
+.face[data-e="ngac_nhien"] .body { transform: scale(1.05); }
+.face[data-e="ngac_nhien"] .ear-l { transform: rotate(-6deg) scale(1.08); }
+.face[data-e="ngac_nhien"] .ear-r { transform: rotate(6deg) scale(1.08); }
+.face[data-e="ngac_nhien"] .tail .vien { stroke-width: 26; } .face[data-e="ngac_nhien"] .tail .long { stroke-width: 20; }
+/* buồn: tai cụp, đuôi rủ, miệng mếu, mắt cụp */
+.face[data-e="buon"] .ear-l { transform: rotate(-38deg); } .face[data-e="buon"] .ear-r { transform: rotate(38deg); }
+.face[data-e="buon"] .tail { display: none; } .face[data-e="buon"] .tail-ngu { display: inline; }
+.face[data-e="buon"] .mieng-w { display: none; } .face[data-e="buon"] .mieng-buon { display: inline; }
+.face[data-e="buon"] .mat-mo { transform: scaleY(.7) translateY(4px); }
+.face[data-e="buon"] .head { transform: translateY(4px); }
+/* thương: má hồng đậm, mắt lim dim */
+.face[data-e="thuong"] .mat-mo { display: none; } .face[data-e="thuong"] .mat-nham { display: inline; }
+.face[data-e="thuong"] .ma { opacity: .85; } .face[data-e="thuong"] .head { transform: rotate(6deg); }
+/* ngủ gật: cuộn tròn, mắt nhắm, đuôi quấn trước chân, zzz bay lên */
+.face[data-e="ngu"] .mat-mo { display: none; } .face[data-e="ngu"] .mat-nham { display: inline; }
+.face[data-e="ngu"] .head { transform: translateY(14px) rotate(-5deg); }
+.face[data-e="ngu"] .ear-l { transform: rotate(-18deg); } .face[data-e="ngu"] .ear-r { transform: rotate(18deg); }
+.face[data-e="ngu"] .tail { display: none; } .face[data-e="ngu"] .tail-ngu { display: inline; }
+.face[data-e="ngu"] .paw { transform: translateY(2px); }
+.face[data-e="ngu"] .zzz { display: inline; }
+.face[data-e="ngu"] .mieng-w { transform: scale(.7); transform-origin: 100px 93px; }
+
+/* Ngáp: mắt nhắm, miệng há to */
+.meo.ngap .mat-mo { display: none; } .meo.ngap .mat-nham { display: inline; }
+.meo.ngap .mieng-w { display: none; } .meo.ngap .mieng-mo { display: inline; transform: scale(1.3, 1.5); }
+.meo.ngap .head { transform: rotate(-4deg) translateY(-3px); }
+/* Liếm chân: chân phải đưa lên miệng, lè lưỡi, mắt nhắm */
+.meo.liem .paw-r { transform: translate(6px, -60px) rotate(-14deg); }
+.meo.liem .mat-mo { display: none; } .meo.liem .mat-nham { display: inline; }
+.meo.liem .luoi-liem { display: inline; } .meo.liem .mieng-w { display: none; }
+
+/* ---- Chuyển động: chỉ khi máy không yêu cầu giảm chuyển động ---- */
+@media (prefers-reduced-motion: no-preference) {
+  .meo .body { animation: meo-tho 3.2s ease-in-out infinite; }
+  .meo .tail { animation: meo-duoi 3s ease-in-out infinite; }
+  .face[data-e="ngu"] .body { animation-duration: 4.5s; }
+  .face[data-e="ngu"] .zzz text { animation: meo-zzz 3s ease-out infinite; opacity: 0; }
+  .face[data-e="ngu"] .zzz text:nth-child(2) { animation-delay: 1s; }
+  .face[data-e="ngu"] .zzz text:nth-child(3) { animation-delay: 2s; }
+  .face[data-e="hao_hung"] .meo { animation: meo-nhun .55s ease-in-out infinite; }
+  .face[data-e="buon"] .tail { animation: none; }
+  .meo.cho .tail { animation: meo-ngoe .7s ease-in-out infinite; }
+  .meo.cho .con-nguoi { transform: translate(0, -3px); }
+  .meo.vuon { animation: meo-vuon 1.3s ease-in-out; }
+  .meo.liem .luoi-liem { animation: meo-liem .4s ease-in-out infinite alternate; }
+  /* đang đọc to: miệng mấp máy */
+  .face.talking .mieng-w { display: none; }
+  .face.talking .mieng-mo { display: inline; animation: meo-noi .22s ease-in-out infinite alternate; }
+  /* 6 hành động */
+  .face.a-gat_dau .head { animation: meo-gat .6s 2; }
+  .face.a-lac_dau .head { animation: meo-lac .5s 2; }
+  .face.a-nghieng_dau .head { transform: rotate(-14deg); }
+  .face.a-nhay .meo { animation: meo-nhay .55s 2; }
+  .face.a-vay_tay .paw-l { animation: meo-vay .45s 4; transform: translate(-10px, -58px) rotate(25deg); }
+}
+/* Giảm chuyển động: vẫn đổi tư thế, chỉ bỏ phần lắc lư */
+@media (prefers-reduced-motion: reduce) {
+  .face.talking .mieng-w { display: none; } .face.talking .mieng-mo { display: inline; transform: scale(.8); }
+  .face.a-nghieng_dau .head { transform: rotate(-14deg); }
+}
+@keyframes meo-tho { 50% { transform: scale(1.025, 1.04); } }
+@keyframes meo-duoi { 50% { transform: rotate(9deg); } }
+@keyframes meo-ngoe { 50% { transform: rotate(16deg); } }
+@keyframes meo-nhun { 50% { transform: translateY(-7px) scaleY(1.02); } }
+@keyframes meo-zzz { 0% { opacity: 0; transform: translate(0, 8px); } 30% { opacity: 1; } 100% { opacity: 0; transform: translate(8px, -14px); } }
+@keyframes meo-vuon { 30% { transform: scale(1.08, .9) translateY(8px); } 60% { transform: scale(.96, 1.08) translateY(-6px); } }
+@keyframes meo-liem { to { transform: translateY(3px); } }
+@keyframes meo-noi { from { transform: scaleY(.35); } to { transform: scaleY(1); } }
+@keyframes meo-gat { 50% { transform: translateY(9px) rotate(2deg); } }
+@keyframes meo-lac { 25% { transform: rotate(-10deg); } 75% { transform: rotate(10deg); } }
+@keyframes meo-nhay { 40% { transform: translateY(-22px) scale(.97, 1.04); } 80% { transform: translateY(0) scale(1.05, .95); } }
+@keyframes meo-vay { 0%, 100% { transform: translate(-10px, -58px) rotate(25deg); } 50% { transform: translate(-10px, -58px) rotate(-10deg); } }
+
+/* Màn hình thấp (điện thoại nhỏ, xoay ngang): mèo nhỏ lại để còn chỗ cho tin nhắn */
+@media (max-height: 640px) { .face { width: 150px; height: 144px; } }
+@media (min-width: 700px) and (min-height: 760px) { .face { width: 240px; height: 230px; } }

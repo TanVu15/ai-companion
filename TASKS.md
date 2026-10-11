@@ -240,14 +240,14 @@
 - [x] Rà soát code lần 24, sửa lỗi tìm được
 
 ## Giai đoạn 46 – Mèo Bơ ra đời (ƯU TIÊN, xem HUONG_PHAT_TRIEN.md)
-- [ ] Vẽ mèo béo bằng SVG trong file riêng (web/meo.js hoặc web/meo.svg): đầu, 2 tai, mắt, ria, miệng, bụng, 4 chân, đuôi – mỗi bộ phận có id/class để CSS chuyển động riêng. Màu mặc định cam/kem; giữ nút chọn màu cũ (đổi màu lông)
-- [ ] Thay khuôn mặt tròn bằng mèo ở đầu trang (điện thoại: mèo chiếm khoảng 1/3 màn hình, khung chat bên dưới)
-- [ ] Ánh xạ 7 cảm xúc sang mèo: vui (mắt cong ^^, đuôi dựng), hào hứng (nhún nhảy), bình thường, suy nghĩ (nghiêng đầu, tai xoay), ngạc nhiên (mắt tròn, lông xù nhẹ), buồn (tai cụp, đuôi rủ), thương (má hồng, mắt lim dim)
-- [ ] Ánh xạ 6 hành động: gật đầu, lắc đầu, nghiêng đầu, nhảy, vẫy tay (vẫy chân trước), không
-- [ ] "Sống" khi rảnh: thở (bụng phập phồng), đuôi đung đưa, chớp mắt ngẫu nhiên, thỉnh thoảng ngáp/liếm chân
-- [ ] Ngủ gật (đã có, 3 phút) → mèo cuộn tròn ngủ, "zzz" bay lên; chạm là tỉnh, vươn vai
-- [ ] Đang "Bơ đang gõ..." → mèo ngoe nguẩy đuôi nhìn lên; đang đọc to → miệng mấp máy
-- [ ] Chụp ảnh từng cảm xúc (điện thoại + máy tính), tự xem, lưu vào docs/anh/; cập nhật README (ảnh mèo ở đầu)
+- [x] Vẽ mèo béo bằng SVG trong file riêng (web/meo.js hoặc web/meo.svg): đầu, 2 tai, mắt, ria, miệng, bụng, 4 chân, đuôi – mỗi bộ phận có id/class để CSS chuyển động riêng. Màu mặc định cam/kem; giữ nút chọn màu cũ (đổi màu lông)
+- [x] Thay khuôn mặt tròn bằng mèo ở đầu trang (điện thoại: mèo chiếm khoảng 1/3 màn hình, khung chat bên dưới)
+- [x] Ánh xạ 7 cảm xúc sang mèo: vui (mắt cong ^^, đuôi dựng), hào hứng (nhún nhảy), bình thường, suy nghĩ (nghiêng đầu, tai xoay), ngạc nhiên (mắt tròn, lông xù nhẹ), buồn (tai cụp, đuôi rủ), thương (má hồng, mắt lim dim)
+- [x] Ánh xạ 6 hành động: gật đầu, lắc đầu, nghiêng đầu, nhảy, vẫy tay (vẫy chân trước), không
+- [x] "Sống" khi rảnh: thở (bụng phập phồng), đuôi đung đưa, chớp mắt ngẫu nhiên, thỉnh thoảng ngáp/liếm chân
+- [x] Ngủ gật (đã có, 3 phút) → mèo cuộn tròn ngủ, "zzz" bay lên; chạm là tỉnh, vươn vai
+- [x] Đang "Bơ đang gõ..." → mèo ngoe nguẩy đuôi nhìn lên; đang đọc to → miệng mấp máy
+- [x] Chụp ảnh từng cảm xúc (điện thoại + máy tính), tự xem, lưu vào docs/anh/; cập nhật README (ảnh mèo ở đầu)
 
 ## Giai đoạn 47 – Chạm & chơi với Bơ (không tốn API)
 - [ ] Vuốt ve: rê chuột / kéo ngón tay trên lưng-đầu → mèo nhắm mắt, kêu "rừ rừ" (âm thanh tạo bằng Web Audio, không cần file), tim bay lên

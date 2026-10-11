@@ -12,54 +12,22 @@
 <meta name="apple-mobile-web-app-title" content="Bơ">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#f6f3ee">
+<link rel="stylesheet" href="/web/meo.css">
 <style>
   :root {
     --bg: #f6f3ee; --panel: #ffffff; --text: #1f1d1a; --muted: #77726a;
-    --me: #2f6f5e; --me-text: #ffffff; --bot: #ece7df; --face: #ffd36e; --ink: #2b2620;
+    --me: #2f6f5e; --me-text: #ffffff; --bot: #ece7df; --face: #f7a95c; --ink: #2b2620;
     --border: #e2dcd2;
   }
   @media (prefers-color-scheme: dark) {
     :root { --bg: #171614; --panel: #22201d; --text: #ece8e1; --muted: #9a948a;
-      --me: #3c8a75; --bot: #2e2b27; --face: #f2c14e; --ink: #1d1a16; --border: #34302b; }
+      --me: #3c8a75; --bot: #2e2b27; --face: #e8964a; --ink: #1d1a16; --border: #34302b; }
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text);
     font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
   .app { max-width: 640px; margin: 0 auto; height: 100%; display: flex; flex-direction: column; }
   header { display: flex; flex-direction: column; align-items: center; padding: 16px 16px 8px; }
-  .face { width: 120px; height: 120px; border-radius: 50%; background: var(--face); position: relative;
-    transition: transform .3s; }
-  .eye { position: absolute; top: 40px; width: 14px; height: 18px; background: var(--ink); border-radius: 50%;
-    transition: all .25s; animation: blink 4s infinite; }
-  .eye.l { left: 34px; } .eye.r { right: 34px; }
-  .mouth { position: absolute; left: 50%; top: 72px; width: 40px; height: 18px; transform: translateX(-50%);
-    border: 4px solid var(--ink); border-top: none; border-radius: 0 0 40px 40px; transition: all .25s; }
-  @keyframes blink { 0%, 96%, 100% { transform: scaleY(1); } 98% { transform: scaleY(.1); } }
-  .face[data-e="hao_hung"] .mouth { height: 24px; width: 48px; background: var(--ink); }
-  .face[data-e="vui"] .eye { height: 10px; top: 44px; border-radius: 10px 10px 0 0; }
-  .face[data-e="buon"] .mouth { top: 80px; border: 4px solid var(--ink); border-bottom: none; border-radius: 40px 40px 0 0; }
-  .face[data-e="buon"] .eye { top: 46px; height: 12px; }
-  .face[data-e="ngac_nhien"] .mouth { width: 22px; height: 22px; border: 4px solid var(--ink); border-radius: 50%; }
-  .face[data-e="ngac_nhien"] .eye { height: 22px; width: 18px; }
-  .face[data-e="suy_nghi"] .mouth { height: 0; width: 28px; border-radius: 0; border-width: 0 0 4px 0; margin-left: 8px; }
-  .face[data-e="suy_nghi"] .eye { top: 34px; }
-  .face[data-e="ngu"] .eye { height: 4px; top: 46px; border-radius: 4px; animation: none; }
-  .face[data-e="ngu"] .mouth { width: 16px; height: 8px; top: 76px; }
-  .face[data-e="ngu"]::before { content: "z z"; position: absolute; right: -18px; top: -6px; font-weight: 700; color: var(--muted); }
-  @media (prefers-reduced-motion: no-preference) { .face[data-e="ngu"] { animation: breathe 3s infinite; } }
-  @keyframes breathe { 50% { transform: scale(1.03); } }
-  .face[data-e="thuong"] .eye { height: 10px; top: 44px; border-radius: 10px 10px 0 0; }
-  .face[data-e="thuong"]::after { content: ""; position: absolute; left: 18px; right: 18px; top: 62px; height: 10px;
-    background: radial-gradient(circle at 10px 5px, #f39a9a 6px, transparent 7px), radial-gradient(circle at calc(100% - 10px) 5px, #f39a9a 6px, transparent 7px); }
-  @media (prefers-reduced-motion: no-preference) {
-    .face.a-gat_dau { animation: nod .6s 2; } .face.a-lac_dau { animation: shake .5s 2; }
-    .face.a-nhay { animation: jump .5s 2; } .face.a-nghieng_dau { transform: rotate(-12deg); }
-    .face.a-vay_tay { animation: wave .4s 3; }
-  }
-  @keyframes nod { 50% { transform: translateY(8px); } }
-  @keyframes shake { 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
-  @keyframes jump { 50% { transform: translateY(-16px); } }
-  @keyframes wave { 25% { transform: rotate(8deg); } 75% { transform: rotate(-8deg); } }
   .name { margin-top: 8px; font-weight: 600; }
   .lich { font-size: 12px; color: var(--muted); min-height: 16px; } .lich b { color: var(--text); font-weight: 600; } .status { font-size: 13px; color: var(--muted); min-height: 20px; }
   main { flex: 1; overflow-y: auto; padding: 8px 16px; display: flex; flex-direction: column; gap: 8px; }
@@ -100,19 +68,17 @@
   .mic.on { background: #c0392b; color: #fff; }
   @media (prefers-reduced-motion: no-preference) {
     .mic.on { animation: pulse 1.2s infinite; }
-    .face.talking .mouth { animation: talk .25s infinite alternate; }
   }
   @keyframes pulse { 50% { opacity: .6; } }
-  @keyframes talk { to { height: 6px; } }
   ul.plain { list-style: none; padding: 0; margin: 0 0 12px; } ul.plain li { padding: 4px 0; border-bottom: 1px solid var(--border); }
   #searchInput { width: 100%; border: 1px solid var(--border); border-radius: 12px; padding: 8px 12px; font: inherit;
     background: var(--bg); color: var(--text); margin-bottom: 8px; }
   #searchList { max-height: 50vh; overflow-y: auto; } #searchList small { color: var(--muted); display: block; }
   #searchList mark { background: var(--face); color: var(--ink); border-radius: 3px; }
   #personaText { display: block; width: 100%; height: 45vh; max-height: none; border-radius: 12px; font-size: 14px; }
-  /* Màn hình thấp (điện thoại nhỏ, xoay ngang): mặt Bơ nhỏ lại để còn chỗ cho tin nhắn */
+  /* Màn hình thấp (điện thoại nhỏ, xoay ngang): mèo nhỏ lại (meo.css) để còn chỗ cho tin nhắn */
   @media (max-height: 640px) {
-    header { padding-top: 8px; } .face { zoom: .65; } .name { margin-top: 2px; }
+    header { padding-top: 8px; } .name { margin-top: 2px; }
     #personaText { height: 35vh; }
   }
   .diary { max-height: 55vh; overflow-y: auto; }
@@ -157,9 +123,7 @@
 <body>
 <div class="app">
   <header>
-    <div class="face" id="face" data-e="binh_thuong" aria-label="Khuôn mặt của Bơ (chạm để Bơ ngừng đọc)" role="img" title="Chạm để Bơ ngừng đọc">
-      <div class="eye l"></div><div class="eye r"></div><div class="mouth"></div>
-    </div>
+    <div class="face" id="face" data-e="binh_thuong" aria-label="Mèo Bơ (chạm để Bơ ngừng đọc)" role="img" title="Chạm để Bơ ngừng đọc"></div>
     <div class="name">Bơ</div>
     <div class="lich" id="lich"></div>
     <div class="status" id="status"></div>
@@ -264,7 +228,7 @@
     <li><b>Thói quen:</b> "theo dõi giúp mình thói quen đọc sách" → mỗi ngày kể "đọc sách rồi"; xem chuỗi ngày ở nút "Thói quen".</li>
     <li><b>Hỏi nhanh, miễn phí:</b> "mấy giờ rồi?", "hôm nay ngày mấy âm?", "còn mấy ngày nữa Tết?", "mình còn việc gì cần làm?", "thói quen hôm nay?", "hôm nay trời thế nào?" → Bơ trả lời ngay, không tốn tiền API (cả khi đã hết ngân sách).</li>
     <li><b>Lịch điện thoại:</b> "Bơ nhớ gì về mình?" → "Tải lịch cho điện thoại" để thêm ngày đặc biệt, lời nhắc vào app Lịch.</li>
-    <li><b>Giọng nói:</b> bật "Giọng nói" để Bơ đọc to; bấm micro để nói. "Rảnh tay": gọi "Bơ ơi" rồi nói. Chạm mặt Bơ để Bơ im.</li>
+    <li><b>Giọng nói:</b> bật "Giọng nói" để Bơ đọc to; bấm micro để nói. "Rảnh tay": gọi "Bơ ơi" rồi nói. Chạm vào mèo Bơ để Bơ im.</li>
     <li><b>Tìm chuyện cũ:</b> nút "Tìm" (hoặc Ctrl+K), gõ không dấu cũng được.</li>
     <li><b>Phím tắt:</b> Esc để Bơ ngừng đọc; Enter gửi, Shift+Enter xuống dòng.</li>
     <li><b>Ghim:</b> chạm vào một tin nhắn → "Ghim tin này". Xem lại trong nút "Tìm".</li>
@@ -273,8 +237,8 @@
     <li><b>Chi phí:</b> nút "Chi phí" xem đã tiêu bao nhiêu tiền API.</li>
     <li><b>Cài đặt:</b> thành phố (thời tiết), giờ yên lặng, tổng kết tuần — chỉnh ngay bên dưới, không cần sửa .env.</li>
   </ul>
-  <h2>Màu mặt Bơ</h2>
-  <div id="colors" class="colors" role="radiogroup" aria-label="Màu mặt Bơ"></div>
+  <h2>Màu lông Bơ</h2>
+  <div id="colors" class="colors" role="radiogroup" aria-label="Màu lông Bơ"></div>
   <h2>Cài đặt</h2>
   <form id="settingsForm" class="settings">
     <label>Thành phố (để biết thời tiết) <input id="setCity" type="text" maxlength="60" placeholder="ví dụ: Da Nang — để trống = tắt"></label>
@@ -314,6 +278,7 @@
 </dialog>
 <script src="/web/danh_thuc.js"></script>
 <script src="/web/doc_to.js"></script>
+<script src="/web/meo.js"></script>
 <script src="/web/app.js"></script>
 <script src="/web/giong_noi.js"></script>
 <script src="/web/khoi_dong.js"></script>

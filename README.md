@@ -1,6 +1,13 @@
-# Bơ – người bạn AI
+# Bơ – mèo béo AI
 
-Chatbot trò chuyện có tính cách, có trí nhớ và có khuôn mặt biểu cảm. Đây là phần "bộ não"; sau này sẽ gắn vào phần cứng (micro, loa, màn hình, động cơ).
+<img src="docs/anh/trang-dien-thoai.png" width="260" alt="Mèo Bơ trên điện thoại">
+
+Bơ là một con mèo béo biết trò chuyện, có tính cách, có trí nhớ, biết vui/buồn/ngạc nhiên, ngáp, liếm chân, ngủ gật.
+Mèo vẽ bằng SVG (`web/meo.js`, `web/meo.css`), đọc JSON cảm xúc từ "bộ não"; sau này có thể gắn vào phần cứng.
+
+![Các cảm xúc của Bơ](docs/anh/meo-tat-ca.png)
+
+Chụp lại ảnh sau khi sửa giao diện: `python scripts/chup_meo.py` (cần `pip install playwright`).
 
 ## Chạy trên Windows
 
