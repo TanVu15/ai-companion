@@ -557,3 +557,12 @@ def test_vung_cham_luc_ngu_dau_guc():
       console.log(JSON.stringify([f(100, 130, false, false), f(100, 130, false, true), f(100, 140, true, true),
         f(100, 150, false, true), C.boDiemTuThe(45, 140, false, true)]))""")
     assert v == ["bung", "cam", "cam", "bung", {"x": 45, "y": 140}]
+
+
+def test_gai_cam_dinh():
+    """Đang gãi cằm (Bơ ngửa đầu lên) mà ngón tay trượt sát dưới cằm vẫn tính là cằm; chưa gãi thì vẫn là bụng."""
+    v = node("""console.log(JSON.stringify([C.boGaiCamDinh('bung', 100, 126, true), C.boGaiCamDinh('bung', 100, 126, false),
+      C.boGaiCamDinh('bung', 100, 145, true), C.boGaiCamDinh('lung', 45, 140, true), C.boGaiCamDinh('dau', 100, 60, true)]))""")
+    assert v == ["cam", "bung", "bung", "lung", "dau"]
+    js = (config.ROOT / "web" / "choi.js").read_text(encoding="utf-8")
+    assert "boGaiCamDinh(boVungCham(p.x, p.y), p.x, p.y, vuotDangChay === 'gai_cam')" in js

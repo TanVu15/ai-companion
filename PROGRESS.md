@@ -5,6 +5,9 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-12 – Giai đoạn 88: gãi cằm không đứt quãng
+- Gãi cằm thì Bơ ngửa đầu lên, nên ngón tay đang gãi sát mép dưới cằm trước đây rơi ra "bụng" làm đứt quãng (Bơ thôi cười). Giờ đang gãi dở mà trượt xuống sát dưới cằm vẫn tính là cằm. 450 test qua hết, `scripts/thu_cham.py` đạt hết.
+
 ## 2026-10-12 – Giai đoạn 87 xong: vùng chạm theo tư thế nằm bẹp
 - **Chạm trúng chỗ khi Bơ nằm bẹp**: lúc nằm bẹp (ổ bánh mì) đầu Bơ hạ thấp xuống, mà trước đây vùng chạm vẫn tính như lúc ngồi → gãi cằm (đã hạ thấp) lại bị tính là chọc bụng, boop mũi/nựng má lệch. Giờ vùng chạm (đầu, cằm, tai, mũi, má, ngửi tay, mắt nhìn theo tay) đi theo tư thế nằm. Ảnh `docs/anh/bep-gai-cam.png` (điện thoại, máy tính: nằm bẹp được gãi cằm). `scripts/thu_cham.py` thử thêm — đạt hết. 448 test qua hết.
 - Sửa thêm: đang "hào hứng" mà nằm bẹp thì cả con mèo cứ nhún nhảy → giờ nằm bẹp thì nằm yên.

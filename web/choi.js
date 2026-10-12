@@ -104,6 +104,12 @@ function boDiemTuThe(x, y, bep, ngu) {
   if (!bep) return { x, y };
   return { x: +(100 + (x - 100) / 1.05).toFixed(2), y: +(180 + (y - 6 - 180) / 0.93).toFixed(2) };
 }
+// Đang gãi cằm thì Bơ ngửa đầu lên (meo.css: 6 đơn vị) → ngón tay sát mép dưới cằm rơi ra "bụng".
+// Đang gãi dở mà trượt xuống sát dưới cằm (trong 8 đơn vị) thì vẫn tính là cằm, khỏi đứt quãng.
+function boGaiCamDinh(vung, x, y, dangGai) {
+  if (dangGai && vung === 'bung' && boVungCham(x, y - 8) === 'cam') return 'cam';
+  return vung;
+}
 // Đang nằm bẹp: đuôi quấn quanh người (đường cong 152,166 → 58,178 ở khung vẽ). Chạm sát đuôi đó (cách dưới 9) → true
 function boChamDuoiNgu(x, y) {
   for (let i = 0; i <= 20; i++) {
@@ -231,7 +237,7 @@ function boLucMo(lanTruoc, bayGio, gio) {
   return null;
 }
 
-if (typeof module !== 'undefined') module.exports = { boVungCham, boDiemTuThe, boChamDuoiNgu, boChiTietDau, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boChamChan, boThongSoMeo, boGanMui, boDoToRuRu, boNhoiBot, boChopCham, boKhoe, boDoGiat, boLac, boGoiY, BO_GOI_Y, boPhanUngTin, boLucMo, boMonAn, BO_MON_AN, boNhipAn, boDoNhac, BO_CAU_CHOI, BO_DOC_TO };
+if (typeof module !== 'undefined') module.exports = { boVungCham, boDiemTuThe, boGaiCamDinh, boChamDuoiNgu, boChiTietDau, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boChamChan, boThongSoMeo, boGanMui, boDoToRuRu, boNhoiBot, boChopCham, boKhoe, boDoGiat, boLac, boGoiY, BO_GOI_Y, boPhanUngTin, boLucMo, boMonAn, BO_MON_AN, boNhipAn, boDoNhac, BO_CAU_CHOI, BO_DOC_TO };
 
 // ---- Phần giao diện ----
 (function () {
@@ -579,7 +585,7 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boDiemTuThe, b
     // kéo ngón tay, hoặc rê chuột (không cần bấm) trên đầu/lưng/cằm = vuốt ve
     if (!bam && ev.pointerType !== 'mouse') return;
     const p = toaDo(ev); if (!p) return;
-    const vung = boVungCham(p.x, p.y);
+    const vung = boGaiCamDinh(boVungCham(p.x, p.y), p.x, p.y, vuotDangChay === 'gai_cam');
     if (vung === 'dau' || vung === 'lung' || vung === 'cam') vuot(ev, vung);
   });
   let vuaKeo = false;  // lần bấm vừa rồi là kéo/vuốt hay giữ lâu (không phải chạm nhanh) → hop_thoai.js không bảo Bơ im
