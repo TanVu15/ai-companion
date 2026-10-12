@@ -513,7 +513,7 @@ def test_nam_bep_cham_duoi_quan():
              " C.boChamDuoiNgu(100, 74), C.boChamDuoiNgu(184, 108), C.BO_CAU_CHOI.duoi_ngu.length > 0, C.BO_DOC_TO.includes('duoi_ngu')]))")
     assert v == [True, True, True, False, False, True, False]
     js = (config.ROOT / "web" / "choi.js").read_text(encoding="utf-8")
-    khoi = js.split("if (svg.classList.contains('bep') && (vung === 'chan' || (p && boChamDuoiNgu(p.x, p.y))))")[1].split("return;")[0]
+    khoi = js.split("if (svg.classList.contains('bep') && (vung === 'chan' || (p && boChamDuoiNgu(p.goc.x, p.goc.y))))")[1].split("return;")[0]
     assert "giu('vay-duoi-ngu'" in khoi and "conChoi" not in khoi  # vẫn nằm bẹp
     assert "cham(ev, boVungCham(p.x, p.y), b.ngu, p);" in js
     css = (config.ROOT / "web" / "meo.css").read_text(encoding="utf-8")
@@ -533,3 +533,19 @@ def test_nam_bep_duoc_vuot_van_nam():
     assert "face.dataset.e !== 'ngu' && !bep && boNhoiBot(" in js
     ht = (config.ROOT / "web" / "hop_thoai.js").read_text(encoding="utf-8")
     assert "function scheduleSleep(giuBep)" in ht and "if (window.meo && !giuBep) meo.dat('bep', false);" in ht
+
+
+def test_vung_cham_theo_tu_the_nam_bep():
+    """Nằm bẹp: đầu hạ 10, thân dời xuống và dẹt lại → vùng chạm đi theo, chạm sát cằm không trúng nhầm."""
+    v = node("""const f = (x, y, b) => { const q = C.boDiemTuThe(x, y, b); return C.boVungCham(q.x, q.y); };
+      console.log(JSON.stringify([
+        C.boDiemTuThe(100, 60, false), f(100, 122, false), f(100, 122, true), f(100, 70, true),
+        f(52, 35, true), f(100, 98, true), f(100, 152, true), f(45, 145, true), f(100, 3, true)]))""")
+    assert v[0] == {"x": 100, "y": 60}            # ngồi: giữ nguyên
+    assert v[1] == "bung" and v[2] == "cam"         # ngay dưới cằm lúc ngồi là bụng, lúc nằm bẹp là cằm đã hạ xuống
+    assert v[3:] == ["dau", "tai_trai", "dau", "bung", "lung", None]
+    # mũi, má cũng theo đầu: điểm mũi lúc nằm bẹp (100, 98) đổi về (100, 88)
+    m = node("const q = C.boDiemTuThe(100, 98, true); console.log(JSON.stringify([C.boChiTietDau(q.x, q.y), C.boGanMui(q.x, q.y)]))")
+    assert m == ["mui", True]
+    js = (config.ROOT / "web" / "choi.js").read_text(encoding="utf-8")
+    assert "boDiemTuThe(p.x, p.y, svg.classList.contains('bep'))" in js

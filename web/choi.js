@@ -92,6 +92,15 @@ function boHuongNhin(dx, dy) {
   const k = Math.min(1, d / 80);
   return [+(dx / d * 4 * k).toFixed(1), +(dy / d * 3 * k).toFixed(1)];
 }
+// Đổi điểm chạm (khung vẽ) về chỗ tương ứng trên người Bơ lúc ngồi, để vùng chạm đi theo tư thế.
+// Nằm bẹp (meo.css): đầu hạ 10 đơn vị; thân dời xuống 6 và dẹt lại (scale 1.05 × .93, gốc 100,180).
+// Trúng đầu/tai (sau khi bù 10) thì tính là đầu; còn lại tính theo thân. Không nằm bẹp thì giữ nguyên.
+function boDiemTuThe(x, y, bep) {
+  if (!bep) return { x, y };
+  const dau = { x, y: y - 10 }, v = boVungCham(dau.x, dau.y);
+  if (v === 'dau' || v === 'cam' || v === 'tai_trai' || v === 'tai_phai') return dau;
+  return { x: +(100 + (x - 100) / 1.05).toFixed(2), y: +(180 + (y - 6 - 180) / 0.93).toFixed(2) };
+}
 // Đang nằm bẹp: đuôi quấn quanh người (đường cong 152,166 → 58,178 ở khung vẽ). Chạm sát đuôi đó (cách dưới 9) → true
 function boChamDuoiNgu(x, y) {
   for (let i = 0; i <= 20; i++) {
@@ -219,7 +228,7 @@ function boLucMo(lanTruoc, bayGio, gio) {
   return null;
 }
 
-if (typeof module !== 'undefined') module.exports = { boVungCham, boChamDuoiNgu, boChiTietDau, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boChamChan, boThongSoMeo, boGanMui, boDoToRuRu, boNhoiBot, boChopCham, boKhoe, boDoGiat, boLac, boGoiY, BO_GOI_Y, boPhanUngTin, boLucMo, boMonAn, BO_MON_AN, boNhipAn, boDoNhac, BO_CAU_CHOI, BO_DOC_TO };
+if (typeof module !== 'undefined') module.exports = { boVungCham, boDiemTuThe, boChamDuoiNgu, boChiTietDau, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boChamChan, boThongSoMeo, boGanMui, boDoToRuRu, boNhoiBot, boChopCham, boKhoe, boDoGiat, boLac, boGoiY, BO_GOI_Y, boPhanUngTin, boLucMo, boMonAn, BO_MON_AN, boNhipAn, boDoNhac, BO_CAU_CHOI, BO_DOC_TO };
 
 // ---- Phần giao diện ----
 (function () {
@@ -382,7 +391,10 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boChamDuoiNgu,
     const m = svg.getScreenCTM();
     if (!m) return null;
     const p = new DOMPoint(ev.clientX, ev.clientY).matrixTransform(m.inverse());
-    return { x: p.x, y: p.y };
+    // Nằm bẹp thì đầu/thân hạ thấp: đổi về chỗ tương ứng lúc ngồi để vùng chạm (đầu, cằm, mũi, má...) đi theo.
+    // goc = tọa độ thật trong khung vẽ (đuôi quấn lúc nằm bẹp không dời, nên dò bằng goc)
+    const q = boDiemTuThe(p.x, p.y, svg.classList.contains('bep'));
+    return { x: q.x, y: q.y, goc: { x: p.x, y: p.y } };
   }
   function viTriKhung(ev) {
     const r = khung.getBoundingClientRect();
@@ -462,7 +474,7 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boChamDuoiNgu,
     if (typeof speaking !== 'undefined' && speaking) return;  // đang đọc to: chạm là để Bơ im (hop_thoai.js)
     // Đang nằm bẹp (chân giấu, đuôi quấn quanh người): chạm vào đuôi quấn hay chỗ chân giấu → đầu đuôi khẽ vẫy,
     // Bơ hé mắt lười nhìn xuống, không thèm ngồi dậy (không gọi conChoi: vẫn nằm bẹp)
-    if (svg.classList.contains('bep') && (vung === 'chan' || (p && boChamDuoiNgu(p.x, p.y)))) {
+    if (svg.classList.contains('bep') && (vung === 'chan' || (p && boChamDuoiNgu(p.goc.x, p.goc.y)))) {
       giu('vay-duoi-ngu', 1300);
       if (dem('duoi_ngu').duoi_ngu === 1) noi('duoi_ngu', true); else noi('duoi_ngu');  // lần đầu trong ngày: chắc chắn nói
       return;

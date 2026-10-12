@@ -5,6 +5,10 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-12 – Giai đoạn 87: vùng chạm theo tư thế nằm bẹp
+- **Chạm trúng chỗ khi Bơ nằm bẹp**: lúc nằm bẹp (ổ bánh mì) đầu Bơ hạ thấp xuống, mà trước đây vùng chạm vẫn tính như lúc ngồi → gãi cằm (đã hạ thấp) lại bị tính là chọc bụng, boop mũi/nựng má lệch. Giờ vùng chạm (đầu, cằm, tai, mũi, má, ngửi tay, mắt nhìn theo tay) đi theo tư thế nằm. Ảnh `docs/anh/bep-gai-cam.png` (điện thoại, máy tính: nằm bẹp được gãi cằm). `scripts/thu_cham.py` thử thêm — đạt hết. 449 test qua hết.
+- Sửa thêm: đang "hào hứng" mà nằm bẹp thì cả con mèo cứ nhún nhảy → giờ nằm bẹp thì nằm yên.
+
 ## 2026-10-12 – Giai đoạn 86 xong: nằm ổ bánh mì cho vuốt
 - **Vuốt mèo đang nằm bẹp**: Bơ đang nằm bẹp (ổ bánh mì) mà được vuốt đầu/lưng → Bơ cứ nằm vậy cho vuốt, nhắm mắt, tim bay, rừ rừ (trước đây vừa vuốt là Bơ ngồi bật dậy). Thôi vuốt thì vẫn nằm bẹp. Lúc nằm bẹp chân đang giấu nên không nhồi bột. Cho ăn, chơi đồ chơi, nhắn tin thì Bơ vẫn ngồi dậy như cũ. Ảnh `docs/anh/bep-duoc-vuot.png` (điện thoại, máy tính). `scripts/thu_cham.py` thử thêm — đạt hết. 447 test qua hết.
 - Rà soát: chạm đuôi quấn, vuốt, rồi cho ăn/bật đồ chơi → Bơ ngồi dậy đúng như cũ; vuốt lúc nằm bẹp vẫn tính giờ ngủ gật lại từ đầu (đang được vuốt thì không ngủ gật). Thấy thêm: lúc nằm bẹp đầu Bơ thấp xuống mà vùng chạm vẫn như lúc ngồi (chạm sát cằm có thể trúng nhầm) → ghi thành việc giai đoạn 87.

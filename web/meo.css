@@ -99,6 +99,7 @@
   .face[data-e="ngu"] .zzz text:nth-child(2) { animation-delay: 1s; }
   .face[data-e="ngu"] .zzz text:nth-child(3) { animation-delay: 2s; }
   .face[data-e="hao_hung"] .meo { animation: meo-nhun .55s ease-in-out infinite; }
+  .face[data-e="hao_hung"] .meo.bep { animation: none; }  /* nằm bẹp (ổ bánh mì) thì không nhún nhảy */
   .face[data-e="buon"] .tail { animation: none; }
   .meo.cho .tail { animation: meo-ngoe .7s ease-in-out infinite; }
   .meo.cho .con-nguoi { transform: translate(0, -3px); }

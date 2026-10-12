@@ -451,7 +451,7 @@
 - [x] Rà soát giai đoạn 86, sửa lỗi tìm được
 
 ## Giai đoạn 87 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
-- [ ] Nằm bẹp thì đầu Bơ thấp xuống 10 đơn vị, nhưng vùng chạm (đầu, cằm, mũi, má) vẫn tính như lúc ngồi → dời vùng chạm theo tư thế nằm bẹp (có test)
+- [x] Nằm bẹp thì đầu Bơ thấp xuống 10 đơn vị, nhưng vùng chạm (đầu, cằm, mũi, má) vẫn tính như lúc ngồi → dời vùng chạm theo tư thế nằm bẹp (có test)
 - [ ] Rà soát giai đoạn 87, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
