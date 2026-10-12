@@ -5,6 +5,10 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-12 – Giai đoạn 83: đuôi đuổi lông vũ
+- **Đuôi quất theo lông**: bật cần câu lông vũ, quét lông nhanh lên xuống qua đuôi Bơ → đuôi quất qua quất lại đuổi theo lông, Bơ nghiêng đầu liếc ra sau; lâu lâu nói "Đuôi Bơ bắt lông vũ nè!". Lông đứng yên/lắc nhẹ bên hông thì vẫn là quơ chân như cũ. Nghỉ 2,5 giây giữa hai lần. Ảnh `docs/anh/long-vu-quet-duoi.png`. `scripts/thu_cham.py` thử thêm — đạt hết. 441 test qua hết.
+**Tân cần thử:** bật nút lông vũ, đưa lông ra sau lưng bên phải rồi quét lên xuống thật nhanh qua đuôi.
+
 ## 2026-10-12 – Giai đoạn 82 xong: giọng cho trò len chạm đuôi
 - Bật "Giọng nói": lần len chạm đuôi đầu tiên trong ngày Bơ đọc to "Ai đụng đuôi Bơ?"; các lần sau chỉ hiện chữ (đã thử trên trình duyệt: lần 2 không đọc). 440 test qua hết.
 - Rà soát, sửa: `scripts/chup_meo.py` chụp lúc khuya thì ảnh mèo bị mắt lim dim (khác mỗi lần chụp) → giờ luôn đặt giờ trình duyệt 10h sáng. Bộ ảnh `docs/anh/meo-tat-ca.png` chụp lại, có thêm "ngoai-duoi". 440 test qua hết.

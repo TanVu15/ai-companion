@@ -261,7 +261,7 @@ header.dang-laser { touch-action: none; cursor: crosshair; position: relative; }
 .meo:is(.lan, .mung) .mat-cuoi { display: inline !important; }
 .meo.mung :is(.mieng-w, .mieng-buon) { display: none !important; } .meo.mung .mieng-mo { display: inline !important; }
 /* Khuya (meo.js đặt lim-dim): mắt lim dim lúc bình thường (trừ lúc giật mình, vồ, rình, nhìn theo len... thì mắt vẫn tròn xoe) */
-.face[data-e="binh_thuong"] .meo.lim-dim:not(.giat, .vo, .voi, .be, .rinh, .vo-rinh, .om-len, .theo-len, .ke-ke, .ngoai-duoi, .nguoc-long, .chop-cham) .mat-mo { transform: scaleY(.6); }
+.face[data-e="binh_thuong"] .meo.lim-dim:not(.giat, .vo, .voi, .be, .rinh, .vo-rinh, .om-len, .theo-len, .ke-ke, .ngoai-duoi, .quat-duoi, .nguoc-long, .chop-cham) .mat-mo { transform: scaleY(.6); }
 .face[data-e="binh_thuong"] .meo.lim-dim.chop .mat-mo { transform: scaleY(.1); }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -586,3 +586,14 @@ header.dang-long-vu { touch-action: none; position: relative; }
   .meo.ngoai-duoi { animation: meo-giat .45s ease-out; }
 }
 @keyframes meo-duoi-vinh { 0% { transform: rotate(-6deg); } 30% { transform: rotate(22deg); } 60% { transform: rotate(2deg); } 100% { transform: rotate(6deg); } }
+
+/* Lông vũ quét qua đuôi: đuôi quất qua quất lại đuổi theo lông, Bơ liếc ra sau (đầu nghiêng phải nhẹ, mắt nhìn phải) */
+.meo.quat-duoi .head { transform: translateX(3px) rotate(6deg); }
+.meo.quat-duoi .nhin { transform: translate(5px, 0); }
+.meo.quat-duoi .ear-r { transform: rotate(12deg); }
+.meo.quat-duoi .tail-ngu { display: none !important; }
+.meo.quat-duoi .tail { transform: rotate(14deg); }
+@media (prefers-reduced-motion: no-preference) {
+  .meo.quat-duoi .tail { animation: meo-quat-duoi .22s ease-in-out infinite alternate; }
+}
+@keyframes meo-quat-duoi { from { transform: rotate(-10deg); } to { transform: rotate(24deg); } }

@@ -248,7 +248,7 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
   // Bơ đang làm tư thế khác (được vuốt, gãi cằm, boop, vồ, ăn, bế...) thì khỏi quay đầu theo len
   const TU_THE_KHAC = ['be', 'em', 'an', 'lan', 'vo', 'om-len', 'da-len', 'rinh', 'vo-rinh', 'ngo-chan', 'vuot', 'nguoc-long', 'giat',
     'giat-duoi', 'ngui', 'co-ma', 'nghieng', 'gai-cam', 'hong', 'khoe', 'boop', 'nhoi', 'chong-mat', 'roi', 'dap-tay', 'ngap',
-    'hat-xi', 'nung-ma-trai', 'nung-ma-phai', 'liem-mep', 'dinh-sua', 'chop-cham', 'ke-ke', 'ngoai-duoi'];
+    'hat-xi', 'nung-ma-trai', 'nung-ma-phai', 'liem-mep', 'dinh-sua', 'chop-cham', 'ke-ke', 'ngoai-duoi', 'quat-duoi'];
   function thoiTheoLen() { clearTimeout(theoLenTat); theoLenTat = null; svg.classList.remove('theo-len'); }
   function theoLen(p) {
     // đang vồ, ôm, ăn, bế, ngủ, dỗi... → thôi liền cho khỏi lẫn tư thế
@@ -367,7 +367,7 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
   const nutLongVu = document.getElementById('longVu');
   let lv = null, lvPos = null, lvDich = null, lvVong = 0, lvTat = null, lvNoi = 0, lvHatXi = 0;
   let lvRinh = null, lvVoRinh = 0;  // đang rình (hẹn giờ nhảy vồ), lần vồ gần nhất
-  let lvNhot = 0;  // lần lông vũ cù lưng/bụng gần nhất
+  let lvNhot = 0, lvDuoi = 0;  // lần lông vũ cù lưng/bụng, quét qua đuôi gần nhất
   // Thôi rình (lông đi chỗ khác, cất lông, Bơ dỗi/ngủ...)
   function boRinh() { clearTimeout(lvRinh); lvRinh = null; svg.classList.remove('rinh'); }
   // Lông sát đất trước mặt: Bơ hạ người, mông ngoáy ngoáy; 1,4 giây sau nhảy vồ (nghỉ 3 giây giữa hai lần vồ)
@@ -416,8 +416,15 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
         lvNhot = Date.now(); svg.style.setProperty('--nhot', p.x < 100 ? -1 : 1);
         giu('nhot-long', 900); conChoi(); dem('nhot'); noi('nhot');  // lướt ngang qua là hay gặp: lâu lâu mới nói
       }
+      // lông quét nhanh qua đuôi → đuôi quất qua quất lại đuổi theo lông, Bơ liếc ra sau (không quơ chân; nghỉ 2,5 giây)
+      const quetDuoi = vung === 'duoi' && Math.abs(vx) + Math.abs(vy) > 4;
+      if (quetDuoi && Date.now() - lvDuoi > 2500 && !dangDoi() && face.dataset.e !== 'ngu' && face.dataset.e !== 'buon' &&
+          !['rinh', 'vo-rinh', 'voi', 'hat-xi', 'be', 'an', 'bep'].some(c => svg.classList.contains(c))) {
+        lvDuoi = Date.now(); svg.classList.remove('nhot-long', 'quo-trai', 'quo-phai');
+        giu('quat-duoi', 1100); conChoi(); dem('quat_duoi'); noi('quat_duoi');
+      }
       // lông lơ lửng bên hông → nghiêng người quơ một chân về bên đó (lông còn lắc ở đó thì còn quơ)
-      const hong = boLongVuBenHong(p.x, p.y);
+      const hong = svg.classList.contains('quat-duoi') ? null : boLongVuBenHong(p.x, p.y);
       if (hong && !svg.classList.contains('rinh') && !svg.classList.contains('voi') && !dangDoi() && face.dataset.e !== 'ngu') {
         svg.classList.remove(hong === 'trai' ? 'quo-phai' : 'quo-trai');
         svg.classList.remove('nhot-long'); giu('quo-' + hong, 650); conChoi();

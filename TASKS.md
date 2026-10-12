@@ -435,7 +435,7 @@
 - [x] Rà soát giai đoạn 82, sửa lỗi tìm được
 
 ## Giai đoạn 83 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
-- [ ] Lông vũ quét qua đuôi Bơ → đuôi quất qua quất lại đuổi theo lông (như mèo thật chơi với đuôi), không vồ
+- [x] Lông vũ quét qua đuôi Bơ → đuôi quất qua quất lại đuổi theo lông (như mèo thật chơi với đuôi), không vồ
 - [ ] Rà soát giai đoạn 83, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)

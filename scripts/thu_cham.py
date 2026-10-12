@@ -133,6 +133,11 @@ def thu(pg, ten, w, h):
     for i in range(8):
         pg.mouse.move(X(150 - i * 8), Y(120) + 10); pg.wait_for_timeout(40)
     kq.append(("lông vũ lướt qua lưng → nhột", co("nhot-long")))
+    pg.mouse.move(X(184), Y(60) + 10); pg.wait_for_timeout(1200)  # lông quét nhanh lên xuống qua đuôi → đuôi quất theo lông
+    qd = False
+    for i in range(12):
+        pg.mouse.move(X(184), Y(70 + (i % 6) * 14) + 10); pg.wait_for_timeout(40); qd = qd or co("quat-duoi")
+    kq.append(("lông vũ quét qua đuôi → đuôi quất theo", qd))
     pg.keyboard.press('Escape'); pg.wait_for_timeout(100)
     kq.append(("Esc cất đồ chơi", pg.evaluate("!document.querySelector('.long-vu, .len, .laser')")))
     pg.focus('#face'); pg.keyboard.press('d'); pg.wait_for_timeout(60); kq.append(("phím D", co("dap-tay"))); nghi()

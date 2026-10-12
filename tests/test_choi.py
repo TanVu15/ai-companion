@@ -470,3 +470,14 @@ def test_khuya_mat_lim_dim_khong_de_mat_tron():
     dong = [d for d in css.splitlines() if d.startswith('.face[data-e="binh_thuong"] .meo.lim-dim') and "scaleY(.6)" in d][0]
     for c in [".giat", ".vo", ".be", ".rinh", ".om-len", ".theo-len", ".ke-ke", ".ngoai-duoi"]:
         assert c + "," in dong.split(":not(")[1] or c + ")" in dong.split(":not(")[1]
+
+
+def test_long_vu_quet_duoi():
+    """Lông vũ quét nhanh qua đuôi → đuôi quất qua quất lại đuổi theo lông (không quơ chân); nghỉ 2,5 giây."""
+    v = node("console.log(JSON.stringify([C.BO_CAU_CHOI.quat_duoi.length > 0, C.BO_DOC_TO.includes('quat_duoi'), C.boVungCham(184, 108)]))")
+    assert v == [True, False, "duoi"]
+    css = (config.ROOT / "web" / "meo.css").read_text(encoding="utf-8")
+    assert ".meo.quat-duoi .tail { animation" in css and "@keyframes meo-quat-duoi" in css
+    js = (config.ROOT / "web" / "do_choi.js").read_text(encoding="utf-8")
+    assert "const quetDuoi = vung === 'duoi' && Math.abs(vx) + Math.abs(vy) > 4;" in js and "Date.now() - lvDuoi > 2500" in js
+    assert "const hong = svg.classList.contains('quat-duoi') ? null : boLongVuBenHong(p.x, p.y);" in js
