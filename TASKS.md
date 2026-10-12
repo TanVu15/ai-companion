@@ -440,7 +440,11 @@
 
 ## Giai đoạn 84 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
 - [x] Bật "Giọng nói": lần "Đuôi Bơ bắt lông vũ nè!" đầu tiên trong ngày Bơ đọc to; các lần sau chỉ hiện chữ
-- [ ] Rà soát giai đoạn 84, sửa lỗi tìm được
+- [x] Rà soát giai đoạn 84, sửa lỗi tìm được
+
+## Giai đoạn 85 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
+- [ ] Cuộn len lăn tới chạm đuôi khi Bơ đang nằm bẹp (lười) → chỉ đuôi khẽ vẫy một cái, Bơ không thèm dậy, hé một mắt "Ừm... ai đó?" (mèo lười)
+- [ ] Rà soát giai đoạn 85, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):

@@ -5,9 +5,10 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
-## 2026-10-12 – Giai đoạn 84: giọng cho trò đuôi đuổi lông vũ
+## 2026-10-12 – Giai đoạn 84 xong: giọng cho trò đuôi đuổi lông vũ
 - Bật "Giọng nói": lần đầu tiên trong ngày lông vũ quét qua đuôi, Bơ chắc chắn nói và đọc to (ví dụ "Đuôi Bơ bắt lông vũ nè!"); các lần sau lâu lâu mới hiện chữ, không đọc (đã thử trên trình duyệt: lần 2 không đọc). 444 test qua hết.
 - Sửa lỗi cũ (giai đoạn 82): ở trò len chạm đuôi, lệnh "đang chơi, đừng ngủ gật" lỡ nằm trong dòng chú thích nên không chạy → Bơ có thể nằm bẹp/ngủ gật ngay sau khi len chạm đuôi. Giờ chạy đúng, có test chặn lỗi kiểu này.
+- Rà soát: `scripts/thu_cham.py` đạt hết sau khi sửa. Bộ ảnh `docs/anh/meo-tat-ca.png` có thêm "quat-duoi"; ảnh `docs/anh/long-vu-quet-duoi.png` chụp lại lúc đuôi đang quất trên trang thật (điện thoại, máy tính): đuôi không bị cắt, câu nói không đè lên mèo. 444 test qua hết.
 **Tân cần thử:** bật Giọng nói, bật lông vũ, quét lông lên xuống thật nhanh qua đuôi Bơ.
 
 ## 2026-10-12 – Giai đoạn 83 xong: đuôi đuổi lông vũ
