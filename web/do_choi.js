@@ -239,7 +239,7 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
     if (lenKeo || lenMoi || lenS.yen || !boLenChamDuoi(p.x, p.y) || Date.now() - duoiCuoi < 3000 || Date.now() - voLen < 1500) return false;
     if (dangDoi() || ['ngu', 'buon'].includes(face.dataset.e) || ['bep', 'be', 'om-len', 'an', 'lan'].some(c => svg.classList.contains(c))) return false;
     duoiCuoi = Date.now(); voLen = Date.now();
-    thoiTheoLen(); svg.classList.remove('vo'); giu('ngoai-duoi', 1400); keu('ngan'); noi('ngoai_duoi', true, dem('ngoai_duoi').ngoai_duoi === 1);  // lần đầu trong ngày: đọc to (khi bật Giọng nói) conChoi();
+    thoiTheoLen(); svg.classList.remove('vo'); giu('ngoai-duoi', 1400); keu('ngan'); noi('ngoai_duoi', true, dem('ngoai_duoi').ngoai_duoi === 1); conChoi();  // lần đầu trong ngày: đọc to (khi bật Giọng nói)
     lenS = { ...lenS, vx: 150 + Math.random() * 80, vy: -260 - Math.random() * 80 };  // đuôi hất len văng nhẹ ra sau
     return true;
   }
@@ -421,7 +421,8 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
       if (quetDuoi && Date.now() - lvDuoi > 2500 && !dangDoi() && face.dataset.e !== 'ngu' && face.dataset.e !== 'buon' &&
           !['rinh', 'vo-rinh', 'voi', 'hat-xi', 'be', 'an', 'bep'].some(c => svg.classList.contains(c))) {
         lvDuoi = Date.now(); svg.classList.remove('nhot-long', 'quo-trai', 'quo-phai');
-        giu('quat-duoi', 1100); conChoi(); dem('quat_duoi'); noi('quat_duoi');
+        giu('quat-duoi', 1100); conChoi();
+        if (dem('quat_duoi').quat_duoi === 1) noi('quat_duoi', true, true); else noi('quat_duoi');  // lần đầu trong ngày: hiện chữ + đọc to (khi bật Giọng nói)
       }
       // lông lơ lửng bên hông → nghiêng người quơ một chân về bên đó (lông còn lắc ở đó thì còn quơ)
       const hong = svg.classList.contains('quat-duoi') ? null : boLongVuBenHong(p.x, p.y);

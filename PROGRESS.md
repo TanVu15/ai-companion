@@ -5,6 +5,11 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-12 – Giai đoạn 84: giọng cho trò đuôi đuổi lông vũ
+- Bật "Giọng nói": lần đầu tiên trong ngày lông vũ quét qua đuôi, Bơ chắc chắn nói và đọc to (ví dụ "Đuôi Bơ bắt lông vũ nè!"); các lần sau lâu lâu mới hiện chữ, không đọc (đã thử trên trình duyệt: lần 2 không đọc). 444 test qua hết.
+- Sửa lỗi cũ (giai đoạn 82): ở trò len chạm đuôi, lệnh "đang chơi, đừng ngủ gật" lỡ nằm trong dòng chú thích nên không chạy → Bơ có thể nằm bẹp/ngủ gật ngay sau khi len chạm đuôi. Giờ chạy đúng, có test chặn lỗi kiểu này.
+**Tân cần thử:** bật Giọng nói, bật lông vũ, quét lông lên xuống thật nhanh qua đuôi Bơ.
+
 ## 2026-10-12 – Giai đoạn 83 xong: đuôi đuổi lông vũ
 - **Đuôi quất theo lông**: bật cần câu lông vũ, quét lông nhanh lên xuống qua đuôi Bơ → đuôi quất qua quất lại đuổi theo lông, Bơ nghiêng đầu liếc ra sau; lâu lâu nói "Đuôi Bơ bắt lông vũ nè!". Lông đứng yên/lắc nhẹ bên hông thì vẫn là quơ chân như cũ. Nghỉ 2,5 giây giữa hai lần. Ảnh `docs/anh/long-vu-quet-duoi.png`. `scripts/thu_cham.py` thử thêm — đạt hết. 441 test qua hết.
 - Rà soát, sửa: đang quất đuôi mà lông bay lên đầu (vồ), qua mũi (hắt xì) hay xuống đất (rình) thì trước đây hai tư thế lẫn vào nhau (đầu vừa liếc ra sau vừa ngửa lên vồ) → giờ bỏ tư thế quất đuôi, làm tư thế mới; lông lướt qua lưng lúc đang quất đuôi thì không chen tư thế nhột vào. `scripts/thu_cham.py` thử thêm trò này, và sửa chỗ thử quất đuôi trên máy tính hay báo LỖI oan (đường đưa lông sang đã quét qua đuôi, còn trong lúc nghỉ) — giờ đạt hết. 442 test qua hết.

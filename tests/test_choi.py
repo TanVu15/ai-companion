@@ -490,3 +490,18 @@ def test_quat_duoi_khong_lan_tu_the():
     assert "lvHatXi = Date.now(); svg.classList.remove('nhot-long', 'quat-duoi');" in js
     assert "svg.classList.remove('nhot-long', 'quat-duoi'); svg.classList.add('rinh');" in js
     assert "'quo-trai', 'quo-phai', 'quat-duoi', 'be', 'an'].some" in js
+
+
+def test_len_cham_duoi_van_con_choi():
+    """Len chạm đuôi vẫn gọi conChoi() (đang chơi thì Bơ đừng ngủ gật) — trước đây lỡ nằm trong dòng chú thích."""
+    js = (config.ROOT / "web" / "do_choi.js").read_text(encoding="utf-8")
+    assert "noi('ngoai_duoi', true, dem('ngoai_duoi').ngoai_duoi === 1); conChoi();" in js
+    for dong in js.splitlines():  # không dòng nào có lệnh nằm sau "//" kiểu "...) conChoi();"
+        if "//" in dong and not dong.strip().startswith("//"):
+            assert not dong.rstrip().endswith("conChoi();"), dong
+
+
+def test_quat_duoi_doc_to_lan_dau():
+    """Bật Giọng nói: lần quất đuôi đầu tiên trong ngày Bơ nói chắc chắn và đọc to; các lần sau lâu lâu mới hiện chữ."""
+    js = (config.ROOT / "web" / "do_choi.js").read_text(encoding="utf-8")
+    assert "if (dem('quat_duoi').quat_duoi === 1) noi('quat_duoi', true, true); else noi('quat_duoi');" in js

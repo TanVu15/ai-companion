@@ -439,7 +439,7 @@
 - [x] Rà soát giai đoạn 83, sửa lỗi tìm được
 
 ## Giai đoạn 84 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
-- [ ] Bật "Giọng nói": lần "Đuôi Bơ bắt lông vũ nè!" đầu tiên trong ngày Bơ đọc to; các lần sau chỉ hiện chữ
+- [x] Bật "Giọng nói": lần "Đuôi Bơ bắt lông vũ nè!" đầu tiên trong ngày Bơ đọc to; các lần sau chỉ hiện chữ
 - [ ] Rà soát giai đoạn 84, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
