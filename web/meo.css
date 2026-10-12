@@ -570,3 +570,19 @@ header.dang-long-vu { touch-action: none; position: relative; }
   .meo.nhot-long .body { animation: meo-rung-long .09s linear 8 alternate; }
 }
 @keyframes meo-rung-long { from { transform: translateX(-1.2px) scale(1.01, .99); } to { transform: translateX(1.2px) scale(.99, 1.01); } }
+
+/* Len chạm đuôi: đuôi giật mình vểnh lên (xù nhẹ), Bơ ngoái đầu sang phải nhìn đuôi, mắt tròn, miệng chữ o, tai phải xoay ra sau */
+.meo.ngoai-duoi .head { transform: translate(6px, 2px) rotate(13deg); }
+.meo.ngoai-duoi .nhin { transform: translate(6px, -1px); }
+.meo.ngoai-duoi :is(.mat-cuoi, .mat-nham) { display: none !important; } .meo.ngoai-duoi .mat-mo, .face[data-e] .meo.lim-dim.ngoai-duoi .mat-mo { display: inline !important; transform: scale(1.2); }
+.meo.ngoai-duoi :is(.mieng-w, .mieng-buon) { display: none !important; } .meo.ngoai-duoi .mieng-mo { display: inline !important; transform: scale(.5); }
+.meo.ngoai-duoi .luoi { display: none; }
+.meo.ngoai-duoi .ear-l { transform: rotate(-4deg); } .meo.ngoai-duoi .ear-r { transform: rotate(22deg); }
+.meo.ngoai-duoi .tail-ngu { display: none !important; }
+.meo.ngoai-duoi .tail { transform: rotate(6deg); }
+.meo.ngoai-duoi .tail .vien { stroke-width: 26; } .meo.ngoai-duoi .tail .long { stroke-width: 20; }
+@media (prefers-reduced-motion: no-preference) {
+  .meo.ngoai-duoi .tail { animation: meo-duoi-vinh .45s ease-out; }
+  .meo.ngoai-duoi { animation: meo-giat .45s ease-out; }
+}
+@keyframes meo-duoi-vinh { 0% { transform: rotate(-6deg); } 30% { transform: rotate(22deg); } 60% { transform: rotate(2deg); } 100% { transform: rotate(6deg); } }

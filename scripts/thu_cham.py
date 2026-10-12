@@ -109,6 +109,17 @@ def thu(pg, ten, w, h):
         pg.mouse.move(x0 + 10 * i, fy); pg.wait_for_timeout(16)
     pg.mouse.up(); pg.mouse.move(5, 5)
     kq.append(("len lăn qua trước mặt → quay đầu nhìn theo", cho("theo-len", 600)))
+    pg.wait_for_timeout(1000)  # ném len từ mép phải lăn vào đuôi → đuôi vểnh, Bơ ngoái lại nhìn đuôi (không vồ)
+    l = pg.locator('.len').bounding_box(); x1 = min(X(224), kh[0] + kh[2] - 18)
+    pg.mouse.move(l['x'] + 15, l['y'] + 15); pg.mouse.down()
+    for i in range(1, 9):
+        pg.mouse.move(l['x'] + 15 + (x1 - l['x'] - 15) * i / 8, l['y'] + 15 + (fy - l['y'] - 15) * i / 8); pg.wait_for_timeout(30)
+    for _ in range(100):  # cầm len chờ ~3 giây (len lăn ngược về có thể vừa chạm đuôi: đợi hết lúc nghỉ)
+        pg.mouse.move(x1, fy); pg.wait_for_timeout(30)
+    for i in range(1, 5):
+        pg.mouse.move(x1 - 8 * i, fy); pg.wait_for_timeout(16)
+    pg.mouse.up(); pg.mouse.move(5, 5)
+    kq.append(("len lăn chạm đuôi → ngoái lại nhìn đuôi", cho("ngoai-duoi", 1500)))
     pg.click('#longVu'); pg.wait_for_timeout(300); kq.append(("lông vũ", pg.evaluate("!!document.querySelector('.long-vu')")))
     for i in range(8):
         pg.mouse.move(X(100), Y(120 + i * 8) + 10); pg.wait_for_timeout(30)

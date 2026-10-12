@@ -5,6 +5,10 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-11 – Giai đoạn 81: len chạm đuôi
+- **Ai đụng đuôi Bơ?**: ném/lăn cuộn len từ bên phải vào đuôi Bơ → đuôi giật mình vểnh lên, xù nhẹ, Bơ ngoái đầu sang phải nhìn đuôi, mắt tròn, miệng chữ o, tai xoay ra sau "Ai đụng đuôi Bơ?", đuôi hất len văng nhẹ ra (không vồ như chạm chân). Nghỉ 3 giây giữa hai lần. Không tính khi: len vừa bấm nút thả ra tự lăn vào, len vừa bị chính Bơ vồ/đá văng qua đuôi, đang kéo len, Bơ ngủ/buồn/nằm bẹp/được bế/ôm len. Ảnh `docs/anh/len-cham-duoi.png` (điện thoại, máy tính). `scripts/thu_cham.py` thử thêm — đạt hết. 439 test qua hết.
+**Tân cần thử:** bật nút cuộn len, kéo len xuống sàn sát mép phải rồi đẩy nhẹ sang trái cho lăn vào đuôi Bơ.
+
 ## 2026-10-11 – Giai đoạn 80 xong: lông vũ cù Bơ
 - **Nhột**: bật cần câu lông vũ, lướt lông ngang qua lưng hay bụng Bơ → lông Bơ rùng rùng, Bơ cúi đầu quay về phía chỗ nhột, mắt cười, má hồng, tai giật, lâu lâu nói "Hí hí, nhột! Lông vũ cù Bơ hả~". Lông đứng yên thì không tính; nghỉ 3 giây giữa hai lần. Máy bật giảm chuyển động thì không rùng, chỉ đổi tư thế. Ảnh `docs/anh/long-vu-cu-lung.png` (điện thoại, máy tính, mèo đen màn hình thấp, mướp vằn nền tối). `scripts/thu_cham.py` thử thêm — đạt hết. 438 test qua hết.
 - Rà soát, sửa: đang nhột mà lông bay ngay lên đầu (vồ), sang hông (quơ chân), xuống đất (rình) hay qua mũi (hắt xì) thì trước đây hai tư thế lẫn vào nhau → giờ bỏ tư thế nhột, làm tư thế mới. Câu "nhột" chỉ thỉnh thoảng hiện (lướt qua bụng là chuyện hay gặp, cho khỏi lắm lời). Bộ ảnh `docs/anh/meo-tat-ca.png` có thêm "nhot-long". 438 test qua hết, `scripts/thu_cham.py` đạt hết.

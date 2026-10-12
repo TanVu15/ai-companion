@@ -444,3 +444,19 @@ def test_khoe_chien_tich():
     assert js.count("daBat();") >= 5  # laser vồ, laser rình-vồ, len vồ, đá len, lông vũ rình-vồ
     choi = (config.ROOT / "web" / "choi.js").read_text(encoding="utf-8")
     assert "noi('khoe', true, dem('khoe').khoe === 1);" in choi  # lần đầu trong ngày đọc to
+
+
+def test_len_cham_duoi_ngoai_lai():
+    """Cuộn len lăn chạm đuôi Bơ → đuôi vểnh, Bơ ngoái lại "Ai đụng đuôi Bơ?" (không vồ); len ở chân, trên đầu, bên trái thì không."""
+    v = node("""console.log(JSON.stringify([C.boLenChamDuoi(184, 108), C.boLenChamDuoi(175, 80), C.boLenChamDuoi(185, 176),
+      C.boLenChamDuoi(118, 174), C.boLenChamDuoi(40, 170), C.boLenChamDuoi(100, 20), C.boLenChamDuoi(225, 176),
+      C.BO_CAU_CHOI.ngoai_duoi.length > 0]))""")
+    assert v == [True, True, True, False, False, False, False, True]
+    css = (config.ROOT / "web" / "meo.css").read_text(encoding="utf-8")
+    assert ".meo.ngoai-duoi .head" in css and "@keyframes meo-duoi-vinh" in css
+    js = (config.ROOT / "web" / "do_choi.js").read_text(encoding="utf-8")
+    # kiểm tra chạm đuôi trước khi vồ; nghỉ 3 giây; ngủ/buồn/nằm bẹp/bế thì thôi; len vừa thả ra khỏi tính liền
+    assert "if (lenChamDuoi(p)) return;\n    if (lenKeo || !boVungCham" in js
+    assert "Date.now() - duoiCuoi < 3000 || Date.now() - voLen < 1500" in js and "['ngu', 'buon'].includes(face.dataset.e)" in js
+    assert "lenMoi = true;" in js and "thoiOmLen(); lenMoi = false;" in js and "lenKeo || lenMoi || lenS.yen" in js
+    assert "'ngoai-duoi'" in js.split("const TU_THE_KHAC")[1].split("];")[0]

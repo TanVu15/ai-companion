@@ -427,7 +427,7 @@
 - [x] Rà soát giai đoạn 80, sửa lỗi tìm được
 
 ## Giai đoạn 81 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
-- [ ] Cuộn len lăn tới chạm đuôi Bơ → đuôi giật mình vểnh lên, Bơ ngoái lại nhìn đuôi "Ai đụng đuôi Bơ?" (thay vì vồ như chạm chân)
+- [x] Cuộn len lăn tới chạm đuôi Bơ → đuôi giật mình vểnh lên, Bơ ngoái lại nhìn đuôi "Ai đụng đuôi Bơ?" (thay vì vồ như chạm chân)
 - [ ] Rà soát giai đoạn 81, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
