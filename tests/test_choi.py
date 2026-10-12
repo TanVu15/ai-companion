@@ -524,3 +524,12 @@ def test_vay_duoi_ngu_khuya_van_he_mat():
     """Khuya (mắt lim dim) mà chạm đuôi quấn lúc nằm bẹp: vẫn hé mắt lười như ban ngày (luật lim dim không đè)."""
     css = (config.ROOT / "web" / "meo.css").read_text(encoding="utf-8")
     assert '.face[data-e="binh_thuong"] .meo.lim-dim.bep.vay-duoi-ngu:not(.chop) .mat-mo { transform: scaleY(.4); }' in css
+
+
+def test_nam_bep_duoc_vuot_van_nam():
+    """Nằm bẹp mà được vuốt → vẫn nằm (scheduleSleep(true) không bỏ 'bep'), không nhồi bột (chân đang giấu)."""
+    js = (config.ROOT / "web" / "choi.js").read_text(encoding="utf-8")
+    assert "const bep = svg.classList.contains('bep');" in js and "scheduleSleep(bep);" in js
+    assert "face.dataset.e !== 'ngu' && !bep && boNhoiBot(" in js
+    ht = (config.ROOT / "web" / "hop_thoai.js").read_text(encoding="utf-8")
+    assert "function scheduleSleep(giuBep)" in ht and "if (window.meo && !giuBep) meo.dat('bep', false);" in ht

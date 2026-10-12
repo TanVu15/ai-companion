@@ -409,7 +409,9 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boChamDuoiNgu,
       nguocLong(); return;
     }
     // rê chuột vuốt ve cũng là đang chơi: Bơ đang thức thì đừng ngủ gật giữa chừng (đang ngủ thì rừ rừ trong mơ)
-    if (face.dataset.e !== 'ngu' && typeof scheduleSleep === 'function') scheduleSleep();
+    // đang nằm bẹp (ổ bánh mì) thì cứ nằm vậy cho vuốt, không ngồi dậy
+    const bep = svg.classList.contains('bep');
+    if (face.dataset.e !== 'ngu' && typeof scheduleSleep === 'function') scheduleSleep(bep);
     const loai = vung === 'cam' ? 'gai_cam' : 'vuot';
     if (!vuotDangChay) {
       vuotDangChay = loai; dem(loai); vuotBatDau = Date.now(); daNoiNhoi = false;
@@ -423,7 +425,7 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boChamDuoiNgu,
     giu(loai === 'gai_cam' ? 'gai-cam' : 'vuot', 700);
     if (loai === 'vuot') tim(pos.x, pos.y - 10);
     // vuốt lâu liền một mạch → Bơ nhồi bột (dẫm sữa) như mèo con, mắt lim dim
-    if (loai === 'vuot' && face.dataset.e !== 'ngu' && boNhoiBot((Date.now() - vuotBatDau) / 1000)) {
+    if (loai === 'vuot' && face.dataset.e !== 'ngu' && !bep && boNhoiBot((Date.now() - vuotBatDau) / 1000)) {  // (nằm bẹp: chân đang giấu, khỏi nhồi)
       giu('nhoi', 900);
       if (!daNoiNhoi) { daNoiNhoi = true; dem('nhoi'); noi('nhoi', true); }
     }

@@ -146,9 +146,10 @@ menuDlg.addEventListener('click', ev => {
 var SLEEP_AFTER = 3 * 60 * 1000;
 var idleTimer = null, bepTimer = null;
 // 1 phút không ai đụng: Bơ nằm bẹp kiểu "ổ bánh mì" (giấu chân); 3 phút: ngủ gật. Có gì xảy ra là ngồi dậy.
-function scheduleSleep() {
+// giuBep: đang được vuốt lúc nằm bẹp → cứ nằm vậy cho vuốt (mèo thật nằm ổ bánh mì cho vuốt), chỉ tính lại giờ ngủ gật
+function scheduleSleep(giuBep) {
   clearTimeout(idleTimer); clearTimeout(bepTimer);
-  if (window.meo) meo.dat('bep', false);
+  if (window.meo && !giuBep) meo.dat('bep', false);
   bepTimer = setTimeout(() => { if (!send.disabled && !speaking && face.dataset.e !== 'ngu' && window.meo) meo.dat('bep', true); }, 60 * 1000);
   idleTimer = setTimeout(() => {
     if (send.disabled || speaking) return;

@@ -45,6 +45,8 @@ def thu(pg, ten, w, h):
     pg.evaluate("meo.dat('bep', true)"); pg.wait_for_timeout(300)  # nằm bẹp mà chạm đuôi quấn quanh người → đuôi khẽ vẫy, vẫn nằm
     pg.mouse.click(X(108), Y(187)); pg.wait_for_timeout(60)
     kq.append(("nằm bẹp, chạm đuôi quấn → khẽ vẫy, vẫn nằm", co("vay-duoi-ngu") and co("bep") and not co("rut-chan")))
+    pg.mouse.move(X(5), Y(5)); pg.evaluate("meo.dat('bep', true)"); pg.wait_for_timeout(300)  # nằm bẹp mà được vuốt đầu → vẫn nằm, nhắm mắt
+    keo(70, 60, 130, 60); kq.append(("nằm bẹp, được vuốt → vẫn nằm", co("vuot") and co("bep"))); pg.mouse.up(); pg.mouse.move(X(5), Y(5))
     pg.evaluate("meo.dat('bep', false)"); nghi()
     pg.mouse.click(X(118), Y(174)); pg.wait_for_timeout(120); pg.mouse.click(X(118), Y(174)); pg.wait_for_timeout(60)
     kq.append(("đập tay", co("dap-tay"))); nghi()

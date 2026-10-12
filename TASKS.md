@@ -447,7 +447,7 @@
 - [x] Rà soát giai đoạn 85, sửa lỗi tìm được
 
 ## Giai đoạn 86 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
-- [ ] Bơ đang nằm bẹp mà được vuốt lưng/đầu → Bơ vẫn nằm (như mèo thật nằm ổ bánh mì cho vuốt), mắt híp, rừ rừ; thôi vuốt thì vẫn nằm bẹp
+- [x] Bơ đang nằm bẹp mà được vuốt lưng/đầu → Bơ vẫn nằm (như mèo thật nằm ổ bánh mì cho vuốt), mắt híp, rừ rừ; thôi vuốt thì vẫn nằm bẹp
 - [ ] Rà soát giai đoạn 86, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
