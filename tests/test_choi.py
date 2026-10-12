@@ -460,3 +460,11 @@ def test_len_cham_duoi_ngoai_lai():
     assert "Date.now() - duoiCuoi < 3000 || Date.now() - voLen < 1500" in js and "['ngu', 'buon'].includes(face.dataset.e)" in js
     assert "lenMoi = true;" in js and "thoiOmLen(); lenMoi = false;" in js and "lenKeo || lenMoi || lenS.yen" in js
     assert "'ngoai-duoi'" in js.split("const TU_THE_KHAC")[1].split("];")[0]
+
+
+def test_khuya_mat_lim_dim_khong_de_mat_tron():
+    """Khuya (lim-dim) mắt lim dim, nhưng lúc giật mình, vồ, rình, nhìn theo len, ke ke, ngoái đuôi, được bế... mắt vẫn tròn."""
+    css = (config.ROOT / "web" / "meo.css").read_text(encoding="utf-8")
+    dong = [d for d in css.splitlines() if d.startswith('.face[data-e="binh_thuong"] .meo.lim-dim') and "scaleY(.6)" in d][0]
+    for c in [".giat", ".vo", ".be", ".rinh", ".om-len", ".theo-len", ".ke-ke", ".ngoai-duoi"]:
+        assert c + "," in dong.split(":not(")[1] or c + ")" in dong.split(":not(")[1]

@@ -260,8 +260,8 @@ header.dang-laser { touch-action: none; cursor: crosshair; position: relative; }
 .meo:is(.lan, .mung) :is(.mat-mo, .mat-nham) { display: none !important; }
 .meo:is(.lan, .mung) .mat-cuoi { display: inline !important; }
 .meo.mung :is(.mieng-w, .mieng-buon) { display: none !important; } .meo.mung .mieng-mo { display: inline !important; }
-/* Khuya (meo.js đặt lim-dim): mắt lim dim lúc bình thường */
-.face[data-e="binh_thuong"] .meo.lim-dim .mat-mo { transform: scaleY(.6); }
+/* Khuya (meo.js đặt lim-dim): mắt lim dim lúc bình thường (trừ lúc giật mình, vồ, rình, nhìn theo len... thì mắt vẫn tròn xoe) */
+.face[data-e="binh_thuong"] .meo.lim-dim:not(.giat, .vo, .voi, .be, .rinh, .vo-rinh, .om-len, .theo-len, .ke-ke, .ngoai-duoi, .nguoc-long, .chop-cham) .mat-mo { transform: scaleY(.6); }
 .face[data-e="binh_thuong"] .meo.lim-dim.chop .mat-mo { transform: scaleY(.1); }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -574,7 +574,7 @@ header.dang-long-vu { touch-action: none; position: relative; }
 /* Len chạm đuôi: đuôi giật mình vểnh lên (xù nhẹ), Bơ ngoái đầu sang phải nhìn đuôi, mắt tròn, miệng chữ o, tai phải xoay ra sau */
 .meo.ngoai-duoi .head { transform: translate(6px, 2px) rotate(13deg); }
 .meo.ngoai-duoi .nhin { transform: translate(6px, -1px); }
-.meo.ngoai-duoi :is(.mat-cuoi, .mat-nham) { display: none !important; } .meo.ngoai-duoi .mat-mo, .face[data-e] .meo.lim-dim.ngoai-duoi .mat-mo { display: inline !important; transform: scale(1.2); }
+.meo.ngoai-duoi :is(.mat-cuoi, .mat-nham) { display: none !important; } .meo.ngoai-duoi .mat-mo { display: inline !important; transform: scale(1.2); }
 .meo.ngoai-duoi :is(.mieng-w, .mieng-buon) { display: none !important; } .meo.ngoai-duoi .mieng-mo { display: inline !important; transform: scale(.5); }
 .meo.ngoai-duoi .luoi { display: none; }
 .meo.ngoai-duoi .ear-l { transform: rotate(-4deg); } .meo.ngoai-duoi .ear-r { transform: rotate(22deg); }
