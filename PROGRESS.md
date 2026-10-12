@@ -5,8 +5,9 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
-## 2026-10-12 – Giai đoạn 82: giọng cho trò len chạm đuôi
+## 2026-10-12 – Giai đoạn 82 xong: giọng cho trò len chạm đuôi
 - Bật "Giọng nói": lần len chạm đuôi đầu tiên trong ngày Bơ đọc to "Ai đụng đuôi Bơ?"; các lần sau chỉ hiện chữ (đã thử trên trình duyệt: lần 2 không đọc). 440 test qua hết.
+- Rà soát, sửa: `scripts/chup_meo.py` chụp lúc khuya thì ảnh mèo bị mắt lim dim (khác mỗi lần chụp) → giờ luôn đặt giờ trình duyệt 10h sáng. Bộ ảnh `docs/anh/meo-tat-ca.png` chụp lại, có thêm "ngoai-duoi". 440 test qua hết.
 **Tân cần thử:** bật Giọng nói, lăn cuộn len vào đuôi Bơ.
 
 ## 2026-10-12 – Giai đoạn 81 xong: len chạm đuôi

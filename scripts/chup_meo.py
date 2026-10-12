@@ -6,6 +6,7 @@ Ra: trang-dien-thoai.png (390×800), trang-may-tinh.png (1100×800), meo-<cảm 
      meo-tat-ca.png (mọi cảm xúc trên một tấm).
 """
 import base64
+from datetime import datetime
 import os
 import socket
 import subprocess
@@ -24,6 +25,11 @@ TRANG_THAI = config.EMOTIONS + ["ngu"]
 # (Ảnh chụp cả trang cho PROGRESS.md đừng đặt tên meo-<tư thế>.png: script này sẽ ghi đè.)
 TRANG_THAI_NHO = ["ngap", "liem", "cho", "lan", "mung", "bep", "hong", "nghe", "nguoc-long", "dap-tay", "rua-mat", "chong-mat",
                   "hat-xi", "boop", "nung-ma-trai", "be", "dinh-sua", "rinh", "vo-rinh", "nhoi", "chop-cham", "quo-trai", "om-len", "ngo-chan", "khoe", "theo-len", "ke-ke", "nhot-long", "ngoai-duoi"]
+
+
+def ban_ngay(pg):
+    """Chụp lúc khuya thì mắt Bơ lim dim (meo.js) → đặt giờ trình duyệt là 10h sáng cho ảnh giống nhau mỗi lần chụp."""
+    pg.clock.set_fixed_time(datetime.now().replace(hour=10, minute=0, second=0))
 
 
 def cong_trong():
@@ -50,11 +56,11 @@ def main(out):
             b = p.chromium.launch()
             for ten, w, h in [("dien-thoai", 390, 800), ("may-tinh", 1100, 800)]:
                 pg = b.new_page(viewport={"width": w, "height": h}, reduced_motion="reduce")
-                pg.goto(url); pg.wait_for_timeout(800)
+                ban_ngay(pg); pg.goto(url); pg.wait_for_timeout(800)
                 pg.screenshot(path=out / f"trang-{ten}.png")
                 pg.close()
             pg = b.new_page(viewport={"width": 390, "height": 800}, reduced_motion="reduce", device_scale_factor=2)
-            pg.goto(url); pg.wait_for_timeout(500)
+            ban_ngay(pg); pg.goto(url); pg.wait_for_timeout(500)
             face = pg.locator("#face")
             for e in TRANG_THAI:
                 pg.evaluate("e => { face.dataset.e = e; face.className = 'face'; }", e)

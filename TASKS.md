@@ -432,7 +432,11 @@
 
 ## Giai đoạn 82 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
 - [x] Bật "Giọng nói": lần "Ai đụng đuôi Bơ?" đầu tiên trong ngày Bơ đọc to; các lần sau chỉ hiện chữ
-- [ ] Rà soát giai đoạn 82, sửa lỗi tìm được
+- [x] Rà soát giai đoạn 82, sửa lỗi tìm được
+
+## Giai đoạn 83 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
+- [ ] Lông vũ quét qua đuôi Bơ → đuôi quất qua quất lại đuổi theo lông (như mèo thật chơi với đuôi), không vồ
+- [ ] Rà soát giai đoạn 83, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):
