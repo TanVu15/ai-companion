@@ -5,8 +5,9 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
-## 2026-10-12 – Giai đoạn 86: nằm ổ bánh mì cho vuốt
+## 2026-10-12 – Giai đoạn 86 xong: nằm ổ bánh mì cho vuốt
 - **Vuốt mèo đang nằm bẹp**: Bơ đang nằm bẹp (ổ bánh mì) mà được vuốt đầu/lưng → Bơ cứ nằm vậy cho vuốt, nhắm mắt, tim bay, rừ rừ (trước đây vừa vuốt là Bơ ngồi bật dậy). Thôi vuốt thì vẫn nằm bẹp. Lúc nằm bẹp chân đang giấu nên không nhồi bột. Cho ăn, chơi đồ chơi, nhắn tin thì Bơ vẫn ngồi dậy như cũ. Ảnh `docs/anh/bep-duoc-vuot.png` (điện thoại, máy tính). `scripts/thu_cham.py` thử thêm — đạt hết. 447 test qua hết.
+- Rà soát: chạm đuôi quấn, vuốt, rồi cho ăn/bật đồ chơi → Bơ ngồi dậy đúng như cũ; vuốt lúc nằm bẹp vẫn tính giờ ngủ gật lại từ đầu (đang được vuốt thì không ngủ gật). Thấy thêm: lúc nằm bẹp đầu Bơ thấp xuống mà vùng chạm vẫn như lúc ngồi (chạm sát cằm có thể trúng nhầm) → ghi thành việc giai đoạn 87.
 **Tân cần thử:** để yên Bơ 1 phút cho Bơ nằm bẹp, rồi vuốt đầu Bơ.
 
 ## 2026-10-12 – Giai đoạn 85 xong: mèo lười vẫy đuôi
