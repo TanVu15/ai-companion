@@ -452,7 +452,12 @@
 
 ## Giai đoạn 87 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
 - [x] Nằm bẹp thì đầu Bơ thấp xuống 10 đơn vị, nhưng vùng chạm (đầu, cằm, mũi, má) vẫn tính như lúc ngồi → dời vùng chạm theo tư thế nằm bẹp (có test)
-- [ ] Rà soát giai đoạn 87, sửa lỗi tìm được
+- [x] Rà soát giai đoạn 87, sửa lỗi tìm được
+
+## Giai đoạn 88 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
+- [ ] Nằm bẹp mà được gãi cằm: Bơ chỉ đổi mặt, đầu không ngửa → cho Bơ khẽ ngẩng cằm lên (vẫn nằm bẹp), có ảnh
+- [ ] `scripts/thu_cham.py`: trò "len nằm yên sát bên → ôm rồi đá ra" thỉnh thoảng báo LỖI oan trên máy tính (chạy lại thì đạt) → tìm nguyên nhân, làm cho chắc
+- [ ] Rà soát giai đoạn 88, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):

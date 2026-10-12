@@ -548,4 +548,12 @@ def test_vung_cham_theo_tu_the_nam_bep():
     m = node("const q = C.boDiemTuThe(100, 98, true); console.log(JSON.stringify([C.boChiTietDau(q.x, q.y), C.boGanMui(q.x, q.y)]))")
     assert m == ["mui", True]
     js = (config.ROOT / "web" / "choi.js").read_text(encoding="utf-8")
-    assert "boDiemTuThe(p.x, p.y, svg.classList.contains('bep'))" in js
+    assert "boDiemTuThe(p.x, p.y, svg.classList.contains('bep'), face.dataset.e === 'ngu')" in js
+
+
+def test_vung_cham_luc_ngu_dau_guc():
+    """Đang ngủ đầu gục xuống 14 (nằm bẹp mà ngủ thì 24): vuốt chỗ đầu đã gục vẫn là vuốt đầu (rừ rừ trong mơ)."""
+    v = node("""const f = (x, y, b, n) => { const q = C.boDiemTuThe(x, y, b, n); return C.boVungCham(q.x, q.y); };
+      console.log(JSON.stringify([f(100, 130, false, false), f(100, 130, false, true), f(100, 140, true, true),
+        f(100, 150, false, true), C.boDiemTuThe(45, 140, false, true)]))""")
+    assert v == ["bung", "cam", "cam", "bung", {"x": 45, "y": 140}]

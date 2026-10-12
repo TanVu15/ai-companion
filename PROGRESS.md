@@ -5,9 +5,11 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
-## 2026-10-12 – Giai đoạn 87: vùng chạm theo tư thế nằm bẹp
-- **Chạm trúng chỗ khi Bơ nằm bẹp**: lúc nằm bẹp (ổ bánh mì) đầu Bơ hạ thấp xuống, mà trước đây vùng chạm vẫn tính như lúc ngồi → gãi cằm (đã hạ thấp) lại bị tính là chọc bụng, boop mũi/nựng má lệch. Giờ vùng chạm (đầu, cằm, tai, mũi, má, ngửi tay, mắt nhìn theo tay) đi theo tư thế nằm. Ảnh `docs/anh/bep-gai-cam.png` (điện thoại, máy tính: nằm bẹp được gãi cằm). `scripts/thu_cham.py` thử thêm — đạt hết. 449 test qua hết.
+## 2026-10-12 – Giai đoạn 87 xong: vùng chạm theo tư thế nằm bẹp
+- **Chạm trúng chỗ khi Bơ nằm bẹp**: lúc nằm bẹp (ổ bánh mì) đầu Bơ hạ thấp xuống, mà trước đây vùng chạm vẫn tính như lúc ngồi → gãi cằm (đã hạ thấp) lại bị tính là chọc bụng, boop mũi/nựng má lệch. Giờ vùng chạm (đầu, cằm, tai, mũi, má, ngửi tay, mắt nhìn theo tay) đi theo tư thế nằm. Ảnh `docs/anh/bep-gai-cam.png` (điện thoại, máy tính: nằm bẹp được gãi cằm). `scripts/thu_cham.py` thử thêm — đạt hết. 448 test qua hết.
 - Sửa thêm: đang "hào hứng" mà nằm bẹp thì cả con mèo cứ nhún nhảy → giờ nằm bẹp thì nằm yên.
+- Rà soát, sửa: lúc Bơ ngủ đầu gục xuống thấp, vuốt chỗ đầu đã gục trước đây bị tính là bụng (không rừ rừ trong mơ) → giờ vùng chạm cũng đi theo đầu gục. 449 test qua hết, `scripts/thu_cham.py` đạt hết. Thấy thêm: trò len "ôm rồi đá ra" thỉnh thoảng báo lỗi oan khi thử tự động → ghi thành việc giai đoạn 88.
+**Tân cần thử:** để yên Bơ 1 phút cho Bơ nằm bẹp, rồi gãi ngay dưới cằm Bơ (Bơ phải cười tít "mèo béo thích lắm luôn", không giật mình như bị chọc bụng).
 
 ## 2026-10-12 – Giai đoạn 86 xong: nằm ổ bánh mì cho vuốt
 - **Vuốt mèo đang nằm bẹp**: Bơ đang nằm bẹp (ổ bánh mì) mà được vuốt đầu/lưng → Bơ cứ nằm vậy cho vuốt, nhắm mắt, tim bay, rừ rừ (trước đây vừa vuốt là Bơ ngồi bật dậy). Thôi vuốt thì vẫn nằm bẹp. Lúc nằm bẹp chân đang giấu nên không nhồi bột. Cho ăn, chơi đồ chơi, nhắn tin thì Bơ vẫn ngồi dậy như cũ. Ảnh `docs/anh/bep-duoc-vuot.png` (điện thoại, máy tính). `scripts/thu_cham.py` thử thêm — đạt hết. 447 test qua hết.
