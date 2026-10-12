@@ -443,7 +443,7 @@
 - [x] Rà soát giai đoạn 84, sửa lỗi tìm được
 
 ## Giai đoạn 85 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
-- [ ] Cuộn len lăn tới chạm đuôi khi Bơ đang nằm bẹp (lười) → chỉ đuôi khẽ vẫy một cái, Bơ không thèm dậy, hé một mắt "Ừm... ai đó?" (mèo lười)
+- [x] Bơ đang nằm bẹp mà chạm vào đuôi quấn quanh người (hay chỗ chân đang giấu) → đầu đuôi khẽ vẫy, Bơ hé mắt lười, không thèm ngồi dậy (đổi từ ý "len chạm đuôi lúc nằm bẹp": len gần như không bao giờ lăn tới lúc Bơ nằm bẹp)
 - [ ] Rà soát giai đoạn 85, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)

@@ -42,6 +42,10 @@ def thu(pg, ten, w, h):
     keo(42, 160, 42, 110); kq.append(("vuốt ngược lông", co("nguoc-long"))); pg.mouse.up(); nghi()
     pg.mouse.click(X(52), Y(25)); pg.wait_for_timeout(60); kq.append(("chạm tai", co("giat-tai-trai"))); nghi()
     pg.mouse.click(X(186), Y(105)); pg.wait_for_timeout(60); kq.append(("chạm đuôi", co("giat-duoi"))); nghi()
+    pg.evaluate("meo.dat('bep', true)"); pg.wait_for_timeout(300)  # nằm bẹp mà chạm đuôi quấn quanh người → đuôi khẽ vẫy, vẫn nằm
+    pg.mouse.click(X(108), Y(187)); pg.wait_for_timeout(60)
+    kq.append(("nằm bẹp, chạm đuôi quấn → khẽ vẫy, vẫn nằm", co("vay-duoi-ngu") and co("bep") and not co("rut-chan")))
+    pg.evaluate("meo.dat('bep', false)"); nghi()
     pg.mouse.click(X(118), Y(174)); pg.wait_for_timeout(120); pg.mouse.click(X(118), Y(174)); pg.wait_for_timeout(60)
     kq.append(("đập tay", co("dap-tay"))); nghi()
     pg.mouse.click(X(100), Y(145)); pg.wait_for_timeout(60); kq.append(("chọc bụng", co("giat"))); nghi()

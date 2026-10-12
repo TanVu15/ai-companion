@@ -505,3 +505,16 @@ def test_quat_duoi_doc_to_lan_dau():
     """Bật Giọng nói: lần quất đuôi đầu tiên trong ngày Bơ nói chắc chắn và đọc to; các lần sau lâu lâu mới hiện chữ."""
     js = (config.ROOT / "web" / "do_choi.js").read_text(encoding="utf-8")
     assert "if (dem('quat_duoi').quat_duoi === 1) noi('quat_duoi', true, true); else noi('quat_duoi');" in js
+
+
+def test_nam_bep_cham_duoi_quan():
+    """Nằm bẹp mà chạm đuôi quấn quanh người (hay chỗ chân giấu) → đầu đuôi khẽ vẫy, Bơ hé mắt lười, không ngồi dậy."""
+    v = node("console.log(JSON.stringify([C.boChamDuoiNgu(152, 166), C.boChamDuoiNgu(108, 187), C.boChamDuoiNgu(58, 178),"
+             " C.boChamDuoiNgu(100, 74), C.boChamDuoiNgu(184, 108), C.BO_CAU_CHOI.duoi_ngu.length > 0, C.BO_DOC_TO.includes('duoi_ngu')]))")
+    assert v == [True, True, True, False, False, True, False]
+    js = (config.ROOT / "web" / "choi.js").read_text(encoding="utf-8")
+    khoi = js.split("if (svg.classList.contains('bep') && (vung === 'chan' || (p && boChamDuoiNgu(p.x, p.y))))")[1].split("return;")[0]
+    assert "giu('vay-duoi-ngu'" in khoi and "conChoi" not in khoi  # vẫn nằm bẹp
+    assert "cham(ev, boVungCham(p.x, p.y), b.ngu, p);" in js
+    css = (config.ROOT / "web" / "meo.css").read_text(encoding="utf-8")
+    assert ".meo.bep.vay-duoi-ngu .tail-ngu { animation" in css and "@keyframes meo-vay-duoi-ngu" in css

@@ -5,6 +5,10 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-12 – Giai đoạn 85: mèo lười vẫy đuôi
+- **Vẫy đuôi lười**: để yên Bơ 1 phút cho Bơ nằm bẹp (ổ bánh mì), rồi chạm vào cái đuôi đang quấn quanh người (hay chỗ chân đang giấu) → đầu đuôi khẽ vẫy, Bơ hé mắt lười nhìn xuống, tai phải giật nhẹ "Ừm... đuôi Bơ mà, để Bơ nằm~" — vẫn nằm bẹp, không ngồi dậy. Trước đây chạm chỗ đó lúc nằm bẹp thì không thấy gì (chân đang giấu mà vẫn tính "rụt chân"). Ảnh `docs/anh/bep-vay-duoi.png` (điện thoại trước/sau, máy tính trước/sau). `scripts/thu_cham.py` thử thêm — đạt hết. 445 test qua hết.
+**Tân cần thử:** để yên Bơ 1 phút (Bơ nằm bẹp), rồi chạm nhẹ vào cái đuôi quấn dưới bụng.
+
 ## 2026-10-12 – Giai đoạn 84 xong: giọng cho trò đuôi đuổi lông vũ
 - Bật "Giọng nói": lần đầu tiên trong ngày lông vũ quét qua đuôi, Bơ chắc chắn nói và đọc to (ví dụ "Đuôi Bơ bắt lông vũ nè!"); các lần sau lâu lâu mới hiện chữ, không đọc (đã thử trên trình duyệt: lần 2 không đọc). 444 test qua hết.
 - Sửa lỗi cũ (giai đoạn 82): ở trò len chạm đuôi, lệnh "đang chơi, đừng ngủ gật" lỡ nằm trong dòng chú thích nên không chạy → Bơ có thể nằm bẹp/ngủ gật ngay sau khi len chạm đuôi. Giờ chạy đúng, có test chặn lỗi kiểu này.

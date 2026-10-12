@@ -597,3 +597,14 @@ header.dang-long-vu { touch-action: none; position: relative; }
   .meo.quat-duoi .tail { animation: meo-quat-duoi .22s ease-in-out infinite alternate; }
 }
 @keyframes meo-quat-duoi { from { transform: rotate(-10deg); } to { transform: rotate(24deg); } }
+
+/* Đang nằm bẹp mà chạm đuôi quấn quanh người: đầu đuôi khẽ vẫy một cái, Bơ hé mắt lười nhìn xuống đuôi, không ngồi dậy */
+.meo .tail-ngu { transform-origin: 150px 168px; }
+.meo.bep.vay-duoi-ngu .tail-ngu { transform: rotate(4deg); }
+.meo.bep.vay-duoi-ngu .mat-mo, .meo.bep.vay-duoi-ngu.chop .mat-mo { transform: scaleY(.4); }
+.meo.bep.vay-duoi-ngu .nhin { transform: translate(-2px, 3px); }
+.meo.bep.vay-duoi-ngu .ear-r { transform: rotate(8deg); }
+@media (prefers-reduced-motion: no-preference) {
+  .meo.bep.vay-duoi-ngu .tail-ngu { animation: meo-vay-duoi-ngu .65s ease-in-out 2 alternate; }
+}
+@keyframes meo-vay-duoi-ngu { 0% { transform: rotate(0); } 50% { transform: rotate(8deg); } 100% { transform: rotate(3deg); } }

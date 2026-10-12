@@ -45,6 +45,7 @@ const BO_CAU_CHOI = {
   nguoc: ['Ngược lông rồi á!', 'Ơ kìa, vuốt xuôi cơ mà~', 'Lông Bơ dựng hết rồi nè!', 'Hướng kia mới đúng nha!'],
   chan: ['Chân Bơ đó nha~', 'Hí, nhột chân!', 'Hửm? Muốn nắm tay Bơ hả?'],
   dap_tay: ['Đập tay nè!', 'Bốp! Tuyệt vời!', 'Hi-five với Bơ nè!', 'Một, hai, bốp!'],
+  duoi_ngu: ['Ừm... đuôi Bơ mà, để Bơ nằm~', 'Hửm... Bơ đang lười, đừng phá~', 'Ư... vẫy đuôi cho rồi đó, nằm tiếp nha'],
   duoi: ['Đuôi Bơ mà!', 'Ơ, ai đụng đuôi Bơ đó?', 'Đuôi này không phải đồ chơi nha~', 'Hửm? Đuôi Bơ có gì hả?'],
   ngui: ['Hít hít... thơm tay bạn ghê~', 'Cho Bơ ngửi xíu... ừm, quen quen!', 'Hít hít~ Bơ cọ cọ nè'],
   chong_mat: ['Ối ối, chóng mặt quá~', 'Đừng lắc nữa mà, Bơ xoay vòng vòng rồi!', 'Trời đất quay cuồng... meo~'],
@@ -90,6 +91,16 @@ function boHuongNhin(dx, dy) {
   if (d < 6) return [0, 0];
   const k = Math.min(1, d / 80);
   return [+(dx / d * 4 * k).toFixed(1), +(dy / d * 3 * k).toFixed(1)];
+}
+// Đang nằm bẹp: đuôi quấn quanh người (đường cong 152,166 → 58,178 ở khung vẽ). Chạm sát đuôi đó (cách dưới 9) → true
+function boChamDuoiNgu(x, y) {
+  for (let i = 0; i <= 20; i++) {
+    const t = i / 20, u = 1 - t;
+    const px = u * u * u * 152 + 3 * u * u * t * 154 + 3 * u * t * t * 70 + t * t * t * 58;
+    const py = u * u * u * 166 + 3 * u * u * t * 192 + 3 * u * t * t * 194 + t * t * t * 178;
+    if ((x - px) ** 2 + (y - py) ** 2 < 81) return true;
+  }
+  return false;
 }
 // Chạm chân trước: hai lần liền nhau (cách nhau dưới 450 ms) → 'dap_tay' (Bơ giơ chân đập tay); không thì 'chan'
 function boChamChan(lanTruoc, bayGio) {
@@ -208,7 +219,7 @@ function boLucMo(lanTruoc, bayGio, gio) {
   return null;
 }
 
-if (typeof module !== 'undefined') module.exports = { boVungCham, boChiTietDau, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boChamChan, boThongSoMeo, boGanMui, boDoToRuRu, boNhoiBot, boChopCham, boKhoe, boDoGiat, boLac, boGoiY, BO_GOI_Y, boPhanUngTin, boLucMo, boMonAn, BO_MON_AN, boNhipAn, boDoNhac, BO_CAU_CHOI, BO_DOC_TO };
+if (typeof module !== 'undefined') module.exports = { boVungCham, boChamDuoiNgu, boChiTietDau, boDemChoc, boCauNgau, boDemHomNay, boHuongNhin, boHuongVuot, boChamChan, boThongSoMeo, boGanMui, boDoToRuRu, boNhoiBot, boChopCham, boKhoe, boDoGiat, boLac, boGoiY, BO_GOI_Y, boPhanUngTin, boLucMo, boMonAn, BO_MON_AN, boNhipAn, boDoNhac, BO_CAU_CHOI, BO_DOC_TO };
 
 // ---- Phần giao diện ----
 (function () {
@@ -443,10 +454,17 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boChiTietDau, 
     khung.appendChild(t);
     setTimeout(() => t.remove(), 1200);
   }
-  function cham(ev, vung, vuaNgu) {
+  function cham(ev, vung, vuaNgu, p) {
     if (vuaNgu) { noi('thuc', true); return; }  // đang ngủ: chạm là tỉnh (hop_thoai.js lo), Bơ lầm bầm
     if (dangDoi()) return;
     if (typeof speaking !== 'undefined' && speaking) return;  // đang đọc to: chạm là để Bơ im (hop_thoai.js)
+    // Đang nằm bẹp (chân giấu, đuôi quấn quanh người): chạm vào đuôi quấn hay chỗ chân giấu → đầu đuôi khẽ vẫy,
+    // Bơ hé mắt lười nhìn xuống, không thèm ngồi dậy (không gọi conChoi: vẫn nằm bẹp)
+    if (svg.classList.contains('bep') && (vung === 'chan' || (p && boChamDuoiNgu(p.x, p.y)))) {
+      giu('vay-duoi-ngu', 1300);
+      if (dem('duoi_ngu').duoi_ngu === 1) noi('duoi_ngu', true); else noi('duoi_ngu');  // lần đầu trong ngày: chắc chắn nói
+      return;
+    }
     if (vung === 'tai_trai' || vung === 'tai_phai') {
       giu(vung === 'tai_trai' ? 'giat-tai-trai' : 'giat-tai-phai', 450); noi('tai'); keu('ngan');
     } else if (vung === 'bung' || vung === 'lung') {
@@ -553,7 +571,7 @@ if (typeof module !== 'undefined') module.exports = { boVungCham, boChiTietDau, 
     vuaKeo = !!b && (b.di >= 10 || Date.now() - b.t >= 500);
     if (!b || doChoi.dieuKhien()) return;  // đang chơi laser/lông vũ: chạm là để điều khiển đồ chơi
     if (b.di < 10 && Date.now() - b.t < 500) {
-      const p = toaDo(ev); if (p) cham(ev, boVungCham(p.x, p.y), b.ngu);
+      const p = toaDo(ev); if (p) cham(ev, boVungCham(p.x, p.y), b.ngu, p);
     }
   });
   face.addEventListener('pointercancel', () => { bam = null; clearTimeout(henLan); clearTimeout(henBe); thaBe(); });
