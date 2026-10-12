@@ -602,6 +602,7 @@ header.dang-long-vu { touch-action: none; position: relative; }
 .meo .tail-ngu { transform-origin: 150px 168px; }
 .meo.bep.vay-duoi-ngu .tail-ngu { transform: rotate(4deg); }
 .meo.bep.vay-duoi-ngu .mat-mo, .meo.bep.vay-duoi-ngu.chop .mat-mo { transform: scaleY(.4); }
+.face[data-e="binh_thuong"] .meo.lim-dim.bep.vay-duoi-ngu:not(.chop) .mat-mo { transform: scaleY(.4); }  /* khuya (lim dim) cũng hé mắt y vậy */
 .meo.bep.vay-duoi-ngu .nhin { transform: translate(-2px, 3px); }
 .meo.bep.vay-duoi-ngu .ear-r { transform: rotate(8deg); }
 @media (prefers-reduced-motion: no-preference) {

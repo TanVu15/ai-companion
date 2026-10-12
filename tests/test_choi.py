@@ -518,3 +518,9 @@ def test_nam_bep_cham_duoi_quan():
     assert "cham(ev, boVungCham(p.x, p.y), b.ngu, p);" in js
     css = (config.ROOT / "web" / "meo.css").read_text(encoding="utf-8")
     assert ".meo.bep.vay-duoi-ngu .tail-ngu { animation" in css and "@keyframes meo-vay-duoi-ngu" in css
+
+
+def test_vay_duoi_ngu_khuya_van_he_mat():
+    """Khuya (mắt lim dim) mà chạm đuôi quấn lúc nằm bẹp: vẫn hé mắt lười như ban ngày (luật lim dim không đè)."""
+    css = (config.ROOT / "web" / "meo.css").read_text(encoding="utf-8")
+    assert '.face[data-e="binh_thuong"] .meo.lim-dim.bep.vay-duoi-ngu:not(.chop) .mat-mo { transform: scaleY(.4); }' in css
