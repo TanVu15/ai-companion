@@ -239,7 +239,7 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
     if (lenKeo || lenMoi || lenS.yen || !boLenChamDuoi(p.x, p.y) || Date.now() - duoiCuoi < 3000 || Date.now() - voLen < 1500) return false;
     if (dangDoi() || ['ngu', 'buon'].includes(face.dataset.e) || ['bep', 'be', 'om-len', 'an', 'lan'].some(c => svg.classList.contains(c))) return false;
     duoiCuoi = Date.now(); voLen = Date.now();
-    thoiTheoLen(); svg.classList.remove('vo'); giu('ngoai-duoi', 1400); keu('ngan'); noi('ngoai_duoi', true); conChoi();
+    thoiTheoLen(); svg.classList.remove('vo'); giu('ngoai-duoi', 1400); keu('ngan'); noi('ngoai_duoi', true, dem('ngoai_duoi').ngoai_duoi === 1);  // lần đầu trong ngày: đọc to (khi bật Giọng nói) conChoi();
     lenS = { ...lenS, vx: 150 + Math.random() * 80, vy: -260 - Math.random() * 80 };  // đuôi hất len văng nhẹ ra sau
     return true;
   }

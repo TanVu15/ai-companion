@@ -5,6 +5,10 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-12 – Giai đoạn 82: giọng cho trò len chạm đuôi
+- Bật "Giọng nói": lần len chạm đuôi đầu tiên trong ngày Bơ đọc to "Ai đụng đuôi Bơ?"; các lần sau chỉ hiện chữ (đã thử trên trình duyệt: lần 2 không đọc). 440 test qua hết.
+**Tân cần thử:** bật Giọng nói, lăn cuộn len vào đuôi Bơ.
+
 ## 2026-10-12 – Giai đoạn 81 xong: len chạm đuôi
 - **Ai đụng đuôi Bơ?**: ném/lăn cuộn len từ bên phải vào đuôi Bơ → đuôi giật mình vểnh lên, xù nhẹ, Bơ ngoái đầu sang phải nhìn đuôi, mắt tròn, miệng chữ o, tai xoay ra sau "Ai đụng đuôi Bơ?", đuôi hất len văng nhẹ ra (không vồ như chạm chân). Nghỉ 3 giây giữa hai lần. Không tính khi: len vừa bấm nút thả ra tự lăn vào, len vừa bị chính Bơ vồ/đá văng qua đuôi, đang kéo len, Bơ ngủ/buồn/nằm bẹp/được bế/ôm len. Ảnh `docs/anh/len-cham-duoi.png` (điện thoại, máy tính). `scripts/thu_cham.py` thử thêm — đạt hết. 439 test qua hết.
 - Rà soát, sửa: Bơ vồ len văng sang phải mà len bay qua đuôi thì trước đây Bơ lại hỏi "ai đụng đuôi" (chính Bơ đập mà) → giờ không tính. Sửa lỗi cũ: khuya (22h–5h) mắt Bơ lim dim đè lên cả lúc giật mình, vồ, nhìn theo len, ke ke, ôm len, được bế → mắt nhỏ xíu không hợp; giờ những lúc đó mắt vẫn tròn xoe. Mèo đen, mướp, tam thể nền tối: không vỡ hình (ảnh `docs/anh/ngoai-duoi-kieu-long.png`). 440 test qua hết, `scripts/thu_cham.py` đạt hết.

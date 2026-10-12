@@ -460,6 +460,8 @@ def test_len_cham_duoi_ngoai_lai():
     assert "Date.now() - duoiCuoi < 3000 || Date.now() - voLen < 1500" in js and "['ngu', 'buon'].includes(face.dataset.e)" in js
     assert "lenMoi = true;" in js and "thoiOmLen(); lenMoi = false;" in js and "lenKeo || lenMoi || lenS.yen" in js
     assert "'ngoai-duoi'" in js.split("const TU_THE_KHAC")[1].split("];")[0]
+    # bật Giọng nói: lần "Ai đụng đuôi Bơ?" đầu tiên trong ngày đọc to, các lần sau chỉ hiện chữ
+    assert "noi('ngoai_duoi', true, dem('ngoai_duoi').ngoai_duoi === 1);" in js
 
 
 def test_khuya_mat_lim_dim_khong_de_mat_tron():
