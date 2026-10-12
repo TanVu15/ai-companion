@@ -727,12 +727,11 @@ class Memory:
 
     # --- Chuyện cần hỏi thăm ---
     def add_followups(self, items: list[str]) -> None:
-        known = {self._key(f["content"]) for f in self.pending_followups(min_hours=0)}
+        known = [f["content"] for f in self.pending_followups(min_hours=0)]
         for item in items:
             item = re.sub(r"\s+", " ", item).strip()
-            key = self._key(item)
-            if key and key not in known:
-                known.add(key)
+            if self._key(item) and not any(self.same_followup(item, k) for k in known):
+                known.append(item)
                 self.conn.execute("INSERT INTO followups (content) VALUES (?)", (item,))
         self.conn.commit()
 
@@ -761,12 +760,35 @@ class Memory:
         keys.discard("")
         return keys
 
+    # Từ chỉ thời điểm: cùng một chuyện mà model ghi mỗi lần một kiểu ("Mai 12/10 đi...", "Chiều 12/10 đi...")
+    _HOI_THAM_BO = frozenset("sáng trưa chiều tối đêm mai mốt nay qua hôm ngày lúc này tuần".split())
+
+    @classmethod
+    def _hoi_tham_tu(cls, text: str) -> tuple[frozenset[str], frozenset[str]]:
+        """(các từ nói về việc, các ngày D/M) của một chuyện hỏi thăm, đã bỏ thứ, ngày, giờ và từ chỉ thời điểm."""
+        s = cls._key(re.sub(r"\s*\(kể [^()]*\)\s*$", "", re.sub(r"^\s*[-•]\s*", "", str(text))))
+        ngay = frozenset(f"{int(d)}/{int(m)}" for d, m in re.findall(r"\b(\d{1,2})/(\d{1,2})\b", s))
+        s = re.sub(r"\bthứ (hai|ba|tư|năm|sáu|bảy)\b|\bchủ nhật\b|\b\d{1,2}/\d{1,2}(/\d{2,4})?\b"
+                   r"|\b\d{1,2}\s*(h|g|giờ|:)\s*\d{0,2}\b", " ", s)
+        return frozenset(re.findall(r"\w+", s)) - cls._HOI_THAM_BO, ngay
+
+    @classmethod
+    def same_followup(cls, a: str, b: str) -> bool:
+        """Hai dòng có phải cùng một chuyện hỏi thăm không. Model ít khi chép y nguyên: lúc thêm tên người dùng,
+        lúc đổi "mai" thành "chiều" → so theo các từ nói về việc; hai dòng ghi ngày khác nhau thì là hai chuyện."""
+        if cls.followup_keys([a]) & cls.followup_keys([b]):
+            return True
+        (ta, na), (tb, nb) = cls._hoi_tham_tu(a), cls._hoi_tham_tu(b)
+        chung = len(ta & tb)
+        if chung < 2 or (na and nb and na != nb):
+            return False
+        return len(ta ^ tb) <= 1 or chung / len(ta | tb) >= 0.7
+
     def done_followups(self, items: list[str]) -> None:
-        """Đánh dấu đã hỏi thăm (so theo dạng rút gọn như điều đáng nhớ)."""
-        keys = self.followup_keys(items)
+        """Đánh dấu đã hỏi thăm, kể cả các dòng ghi trùng cùng chuyện đó (xem same_followup)."""
         rows = self.conn.execute("SELECT id, content FROM followups WHERE done = 0").fetchall()
         for i, c in rows:
-            if self._key(c) in keys:
+            if any(self.same_followup(c, x) for x in items):
                 self.conn.execute("UPDATE followups SET done = 1 WHERE id = ?", (i,))
         self.conn.commit()
 

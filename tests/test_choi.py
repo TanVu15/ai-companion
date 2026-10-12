@@ -8,7 +8,7 @@ from tests.test_api import make_client
 
 def node(code):
     r = subprocess.run(["node", "-e", "const C = {...require('./web/choi.js'), ...require('./web/do_choi.js')};\n" + code],
-                       cwd=config.ROOT, capture_output=True, text=True, timeout=30)
+                       cwd=config.ROOT, capture_output=True, text=True, encoding="utf-8", timeout=30)
     assert r.returncode == 0, r.stderr
     return json.loads(r.stdout)
 

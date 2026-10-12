@@ -64,7 +64,7 @@ def test_meo_js_chay_khong_loi_va_tao_svg():
     window.meo.cho(false); if (added.has('cho')) throw new Error('cho khong tat');
     console.log('ok');
     """
-    r = subprocess.run(["node", "-e", js], cwd=ROOT, capture_output=True, text=True, timeout=30)
+    r = subprocess.run(["node", "-e", js], cwd=ROOT, capture_output=True, text=True, encoding="utf-8", timeout=30)
     assert r.stdout.strip() == "ok", r.stderr
 
 
@@ -81,7 +81,7 @@ def test_viec_vat_luc_ranh():
     r = subprocess.run(["node", "-e", """const M = require('./web/meo.js'); const ra = {};
       for (let i = 0; i < 100; i++) for (const k of [false, true]) for (const b of [false, true]) {
         const [v, ms] = M.boViecVat(i / 100, k, b); ra[v + (b ? '|bep' : '')] = ms; }
-      console.log(JSON.stringify(ra))"""], cwd=ROOT, capture_output=True, text=True, timeout=30)
+      console.log(JSON.stringify(ra))"""], cwd=ROOT, capture_output=True, text=True, encoding="utf-8", timeout=30)
     assert r.returncode == 0, r.stderr
     import json
     ra = json.loads(r.stdout)
@@ -95,5 +95,5 @@ def test_viec_vat_luc_ranh():
 def test_moi_file_js_khong_loi_cu_phap():
     # Lỗi cú pháp ở một file làm hỏng cả phần web của file đó (mèo đứng im, nút không chạy) — bắt sớm ở đây
     for f in sorted((ROOT / "web").glob("*.js")):
-        r = subprocess.run(["node", "--check", str(f)], capture_output=True, text=True, timeout=30)
+        r = subprocess.run(["node", "--check", str(f)], capture_output=True, text=True, encoding="utf-8", timeout=30)
         assert r.returncode == 0, f"{f.name}: {r.stderr}"

@@ -5,6 +5,18 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-12 sáng – Kiểm tra trên máy Tân (Windows, API thật) + sửa lỗi hỏi thăm trùng (Tân báo)
+- **Máy Tân chậm hơn GitHub 108 commit** (vẫn là bản khuôn mặt, giai đoạn 44) → đã `git pull`. Mèo Bơ chạy được: xoa đầu, cho ăn cá
+  có phản ứng; **giọng AI (edge-tts) gọi được từ máy Tân**: `/api/giong` trả mp3 3,5 giây sau ~4 giây (máy tự chạy không thử được).
+- **4 test đỏ trên Windows** (`test_choi.py`, `test_giong.py`): gọi `node` mà không ghi `encoding="utf-8"` nên chữ có dấu thành
+  "CÃ¡". Đã thêm vào mọi chỗ gọi `node` trong tests. Lưu ý cho phiên tự chạy: `subprocess.run(..., text=True)` luôn kèm `encoding="utf-8"`.
+- **Bơ hỏi lại mãi một chuyện (chưa hết sau giai đoạn 43–44):** model ghi cùng một buổi phỏng vấn thành 3 dòng khác kiểu
+  ("Ngày 12/10 đi...", "Chiều 12/10 Tân đi...", "Mai 12/10 Tân đi..."), hỏi xong chỉ gạch dòng giống hệt. Sửa: `Memory.same_followup`
+  so theo các từ nói về việc (bỏ thứ, ngày, giờ, "mai/chiều/nay..."), hai dòng ghi ngày khác nhau vẫn là hai chuyện. Dùng khi thêm,
+  khi gạch (gạch luôn dòng trùng có sẵn) và khi lọc chuyện vừa hỏi. 457 test qua hết.
+- Còn lại, chưa sửa: lời nhắc ("7h mang áo mưa") đôi khi bị model chép thêm vào chuyện hỏi thăm; `tests/test_nhac.py` đỏ 1 lần khi
+  chạy cả bộ rồi tự hết (chập chờn, chưa rõ nguyên nhân).
+
 ## 2026-10-12 – Giai đoạn 88: gãi cằm không đứt quãng
 - Gãi cằm thì Bơ ngửa đầu lên, nên ngón tay đang gãi sát mép dưới cằm trước đây rơi ra "bụng" làm đứt quãng (Bơ thôi cười). Giờ đang gãi dở mà trượt xuống sát dưới cằm vẫn tính là cằm. 450 test qua hết, `scripts/thu_cham.py` đạt hết.
 

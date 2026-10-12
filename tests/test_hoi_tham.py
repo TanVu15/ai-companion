@@ -48,6 +48,38 @@ def test_done_followup_removed(memory):
     assert memory.pending_followups(min_hours=0) == []
 
 
+def test_cung_chuyen_ghi_khac_kieu_chi_luu_mot(memory):
+    # Lỗi thật 12/10: model ghi một buổi phỏng vấn thành 3 dòng khác kiểu, hỏi xong chỉ gạch 1 → Bơ hỏi lại mãi
+    memory.add_followups(["Ngày 12/10 đi phỏng vấn công ty mới"])
+    memory.add_followups(["Chiều 12/10 Tân đi phỏng vấn công ty mới", "Mai 12/10 Tân đi phỏng vấn công ty mới"])
+    memory.add_followups(["Thứ Bảy 17/10 về quê thăm mẹ", "Thứ Bảy 17/10 Tân về quê thăm mẹ"])
+    assert [f["content"] for f in memory.pending_followups(min_hours=0)] == [
+        "Ngày 12/10 đi phỏng vấn công ty mới", "Thứ Bảy 17/10 về quê thăm mẹ"]
+    memory.done_followups(["- Mai 12/10 Tân đi phỏng vấn công ty mới (kể hôm qua)"])  # chép khác kiểu vẫn gạch
+    assert [f["content"] for f in memory.pending_followups(min_hours=0)] == ["Thứ Bảy 17/10 về quê thăm mẹ"]
+
+
+def test_hoi_xong_gach_het_dong_trung_cu(memory):
+    # Trí nhớ có sẵn dòng trùng từ trước khi sửa: hỏi một lần là gạch hết
+    for c in ["Ngày 12/10 đi phỏng vấn công ty mới", "Chiều 12/10 Tân đi phỏng vấn công ty mới"]:
+        memory.conn.execute("INSERT INTO followups (content) VALUES (?)", (c,))
+    memory.done_followups(["Đi phỏng vấn công ty mới"])
+    assert memory.pending_followups(min_hours=0) == []
+
+
+@pytest.mark.parametrize("a, b", [
+    ("Chiều 12/10 đi đá bóng với bạn", "Chiều 12/10 đi ăn với bạn"),  # cùng ngày, khác việc
+    ("Thi toán", "Thi văn"),
+    ("Đi tập chân", "Đi tập tay"),
+    ("12/10 đi phỏng vấn công ty mới", "19/10 đi phỏng vấn công ty mới"),  # cùng việc, khác ngày
+    ("Đi khám với ba", "Đi khám với mẹ"),
+])
+def test_chuyen_khac_nhau_khong_bi_gop(memory, a, b):
+    assert not Memory.same_followup(a, b)
+    memory.add_followups([a, b])
+    assert len(memory.pending_followups(min_hours=0)) == 2
+
+
 def test_prompt_lists_followups_with_day():
     now = datetime(2026, 10, 10, 9, 0)
     p = build_system_prompt("Bơ", [], followups=[{"content": "Tập chân", "created_at": "2026-10-09 17:00:00"}], now=now)
