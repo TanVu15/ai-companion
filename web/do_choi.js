@@ -375,7 +375,7 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
     const ranh = trongVung && !dangDoi() && face.dataset.e !== 'ngu' && Date.now() - lvVoRinh > 3000;
     if (!ranh) { if (lvRinh) boRinh(); return; }
     if (lvRinh) return;
-    svg.classList.remove('nhot-long'); svg.classList.add('rinh'); conChoi(); noi('rinh');
+    svg.classList.remove('nhot-long', 'quat-duoi'); svg.classList.add('rinh'); conChoi(); noi('rinh');
     lvRinh = setTimeout(() => {
       lvRinh = null; svg.classList.remove('rinh');
       if (!lv || dangDoi() || face.dataset.e === 'ngu' || document.hidden) return;
@@ -400,11 +400,11 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
       if (nhin && face.dataset.e !== 'ngu') { const [tx, ty] = boHuongNhin(p.x - 100, p.y - 74); nhin.setAttribute('transform', `translate(${tx} ${ty})`); }
       // lông quét ngang mũi → lâu lâu Bơ hắt xì (nghỉ 6 giây giữa hai lần)
       if (boGanMui(p.x, p.y) && Date.now() - lvHatXi > 6000 && !dangDoi() && face.dataset.e !== 'ngu') {
-        lvHatXi = Date.now(); svg.classList.remove('nhot-long'); giu('hat-xi', 900); noi('hat_xi', true); conChoi();
+        lvHatXi = Date.now(); svg.classList.remove('nhot-long', 'quat-duoi'); giu('hat-xi', 900); noi('hat_xi', true); conChoi();
       }
       // lông ở phía trên đầu, ngang tầm với của chân → đứng lên vồ
       if (p.y > -30 && p.y < 45 && Math.abs(p.x - 100) < 65 && !dangDoi() && face.dataset.e !== 'ngu') {
-        svg.classList.remove('nhot-long'); giu('voi', 500); conChoi();
+        svg.classList.remove('nhot-long', 'quat-duoi'); giu('voi', 500); conChoi();
         if (Date.now() - lvNoi > 1500) { lvNoi = Date.now(); dem('long_vu'); noi('long_vu'); }
       }
       rinhLongVu(boLongVuRinh_(p.x, p.y));
@@ -412,7 +412,7 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
       const vung = boVungCham(p.x, p.y), dangLuot = Math.abs(vx) + Math.abs(vy) > 1.2;
       if ((vung === 'lung' || vung === 'bung') && dangLuot && Date.now() - lvNhot > 3000 && !boLongVuRinh_(p.x, p.y) &&
           !boLongVuBenHong(p.x, p.y) && !dangDoi() && face.dataset.e !== 'ngu' &&
-          !['rinh', 'vo-rinh', 'voi', 'hat-xi', 'quo-trai', 'quo-phai', 'be', 'an'].some(c => svg.classList.contains(c))) {
+          !['rinh', 'vo-rinh', 'voi', 'hat-xi', 'quo-trai', 'quo-phai', 'quat-duoi', 'be', 'an'].some(c => svg.classList.contains(c))) {
         lvNhot = Date.now(); svg.style.setProperty('--nhot', p.x < 100 ? -1 : 1);
         giu('nhot-long', 900); conChoi(); dem('nhot'); noi('nhot');  // lướt ngang qua là hay gặp: lâu lâu mới nói
       }

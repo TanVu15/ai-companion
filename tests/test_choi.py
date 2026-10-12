@@ -413,7 +413,7 @@ def test_long_vu_cu_lung():
     assert "(vung === 'lung' || vung === 'bung') && dangLuot && Date.now() - lvNhot > 3000" in js
     assert "giu('nhot-long', 900)" in js
     # đang nhột mà lông bay lên đầu (vồ), sang hông (quơ), xuống đất (rình), qua mũi (hắt xì) → bỏ tư thế nhột cho khỏi lẫn
-    assert js.count("svg.classList.remove('nhot-long');") == 4
+    assert js.count("svg.classList.remove('nhot-long');") + js.count("svg.classList.remove('nhot-long', 'quat-duoi');") == 4
 
 
 def test_cho_an_luc_om_len_thi_buong_len():
@@ -481,3 +481,12 @@ def test_long_vu_quet_duoi():
     js = (config.ROOT / "web" / "do_choi.js").read_text(encoding="utf-8")
     assert "const quetDuoi = vung === 'duoi' && Math.abs(vx) + Math.abs(vy) > 4;" in js and "Date.now() - lvDuoi > 2500" in js
     assert "const hong = svg.classList.contains('quat-duoi') ? null : boLongVuBenHong(p.x, p.y);" in js
+
+
+def test_quat_duoi_khong_lan_tu_the():
+    """Đang quất đuôi mà lông bay lên đầu (vồ), qua mũi (hắt xì), xuống đất (rình) → bỏ tư thế quất đuôi; lướt qua lưng thì không nhột chen vào."""
+    js = (config.ROOT / "web" / "do_choi.js").read_text(encoding="utf-8")
+    assert "svg.classList.remove('nhot-long', 'quat-duoi'); giu('voi', 500);" in js
+    assert "lvHatXi = Date.now(); svg.classList.remove('nhot-long', 'quat-duoi');" in js
+    assert "svg.classList.remove('nhot-long', 'quat-duoi'); svg.classList.add('rinh');" in js
+    assert "'quo-trai', 'quo-phai', 'quat-duoi', 'be', 'an'].some" in js

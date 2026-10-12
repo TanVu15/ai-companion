@@ -133,11 +133,16 @@ def thu(pg, ten, w, h):
     for i in range(8):
         pg.mouse.move(X(150 - i * 8), Y(120) + 10); pg.wait_for_timeout(40)
     kq.append(("lông vũ lướt qua lưng → nhột", co("nhot-long")))
-    pg.mouse.move(X(184), Y(60) + 10); pg.wait_for_timeout(1200)  # lông quét nhanh lên xuống qua đuôi → đuôi quất theo lông
+    pg.mouse.move(X(184), Y(60) + 10); pg.wait_for_timeout(2700)  # (đường sang có thể vừa quét qua đuôi: đợi hết lúc nghỉ 2,5 giây) lông quét nhanh lên xuống qua đuôi → đuôi quất theo lông
     qd = False
     for i in range(12):
         pg.mouse.move(X(184), Y(70 + (i % 6) * 14) + 10); pg.wait_for_timeout(40); qd = qd or co("quat-duoi")
+    if not qd: print("   (lớp trên mèo:", pg.evaluate(CLS), "| cảm xúc:", pg.evaluate("document.querySelector('#face').dataset.e"), ")")
     kq.append(("lông vũ quét qua đuôi → đuôi quất theo", qd))
+    if co("quat-duoi"):  # đang quất đuôi mà lông bay lên đầu → Bơ vồ, bỏ tư thế quất đuôi (không lẫn hai tư thế)
+        for i in range(6):
+            pg.mouse.move(X(100), Y(40 - i * 4) + 10); pg.wait_for_timeout(40)
+        kq.append(("đang quất đuôi, lông lên đầu → vồ, thôi quất đuôi", co("voi") and not co("quat-duoi")))
     pg.keyboard.press('Escape'); pg.wait_for_timeout(100)
     kq.append(("Esc cất đồ chơi", pg.evaluate("!document.querySelector('.long-vu, .len, .laser')")))
     pg.focus('#face'); pg.keyboard.press('d'); pg.wait_for_timeout(60); kq.append(("phím D", co("dap-tay"))); nghi()

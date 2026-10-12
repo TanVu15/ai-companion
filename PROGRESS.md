@@ -5,8 +5,9 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
-## 2026-10-12 – Giai đoạn 83: đuôi đuổi lông vũ
+## 2026-10-12 – Giai đoạn 83 xong: đuôi đuổi lông vũ
 - **Đuôi quất theo lông**: bật cần câu lông vũ, quét lông nhanh lên xuống qua đuôi Bơ → đuôi quất qua quất lại đuổi theo lông, Bơ nghiêng đầu liếc ra sau; lâu lâu nói "Đuôi Bơ bắt lông vũ nè!". Lông đứng yên/lắc nhẹ bên hông thì vẫn là quơ chân như cũ. Nghỉ 2,5 giây giữa hai lần. Ảnh `docs/anh/long-vu-quet-duoi.png`. `scripts/thu_cham.py` thử thêm — đạt hết. 441 test qua hết.
+- Rà soát, sửa: đang quất đuôi mà lông bay lên đầu (vồ), qua mũi (hắt xì) hay xuống đất (rình) thì trước đây hai tư thế lẫn vào nhau (đầu vừa liếc ra sau vừa ngửa lên vồ) → giờ bỏ tư thế quất đuôi, làm tư thế mới; lông lướt qua lưng lúc đang quất đuôi thì không chen tư thế nhột vào. `scripts/thu_cham.py` thử thêm trò này, và sửa chỗ thử quất đuôi trên máy tính hay báo LỖI oan (đường đưa lông sang đã quét qua đuôi, còn trong lúc nghỉ) — giờ đạt hết. 442 test qua hết.
 **Tân cần thử:** bật nút lông vũ, đưa lông ra sau lưng bên phải rồi quét lên xuống thật nhanh qua đuôi.
 
 ## 2026-10-12 – Giai đoạn 82 xong: giọng cho trò len chạm đuôi
