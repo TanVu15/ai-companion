@@ -5,6 +5,12 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-22 – Giai đoạn 88: thử chạm tự động chắc hơn + len cầm yên rồi buông thì rơi thẳng
+- **Lỗi thật đã sửa:** kéo cuộn len, dừng tay cầm yên một lúc rồi mới buông → trước đây len vẫn bay vèo theo cú kéo cũ (có thể bay vào chân Bơ làm Bơ vồ). Giờ cầm yên ≥0,12 giây rồi buông thì len rơi thẳng xuống; buông ngay lúc đang kéo thì vẫn ném như cũ. Có test.
+- **Thử tự động báo LỖI oan:** tìm ra một nguyên nhân chắc chắn: mở lại web thì Bơ giữ vẻ mặt câu nói cuối; bộ não DEMO xoay vòng cảm xúc nên có lần trang máy tính mở ra Bơ đang "buồn" (đuôi rủ, không chơi đuôi) → trò đuôi báo LỖI. `scripts/thu_cham.py` giờ chờ trang tải xong rồi đặt vẻ mặt bình thường. Trò "ôm len" chạy 20+ lần không lỗi lại; nếu còn lỗi, script in ra len nằm đâu và Bơ đang làm gì để lần sau sửa tiếp.
+- 458 test qua hết, `scripts/thu_cham.py` đạt hết.
+**Tân cần thử:** bật cuộn len, kéo len tới cạnh Bơ, giữ yên tay một chút rồi buông → len rơi xuống nằm đó, chờ ~1,5 giây Bơ ôm len.
+
 ## 2026-10-12 sáng – Kiểm tra trên máy Tân (Windows, API thật) + sửa lỗi hỏi thăm trùng (Tân báo)
 - **Máy Tân chậm hơn GitHub 108 commit** (vẫn là bản khuôn mặt, giai đoạn 44) → đã `git pull`. Mèo Bơ chạy được: xoa đầu, cho ăn cá
   có phản ứng; **giọng AI (edge-tts) gọi được từ máy Tân**: `/api/giong` trả mp3 3,5 giây sau ~4 giây (máy tự chạy không thử được).

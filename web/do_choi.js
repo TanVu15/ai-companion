@@ -30,6 +30,14 @@ function boLenDeNut(x, y, nut, giua, r = 15) {
   return de ? (x < giua ? 1 : -1) : 0;
 }
 
+// Thả cuộn len: tốc độ ném (px/giây) theo lúc kéo. Cầm len đứng yên một lúc (msDungYen: từ lần di chuột cuối tới lúc thả)
+// rồi mới buông thì len rơi thẳng xuống, không bay theo cú kéo cũ. Giới hạn 1600 px/giây cho len khỏi bay vèo.
+function boVanTocTha(vx, vy, msDungYen) {
+  const giam = msDungYen >= 120 ? 0 : 1 - msDungYen / 120;
+  const gh = v => Math.max(-1600, Math.min(1600, (v || 0) * giam)) || 0;
+  return { vx: gh(vx), vy: gh(vy) };
+}
+
 // Lông vũ (đầu lông, tọa độ khung vẽ 200×192 của mèo) đang sát đất ngay trước mặt Bơ? (chân Bơ ở y≈174, đất ≈184)
 // Ở yên vùng này một lúc thì Bơ hạ người rình, ngoáy mông rồi nhảy vồ
 function boLongVuRinh(x, y) {
@@ -78,7 +86,7 @@ function boLenChamDuoi(x, y) {
   return x >= 160 && x <= 206 && y >= 128 && y <= 186;
 }
 
-if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boLongVuRinh, boLongVuBenHong, boLenGanMeo, boLaserTruocMat, boLenLanQua, boLaserTrenCao, boLenChamDuoi };
+if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boVanTocTha, boLongVuRinh, boLongVuBenHong, boLenGanMeo, boLaserTruocMat, boLenLanQua, boLaserTrenCao, boLenChamDuoi };
 
 // ---- Phần giao diện ----
 (function () {
@@ -349,8 +357,8 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boL
       });
       const tha = () => {
         if (!lenKeo) return;
-        const gioiHan = v => Math.max(-1600, Math.min(1600, v || 0));
-        lenS = { ...lenS, vx: gioiHan(lenKeo.vx), vy: gioiHan(lenKeo.vy), yen: false };
+        const v = boVanTocTha(lenKeo.vx, lenKeo.vy, performance.now() - lenKeo.t);  // cầm yên rồi buông → rơi thẳng
+        lenS = { ...lenS, vx: v.vx, vy: v.vy, yen: false };
         lenKeo = null; chayLen();
       };
       len.addEventListener('pointerup', tha); len.addEventListener('pointercancel', tha);

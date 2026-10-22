@@ -103,7 +103,12 @@ def thu(pg, ten, w, h):
     for _ in range(8):
         pg.mouse.move(X(20), Y(175)); pg.wait_for_timeout(30)
     pg.mouse.up(); pg.mouse.move(5, 5)
-    om = cho("om-len", 4000); da = cho("da-len", 3500)
+    om = cho("om-len", 4000)
+    if not om:  # in ra để lần sau biết vì sao (len lăn đi đâu, Bơ đang làm gì)
+        lb = pg.locator('.len').bounding_box()
+        print("   (không ôm len — lớp trên mèo:", pg.evaluate(CLS), "| cảm xúc:", pg.evaluate("document.querySelector('#face').dataset.e"),
+              "| len ở:", lb and (round((lb['x'] + lb['width'] / 2 - f['x']) / k), round((lb['y'] + lb['height'] / 2 - f['y']) / k)), ")")
+    da = cho("da-len", 3500)
     kq.append(("len nằm yên sát bên → ôm rồi đá ra", om and da and not co("om-len")))
     pg.wait_for_timeout(1500)  # lăn len ngang sàn qua trước mặt Bơ → đầu quay theo, đuôi giật
     kh = pg.evaluate("(()=>{const b=document.querySelector('.len').parentElement.getBoundingClientRect();return [b.left,b.top,b.width,b.height]})()")
@@ -183,7 +188,10 @@ def main():
                 pg = b.new_page(viewport={"width": w, "height": h})
                 loi = []
                 pg.on("pageerror", lambda e: loi.append(str(e)))
-                pg.goto(f"http://127.0.0.1:{port}/"); pg.wait_for_timeout(800)
+                pg.goto(f"http://127.0.0.1:{port}/"); pg.wait_for_load_state("networkidle"); pg.wait_for_timeout(300)
+                # mở lại web thì Bơ giữ vẻ mặt câu cuối (bộ não DEMO xoay vòng, có lúc "buồn" → đuôi rủ, không chơi đuôi):
+                # đặt vẻ mặt bình thường cho lần thử nào cũng như nhau
+                pg.evaluate("express('binh_thuong')"); pg.wait_for_timeout(500)
                 print(f"--- {ten} ({w}×{h})")
                 for tro, dat in thu(pg, ten, w, h):
                     print(("  ĐẠT " if dat else "  LỖI ") + tro)

@@ -135,6 +135,16 @@ def test_cuon_len_khong_nam_de_len_nut():
     assert v == [1, -1, 0, 1, 0]  # đè nút bên trái → lăn sang phải, bên phải → sang trái; chỉ chạm mép (54-15<40) cũng tính
 
 
+def test_tha_len_sau_khi_cam_yen_thi_roi_thang():
+    v = node("""console.log(JSON.stringify([C.boVanTocTha(-900, 300, 10), C.boVanTocTha(-900, 300, 300),
+      C.boVanTocTha(5000, -5000, 0), C.boVanTocTha(-900, 0, 60), C.boVanTocTha(undefined, NaN, 0)]))""")
+    assert v[0]["vx"] < -800 and v[0]["vy"] > 250  # vừa kéo xong buông liền: ném theo cú kéo
+    assert v[1] == {"vx": 0, "vy": 0}  # cầm yên 0,3 giây rồi buông: rơi thẳng, không bay theo cú kéo cũ
+    assert v[2] == {"vx": 1600, "vy": -1600}  # giới hạn tốc độ
+    assert v[3] == {"vx": -450, "vy": 0}  # cầm yên một chút: ném nhẹ hơn
+    assert v[4] == {"vx": 0, "vy": 0}
+
+
 def test_huong_vuot_nguoc_long():
     v = node("""console.log(JSON.stringify([C.boHuongVuot(0, -50), C.boHuongVuot(5, -40), C.boHuongVuot(0, 50),
       C.boHuongVuot(60, -30), C.boHuongVuot(0, -10), C.boHuongVuot(-30, -45)]))""")
