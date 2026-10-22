@@ -8,6 +8,7 @@
 ## 2026-10-22 – Giai đoạn 88: thử chạm tự động chắc hơn + len cầm yên rồi buông thì rơi thẳng
 - **Lỗi thật đã sửa:** kéo cuộn len, dừng tay cầm yên một lúc rồi mới buông → trước đây len vẫn bay vèo theo cú kéo cũ (có thể bay vào chân Bơ làm Bơ vồ). Giờ cầm yên ≥0,12 giây rồi buông thì len rơi thẳng xuống; buông ngay lúc đang kéo thì vẫn ném như cũ. Có test.
 - **Thử tự động báo LỖI oan:** tìm ra một nguyên nhân chắc chắn: mở lại web thì Bơ giữ vẻ mặt câu nói cuối; bộ não DEMO xoay vòng cảm xúc nên có lần trang máy tính mở ra Bơ đang "buồn" (đuôi rủ, không chơi đuôi) → trò đuôi báo LỖI. `scripts/thu_cham.py` giờ chờ trang tải xong rồi đặt vẻ mặt bình thường. Trò "ôm len" chạy 20+ lần không lỗi lại; nếu còn lỗi, script in ra len nằm đâu và Bơ đang làm gì để lần sau sửa tiếp.
+- Rà soát giai đoạn 88 (gãi cằm dính) xong, không thấy lỗi khác. Thêm việc giai đoạn 89 (len rơi trúng đầu Bơ).
 - 458 test qua hết, `scripts/thu_cham.py` đạt hết.
 **Tân cần thử:** bật cuộn len, kéo len tới cạnh Bơ, giữ yên tay một chút rồi buông → len rơi xuống nằm đó, chờ ~1,5 giây Bơ ôm len.
 

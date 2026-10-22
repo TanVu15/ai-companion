@@ -457,7 +457,11 @@
 ## Giai đoạn 88 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
 - [x] Gãi cằm thì Bơ ngửa đầu lên 6 đơn vị → ngón tay đang gãi sát mép dưới cằm rơi ra vùng "bụng", đứt quãng gãi. Cho gãi cằm "dính": đang gãi cằm mà trượt xuống sát dưới cằm vẫn tính là cằm (có test, thử cả lúc nằm bẹp)
 - [x] `scripts/thu_cham.py`: trò "len nằm yên sát bên → ôm rồi đá ra" thỉnh thoảng báo LỖI oan trên máy tính (chạy lại thì đạt) → tìm nguyên nhân, làm cho chắc
-- [ ] Rà soát giai đoạn 88, sửa lỗi tìm được
+- [x] Rà soát giai đoạn 88, sửa lỗi tìm được (sửa: len cầm yên rồi buông vẫn bay theo cú kéo cũ; thử tự động bị lệch do vẻ mặt "buồn" còn lại từ lần trước)
+
+## Giai đoạn 89 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
+- [ ] Cầm cuộn len trên đầu Bơ rồi buông cho rơi thẳng trúng đầu → Bơ giật mình rụt cổ, nhìn lên "Ui, cái gì rơi trúng Bơ?", rồi mới vồ len (thay vì vồ ngay)
+- [ ] Rà soát giai đoạn 89, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):
