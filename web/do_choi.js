@@ -283,6 +283,7 @@ if (typeof module !== 'undefined') module.exports = { boLenRoiTrungDau, boBuocLe
     lenTrungHen = null;
     svg.classList.remove('trung-dau');
     if (!len || lenKeo || lenOm || dangDoi() || face.dataset.e === 'ngu') return;
+    if (['an', 'lan', 'be', 'bep', 'om-len'].some(c => svg.classList.contains(c))) return;  // đang ăn, lăn, được bế... thì thôi vồ
     const p = lenTrenMeo();
     if (!p || !(boLenGanMeo(p.x, p.y) || boVungCham(p.x, p.y))) {
       if (lan < 6) lenTrungHen = setTimeout(() => voSauTrungDau(lan + 1), 150);
@@ -292,6 +293,8 @@ if (typeof module !== 'undefined') module.exports = { boLenRoiTrungDau, boBuocLe
     lenS = { ...lenS, vx: (p.x < 100 ? -1 : 1) * (260 + Math.random() * 200), vy: -380 - Math.random() * 200, yen: false };
     chayLen();
   }
+  // Có việc khác (cho ăn...) → thôi ngơ ngác, khỏi vồ len sau đó
+  function thoiTrungDau() { clearTimeout(lenTrungHen); lenTrungHen = null; svg.classList.remove('trung-dau'); }
   // Len lăn ngang qua trước mặt (không chạm) → đầu Bơ quay theo len, đuôi giật giật; len dừng/đi xa 0,5 giây thì thôi
   let theoLenTat = null;
   // Bơ đang làm tư thế khác (được vuốt, gãi cằm, boop, vồ, ăn, bế...) thì khỏi quay đầu theo len
@@ -381,7 +384,7 @@ if (typeof module !== 'undefined') module.exports = { boLenRoiTrungDau, boBuocLe
       veLen(); chayLen(); noi('len', true); henCatLen();
       len.addEventListener('pointerdown', ev => {
         ev.preventDefault(); ev.stopPropagation(); thoiOmLen(); lenMoi = false; lenRoiThang = false;
-        clearTimeout(lenTrungHen); lenTrungHen = null;
+        clearTimeout(lenTrungHen); lenTrungHen = null;  // cầm len lên lại: Bơ khỏi vồ hụt
         try { len.setPointerCapture(ev.pointerId); } catch (e) {}
         const r = khung.getBoundingClientRect();
         lenKeo = { dx: ev.clientX - r.left - lenS.x, dy: ev.clientY - r.top - lenS.y, t: performance.now(), x: lenS.x, y: lenS.y, vx: 0, vy: 0 };
@@ -543,6 +546,6 @@ if (typeof module !== 'undefined') module.exports = { boLenRoiTrungDau, boBuocLe
   doChoi.dieuKhien = () => laserBat || !!lv;
   doChoi.keoLen = () => !!lenKeo;
   // có việc khác (cho ăn): buông len đang ôm, thôi rình chấm laser, thôi ke ke, thôi quay đầu theo len
-  doChoi.thaLen = () => { thaLen(); thoiRinhLaser(); thoiKeKe(); thoiTheoLen(); };
+  doChoi.thaLen = () => { thaLen(); thoiRinhLaser(); thoiKeKe(); thoiTheoLen(); thoiTrungDau(); };
   Object.assign(window.boChoi, { batLaser, batLen, batLongVu });
 })();

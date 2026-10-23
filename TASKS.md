@@ -461,7 +461,11 @@
 
 ## Giai đoạn 89 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
 - [x] Cầm cuộn len trên đầu Bơ rồi buông cho rơi thẳng trúng đầu → Bơ giật mình rụt cổ, nhìn lên "Ui, cái gì rơi trúng Bơ?", rồi mới vồ len (thay vì vồ ngay)
-- [ ] Rà soát giai đoạn 89, sửa lỗi tìm được
+- [x] Rà soát giai đoạn 89, sửa lỗi tìm được
+
+## Giai đoạn 90 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
+- [ ] Len rơi trúng đầu lúc Bơ đang nằm bẹp → Bơ chỉ hé một mắt nhìn lên, tai giật, vẫn nằm (vùng đầu theo tư thế nằm)
+- [ ] Rà soát giai đoạn 90, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)
 Giai đoạn 45 – Chuyện hỏi thăm rõ ràng hơn (chỉ làm khi Tân báo lỗi liên quan):

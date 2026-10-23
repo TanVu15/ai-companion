@@ -410,7 +410,7 @@ def test_laser_tren_cao_ke_ke():
     assert "thoiRinhLaser(); thoiKeKe();" in js and "Date.now() - kkCuoi < 6000" in js
     assert "noi('ke_ke', true, dem('ke_ke').ke_ke === 1);" in js  # lần ke ke đầu tiên trong ngày đọc to
     # đang ke ke mà cho ăn → thôi ke ke (không vừa ăn vừa run miệng)
-    assert "doChoi.thaLen = () => { thaLen(); thoiRinhLaser(); thoiKeKe(); thoiTheoLen(); };" in js
+    assert "doChoi.thaLen = () => { thaLen(); thoiRinhLaser(); thoiKeKe(); thoiTheoLen(); thoiTrungDau(); };" in js
 
 
 def test_long_vu_cu_lung():
@@ -592,3 +592,10 @@ def test_len_roi_trung_dau():
     assert "if (lenS.vy < 0 || lenS.yen) lenRoiThang = false;" in js
     assert "noi('trung_dau', true, dem('trung_dau').trung_dau === 1);" in js
     assert "setTimeout(voSauTrungDau, 1100)" in js and "'trung-dau'" in js.split("const TU_THE_KHAC")[1].split("];")[0]
+
+
+def test_trung_dau_roi_cho_an():
+    """Đang ngơ ngác vì len rơi trúng đầu mà cho ăn → thôi ngơ ngác, không vồ len giữa lúc ăn."""
+    js = (config.ROOT / "web" / "do_choi.js").read_text(encoding="utf-8")
+    assert "thoiTheoLen(); thoiTrungDau(); };" in js
+    assert "if (['an', 'lan', 'be', 'bep', 'om-len'].some(c => svg.classList.contains(c))) return;" in js.split("function voSauTrungDau")[1]

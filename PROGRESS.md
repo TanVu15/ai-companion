@@ -7,6 +7,7 @@
 
 ## 2026-10-23 – Giai đoạn 89: len rơi trúng đầu Bơ
 - **Ui, cái gì rơi trúng Bơ?**: cầm cuộn len lên cao trên đầu Bơ, giữ yên tay rồi buông → len rơi thẳng trúng đầu: Bơ rụt cổ (đầu hạ xuống, bẹp nhẹ), tai cụp sang hai bên, mắt tròn ngước lên, miệng chữ o, nói "Ui, cái gì rơi trúng Bơ?" (lần đầu trong ngày đọc to khi bật Giọng nói). Len nảy khỏi đầu rơi xuống cạnh Bơ, ~1 giây sau Bơ mới hoàn hồn vồ len (trước đây vồ ngay). Ném len bay vèo trúng đầu thì vẫn vồ như cũ; Bơ ngủ, dỗi, nằm bẹp, được bế, ôm len thì như cũ. Ảnh `docs/anh/len-roi-trung-dau.png` (điện thoại, máy tính). `scripts/thu_cham.py` thử thêm — đạt hết. 459 test qua hết.
+- Rà soát, sửa: đang ngơ ngác vì len rơi trúng đầu mà bấm cho ăn → trước đây ~1 giây sau Bơ vẫn vồ len giữa lúc ăn; giờ thôi ngơ ngác, ăn luôn (đã thử trên trình duyệt). Thêm việc giai đoạn 90 (len rơi trúng đầu lúc nằm bẹp). 460 test qua hết, `scripts/thu_cham.py` đạt hết.
 **Tân cần thử:** bật cuộn len, kéo len lên sát mép trên ngay giữa đầu Bơ, giữ yên tay một chút rồi buông.
 
 ## 2026-10-22 – Giai đoạn 88: thử chạm tự động chắc hơn + len cầm yên rồi buông thì rơi thẳng
