@@ -61,6 +61,7 @@ const BO_CAU_CHOI = {
   rinh: ['Rình... rình...', 'Suỵt... Bơ đang rình đó', 'Mông ngoáy ngoáy... chuẩn bị nè'],
   vo_rinh: ['Phập! Bắt được rồi!', 'Vồ! Lông vũ là của Bơ!', 'Hây da! Trúng phóc!', 'Bơ là thợ săn số một~'],
   quat_duoi: ['Đuôi Bơ bắt lông vũ nè!', 'Quất quất~ đuôi cũng biết chơi đó!', 'Hửm? Đuôi Bơ tự đuổi theo luôn á~'],
+  trung_dau: ['Ui, cái gì rơi trúng Bơ?', 'Úi da! Trời mưa len hả?', 'Ối! Ai thả len lên đầu Bơ đó?'],
   ngoai_duoi: ['Ai đụng đuôi Bơ?', 'Ơ! Đuôi Bơ bị len đụng nè!', 'Hửm? Cái gì chạm đuôi Bơ đó?'],
   nhot: ['Hí hí, nhột! Lông vũ cù Bơ hả~', 'Ối, nhột lưng quá!', 'Hihi, chỗ đó nhột lắm á~'],
   ke_ke: ['Ke ke ke... cao quá, với không tới!', 'Ke ke ke~ xuống đây coi!', 'Ke ke... Bơ mà nhảy được là bắt liền!'],

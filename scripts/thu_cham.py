@@ -133,6 +133,20 @@ def thu(pg, ten, w, h):
         pg.mouse.move(x1 - 8 * i, fy); pg.wait_for_timeout(16)
     pg.mouse.up(); pg.mouse.move(5, 5)
     kq.append(("len lăn chạm đuôi → ngoái lại nhìn đuôi", cho("ngoai-duoi", 1500)))
+    pg.wait_for_timeout(3200)  # cầm len lên cao trên đầu Bơ, giữ yên rồi buông → rơi trúng đầu: rụt cổ, nhìn lên, rồi mới vồ
+    l = pg.locator('.len').bounding_box(); yt = max(Y(-8), kh[1] + 16)
+    pg.mouse.move(l['x'] + 15, l['y'] + 15); pg.mouse.down()
+    for i in range(1, 11):
+        pg.mouse.move(l['x'] + 15 + (X(100) - l['x'] - 15) * i / 10, l['y'] + 15 + (yt - l['y'] - 15) * i / 10); pg.wait_for_timeout(30)
+    for _ in range(10):
+        pg.mouse.move(X(100), yt); pg.wait_for_timeout(30)
+    pg.mouse.up(); pg.mouse.move(5, 5)
+    td = cho("trung-dau", 1200); vo_ngay = co("vo"); vo = cho("vo", 1800)
+    if td and not (vo and not vo_ngay):
+        lb = pg.locator('.len').bounding_box()
+        print("   (rơi trúng đầu mà không vồ sau — vồ ngay:", vo_ngay, "| lớp:", pg.evaluate(CLS), "| len ở:", lb and (round((lb['x'] + 15 - f['x']) / k), round((lb['y'] + 15 - f['y']) / k)), ")")
+    if not td: print("   (len không rơi trúng đầu — lớp trên mèo:", pg.evaluate(CLS), "| len thả ở y khung vẽ:", round((yt - f['y']) / k), ")")
+    kq.append(("len rơi thẳng trúng đầu → rụt cổ nhìn lên, rồi mới vồ", td and not vo_ngay and vo))
     pg.click('#longVu'); pg.wait_for_timeout(300); kq.append(("lông vũ", pg.evaluate("!!document.querySelector('.long-vu')")))
     for i in range(8):
         pg.mouse.move(X(100), Y(120 + i * 8) + 10); pg.wait_for_timeout(30)

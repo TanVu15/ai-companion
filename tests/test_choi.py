@@ -576,3 +576,19 @@ def test_gai_cam_dinh():
     assert v == ["cam", "bung", "bung", "lung", "dau"]
     js = (config.ROOT / "web" / "choi.js").read_text(encoding="utf-8")
     assert "boGaiCamDinh(boVungCham(p.x, p.y), p.x, p.y, vuotDangChay === 'gai_cam')" in js
+
+
+def test_len_roi_trung_dau():
+    """Len cầm yên trên đầu rồi buông, rơi thẳng trúng đầu → Bơ giật mình rụt cổ "Ui, cái gì rơi trúng Bơ?", rồi mới vồ len."""
+    v = node("""console.log(JSON.stringify([C.boLenRoiTrungDau(100, 30, 0, 400), C.boLenRoiTrungDau(55, 20, 10, 300),
+      C.boLenRoiTrungDau(100, 30, 0, 100), C.boLenRoiTrungDau(100, 30, 300, 400), C.boLenRoiTrungDau(100, 100, 0, 400),
+      C.boLenRoiTrungDau(10, 30, 0, 400), C.boLenRoiTrungDau(100, 30, 0, -300), C.BO_CAU_CHOI.trung_dau.length > 0]))""")
+    assert v == [True, True, False, False, False, False, False, True]
+    css = (config.ROOT / "web" / "meo.css").read_text(encoding="utf-8")
+    assert ".meo.trung-dau .head" in css and "@keyframes meo-trung-dau" in css
+    js = (config.ROOT / "web" / "do_choi.js").read_text(encoding="utf-8")
+    assert "if (lenTrungDau(p)) return;\n    if (lenChamDuoi(p)) return;" in js  # trước chạm đuôi và trước vồ
+    assert "lenRoiThang = Math.hypot(v.vx, v.vy) < 60;" in js  # chỉ khi cầm yên rồi buông (rơi thẳng)
+    assert "if (lenS.vy < 0 || lenS.yen) lenRoiThang = false;" in js
+    assert "noi('trung_dau', true, dem('trung_dau').trung_dau === 1);" in js
+    assert "setTimeout(voSauTrungDau, 1100)" in js and "'trung-dau'" in js.split("const TU_THE_KHAC")[1].split("];")[0]

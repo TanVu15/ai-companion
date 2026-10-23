@@ -86,7 +86,15 @@ function boLenChamDuoi(x, y) {
   return x >= 160 && x <= 206 && y >= 128 && y <= 186;
 }
 
-if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boVanTocTha, boLongVuRinh, boLongVuBenHong, boLenGanMeo, boLaserTruocMat, boLenLanQua, boLaserTrenCao, boLenChamDuoi };
+// Cuộn len được cầm yên rồi buông, rơi thẳng xuống trúng đỉnh đầu/tai Bơ (tâm len, tọa độ khung vẽ 200×192; vx, vy: px/giây)?
+// Phải đang rơi xuống đủ nhanh (đã rơi một quãng) và gần như thẳng đứng → Bơ giật mình rụt cổ, nhìn lên rồi mới vồ len.
+function boLenRoiTrungDau(x, y, vx, vy) {
+  if (!(vy >= 120) || Math.abs(vx || 0) > 80 || y >= 80) return false;
+  const tai = y > 4 && y < 54 && ((x > 38 && x < 72) || (x > 128 && x < 162));
+  return tai || ((x - 100) / 58) ** 2 + ((y - 74) / 47) ** 2 <= 1;
+}
+
+if (typeof module !== 'undefined') module.exports = { boLenRoiTrungDau, boBuocLen, boLenDeNut, boVanTocTha, boLongVuRinh, boLongVuBenHong, boLenGanMeo, boLaserTruocMat, boLenLanQua, boLaserTrenCao, boLenChamDuoi };
 
 // ---- Phần giao diện ----
 (function () {
@@ -203,6 +211,7 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boV
   const nutLen = document.getElementById('cuonLen');
   let len = null, lenS = null, lenVong = 0, lenTruoc = 0, lenKeo = null, lenTat = null, voLen = 0;
   let lenOmHen = null, lenOm = null, lenOmCuoi = 0;  // hẹn ôm len, đang ôm (hẹn đá), lần ôm gần nhất
+  let lenRoiThang = false, lenTrungHen = null;  // len vừa được cầm yên rồi buông (đang rơi thẳng); hẹn vồ sau khi bị rơi trúng đầu
   let duoiCuoi = 0, lenMoi = false;  // lần len chạm đuôi gần nhất (Bơ ngoái lại; nghỉ 3 giây); len mới thả, chưa ai đụng
   function henCatLen() { clearTimeout(lenTat); lenTat = setTimeout(() => batLen(false), 20000); }
   function veLen() { len.style.transform = `translate(${lenS.x.toFixed(1)}px, ${lenS.y.toFixed(1)}px) rotate(${(lenS.goc % 360).toFixed(0)}deg)`; }
@@ -212,6 +221,7 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boV
     if (!len) return;
     const dt = lenTruoc ? Math.min(0.04, (t - lenTruoc) / 1000) : 0.016; lenTruoc = t;
     if (!lenKeo) lenS = boBuocLen(lenS, dt, khung.clientWidth, khung.clientHeight);
+    if (lenS.vy < 0 || lenS.yen) lenRoiThang = false;  // nảy lên hay nằm yên rồi: hết "rơi thẳng"
     veLen(); lenChamMeo();
     if (lenS.yen && !lenKeo) { lenTranhNut(); if (lenS.yen) henOmLen(); }
     if (!lenS.yen || lenKeo) lenVong = requestAnimationFrame(buocLen);
@@ -234,6 +244,7 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boV
       const [tx, ty] = boHuongNhin(p.x - 100, p.y - 74); nhin.setAttribute('transform', `translate(${tx} ${ty})`);
     }
     theoLen(p);
+    if (lenTrungDau(p)) return;
     if (lenChamDuoi(p)) return;
     if (lenKeo || !boVungCham(p.x, p.y) || Date.now() - voLen < 900 || dangDoi() || face.dataset.e === 'ngu') return;
     voLen = Date.now(); thoiTheoLen(); giu('vo', 600); dem('len'); noi('len'); conChoi(); daBat();
@@ -251,12 +262,42 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boV
     lenS = { ...lenS, vx: 150 + Math.random() * 80, vy: -260 - Math.random() * 80 };  // đuôi hất len văng nhẹ ra sau
     return true;
   }
+  // Len cầm yên trên đầu rồi buông, rơi thẳng trúng đầu → Bơ giật mình rụt cổ, nhìn lên "Ui, cái gì rơi trúng Bơ?",
+  // len nảy khỏi đầu rơi xuống cạnh Bơ; ~1,1 giây sau Bơ mới vồ len (len còn ở gần). Ngủ, dỗi, nằm bẹp, được bế, ôm len... thì như cũ.
+  function lenTrungDau(p) {
+    if (!lenRoiThang || lenKeo || !boLenRoiTrungDau(p.x, p.y, lenS.vx, lenS.vy)) return false;
+    lenRoiThang = false;
+    if (dangDoi() || face.dataset.e === 'ngu' || ['bep', 'be', 'om-len', 'an', 'lan'].some(c => svg.classList.contains(c))) return false;
+    voLen = Date.now() + 500;  // đang ngơ ngác: khỏi vồ liền, khỏi tính len bay qua đuôi
+    thoiTheoLen(); svg.classList.remove('vo'); giu('trung-dau', 1100); keu('ngan');
+    noi('trung_dau', true, dem('trung_dau').trung_dau === 1);  // lần đầu trong ngày: đọc to (khi bật Giọng nói)
+    conChoi();
+    if (nhin) nhin.setAttribute('transform', 'translate(0 -3)');
+    const huong = p.x < 100 ? -1 : 1;  // len nảy khỏi đầu, văng nhẹ ra phía đang lệch
+    lenS = { ...lenS, vx: huong * (110 + Math.random() * 50), vy: -240 - Math.random() * 60, yen: false };
+    clearTimeout(lenTrungHen); lenTrungHen = setTimeout(voSauTrungDau, 1100);
+    return true;
+  }
+  // Hoàn hồn rồi mới vồ: len còn nằm/lăn gần Bơ thì đập văng ra (len còn nảy trên cao thì đợi thêm, tối đa ~1 giây)
+  function voSauTrungDau(lan = 0) {
+    lenTrungHen = null;
+    svg.classList.remove('trung-dau');
+    if (!len || lenKeo || lenOm || dangDoi() || face.dataset.e === 'ngu') return;
+    const p = lenTrenMeo();
+    if (!p || !(boLenGanMeo(p.x, p.y) || boVungCham(p.x, p.y))) {
+      if (lan < 6) lenTrungHen = setTimeout(() => voSauTrungDau(lan + 1), 150);
+      return;
+    }
+    voLen = Date.now(); thoiTheoLen(); giu('vo', 600); dem('len'); noi('len'); conChoi(); daBat();
+    lenS = { ...lenS, vx: (p.x < 100 ? -1 : 1) * (260 + Math.random() * 200), vy: -380 - Math.random() * 200, yen: false };
+    chayLen();
+  }
   // Len lăn ngang qua trước mặt (không chạm) → đầu Bơ quay theo len, đuôi giật giật; len dừng/đi xa 0,5 giây thì thôi
   let theoLenTat = null;
   // Bơ đang làm tư thế khác (được vuốt, gãi cằm, boop, vồ, ăn, bế...) thì khỏi quay đầu theo len
   const TU_THE_KHAC = ['be', 'em', 'an', 'lan', 'vo', 'om-len', 'da-len', 'rinh', 'vo-rinh', 'ngo-chan', 'vuot', 'nguoc-long', 'giat',
     'giat-duoi', 'ngui', 'co-ma', 'nghieng', 'gai-cam', 'hong', 'khoe', 'boop', 'nhoi', 'chong-mat', 'roi', 'dap-tay', 'ngap',
-    'hat-xi', 'nung-ma-trai', 'nung-ma-phai', 'liem-mep', 'dinh-sua', 'chop-cham', 'ke-ke', 'ngoai-duoi', 'quat-duoi'];
+    'hat-xi', 'nung-ma-trai', 'nung-ma-phai', 'liem-mep', 'dinh-sua', 'chop-cham', 'ke-ke', 'ngoai-duoi', 'quat-duoi', 'trung-dau'];
   function thoiTheoLen() { clearTimeout(theoLenTat); theoLenTat = null; svg.classList.remove('theo-len'); }
   function theoLen(p) {
     // đang vồ, ôm, ăn, bế, ngủ, dỗi... → thôi liền cho khỏi lẫn tư thế
@@ -339,7 +380,8 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boV
       lenMoi = true;  // len vừa thả xuống bên phải, tự lăn vào: chưa ai ném thì khỏi tính chạm đuôi
       veLen(); chayLen(); noi('len', true); henCatLen();
       len.addEventListener('pointerdown', ev => {
-        ev.preventDefault(); ev.stopPropagation(); thoiOmLen(); lenMoi = false;
+        ev.preventDefault(); ev.stopPropagation(); thoiOmLen(); lenMoi = false; lenRoiThang = false;
+        clearTimeout(lenTrungHen); lenTrungHen = null;
         try { len.setPointerCapture(ev.pointerId); } catch (e) {}
         const r = khung.getBoundingClientRect();
         lenKeo = { dx: ev.clientX - r.left - lenS.x, dy: ev.clientY - r.top - lenS.y, t: performance.now(), x: lenS.x, y: lenS.y, vx: 0, vy: 0 };
@@ -359,11 +401,12 @@ if (typeof module !== 'undefined') module.exports = { boBuocLen, boLenDeNut, boV
         if (!lenKeo) return;
         const v = boVanTocTha(lenKeo.vx, lenKeo.vy, performance.now() - lenKeo.t);  // cầm yên rồi buông → rơi thẳng
         lenS = { ...lenS, vx: v.vx, vy: v.vy, yen: false };
+        lenRoiThang = Math.hypot(v.vx, v.vy) < 60;  // (gần như) rơi thẳng xuống: trúng đầu thì Bơ giật mình trước
         lenKeo = null; chayLen();
       };
       len.addEventListener('pointerup', tha); len.addEventListener('pointercancel', tha);
     } else {
-      cancelAnimationFrame(lenVong); lenVong = 0; clearTimeout(lenTat);
+      cancelAnimationFrame(lenVong); lenVong = 0; clearTimeout(lenTat); clearTimeout(lenTrungHen); lenTrungHen = null; lenRoiThang = false;
       len.remove(); len = null; lenKeo = null; thoiTheoLen();
       if (nhin) nhin.removeAttribute('transform');
     }

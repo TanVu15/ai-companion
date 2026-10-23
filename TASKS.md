@@ -460,7 +460,7 @@
 - [x] Rà soát giai đoạn 88, sửa lỗi tìm được (sửa: len cầm yên rồi buông vẫn bay theo cú kéo cũ; thử tự động bị lệch do vẻ mặt "buồn" còn lại từ lần trước)
 
 ## Giai đoạn 89 – Ý tưởng tiếp (Claude tự thêm, trong hướng mèo/chạm/giọng)
-- [ ] Cầm cuộn len trên đầu Bơ rồi buông cho rơi thẳng trúng đầu → Bơ giật mình rụt cổ, nhìn lên "Ui, cái gì rơi trúng Bơ?", rồi mới vồ len (thay vì vồ ngay)
+- [x] Cầm cuộn len trên đầu Bơ rồi buông cho rơi thẳng trúng đầu → Bơ giật mình rụt cổ, nhìn lên "Ui, cái gì rơi trúng Bơ?", rồi mới vồ len (thay vì vồ ngay)
 - [ ] Rà soát giai đoạn 89, sửa lỗi tìm được
 
 ## Để sau (tạm dừng theo HUONG_PHAT_TRIEN.md)

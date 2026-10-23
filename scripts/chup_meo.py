@@ -24,7 +24,7 @@ from app import config  # noqa: E402
 TRANG_THAI = config.EMOTIONS + ["ngu"]
 # (Ảnh chụp cả trang cho PROGRESS.md đừng đặt tên meo-<tư thế>.png: script này sẽ ghi đè.)
 TRANG_THAI_NHO = ["ngap", "liem", "cho", "lan", "mung", "bep", "hong", "nghe", "nguoc-long", "dap-tay", "rua-mat", "chong-mat",
-                  "hat-xi", "boop", "nung-ma-trai", "be", "dinh-sua", "rinh", "vo-rinh", "nhoi", "chop-cham", "quo-trai", "om-len", "ngo-chan", "khoe", "theo-len", "ke-ke", "nhot-long", "ngoai-duoi", "quat-duoi"]
+                  "hat-xi", "boop", "nung-ma-trai", "be", "dinh-sua", "rinh", "vo-rinh", "nhoi", "chop-cham", "quo-trai", "om-len", "ngo-chan", "khoe", "theo-len", "ke-ke", "nhot-long", "ngoai-duoi", "quat-duoi", "trung-dau"]
 
 
 def ban_ngay(pg):

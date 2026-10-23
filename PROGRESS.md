@@ -5,6 +5,10 @@
 - **Góp ý:** ghi vào file `FEEDBACK.md`, phiên sau Claude sẽ xử lý trước.
 - **Lấy bản mới về máy:** `git pull` trong thư mục dự án rồi chạy lại `run.bat`.
 
+## 2026-10-23 – Giai đoạn 89: len rơi trúng đầu Bơ
+- **Ui, cái gì rơi trúng Bơ?**: cầm cuộn len lên cao trên đầu Bơ, giữ yên tay rồi buông → len rơi thẳng trúng đầu: Bơ rụt cổ (đầu hạ xuống, bẹp nhẹ), tai cụp sang hai bên, mắt tròn ngước lên, miệng chữ o, nói "Ui, cái gì rơi trúng Bơ?" (lần đầu trong ngày đọc to khi bật Giọng nói). Len nảy khỏi đầu rơi xuống cạnh Bơ, ~1 giây sau Bơ mới hoàn hồn vồ len (trước đây vồ ngay). Ném len bay vèo trúng đầu thì vẫn vồ như cũ; Bơ ngủ, dỗi, nằm bẹp, được bế, ôm len thì như cũ. Ảnh `docs/anh/len-roi-trung-dau.png` (điện thoại, máy tính). `scripts/thu_cham.py` thử thêm — đạt hết. 459 test qua hết.
+**Tân cần thử:** bật cuộn len, kéo len lên sát mép trên ngay giữa đầu Bơ, giữ yên tay một chút rồi buông.
+
 ## 2026-10-22 – Giai đoạn 88: thử chạm tự động chắc hơn + len cầm yên rồi buông thì rơi thẳng
 - **Lỗi thật đã sửa:** kéo cuộn len, dừng tay cầm yên một lúc rồi mới buông → trước đây len vẫn bay vèo theo cú kéo cũ (có thể bay vào chân Bơ làm Bơ vồ). Giờ cầm yên ≥0,12 giây rồi buông thì len rơi thẳng xuống; buông ngay lúc đang kéo thì vẫn ném như cũ. Có test.
 - **Thử tự động báo LỖI oan:** tìm ra một nguyên nhân chắc chắn: mở lại web thì Bơ giữ vẻ mặt câu nói cuối; bộ não DEMO xoay vòng cảm xúc nên có lần trang máy tính mở ra Bơ đang "buồn" (đuôi rủ, không chơi đuôi) → trò đuôi báo LỖI. `scripts/thu_cham.py` giờ chờ trang tải xong rồi đặt vẻ mặt bình thường. Trò "ôm len" chạy 20+ lần không lỗi lại; nếu còn lỗi, script in ra len nằm đâu và Bơ đang làm gì để lần sau sửa tiếp.
